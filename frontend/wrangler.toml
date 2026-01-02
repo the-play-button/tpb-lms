@@ -1,0 +1,11 @@
+# LMS Frontend Worker with Auth Token Endpoint
+# Deploy with: npx wrangler deploy -c frontend/wrangler.toml
+
+name = "lms-viewer"
+main = "_worker.js"
+compatibility_date = "2024-01-01"
+
+# Serve static assets from this directory
+[assets]
+directory = "./"
+

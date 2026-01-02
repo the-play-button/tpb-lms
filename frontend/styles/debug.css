@@ -1,0 +1,128 @@
+/**
+ * Debug FAB Styles
+ * 
+ * Floating action button for copying debug info
+ */
+
+.debug-fab {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    
+    /* Size and shape */
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    
+    /* Appearance */
+    background: rgba(100, 100, 100, 0.15);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(150, 150, 150, 0.2);
+    color: rgba(100, 100, 100, 0.7);
+    
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    /* Interaction */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    
+    /* Reset button styles */
+    padding: 0;
+    margin: 0;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.debug-fab:hover {
+    background: rgba(100, 100, 100, 0.25);
+    color: rgba(80, 80, 80, 0.9);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.debug-fab:active {
+    transform: scale(0.95);
+}
+
+.debug-fab:focus-visible {
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.4);
+}
+
+/* Loading state */
+.debug-fab--loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.debug-fab--loading svg {
+    animation: debug-fab-spin 1s linear infinite;
+}
+
+@keyframes debug-fab-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Success state */
+.debug-fab--success {
+    background: rgba(72, 187, 120, 0.3);
+    border-color: rgba(72, 187, 120, 0.5);
+    color: #48bb78;
+}
+
+/* Error state */
+.debug-fab--error {
+    background: rgba(245, 101, 101, 0.3);
+    border-color: rgba(245, 101, 101, 0.5);
+    color: #f56565;
+}
+
+/* SVG icon */
+.debug-fab svg {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+    .debug-fab {
+        bottom: 91px; /* 75px (tab bar) + 16px (margin) */
+        right: 16px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .debug-fab svg {
+        width: 18px;
+        height: 18px;
+    }
+}
+
+/* Avoid overlap with other fixed elements on small screens */
+@media (max-width: 480px) {
+    .debug-fab {
+        bottom: 12px;
+        right: 12px;
+    }
+}
+
+/* Dark mode support (auto-detect) */
+@media (prefers-color-scheme: dark) {
+    .debug-fab {
+        background: rgba(200, 200, 200, 0.1);
+        border-color: rgba(200, 200, 200, 0.15);
+        color: rgba(200, 200, 200, 0.6);
+    }
+    
+    .debug-fab:hover {
+        background: rgba(200, 200, 200, 0.2);
+        color: rgba(220, 220, 220, 0.9);
+    }
+}
+

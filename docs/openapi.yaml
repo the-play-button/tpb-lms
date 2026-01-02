@@ -1,0 +1,423 @@
+openapi: 3.0.3
+info:
+  title: TPB LMS API
+  description: |
+    Learning Management System API for The Play Button.
+    
+    **Authentication**: All endpoints (except `/api/health`) require Cloudflare Access JWT or API Key.
+    
+    - Browser users: Automatic JWT via Cloudflare Access (`Cf-Access-Jwt-Assertion` header)
+    - Programmatic access: API Key via `Authorization: Bearer <key>` header
+    
+    **Event-Based Architecture**:
+    - `lms_event`: Raw facts (VIDEO_PING, QUIZ_SUBMIT)
+    - `lms_signal`: Derived state (VIDEO_COMPLETED, QUIZ_PASSED)
+    
+    **Roles** (GAP-1201):
+    - `student`: External users (default)
+    - `instructor`: Internal employees  
+    - `admin`: Administrators with full access
+    
+  version: 2.1.0
+  contact:
+    email: tech@theplaybutton.ai
+
+servers:
+  - url: https://lms-api.matthieu-marielouise.workers.dev
+    description: Production server
+  - url: http://localhost:8787
+    description: Local development
+
+tags:
+  - name: Health
+    description: Health check endpoints
+  - name: Auth
+    description: Authentication and session management
+  - name: Courses
+    description: Course management (formerly SOMs)
+  - name: Events
+    description: Event ingestion (VIDEO_PING, QUIZ_SUBMIT, etc.)
+  - name: Signals
+    description: Derived state queries (VIDEO_COMPLETED, QUIZ_PASSED)
+  - name: Learner
+    description: Learner profile and progress
+  - name: Badges
+    description: Gamification badges
+  - name: Leaderboard
+    description: XP rankings
+  - name: Quiz
+    description: Quiz submission
+  - name: Admin
+    description: Admin endpoints (admin role only)
+
+components:
+  securitySchemes:
+    CloudflareJWT:
+      type: apiKey
+      in: header
+      name: Cf-Access-Jwt-Assertion
+      description: Cloudflare Access JWT (automatically injected for browser users)
+    APIKey:
+      type: http
+      scheme: bearer
+      bearerFormat: API Key
+      description: API Key for programmatic access (format: tpb_...)
+
+  responses:
+    Unauthorized:
+      description: Missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Missing authentication"
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Forbidden"
+              requiredRole:
+                type: array
+                items:
+                  type: string
+                example: ["admin"]
+              actualRole:
+                type: string
+                example: "student"
+
+security:
+  - CloudflareJWT: []
+  - APIKey: []
+
+paths:
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Health check
+      description: Check API health and database connectivity
+      security: []  # Public endpoint
+      responses:
+        '200':
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "healthy"
+                  checks:
+                    type: object
+                    properties:
+                      database:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                            example: "up"
+                  timestamp:
+                    type: string
+                    format: date-time
+                  version:
+                    type: string
+                    example: "2.1.0"
+
+  /api/auth/session:
+    get:
+      tags: [Auth]
+      summary: Get current session
+      description: Returns authenticated user profile and progress
+      responses:
+        '200':
+          description: Session data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    type: object
+                    properties:
+                      email:
+                        type: string
+                      role:
+                        type: string
+                        enum: [student, instructor, admin]
+                  profile:
+                    type: object
+                  badges:
+                    type: array
+                    items:
+                      type: object
+
+  /api/courses:
+    get:
+      tags: [Courses]
+      summary: List all courses
+      description: Returns all active courses with progress data for the authenticated user
+      responses:
+        '200':
+          description: List of courses
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  courses:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                        name:
+                          type: string
+                        description:
+                          type: string
+                        progress:
+                          type: object
+                          properties:
+                            steps_completed:
+                              type: integer
+                            progress_percent:
+                              type: number
+                            course_completed:
+                              type: boolean
+
+  /api/courses/{courseId}:
+    get:
+      tags: [Courses]
+      summary: Get course details
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Course details with all classes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  course:
+                    type: object
+
+  /api/signals/{courseId}:
+    get:
+      tags: [Signals]
+      summary: Get course signals
+      description: Returns derived state for a course (VIDEO_COMPLETED, QUIZ_PASSED, etc.)
+      parameters:
+        - name: courseId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Course signals
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  steps:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        class_id:
+                          type: string
+                        video_completed:
+                          type: boolean
+                        quiz_passed:
+                          type: boolean
+                        step_completed:
+                          type: boolean
+
+  /api/events:
+    post:
+      tags: [Events]
+      summary: Ingest event
+      description: |
+        Ingest a raw event (VIDEO_PING, VIDEO_PLAY, VIDEO_PAUSE, QUIZ_SUBMIT).
+        Supports idempotency via `X-Idempotency-Key` header.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  enum: [VIDEO_PING, VIDEO_PLAY, VIDEO_PAUSE, QUIZ_SUBMIT]
+                course_id:
+                  type: string
+                class_id:
+                  type: string
+                payload:
+                  type: object
+              required:
+                - type
+                - course_id
+                - class_id
+                - payload
+      responses:
+        '200':
+          description: Event processed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  event_id:
+                    type: string
+                  video_completed:
+                    type: boolean
+                  quiz_passed:
+                    type: boolean
+                  step_completed:
+                    type: boolean
+
+  /api/quiz:
+    post:
+      tags: [Quiz]
+      summary: Submit quiz result
+      description: Submit quiz answers and get pass/fail result
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                course_id:
+                  type: string
+                class_id:
+                  type: string
+                form_id:
+                  type: string
+                answers:
+                  type: object
+      responses:
+        '200':
+          description: Quiz result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  passed:
+                    type: boolean
+                  score:
+                    type: number
+
+  /api/badges:
+    get:
+      tags: [Badges]
+      summary: List user badges
+      responses:
+        '200':
+          description: User badges
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  badges:
+                    type: array
+                    items:
+                      type: object
+
+  /api/learner:
+    get:
+      tags: [Learner]
+      summary: Get learner profile
+      responses:
+        '200':
+          description: Learner profile with progress
+          content:
+            application/json:
+              schema:
+                type: object
+
+  /api/leaderboard:
+    get:
+      tags: [Leaderboard]
+      summary: Get XP leaderboard
+      responses:
+        '200':
+          description: Leaderboard rankings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  leaderboard:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        rank:
+                          type: integer
+                        user_id:
+                          type: string
+                        xp:
+                          type: integer
+
+  /api/admin/stats:
+    get:
+      tags: [Admin]
+      summary: Get admin statistics (admin only)
+      description: Returns global LMS statistics from v_admin_overview view (GAP-604)
+      security:
+        - CloudflareJWT: []
+        - APIKey: []
+      responses:
+        '200':
+          description: Admin statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stats:
+                    type: object
+                    properties:
+                      totalStudents:
+                        type: integer
+                        description: Total unique students
+                      active24h:
+                        type: integer
+                        description: Active students in last 24 hours
+                      active7d:
+                        type: integer
+                        description: Active students in last 7 days
+                      coursesCompleted:
+                        type: integer
+                      videosCompleted:
+                        type: integer
+                      quizzesPassed:
+                        type: integer
+                      avgQuizScore:
+                        type: number
+                        description: Average quiz score (0-100)
+                  timestamp:
+                    type: string
+                    format: date-time
+        '403':
+          $ref: '#/components/responses/Forbidden'
+

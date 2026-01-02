@@ -1,0 +1,57 @@
+# LMS Worker Configuration
+# Deploy with: npx wrangler deploy
+
+name = "lms-api"
+main = "backend/index.js"
+compatibility_date = "2024-01-01"
+
+# D1 Database binding
+[[d1_databases]]
+binding = "DB"
+database_name = "lms-db"
+database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
+
+# Cloudflare Access configuration
+# Only team domain needed - signature verification is sufficient, no audience check
+[vars]
+ACCESS_TEAM_DOMAIN = "theplaybutton"
+VAULT_API_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
+
+# Secrets (set via: wrangler secret put <NAME>)
+# 
+# BOOTSTRAP SECRETS (must be in wrangler - chicken-egg problem):
+# - VAULT_CLIENT_ID (LMS app client ID for vault-api)
+# - VAULT_CLIENT_SECRET (LMS app client secret for vault-api)
+#
+# MIGRATED TO VAULT (fetch via VaultClient at runtime):
+# - apps/lms/tally_webhook_secret (legacy: secret dans URL pour autoriser les webhooks Tally)
+# - apps/lms/tally_signing_secret (recommandé: vérifie Tally-Signature HMAC-SHA256)
+# - infra/cloudflare_stream_signing_key_id
+# - infra/cloudflare_stream_signing_key_pem
+#
+# NOTE: Legacy wrangler secrets TALLY_* and CLOUDFLARE_STREAM_* can be removed
+# once vault secrets are populated and code is updated to use VaultClient
+
+# Development settings
+[dev]
+port = 8787
+local_protocol = "http"
+
+# Production environment
+[env.production]
+name = "lms-api"
+
+# D1 Database binding for production
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "lms-db"
+database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
+
+# Cloudflare Access configuration for production
+[env.production.vars]
+ACCESS_TEAM_DOMAIN = "theplaybutton"
+VAULT_API_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
+
+# Staging environment  
+[env.staging]
+name = "lms-api-staging"

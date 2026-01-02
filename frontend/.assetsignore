@@ -1,0 +1,5 @@
+# Don't upload these as static assets
+_worker.js
+wrangler.toml
+.assetsignore
+

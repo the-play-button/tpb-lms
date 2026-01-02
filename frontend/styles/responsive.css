@@ -1,0 +1,295 @@
+/* =============================================
+   Responsive - Media Queries
+   ============================================= */
+
+@media (max-width: 1200px) {
+    .lms-main {
+        grid-template-columns: 250px 1fr;
+    }
+    
+    .lms-leaderboard {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .lms-main {
+        grid-template-columns: 1fr;
+    }
+    
+    .lms-sidebar {
+        display: none;
+    }
+    
+    .lms-header {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+    
+    .user-stats {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .step-viewer {
+        padding: var(--space-md);
+    }
+    
+    .step-title {
+        font-size: 1.5rem;
+    }
+    
+    .quick-stats {
+        flex-direction: column;
+        gap: var(--space-md);
+    }
+    
+    .welcome-screen h1 {
+        font-size: 1.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .stat {
+        padding: var(--space-xs) var(--space-sm);
+    }
+    
+    .stat-label {
+        display: none;
+    }
+    
+    .nav-btn {
+        padding: var(--space-sm) var(--space-md);
+        font-size: 0.9rem;
+    }
+}
+
+/* =============================================
+   Mobile Tab Bar
+   Hidden on desktop, visible on mobile
+   ============================================= */
+
+.mobile-tabs {
+    display: none; /* Hidden on desktop */
+}
+
+/* Mobile overlay containers - hidden by default */
+.mobile-parcours-view,
+.mobile-badges-view {
+    display: none;
+}
+
+@media (max-width: 768px) {
+    /* =============================================
+       Tab Bar - Fixed bottom navigation
+       ============================================= */
+    .mobile-tabs {
+        display: flex;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        /* Solid opaque background - NO transparency */
+        background: #1a1a2e;
+        border-top: 2px solid #2d2d44;
+        padding: 0;
+        padding-bottom: env(safe-area-inset-bottom, 0px);
+        z-index: 1000;
+    }
+    
+    .mobile-tab {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 4px;
+        padding: 12px 4px;
+        background: transparent;
+        border: none;
+        border-top: 3px solid transparent;
+        color: #888;
+        font-family: inherit;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .mobile-tab:active {
+        background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Active tab - VERY visible */
+    .mobile-tab.active {
+        color: #667eea;
+        border-top-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .mobile-tab.active .mobile-tab-icon {
+        transform: scale(1.2);
+    }
+    
+    .mobile-tab-icon {
+        font-size: 1.4rem;
+        line-height: 1;
+        transition: transform 0.2s ease;
+    }
+    
+    .mobile-tab-label {
+        font-size: 0.65rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    
+    /* =============================================
+       Main content padding for tab bar
+       ============================================= */
+    .lms-main {
+        padding-bottom: 75px;
+    }
+    
+    .step-quiz {
+        padding-bottom: 100px; /* Espace pour tab bar + respiration */
+    }
+    
+    /* =============================================
+       Mobile Views - Fullscreen overlays
+       ============================================= */
+    
+    /* Hide content when viewing parcours or badges */
+    .lms-content.mobile-hidden {
+        display: none !important;
+    }
+    
+    /* Parcours view - Course list only */
+    .mobile-parcours-view.visible {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 75px;
+        z-index: 500;
+        background: #0f0f1a;
+        overflow-y: auto;
+        padding: 100px 20px 20px 20px;
+    }
+    
+    .mobile-parcours-view h2 {
+        color: #fff;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #2d2d44;
+    }
+    
+    .mobile-parcours-view .course-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .mobile-parcours-view .course-item {
+        background: #1a1a2e;
+        border-radius: 12px;
+        padding: 16px;
+        border: 1px solid #2d2d44;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .mobile-parcours-view .course-item:active {
+        transform: scale(0.98);
+        background: #252540;
+    }
+    
+    .mobile-parcours-view .course-item.active {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.1);
+    }
+    
+    .mobile-parcours-view .course-name {
+        font-weight: 600;
+        color: #fff;
+        margin-bottom: 4px;
+    }
+    
+    .mobile-parcours-view .course-progress {
+        font-size: 0.85rem;
+        color: #888;
+    }
+    
+    /* Badges view - Icons only grid (tap for details) */
+    .mobile-badges-view.visible {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 75px;
+        z-index: 500;
+        background: #0f0f1a;
+        overflow-y: auto;
+        padding: 100px 20px 20px 20px;
+    }
+    
+    .mobile-badges-view h2 {
+        color: #fff;
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #2d2d44;
+    }
+    
+    .mobile-badges-view .badges-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+    
+    .mobile-badges-view .badge-item {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        aspect-ratio: 1;
+        padding: 16px;
+        background: #1a1a2e;
+        border-radius: 16px;
+        border: 2px solid #2d2d44;
+        cursor: pointer;
+        transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    
+    .mobile-badges-view .badge-item:active {
+        transform: scale(0.92);
+    }
+    
+    .mobile-badges-view .badge-item.earned {
+        border-color: #667eea;
+        background: rgba(102, 126, 234, 0.15);
+    }
+    
+    .mobile-badges-view .badge-item.locked {
+        opacity: 0.4;
+        filter: grayscale(1);
+    }
+    
+    .mobile-badges-view .badge-icon {
+        font-size: 2.5rem;
+        line-height: 1;
+    }
+    
+    /* Hide text on mobile - tap for details */
+    .mobile-badges-view .badge-name {
+        display: none;
+    }
+    
+    .mobile-badges-view .badge-hint {
+        text-align: center;
+        color: #666;
+        font-size: 0.8rem;
+        margin-top: 16px;
+    }
+}
+

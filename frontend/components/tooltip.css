@@ -1,0 +1,128 @@
+/**
+ * Badge Tooltip Styles
+ * Custom hover tooltips for badges
+ */
+
+.badge-tooltip {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    
+    /* Appearance */
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 12px;
+    padding: 12px 16px;
+    min-width: 180px;
+    max-width: 240px;
+    
+    /* Shadow */
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    
+    /* Animation */
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-50%) translateY(8px);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+}
+
+.badge-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 8px solid transparent;
+    border-top-color: #27272a;
+}
+
+.badge-item:hover .badge-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Tooltip content */
+.badge-tooltip-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+
+.badge-tooltip-icon {
+    font-size: 28px;
+    line-height: 1;
+}
+
+.badge-tooltip-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fafafa;
+    margin: 0;
+}
+
+.badge-tooltip-rarity {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 2px;
+}
+
+.badge-tooltip-rarity.common { 
+    background: #374151; 
+    color: #9ca3af; 
+}
+.badge-tooltip-rarity.rare { 
+    background: #1e3a8a; 
+    color: #60a5fa; 
+}
+.badge-tooltip-rarity.epic { 
+    background: #581c87; 
+    color: #c084fc; 
+}
+.badge-tooltip-rarity.legendary { 
+    background: #78350f; 
+    color: #fbbf24; 
+}
+
+.badge-tooltip-desc {
+    font-size: 12px;
+    color: #a1a1aa;
+    line-height: 1.4;
+    margin: 0 0 8px 0;
+}
+
+.badge-tooltip-points {
+    font-size: 12px;
+    font-weight: 600;
+    color: #8b5cf6;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+
+/* Position adjustment for badges on edges */
+.badge-item:first-child .badge-tooltip,
+.badge-item:nth-child(2) .badge-tooltip {
+    left: 0;
+    transform: translateX(0) translateY(8px);
+}
+
+.badge-item:first-child:hover .badge-tooltip,
+.badge-item:nth-child(2):hover .badge-tooltip {
+    transform: translateX(0) translateY(0);
+}
+
+.badge-item:first-child .badge-tooltip::after,
+.badge-item:nth-child(2) .badge-tooltip::after {
+    left: 24px;
+}
+

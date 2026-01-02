@@ -1,0 +1,43 @@
+# LMS-specific entropy configuration
+# Extends defaults from tpb_sdk.entropy
+
+# Additional paths to ignore (beyond defaults like node_modules, __pycache__, etc.)
+ignore:
+  - vault-api           # Separate subproject with its own checks
+  - docs/               # Documentation
+  - scripts/entropy_check  # Legacy, will be removed
+
+# Line count thresholds
+thresholds:
+  backend: 500
+  frontend: 300
+  css: 600
+  default: 500
+
+# Check-specific thresholds
+complexity: 15          # Cyclomatic complexity threshold
+nesting: 5              # Max nesting depth
+function_length: 60     # Max function lines
+commented_block: 5      # Consecutive comment lines
+coupling: 10            # Max imports per file
+god_file: 5             # Max files importing this one
+
+# Files that are exceptions to certain rules
+exceptions:
+  # Entry points expected to have many imports
+  coupling:
+    - backend/index.js
+    - frontend/app/index.js
+  
+  # Shared utilities expected to be imported everywhere
+  god_files:
+    - backend/cors.js
+    - frontend/app/api.js
+    - frontend/app/state.js
+  
+  # Entry points always considered "used"
+  entry_points:
+    - backend/index.js
+    - frontend/app/index.js
+    - index.js
+
