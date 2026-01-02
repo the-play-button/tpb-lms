@@ -83,10 +83,11 @@ Scripts Python cross-platform :
 
 ### Entropy Check Modularisé
 
-Package Python modulaire : `scripts/entropy_check/`
+Package Python modulaire via TPB SDK : `tpb_sdk.entropy`
+Config projet : `.entropy.yaml`
 
 ```
-entropy_check/
+tpb_sdk/python/src/tpb_sdk/entropy/
 ├── __init__.py      # EntropyChecker facade
 ├── __main__.py      # CLI entry point
 ├── config.py        # Thresholds, exceptions

@@ -21,10 +21,10 @@ class TestEntropy:
         lms_root = os.path.dirname(scripts_dir)  # lms/
         
         result = subprocess.run(
-            ['python3', '-m', 'entropy_check', '--path', lms_root],
+            ['python3', '-m', 'tpb_sdk.entropy', '--path', lms_root],
             capture_output=True,
             text=True,
-            cwd=scripts_dir
+            cwd=lms_root  # Run from lms root to find .entropy.yaml
         )
         
         # Check summary line for P1 count

@@ -16,7 +16,7 @@
 
 ### 3. Code Quality Automation
 - **Directive** : `1.17_tests.md` section 3
-- **Outil** : `scripts/entropy_check/`
+- **Outil** : `tpb_sdk.entropy` (config: `.entropy.yaml`)
 - **Checks** : line count, duplicates, dead code, complexity, nesting, long functions, console leaks, commented code, TODO density, empty catch, coupling, legacy markers
 
 ### 4. Performance Testing

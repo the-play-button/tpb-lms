@@ -1,43 +1,32 @@
-# LMS-specific entropy configuration
-# Extends defaults from tpb_sdk.entropy
+# LMS Project - Entropy Configuration
+# Migrated from lms/scripts/entropy_check/config.py
+# Usage: python -m tpb_sdk.entropy --path . --report
 
-# Additional paths to ignore (beyond defaults like node_modules, __pycache__, etc.)
-ignore:
-  - vault-api           # Separate subproject with its own checks
-  - docs/               # Documentation
-  - scripts/entropy_check  # Legacy, will be removed
-
-# Line count thresholds
+# Line count thresholds per file type
 thresholds:
-  backend: 500
-  frontend: 300
-  css: 600
-  default: 500
+  backend: 500      # JS files in backend/
+  frontend: 300     # JS files in frontend/
+  css: 600          # CSS files (per module, after split)
+  default: 500      # Other files
 
-# Check-specific thresholds
-complexity: 15          # Cyclomatic complexity threshold
-nesting: 5              # Max nesting depth
-function_length: 60     # Max function lines
-commented_block: 5      # Consecutive comment lines
-coupling: 10            # Max imports per file
-god_file: 5             # Max files importing this one
+# Files/directories to ignore (extends defaults)
+ignore:
+  - vault-api       # Separate subproject with its own config
 
-# Files that are exceptions to certain rules
+# Project-specific exceptions
 exceptions:
-  # Entry points expected to have many imports
+  # Files allowed to have high coupling (entry points, orchestrators)
   coupling:
     - backend/index.js
     - frontend/app/index.js
   
-  # Shared utilities expected to be imported everywhere
+  # Files expected to be "god files" (shared utilities by design)
   god_files:
-    - backend/cors.js
-    - frontend/app/api.js
-    - frontend/app/state.js
+    - backend/cors.js           # CORS config used everywhere
+    - frontend/app/api.js       # API client used everywhere
+    - frontend/app/state.js     # State management (by design)
   
-  # Entry points always considered "used"
+  # Entry points that are always "used" for dead code detection
   entry_points:
     - backend/index.js
     - frontend/app/index.js
-    - index.js
-

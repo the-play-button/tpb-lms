@@ -27,6 +27,7 @@ ENV/
 *.swp
 *.swo
 .DS_Store
+._*
 
 # Build outputs
 dist/
