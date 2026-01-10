@@ -40,13 +40,20 @@ export function getCorsHeaders(request) {
 /**
  * JSON response with CORS headers
  */
-export function jsonResponse(data, status, request) {
-    const headers = getCorsHeaders(request);
+export function jsonResponse(data, status = 200, request = null) {
+    const headers = request ? getCorsHeaders(request) : { 'Content-Type': 'application/json' };
     headers['Content-Type'] = 'application/json';
     
     return new Response(JSON.stringify(data), {
         status,
         headers
     });
+}
+
+/**
+ * Error response helper
+ */
+export function errorResponse(message, status = 400, request = null) {
+    return jsonResponse({ error: message }, status, request);
 }
 

@@ -17,10 +17,15 @@ import { updateUserStats, initUserStats } from './ui/userStats.js';
 import { updateBadgesGrid, initBadges, iconMap } from './ui/badges.js';
 import { renderCourseList, initCourseList } from './ui/courseList.js';
 import { initUserMenu } from './ui/userMenu.js';
+import { renderLangSelector, initLangSelector } from './ui/langSelector.js';
+
+// i18n
+import { initLanguage, t, getLanguage } from '../i18n/index.js';
 
 // Course
 import { loadCourse } from './course/loader.js';
 import { initNavigation } from './course/navigation.js';
+import { renderCurrentStep } from './course/renderer.js';
 
 // Video & Quiz
 import { stopVideoTracking, pauseVideo, isVideoPlaying } from './video/tracking.js';
@@ -36,6 +41,9 @@ import { initDebugFab } from './debug/fab.js';
 
 // Admin
 import { initAdminDashboard } from './admin/dashboard.js';
+
+// KMS
+import { initKmsLinks } from './kms/viewer.js';
 
 /**
  * Initialize application
@@ -69,8 +77,9 @@ async function init() {
             contact_id: session.profile?.contact_id
         });
         
-        // 2. Get available courses
-        const { courses } = await api('/courses');
+        // 2. Get available courses (with language for translations)
+        const lang = getLanguage();
+        const { courses } = await api(`/courses?lang=${lang}`);
         setState('courses', courses);
         
         // 3. Get all badge definitions
@@ -98,8 +107,14 @@ async function init() {
         // 8. Load leaderboard
         loadLeaderboard();
         
+        // 8b. Initialize KMS link handling
+        initKmsLinks();
+        
         // 9. Initialize user menu with logout button
         initUserMenu(session.user, session.profile);
+        
+        // 9b. Initialize language selector
+        initLangSelectorInHeader();
         
         // 10. Check for admin route
         if (window.location.pathname === '/admin') {
@@ -123,6 +138,21 @@ async function init() {
         console.error('Failed to initialize:', error);
         showError(error.message);
     }
+}
+
+/**
+ * Initialize language selector in header
+ */
+function initLangSelectorInHeader() {
+    const userMenu = document.getElementById('userMenu');
+    if (!userMenu) return;
+    
+    // Insert lang selector before user menu
+    const langContainer = document.createElement('div');
+    langContainer.innerHTML = renderLangSelector();
+    userMenu.parentElement.insertBefore(langContainer.firstElementChild, userMenu);
+    
+    initLangSelector();
 }
 
 /**
@@ -300,9 +330,10 @@ function setupEventListeners() {
     
     // Course navigation in sidebar
     document.getElementById('somList')?.addEventListener('click', (e) => {
-        if (e.target.matches('a[data-som-id]')) {
+        const link = e.target.closest('a[data-som-id]');
+        if (link) {
             e.preventDefault();
-            const courseId = e.target.dataset.somId;
+            const courseId = link.dataset.somId;
             loadCourse(courseId);
             history.pushState({}, '', `?som=${courseId}`);
         }
@@ -333,6 +364,32 @@ function setupEventListeners() {
     // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
         stopVideoTracking();
+    });
+    
+    // Reload courses when language changes (preserve current step position)
+    window.addEventListener('languagechange', async (e) => {
+        console.log('🌐 Language changed to:', e.detail.lang);
+        try {
+            // Preserve current step before reloading
+            const currentStepIndex = getState('currentStepIndex');
+            
+            // Reload courses list with new language
+            const { courses } = await api(`/courses?lang=${e.detail.lang}`);
+            setState('courses', courses);
+            
+            // Reload current course if one is active
+            const currentCourse = getState('currentCourse');
+            if (currentCourse) {
+                const course = await api(`/courses/${currentCourse}?lang=${e.detail.lang}`);
+                setState('courseData', course);
+                
+                // Restore step position (don't reset to beginning)
+                setState('currentStepIndex', currentStepIndex);
+                renderCurrentStep();
+            }
+        } catch (error) {
+            console.error('Failed to reload with new language:', error);
+        }
     });
     
     // Listen for Tally form submission via postMessage

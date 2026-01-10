@@ -28,6 +28,9 @@ import { getLeaderboard, getUserStats } from './handlers/leaderboard.js';
 import { handleTestSeed } from './handlers/test.js';
 import { createAPIKeyHandler, listAPIKeysHandler, revokeAPIKeyHandler, adminCreateAPIKeyHandler } from './handlers/apikeys.js';
 import { getAdminStats } from './handlers/admin.js';
+import { listSpaces, getSpace, getPage } from './handlers/kms.js';
+import { getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview } from './handlers/translations.js';
+import { getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary.js';
 import { addTraceId, withTraceHeader } from './middleware/trace.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
@@ -215,6 +218,76 @@ export default {
             const courseMatch = path.match(/^\/api\/(courses|soms)\/([^/]+)$/);
             if (courseMatch && request.method === 'GET') {
                 return await getCourse(request, env, userContext, courseMatch[2]);
+            }
+            
+            // ------------------------------------------
+            // KMS - Knowledge Management System
+            // ------------------------------------------
+            if (path === '/api/kms/spaces' && request.method === 'GET') {
+                return await listSpaces(request, env, userContext);
+            }
+            
+            // GET /api/kms/spaces/:id
+            const kmsSpaceMatch = path.match(/^\/api\/kms\/spaces\/([^/]+)$/);
+            if (kmsSpaceMatch && request.method === 'GET') {
+                return await getSpace(request, env, userContext, kmsSpaceMatch[1]);
+            }
+            
+            // GET /api/kms/pages/:id
+            const kmsPageMatch = path.match(/^\/api\/kms\/pages\/([^/]+)$/);
+            if (kmsPageMatch && request.method === 'GET') {
+                return await getPage(request, env, userContext, kmsPageMatch[1]);
+            }
+            
+            // ------------------------------------------
+            // TRANSLATIONS - Multi-language support
+            // ------------------------------------------
+            // GET /api/translations/review - Get translations needing review
+            if (path === '/api/translations/review' && request.method === 'GET') {
+                return await getTranslationsForReview(request, env, userContext);
+            }
+            
+            // POST /api/translations/batch - Batch upsert (for AI engine)
+            if (path === '/api/translations/batch' && request.method === 'POST') {
+                return await batchUpsertTranslations(request, env, userContext);
+            }
+            
+            // GET /api/translations/:type/:id - Get translations for content
+            const translationsGetMatch = path.match(/^\/api\/translations\/([^/]+)\/([^/]+)$/);
+            if (translationsGetMatch && request.method === 'GET') {
+                return await getTranslations(request, env, userContext);
+            }
+            
+            // PUT /api/translations/:type/:id/:lang - Upsert translation
+            const translationsPutMatch = path.match(/^\/api\/translations\/([^/]+)\/([^/]+)\/([^/]+)$/);
+            if (translationsPutMatch && request.method === 'PUT') {
+                return await upsertTranslation(request, env, userContext);
+            }
+            
+            // ------------------------------------------
+            // GLOSSARY - Business terminology
+            // ------------------------------------------
+            // POST /api/glossary/:orgId/import - Batch import terms
+            const glossaryImportMatch = path.match(/^\/api\/glossary\/([^/]+)\/import$/);
+            if (glossaryImportMatch && request.method === 'POST') {
+                return await importGlossaryTerms(request, env, userContext);
+            }
+            
+            // GET /api/glossary/:orgId - Get glossary for org
+            const glossaryGetMatch = path.match(/^\/api\/glossary\/([^/]+)$/);
+            if (glossaryGetMatch && request.method === 'GET') {
+                return await getGlossary(request, env, userContext);
+            }
+            
+            // POST /api/glossary/:orgId - Add term
+            if (glossaryGetMatch && request.method === 'POST') {
+                return await addGlossaryTerm(request, env, userContext);
+            }
+            
+            // DELETE /api/glossary/:orgId/:termId - Delete term
+            const glossaryDeleteMatch = path.match(/^\/api\/glossary\/([^/]+)\/([^/]+)$/);
+            if (glossaryDeleteMatch && request.method === 'DELETE') {
+                return await deleteGlossaryTerm(request, env, userContext);
             }
             
             // ------------------------------------------

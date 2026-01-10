@@ -49,13 +49,21 @@ export async function nextStep() {
     const signals = getState('signals');
     const stepIndex = getState('currentStepIndex');
     const stepSignal = signals?.steps?.[stepIndex];
+    const courseData = getState('courseData');
+    const currentClass = courseData?.classes?.[stepIndex];
     
-    if (!stepSignal?.step_completed) {
+    // Check if this is a CONTENT step (no video, no quiz in media)
+    const media = currentClass?.media || [];
+    const hasVideo = media.some(m => m.type === 'VIDEO');
+    const hasQuiz = media.some(m => m.type === 'QUIZ');
+    const isContentStep = !hasVideo && !hasQuiz;
+    
+    // CONTENT steps can always advance; VIDEO/QUIZ need completion
+    if (!isContentStep && !stepSignal?.step_completed) {
         alert("Vous devez compléter cette étape avant de continuer.");
         return;
     }
     
-    const courseData = getState('courseData');
     const courseId = getState('currentCourse');
     
     if (courseData && stepIndex < courseData.classes.length - 1) {

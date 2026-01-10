@@ -1,0 +1,62 @@
+{
+  "source_lang": "fr",
+  "course": {
+    "id": "pw05-2",
+    "name": "Parcours d'intégration WGE",
+    "description": "Parcours d'intégration pour les nouveaux collaborateurs de Wonder Grip Europe. Découverte des valeurs, de l'équipe, des process et des outils."
+  },
+  "classes": [
+    {
+      "id": "step01-valeurs-wge",
+      "name": "STEP 01: Les valeurs de WGE"
+    },
+    {
+      "id": "step02-vie-entreprise",
+      "name": "STEP 02: La vie dans l'entreprise"
+    },
+    {
+      "id": "step03-process-operations",
+      "name": "STEP 03: Process & Operations"
+    },
+    {
+      "id": "step04-it-system",
+      "name": "STEP 04: IT & Systems"
+    },
+    {
+      "id": "step05-presentation-entreprise",
+      "name": "STEP 05: Présentation de l'entreprise"
+    },
+    {
+      "id": "step06-marche-francais",
+      "name": "STEP 06: Le marché Français"
+    }
+  ],
+  "translations": {
+    "en": {
+      "course": {
+        "name": "WGE Integration Program",
+        "description": "Integration program for new Wonder Grip Europe employees. Discover company values, meet the team, learn processes and tools."
+      },
+      "classes": {
+        "step01-valeurs-wge": {
+          "name": "STEP 01: WGE Values"
+        },
+        "step02-vie-entreprise": {
+          "name": "STEP 02: Life at the Company"
+        },
+        "step03-process-operations": {
+          "name": "STEP 03: Process & Operations"
+        },
+        "step04-it-system": {
+          "name": "STEP 04: IT & Systems"
+        },
+        "step05-presentation-entreprise": {
+          "name": "STEP 05: Company Presentation"
+        },
+        "step06-marche-francais": {
+          "name": "STEP 06: The French Market"
+        }
+      }
+    }
+  }
+}

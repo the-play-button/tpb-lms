@@ -20,10 +20,15 @@
     --gold: #fbbf24;
     --border: rgba(255, 255, 255, 0.08);
     
-    /* Typography */
-    --font-display: 'Playfair Display', Georgia, serif;
-    --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    /* Hover effects (from iampam design system) */
+    --hover-glow: 0 0 12px 2px rgba(255, 255, 255, 0.08);
+    --hover-bg: rgba(255, 255, 255, 0.05);
+    --focus-ring: 0 0 0 2px var(--accent-primary);
+    
+    /* Typography (iampam design system) */
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
     
     /* Spacing */
     --space-xs: 0.25rem;
@@ -53,5 +58,67 @@ body {
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================
+   Utility Classes (iampam design system)
+   ============================================= */
+
+/* Hover halo effect - cards, buttons, links */
+.hover-halo {
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+.hover-halo:hover {
+    box-shadow: var(--hover-glow);
+    background-color: var(--hover-bg);
+}
+
+/* Active halo - for selected/active states */
+.active-halo {
+    box-shadow: var(--hover-glow);
+    background-color: var(--hover-bg);
+}
+
+/* Radial glow background */
+.bg-radial-glow {
+    background: radial-gradient(
+        circle at center,
+        var(--bg-secondary) 0%,
+        var(--bg-secondary) 10%,
+        var(--bg-primary) 60%,
+        var(--bg-primary) 100%
+    );
+}
+
+/* Text glow for accent elements */
+.text-glow {
+    text-shadow: 0 0 16px var(--accent-glow);
+}
+
+/* Focus ring */
+.focus-ring:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
 }
 

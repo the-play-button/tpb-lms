@@ -19,9 +19,11 @@ import { checkCourseCompletionBadges, recordCourseCompletion } from '../helpers/
 function parseStep(row, currentStep) {
     const media = JSON.parse(row.media_json || '[]');
     const hasQuiz = media.some(m => m.type === 'QUIZ');
+    const hasVideo = media.some(m => m.type === 'VIDEO');
     const videoCompleted = row.video_completed === 1;
     const quizPassed = row.quiz_passed === 1;
-    const stepCompleted = hasQuiz ? quizPassed : videoCompleted;
+    // Quiz → quiz passed | Video → video completed | Content → allow advance (frontend handles)
+    const stepCompleted = hasQuiz ? quizPassed : (hasVideo ? videoCompleted : false);
     
     return {
         class_id: row.class_id,
@@ -164,9 +166,10 @@ export async function getStepSignals(request, env, userContext, courseId, classI
     
     const media = JSON.parse(cls.media_json || '[]');
     const hasQuiz = media.some(m => m.type === 'QUIZ');
+    const hasVideo = media.some(m => m.type === 'VIDEO');
     const videoCompleted = progress?.video_completed === 1;
     const quizPassed = progress?.quiz_passed === 1;
-    const stepCompleted = hasQuiz ? quizPassed : videoCompleted;
+    const stepCompleted = hasQuiz ? quizPassed : (hasVideo ? videoCompleted : false);
     
     return jsonResponse({
         class_id: classId,

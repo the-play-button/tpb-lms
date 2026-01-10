@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "TPB Academy",
+    "loading": "Caricamento...",
+    "error": "Si è verificato un errore"
+  },
+  "nav": {
+    "next": "Avanti",
+    "prev": "Indietro",
+    "finish": "Fine",
+    "continue": "Continua",
+    "restart": "Ricomincia"
+  },
+  "header": {
+    "myProgress": "I miei progressi",
+    "myBadges": "I miei badge",
+    "leaderboard": "Classifica",
+    "days": "giorni",
+    "level": "Livello"
+  },
+  "welcome": {
+    "title": "Benvenuto su TPB Academy",
+    "subtitle": "Seleziona un modulo per iniziare ad apprendere.",
+    "videosWatched": "Video visti",
+    "quizzesPassed": "Quiz superati",
+    "somsCompleted": "SOMs completati"
+  },
+  "course": {
+    "step": "Passo",
+    "of": "/",
+    "noContent": "Nessun contenuto disponibile per questo passo.",
+    "linearProgression": "Progressione lineare: non puoi tornare indietro.",
+    "completeStep": "Devi completare questo passo prima di continuare.",
+    "videoLocked": "Il video non è più accessibile dopo il quiz.",
+    "watchVideo": "Guarda il video al 90%+"
+  },
+  "quiz": {
+    "title": "Quiz di validazione",
+    "start": "Inizia il quiz",
+    "locked": "Bloccato",
+    "unlocked": "Sbloccato",
+    "passed": "Quiz superato",
+    "unlockMessage": "Guarda il video ad almeno il 90% per sbloccare il quiz.",
+    "warning": "Attenzione - Un solo tentativo",
+    "warningDetail": "Avrai solo un tentativo per questo quiz.",
+    "passQuiz": "Supera il quiz"
+  },
+  "requirements": {
+    "title": "Per sbloccare \"Avanti\":"
+  },
+  "badge": {
+    "unlocked": "Badge Sbloccato!",
+    "earned": "Congratulazioni!",
+    "continue": "Continua",
+    "locked": "Badge bloccato"
+  },
+  "leaderboard": {
+    "title": "Classifica",
+    "week": "Settimana",
+    "month": "Mese",
+    "allTime": "Totale",
+    "empty": "Nessuna classifica disponibile"
+  },
+  "endScreen": {
+    "congrats": "Congratulazioni!",
+    "completed": "Modulo completato",
+    "earnedXP": "Hai guadagnato",
+    "xpPoints": "XP",
+    "nextModule": "Modulo successivo",
+    "backToHome": "Torna alla home"
+  },
+  "mobile": {
+    "parcours": "Corsi",
+    "content": "Lezione",
+    "badges": "Badge"
+  },
+  "debug": {
+    "title": "Console Debug",
+    "resetProgress": "Reimposta progressi",
+    "confirmReset": "Sei sicuro di voler reimpostare tutti i tuoi progressi?",
+    "resetSuccess": "Progressi reimpostati"
+  },
+  "userMenu": {
+    "logout": "Esci",
+    "admin": "Admin",
+    "settings": "Impostazioni"
+  },
+  "errors": {
+    "loadFailed": "Caricamento fallito",
+    "saveFailed": "Salvataggio fallito",
+    "networkError": "Errore di rete",
+    "unauthorized": "Non autorizzato",
+    "notFound": "Non trovato"
+  }
+}

@@ -26,6 +26,61 @@ const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 let currentSpeedIndex = 2; // Default 1x (index 2)
 
 /**
+ * Setup native HTML5 video tracking (for external URLs)
+ */
+function setupNativeVideoTracking(videoElement, videoDuration, courseId, classId, resumePosition) {
+    lastPingPosition = -10;
+    isPlaying = false;
+    videoCompletedHandled = false;
+    
+    // Resume position
+    if (resumePosition && resumePosition >= RESUME_THRESHOLD) {
+        videoElement.currentTime = resumePosition;
+        lastPingPosition = Math.floor(resumePosition / 10) * 10 - 10;
+    }
+    
+    // Play event
+    videoElement.addEventListener('play', async () => {
+        console.log('▶️ Video started playing (native)');
+        isPlaying = true;
+        const currentTime = Math.floor(videoElement.currentTime || 0);
+        await sendVideoEvent('VIDEO_PLAY', 'external', currentTime, videoDuration, courseId, classId);
+    });
+    
+    // Pause event
+    videoElement.addEventListener('pause', () => {
+        console.log('⏸️ Video paused (native)');
+        isPlaying = false;
+    });
+    
+    // Ended event
+    videoElement.addEventListener('ended', async () => {
+        if (videoCompletedHandled) return;
+        console.log('🏁 Video ended (native)');
+        videoCompletedHandled = true;
+        isPlaying = false;
+        await sendVideoEvent('VIDEO_COMPLETE', 'external', videoDuration, videoDuration, courseId, classId);
+        await refreshSignals(courseId);
+        updateUIWithoutVideoReset();
+    });
+    
+    // Periodic ping while playing
+    videoTrackingInterval = setInterval(async () => {
+        if (!isPlaying) return;
+        
+        const currentTime = Math.floor(videoElement.currentTime || 0);
+        const pingPosition = Math.floor(currentTime / 10) * 10;
+        
+        if (pingPosition !== lastPingPosition && pingPosition >= 10) {
+            await sendVideoEvent('VIDEO_PING', 'external', currentTime, videoDuration, courseId, classId);
+            lastPingPosition = pingPosition;
+        }
+    }, 10000);
+    
+    log.info('video', 'Native video tracking setup complete');
+}
+
+/**
  * Setup video tracking for a step
  * @param {number} stepIndex - The step index
  * @param {number} resumePosition - Optional position to resume from (GAP-102)
@@ -34,21 +89,28 @@ export function setupVideoTracking(stepIndex, resumePosition = null) {
     // Stop any existing tracking
     stopVideoTracking();
     
-    // Find the video iframe for this step
+    // Find the video iframe or native video element for this step
     const iframe = document.getElementById(`video-player-${stepIndex}`);
     if (!iframe) {
-        log.debug('video', 'No video iframe found for step', { stepIndex });
+        log.debug('video', 'No video player found for step', { stepIndex });
         return;
     }
     
     const videoId = iframe.dataset.videoId;
+    const videoUrl = iframe.dataset.videoUrl;
     const videoDuration = parseInt(iframe.dataset.videoDuration) || 300;
     const courseId = iframe.dataset.courseId;
     const classId = iframe.dataset.classId;
     
-    log.info('video', 'Setting up video tracking', { stepIndex, videoId, videoDuration, resumePosition });
+    log.info('video', 'Setting up video tracking', { stepIndex, videoId, videoUrl, videoDuration, resumePosition });
     
-    // Use Cloudflare Stream SDK to get player instance
+    // For external video URLs (native HTML5 video tag)
+    if (videoUrl && iframe.tagName === 'VIDEO') {
+        setupNativeVideoTracking(iframe, videoDuration, courseId, classId, resumePosition);
+        return;
+    }
+    
+    // For Cloudflare Stream (iframe)
     if (typeof Stream === 'undefined') {
         log.error('video', 'Cloudflare Stream SDK not loaded');
         return;

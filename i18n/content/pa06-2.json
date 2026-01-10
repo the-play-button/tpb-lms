@@ -1,0 +1,125 @@
+{
+  "source_lang": "en",
+  "course": {
+    "id": "pa06-2",
+    "name": "How to Write Complete Digital SOMs",
+    "description": "Complete methodology to create high-quality digital SOMs that serve as both KMS and LMS with videos, drawings and metadata"
+  },
+  "classes": [
+    {
+      "id": "step01-preparation",
+      "name": "STEP 01: Preparation (Before Writing)"
+    },
+    {
+      "id": "step02-create-structure",
+      "name": "STEP 02: Create the Structure"
+    },
+    {
+      "id": "step03-fill-metadata",
+      "name": "STEP 03: Fill in Metadata (YAML Header)"
+    },
+    {
+      "id": "step04-write-why",
+      "name": "STEP 04: Write the WHY (2+ Perspectives)"
+    },
+    {
+      "id": "step05-clarify-what",
+      "name": "STEP 05: Clarify the WHAT (Through Contrast)"
+    },
+    {
+      "id": "step06-define-who-when",
+      "name": "STEP 06: Define WHO & WHEN"
+    },
+    {
+      "id": "step07-write-how",
+      "name": "STEP 07: Write the HOW (Operational Core)"
+    },
+    {
+      "id": "step08-1-video",
+      "name": "STEP 08.1: Video (Create only if beneficial)"
+    },
+    {
+      "id": "step08-2-drawings",
+      "name": "STEP 08.2: Drawings (Create only for complex workflows)"
+    },
+    {
+      "id": "step08-3-references",
+      "name": "STEP 08.3: References"
+    },
+    {
+      "id": "step09-validation-quizzes",
+      "name": "STEP 09: Write the Validation Checklist & Quizzes"
+    },
+    {
+      "id": "step10-notes-references",
+      "name": "STEP 10: Add Notes and References"
+    },
+    {
+      "id": "step11-review-publish",
+      "name": "STEP 11: Review, Validate and Publish"
+    },
+    {
+      "id": "step12-convert-distribute",
+      "name": "STEP 12: Convert and Distribute (For Non-Technical Users)"
+    },
+    {
+      "id": "step13-pruning-archiving",
+      "name": "STEP 13: Pruning & Maintenance (Weekly)"
+    }
+  ],
+  "translations": {
+    "fr": {
+      "course": {
+        "name": "Comment Rédiger des SOMs Numériques Complets",
+        "description": "Méthodologie complète pour créer des SOMs numériques de haute qualité servant à la fois de KMS et de LMS avec vidéos, schémas et métadonnées."
+      },
+      "classes": {
+        "step01-preparation": {
+          "name": "ÉTAPE 01 : Préparation (Avant la Rédaction)"
+        },
+        "step02-create-structure": {
+          "name": "ÉTAPE 02 : Créer la Structure"
+        },
+        "step03-fill-metadata": {
+          "name": "ÉTAPE 03 : Remplir les Métadonnées (En-tête YAML)"
+        },
+        "step04-write-why": {
+          "name": "ÉTAPE 04 : Rédiger le POURQUOI (2+ Perspectives)"
+        },
+        "step05-clarify-what": {
+          "name": "ÉTAPE 05 : Clarifier le QUOI (Par Contraste)"
+        },
+        "step06-define-who-when": {
+          "name": "ÉTAPE 06 : Définir le QUI et le QUAND"
+        },
+        "step07-write-how": {
+          "name": "ÉTAPE 07 : Rédiger le COMMENT (Cœur Opérationnel)"
+        },
+        "step08-1-video": {
+          "name": "ÉTAPE 08.1 : Vidéo (Créer seulement si bénéfique)"
+        },
+        "step08-2-drawings": {
+          "name": "ÉTAPE 08.2 : Schémas (Créer seulement pour les workflows complexes)"
+        },
+        "step08-3-references": {
+          "name": "ÉTAPE 08.3 : Références"
+        },
+        "step09-validation-quizzes": {
+          "name": "ÉTAPE 09 : Rédiger la Checklist de Validation et les Quiz"
+        },
+        "step10-notes-references": {
+          "name": "ÉTAPE 10 : Ajouter Notes et Références"
+        },
+        "step11-review-publish": {
+          "name": "ÉTAPE 11 : Relecture, Validation et Publication"
+        },
+        "step12-convert-distribute": {
+          "name": "ÉTAPE 12 : Convertir et Distribuer (Pour Utilisateurs Non-Techniques)"
+        },
+        "step13-pruning-archiving": {
+          "name": "ÉTAPE 13 : Élagage et Maintenance (Hebdomadaire)"
+        }
+      }
+    }
+  }
+}

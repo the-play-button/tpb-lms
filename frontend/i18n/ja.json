@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "TPB Academy",
+    "loading": "読み込み中...",
+    "error": "エラーが発生しました"
+  },
+  "nav": {
+    "next": "次へ",
+    "prev": "前へ",
+    "finish": "完了",
+    "continue": "続ける",
+    "restart": "最初から"
+  },
+  "header": {
+    "myProgress": "進捗状況",
+    "myBadges": "バッジ",
+    "leaderboard": "ランキング",
+    "days": "日",
+    "level": "レベル"
+  },
+  "welcome": {
+    "title": "TPB Academyへようこそ",
+    "subtitle": "モジュールを選択して学習を開始してください。",
+    "videosWatched": "視聴した動画",
+    "quizzesPassed": "合格したクイズ",
+    "somsCompleted": "完了したSOMs"
+  },
+  "course": {
+    "step": "ステップ",
+    "of": "/",
+    "noContent": "このステップのコンテンツはありません。",
+    "linearProgression": "線形進行：戻ることはできません。",
+    "completeStep": "続行する前にこのステップを完了する必要があります。",
+    "videoLocked": "クイズ後は動画にアクセスできません。",
+    "watchVideo": "動画を90%以上視聴"
+  },
+  "quiz": {
+    "title": "確認クイズ",
+    "start": "クイズを開始",
+    "locked": "ロック中",
+    "unlocked": "解除済み",
+    "passed": "クイズ合格",
+    "unlockMessage": "クイズを解除するには動画を90%以上視聴してください。",
+    "warning": "注意 - 1回のみ",
+    "warningDetail": "このクイズは1回しか挑戦できません。",
+    "passQuiz": "クイズに合格する"
+  },
+  "requirements": {
+    "title": "「次へ」を解除するには："
+  },
+  "badge": {
+    "unlocked": "バッジ獲得！",
+    "earned": "おめでとうございます！",
+    "continue": "続ける",
+    "locked": "バッジロック中"
+  },
+  "leaderboard": {
+    "title": "ランキング",
+    "week": "週間",
+    "month": "月間",
+    "allTime": "全期間",
+    "empty": "ランキングはありません"
+  },
+  "endScreen": {
+    "congrats": "おめでとうございます！",
+    "completed": "モジュール完了",
+    "earnedXP": "獲得XP",
+    "xpPoints": "XP",
+    "nextModule": "次のモジュール",
+    "backToHome": "ホームに戻る"
+  },
+  "mobile": {
+    "parcours": "コース",
+    "content": "レッスン",
+    "badges": "バッジ"
+  },
+  "debug": {
+    "title": "デバッグコンソール",
+    "resetProgress": "進捗をリセット",
+    "confirmReset": "すべての進捗をリセットしてもよろしいですか？",
+    "resetSuccess": "進捗がリセットされました"
+  },
+  "userMenu": {
+    "logout": "ログアウト",
+    "admin": "管理",
+    "settings": "設定"
+  },
+  "errors": {
+    "loadFailed": "読み込み失敗",
+    "saveFailed": "保存失敗",
+    "networkError": "ネットワークエラー",
+    "unauthorized": "認証されていません",
+    "notFound": "見つかりません"
+  }
+}

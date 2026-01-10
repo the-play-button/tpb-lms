@@ -6,11 +6,14 @@
  */
 
 import { copyDebugInfoToClipboard } from './collector.js';
+import { togglePanel } from './panel.js';
 
 // showToast is exposed globally by components/toast.js
 const showToast = (...args) => window.showToast?.(...args);
 
 let fabElement = null;
+let clickCount = 0;
+let clickTimer = null;
 
 /**
  * Create and mount the debug FAB
@@ -45,9 +48,29 @@ export function initDebugFab() {
 }
 
 /**
- * Handle FAB click
+ * Handle FAB click - single click copies info, double click opens panel
  */
-async function handleFabClick() {
+function handleFabClick() {
+    clickCount++;
+    
+    if (clickCount === 1) {
+        // Wait to see if it's a double-click
+        clickTimer = setTimeout(async () => {
+            clickCount = 0;
+            await handleSingleClick();
+        }, 250);
+    } else if (clickCount === 2) {
+        // Double-click: open debug panel
+        clearTimeout(clickTimer);
+        clickCount = 0;
+        togglePanel();
+    }
+}
+
+/**
+ * Handle single click - copy debug info
+ */
+async function handleSingleClick() {
     // Add visual feedback
     fabElement.classList.add('debug-fab--loading');
     
@@ -60,7 +83,7 @@ async function handleFabClick() {
             fabElement.classList.add('debug-fab--success');
             setTimeout(() => fabElement.classList.remove('debug-fab--success'), 1500);
             
-            showToast('📋 Infos copiées ! Collez dans votre message au support.', 'success');
+            showToast('📋 Infos copiées ! Double-clic pour console debug.', 'success');
             
             // Log for debugging
             console.log('[Debug] Info copied to clipboard:', result.data);

@@ -170,11 +170,15 @@
     flex: 1;
 }
 
-.warning-text strong {
+.warning-text > strong:first-child {
     color: var(--warning);
     font-size: 1.1rem;
     display: block;
     margin-bottom: var(--space-sm);
+}
+
+.warning-text p strong {
+    color: var(--text-primary);
 }
 
 .warning-text p {

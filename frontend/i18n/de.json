@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "TPB Academy",
+    "loading": "Wird geladen...",
+    "error": "Ein Fehler ist aufgetreten"
+  },
+  "nav": {
+    "next": "Weiter",
+    "prev": "Zurück",
+    "finish": "Beenden",
+    "continue": "Fortfahren",
+    "restart": "Neu starten"
+  },
+  "header": {
+    "myProgress": "Mein Fortschritt",
+    "myBadges": "Meine Abzeichen",
+    "leaderboard": "Rangliste",
+    "days": "Tage",
+    "level": "Stufe"
+  },
+  "welcome": {
+    "title": "Willkommen bei TPB Academy",
+    "subtitle": "Wählen Sie ein Modul, um mit dem Lernen zu beginnen.",
+    "videosWatched": "Videos angesehen",
+    "quizzesPassed": "Quiz bestanden",
+    "somsCompleted": "SOMs abgeschlossen"
+  },
+  "course": {
+    "step": "Schritt",
+    "of": "/",
+    "noContent": "Kein Inhalt für diesen Schritt verfügbar.",
+    "linearProgression": "Lineare Progression: Sie können nicht zurückgehen.",
+    "completeStep": "Sie müssen diesen Schritt abschließen, bevor Sie fortfahren.",
+    "videoLocked": "Video ist nach dem Quiz nicht mehr zugänglich.",
+    "watchVideo": "Video zu 90%+ ansehen"
+  },
+  "quiz": {
+    "title": "Validierungs-Quiz",
+    "start": "Quiz starten",
+    "locked": "Gesperrt",
+    "unlocked": "Entsperrt",
+    "passed": "Quiz bestanden",
+    "unlockMessage": "Sehen Sie das Video zu mindestens 90%, um das Quiz freizuschalten.",
+    "warning": "Achtung - Nur ein Versuch",
+    "warningDetail": "Sie haben nur einen Versuch für dieses Quiz.",
+    "passQuiz": "Quiz bestehen"
+  },
+  "requirements": {
+    "title": "Um \"Weiter\" freizuschalten:"
+  },
+  "badge": {
+    "unlocked": "Abzeichen Freigeschaltet!",
+    "earned": "Herzlichen Glückwunsch!",
+    "continue": "Fortfahren",
+    "locked": "Abzeichen gesperrt"
+  },
+  "leaderboard": {
+    "title": "Rangliste",
+    "week": "Woche",
+    "month": "Monat",
+    "allTime": "Gesamt",
+    "empty": "Keine Rangliste verfügbar"
+  },
+  "endScreen": {
+    "congrats": "Herzlichen Glückwunsch!",
+    "completed": "Modul abgeschlossen",
+    "earnedXP": "Sie haben verdient",
+    "xpPoints": "XP",
+    "nextModule": "Nächstes Modul",
+    "backToHome": "Zurück zur Startseite"
+  },
+  "mobile": {
+    "parcours": "Kurse",
+    "content": "Lektion",
+    "badges": "Abzeichen"
+  },
+  "debug": {
+    "title": "Debug-Konsole",
+    "resetProgress": "Fortschritt zurücksetzen",
+    "confirmReset": "Sind Sie sicher, dass Sie Ihren gesamten Fortschritt zurücksetzen möchten?",
+    "resetSuccess": "Fortschritt zurückgesetzt"
+  },
+  "userMenu": {
+    "logout": "Abmelden",
+    "admin": "Admin",
+    "settings": "Einstellungen"
+  },
+  "errors": {
+    "loadFailed": "Laden fehlgeschlagen",
+    "saveFailed": "Speichern fehlgeschlagen",
+    "networkError": "Netzwerkfehler",
+    "unauthorized": "Nicht autorisiert",
+    "notFound": "Nicht gefunden"
+  }
+}

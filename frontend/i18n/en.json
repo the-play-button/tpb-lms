@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "TPB Academy",
+    "loading": "Loading...",
+    "error": "An error occurred"
+  },
+  "nav": {
+    "next": "Next",
+    "prev": "Previous",
+    "finish": "Finish",
+    "continue": "Continue",
+    "restart": "Restart"
+  },
+  "header": {
+    "myProgress": "My Progress",
+    "myBadges": "My Badges",
+    "leaderboard": "Leaderboard",
+    "days": "days",
+    "level": "Level"
+  },
+  "welcome": {
+    "title": "Welcome to TPB Academy",
+    "subtitle": "Select a module to start learning.",
+    "videosWatched": "Videos watched",
+    "quizzesPassed": "Quizzes passed",
+    "somsCompleted": "SOMs completed"
+  },
+  "course": {
+    "step": "Step",
+    "of": "/",
+    "noContent": "No content available for this step.",
+    "linearProgression": "Linear progression: you cannot go back.",
+    "completeStep": "You must complete this step before continuing.",
+    "videoLocked": "Video is no longer accessible after the quiz.",
+    "watchVideo": "Watch video to 90%+"
+  },
+  "quiz": {
+    "title": "Validation Quiz",
+    "start": "Start Quiz",
+    "locked": "Locked",
+    "unlocked": "Unlocked",
+    "passed": "Quiz passed",
+    "unlockMessage": "Watch the video to at least 90% to unlock the quiz.",
+    "warning": "Warning - One attempt only",
+    "warningDetail": "You will only have one attempt for this quiz.",
+    "passQuiz": "Pass the quiz"
+  },
+  "requirements": {
+    "title": "To unlock \"Next\":"
+  },
+  "badge": {
+    "unlocked": "Badge Unlocked!",
+    "earned": "Congratulations!",
+    "continue": "Continue",
+    "locked": "Badge locked"
+  },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "week": "Week",
+    "month": "Month",
+    "allTime": "All Time",
+    "empty": "No leaderboard available"
+  },
+  "endScreen": {
+    "congrats": "Congratulations!",
+    "completed": "Module completed",
+    "earnedXP": "You earned",
+    "xpPoints": "XP",
+    "nextModule": "Next module",
+    "backToHome": "Back to home"
+  },
+  "mobile": {
+    "parcours": "Courses",
+    "content": "Lesson",
+    "badges": "Badges"
+  },
+  "debug": {
+    "title": "Debug Console",
+    "resetProgress": "Reset progress",
+    "confirmReset": "Are you sure you want to reset all your progress?",
+    "resetSuccess": "Progress reset"
+  },
+  "userMenu": {
+    "logout": "Logout",
+    "admin": "Admin",
+    "settings": "Settings"
+  },
+  "errors": {
+    "loadFailed": "Failed to load",
+    "saveFailed": "Failed to save",
+    "networkError": "Network error",
+    "unauthorized": "Unauthorized",
+    "notFound": "Not found"
+  }
+}

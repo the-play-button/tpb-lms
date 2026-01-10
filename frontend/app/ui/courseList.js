@@ -26,7 +26,7 @@ export function renderCourseList() {
         
         return `
             <li>
-                <a href="#" class="${statusClass} ${activeClass}".trim() data-som-id="${course.id}">
+                <a href="#" class="${statusClass} ${activeClass}" data-som-id="${course.id}">
                     <span class="course-title">${course.title}</span>
                     <span class="course-badges">
                         ${masteryBadge}

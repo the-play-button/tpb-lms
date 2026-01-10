@@ -126,3 +126,244 @@
     }
 }
 
+/* ================================================
+   Debug Panel
+   ================================================ */
+
+.debug-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.debug-panel--open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.debug-panel__backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.debug-panel__content {
+    position: relative;
+    background: var(--bg-card, #fff);
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    overflow: hidden;
+    transform: translateY(20px);
+    transition: transform 0.2s ease;
+}
+
+.debug-panel--open .debug-panel__content {
+    transform: translateY(0);
+}
+
+.debug-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border, #e5e5e5);
+    background: var(--bg-secondary, #f9f9f9);
+}
+
+.debug-panel__header h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary, #333);
+}
+
+.debug-panel__close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--text-secondary, #666);
+    padding: 0.25rem;
+    line-height: 1;
+    transition: color 0.15s;
+}
+
+.debug-panel__close:hover {
+    color: var(--text-primary, #333);
+}
+
+.debug-panel__body {
+    padding: 1.25rem;
+    overflow-y: auto;
+    max-height: calc(80vh - 60px);
+}
+
+.debug-panel__section {
+    margin-bottom: 1.5rem;
+}
+
+.debug-panel__section:last-child {
+    margin-bottom: 0;
+}
+
+.debug-panel__section h4 {
+    margin: 0 0 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary, #666);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.debug-panel__section--muted {
+    padding: 0.75rem;
+    background: var(--bg-secondary, #f5f5f5);
+    border-radius: 8px;
+}
+
+.debug-panel__section--muted p {
+    margin: 0;
+    font-size: 0.75rem;
+    color: var(--text-muted, #888);
+    line-height: 1.4;
+}
+
+.debug-panel__section--muted p + p {
+    margin-top: 0.25rem;
+}
+
+.debug-panel__info {
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary, #666);
+}
+
+.debug-panel__info strong {
+    color: var(--text-primary, #333);
+}
+
+.debug-panel__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Debug buttons */
+.debug-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border: 1px solid var(--border, #ddd);
+    border-radius: 8px;
+    background: var(--bg-card, #fff);
+    color: var(--text-primary, #333);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.debug-btn:hover {
+    background: var(--bg-secondary, #f5f5f5);
+    border-color: var(--border-hover, #ccc);
+}
+
+.debug-btn--warning {
+    background: #fef3c7;
+    border-color: #f59e0b;
+    color: #92400e;
+}
+
+.debug-btn--warning:hover {
+    background: #fde68a;
+}
+
+.debug-btn--danger {
+    background: #fee2e2;
+    border-color: #ef4444;
+    color: #991b1b;
+}
+
+.debug-btn--danger:hover {
+    background: #fecaca;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .debug-panel__content {
+        background: #1a1a1a;
+    }
+    
+    .debug-panel__header {
+        background: #222;
+        border-color: #333;
+    }
+    
+    .debug-panel__header h3 {
+        color: #eee;
+    }
+    
+    .debug-panel__close {
+        color: #888;
+    }
+    
+    .debug-panel__close:hover {
+        color: #eee;
+    }
+    
+    .debug-panel__section h4 {
+        color: #888;
+    }
+    
+    .debug-panel__section--muted {
+        background: #222;
+    }
+    
+    .debug-panel__info {
+        color: #aaa;
+    }
+    
+    .debug-panel__info strong {
+        color: #eee;
+    }
+    
+    .debug-btn {
+        background: #222;
+        border-color: #444;
+        color: #eee;
+    }
+    
+    .debug-btn:hover {
+        background: #333;
+    }
+    
+    .debug-btn--warning {
+        background: #78350f;
+        border-color: #f59e0b;
+        color: #fde68a;
+    }
+    
+    .debug-btn--danger {
+        background: #7f1d1d;
+        border-color: #ef4444;
+        color: #fecaca;
+    }
+}

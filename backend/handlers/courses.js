@@ -2,10 +2,60 @@
  * Courses Handler
  * 
  * Uses lms_course and lms_class (Unified.to aligned).
+ * Supports multi-language via ?lang= parameter.
  * Refactored for reduced complexity.
  */
 
 import { jsonResponse } from '../cors.js';
+
+// ============================================
+// Translation helpers
+// ============================================
+
+/**
+ * Load translations for a content item from D1
+ * @param {object} env - Cloudflare env with DB binding
+ * @param {string} contentType - 'course' or 'class'
+ * @param {string} contentId - Content ID
+ * @param {string} lang - Target language code
+ * @returns {Promise<object>} Map of field -> translated value
+ */
+async function loadTranslations(env, contentType, contentId, lang) {
+    const result = await env.DB.prepare(`
+        SELECT field, value FROM translations 
+        WHERE content_type = ? AND content_id = ? AND lang = ?
+    `).bind(contentType, contentId, lang).all();
+    
+    const map = {};
+    for (const row of result.results || []) {
+        map[row.field] = row.value;
+    }
+    return map;
+}
+
+/**
+ * Apply translations to an object
+ * @param {object} obj - Object to translate
+ * @param {object} translations - Map of field -> value
+ * @returns {object} Object with translated fields
+ */
+function applyTranslations(obj, translations) {
+    if (!translations || Object.keys(translations).length === 0) {
+        return obj;
+    }
+    
+    const result = { ...obj };
+    for (const [field, value] of Object.entries(translations)) {
+        // Handle both 'name' and 'title' (some places use title)
+        if (field === 'name' && result.title !== undefined) {
+            result.title = value;
+        }
+        if (result[field] !== undefined) {
+            result[field] = value;
+        }
+    }
+    return result;
+}
 
 // ============================================
 // Helper functions
@@ -80,9 +130,12 @@ function processClasses(classes) {
 
 /**
  * GET /api/courses
+ * Supports ?lang= parameter for translations
  */
 export async function listCourses(request, env, userContext) {
     const userId = userContext.contact?.id || userContext.employee?.id;
+    const url = new URL(request.url);
+    const lang = url.searchParams.get('lang');
     
     const courses = await env.DB.prepare(`
         SELECT id, name, description, categories_json, is_private
@@ -99,7 +152,7 @@ export async function listCourses(request, env, userContext) {
                 `).bind(userId, course.id).first()
             ]);
             
-            return {
+            let result = {
                 id: course.id,
                 title: course.name,
                 description: course.description,
@@ -108,6 +161,14 @@ export async function listCourses(request, env, userContext) {
                 total_steps: stepCount?.count || 0,
                 progress: { videos_completed: progress?.videos_completed || 0, quizzes_passed: progress?.quizzes_passed || 0 }
             };
+            
+            // Apply translations if lang is specified
+            if (lang) {
+                const translations = await loadTranslations(env, 'course', course.id, lang);
+                result = applyTranslations(result, translations);
+            }
+            
+            return result;
         })
     );
     
@@ -116,9 +177,12 @@ export async function listCourses(request, env, userContext) {
 
 /**
  * GET /api/courses/:id
+ * Supports ?lang= parameter for translations
  */
 export async function getCourse(request, env, userContext, courseId) {
     const userId = userContext.contact?.id || userContext.employee?.id;
+    const url = new URL(request.url);
+    const lang = url.searchParams.get('lang');
     
     const course = await env.DB.prepare(`
         SELECT * FROM lms_course WHERE id = ? AND is_active = 1
@@ -138,14 +202,32 @@ export async function getCourse(request, env, userContext, courseId) {
         WHERE c.course_id = ? ORDER BY c.order_index ASC
     `).bind(userId, courseId).all();
     
-    const enrichedClasses = processClasses(classes.results || []);
+    let enrichedClasses = processClasses(classes.results || []);
+    
+    // Apply translations if lang is specified
+    let courseTitle = course.name;
+    let courseDescription = course.description;
+    
+    if (lang) {
+        // Translate course
+        const courseTranslations = await loadTranslations(env, 'course', courseId, lang);
+        if (courseTranslations.name) courseTitle = courseTranslations.name;
+        if (courseTranslations.description) courseDescription = courseTranslations.description;
+        
+        // Translate classes
+        enrichedClasses = await Promise.all(enrichedClasses.map(async (cls) => {
+            const classTranslations = await loadTranslations(env, 'class', cls.id, lang);
+            return applyTranslations(cls, classTranslations);
+        }));
+    }
+    
     const completedSteps = enrichedClasses.filter(c => c.step_completed).length;
     const currentStep = enrichedClasses.filter(c => c.step_completed).length;
 
     return jsonResponse({
         id: course.id,
-        title: course.name,
-        description: course.description,
+        title: courseTitle,
+        description: courseDescription,
         categories: course.categories_json ? JSON.parse(course.categories_json) : [],
         classes: enrichedClasses,
         progress: {

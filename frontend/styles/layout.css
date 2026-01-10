@@ -56,6 +56,13 @@
     background: var(--bg-tertiary);
     border-radius: var(--radius-full);
     border: 1px solid var(--border);
+    /* hover-halo effect */
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.stat:hover {
+    box-shadow: var(--hover-glow);
+    background-color: var(--hover-bg);
 }
 
 .stat-icon {
@@ -78,6 +85,8 @@
 
 .stat.xp .stat-value {
     color: var(--accent-secondary);
+    /* text glow for emphasis */
+    text-shadow: 0 0 12px var(--accent-glow);
 }
 
 .user-avatar {
@@ -135,11 +144,13 @@
     color: var(--text-secondary);
     text-decoration: none;
     border-radius: var(--radius-md);
-    transition: all 0.2s;
+    /* hover-halo effect */
+    transition: box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
 
 .nav-list a:hover {
-    background: var(--bg-tertiary);
+    box-shadow: var(--hover-glow);
+    background-color: var(--hover-bg);
     color: var(--text-primary);
 }
 
@@ -177,13 +188,15 @@
     justify-content: center;
     font-size: 1.5rem;
     border: 1px solid var(--border);
-    transition: all 0.2s;
+    /* hover-halo effect */
+    transition: box-shadow 0.2s ease, background-color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
     cursor: pointer;
 }
 
 .badge-item:hover {
     transform: scale(1.1);
     border-color: var(--accent-primary);
+    box-shadow: var(--hover-glow);
 }
 
 .badge-item.locked {
@@ -209,11 +222,134 @@
 .lms-content {
     padding: var(--space-xl);
     overflow-y: auto;
-    background: var(--bg-primary);
+    /* Radial glow background (iampam style) */
+    background: radial-gradient(
+        circle at center,
+        var(--bg-secondary) 0%,
+        var(--bg-secondary) 10%,
+        var(--bg-primary) 60%,
+        var(--bg-primary) 100%
+    );
 }
 
 .som-viewer {
     max-width: 900px;
     margin: 0 auto;
+}
+
+/* =============================================
+   Language Selector
+   ============================================= */
+
+.lang-selector {
+    position: relative;
+    margin-right: var(--space-md);
+}
+
+.lang-btn {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-size: 0.875rem;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.lang-btn:hover {
+    box-shadow: var(--hover-glow);
+    background-color: var(--hover-bg);
+}
+
+.lang-flag {
+    font-size: 1rem;
+}
+
+.lang-code {
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.lang-arrow {
+    font-size: 0.6rem;
+    opacity: 0.6;
+    transition: transform 0.2s ease;
+}
+
+.lang-dropdown.open + .lang-btn .lang-arrow,
+.lang-selector:has(.lang-dropdown.open) .lang-arrow {
+    transform: rotate(180deg);
+}
+
+.lang-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: var(--space-xs);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    min-width: 140px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    z-index: 1000;
+}
+
+.lang-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.lang-option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 0.875rem;
+    text-align: left;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.lang-option:first-child {
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+.lang-option:last-child {
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+}
+
+.lang-option:hover {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.lang-option.active {
+    background: var(--accent-primary);
+    color: white;
+}
+
+.lang-option .lang-flag {
+    font-size: 1.1rem;
+}
+
+.lang-option .lang-label {
+    flex: 1;
+}
+
+.lang-option .lang-check {
+    font-size: 0.75rem;
 }
 

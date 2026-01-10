@@ -1,0 +1,95 @@
+{
+  "app": {
+    "title": "TPB Academy",
+    "loading": "加载中...",
+    "error": "发生错误"
+  },
+  "nav": {
+    "next": "下一步",
+    "prev": "上一步",
+    "finish": "完成",
+    "continue": "继续",
+    "restart": "重新开始"
+  },
+  "header": {
+    "myProgress": "我的进度",
+    "myBadges": "我的徽章",
+    "leaderboard": "排行榜",
+    "days": "天",
+    "level": "等级"
+  },
+  "welcome": {
+    "title": "欢迎来到TPB Academy",
+    "subtitle": "选择一个模块开始学习。",
+    "videosWatched": "已观看视频",
+    "quizzesPassed": "已通过测验",
+    "somsCompleted": "已完成SOMs"
+  },
+  "course": {
+    "step": "步骤",
+    "of": "/",
+    "noContent": "此步骤没有可用内容。",
+    "linearProgression": "线性进度：无法返回。",
+    "completeStep": "您必须完成此步骤才能继续。",
+    "videoLocked": "测验后无法访问视频。",
+    "watchVideo": "观看视频至90%+"
+  },
+  "quiz": {
+    "title": "验证测验",
+    "start": "开始测验",
+    "locked": "已锁定",
+    "unlocked": "已解锁",
+    "passed": "测验通过",
+    "unlockMessage": "观看视频至少90%以解锁测验。",
+    "warning": "注意 - 只有一次机会",
+    "warningDetail": "此测验只有一次尝试机会。",
+    "passQuiz": "通过测验"
+  },
+  "requirements": {
+    "title": "解锁\"下一步\"需要："
+  },
+  "badge": {
+    "unlocked": "徽章已解锁！",
+    "earned": "恭喜！",
+    "continue": "继续",
+    "locked": "徽章已锁定"
+  },
+  "leaderboard": {
+    "title": "排行榜",
+    "week": "本周",
+    "month": "本月",
+    "allTime": "总计",
+    "empty": "暂无排行榜"
+  },
+  "endScreen": {
+    "congrats": "恭喜！",
+    "completed": "模块已完成",
+    "earnedXP": "您获得了",
+    "xpPoints": "XP",
+    "nextModule": "下一模块",
+    "backToHome": "返回首页"
+  },
+  "mobile": {
+    "parcours": "课程",
+    "content": "课时",
+    "badges": "徽章"
+  },
+  "debug": {
+    "title": "调试控制台",
+    "resetProgress": "重置进度",
+    "confirmReset": "您确定要重置所有进度吗？",
+    "resetSuccess": "进度已重置"
+  },
+  "userMenu": {
+    "logout": "登出",
+    "admin": "管理",
+    "settings": "设置"
+  },
+  "errors": {
+    "loadFailed": "加载失败",
+    "saveFailed": "保存失败",
+    "networkError": "网络错误",
+    "unauthorized": "未授权",
+    "notFound": "未找到"
+  }
+}

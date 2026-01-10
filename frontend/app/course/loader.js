@@ -2,12 +2,14 @@
  * Course Loader
  * 
  * Handles loading course data and signals from API.
+ * Supports multi-language via ?lang= parameter.
  */
 
 import { api } from '../api.js';
 import { getState, setState } from '../state.js';
 import { stopVideoTracking } from '../video/tracking.js';
 import { renderCurrentStep } from './renderer.js';
+import { getLanguage } from '../../i18n/index.js';
 
 /**
  * Load a course by ID
@@ -35,8 +37,9 @@ export async function loadCourse(courseId, initialStepIndex = null) {
         const welcomeScreen = document.getElementById('welcomeScreen');
         if (welcomeScreen) welcomeScreen.style.display = 'none';
         
-        // Fetch course details
-        const course = await api(`/courses/${courseId}`);
+        // Fetch course details (with language for translations)
+        const lang = getLanguage();
+        const course = await api(`/courses/${courseId}?lang=${lang}`);
         setState('courseData', course);
         
         // Fetch signals for this course
