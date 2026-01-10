@@ -2,6 +2,17 @@
 
 Learning Management System infrastructure built on Cloudflare (Stream, D1, Workers).
 
+# 0 entropy LMS
+Attention, notre LMS est focus 0
+
+Si on regarde skool. LMS hyper minimaliste. Il a pourtant plus de feature que nous.
+
+Mais attention, nous on a un parti pris : l'hyper linéarité. Donc si plein de features de skool sont pas là c'est pour une raison : sur skool on peut glaner dans le cours, faire les modules qui nous intéresse. Nous on force clairement le chemin. Tu peux aller plus vite sur le cours, mais il n'y a qu'une direction et tu ne peux pas revenir en arrière.
+
+L'étudiant doit prendre le LMS exactement comme un cours avec un professeur -> il prend des notes lui-même, n'a pas un cours 2x (ça s'appelle redoubler et c'est painful dans la réalité !). 
+
+La réalité des LMS actuels est qu'ils ont double fonction : LMS et KMS. On regarde un cours, puis on sait que les ressources sont là. Nos cours auront la même tête que les LMS actuels, mais on force la linéarité. Et comme dans un vrai cours à l'école, à la fin ils ont accès aux ressources dans le KMS (l'équivalent d'un polycopié numérique). Voir ils ont d'avances les ressources, peu importe. Tu vois l'idée ? On sépare bien les concerns nous au final
+
 ## Architecture
 
 ```
