@@ -23,6 +23,14 @@ VAULT_API_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
 # - VAULT_CLIENT_ID (LMS app client ID for vault-api)
 # - VAULT_CLIENT_SECRET (LMS app client secret for vault-api)
 #
+# GITHUB CONTENT ACCESS:
+# - GITHUB_PAT_TPB_REPOS: Fine-grained PAT for reading private TPB repos
+#   - Create at: https://github.com/settings/tokens?type=beta
+#   - Resource owner: the-play-button (organization)
+#   - Repository access: Select repos (pa06-kms-setup, etc.)
+#   - Permissions: Contents (Read-only)
+#   - Set with: npx wrangler secret put GITHUB_PAT_TPB_REPOS
+#
 # MIGRATED TO VAULT (fetch via VaultClient at runtime):
 # - apps/lms/tally_webhook_secret (legacy: secret dans URL pour autoriser les webhooks Tally)
 # - apps/lms/tally_signing_secret (recommandé: vérifie Tally-Signature HMAC-SHA256)

@@ -69,14 +69,19 @@ function storeBreadcrumb(breadcrumb) {
 }
 
 /**
- * Store a network error
+ * Store a network error with full context
  */
 function storeNetworkError(error) {
     storage.networkErrors.unshift({
         url: error.url,
         method: error.method || 'GET',
         status: error.status || null,
+        statusText: error.statusText || null,
         error: error.error || null,
+        // Full response body (truncated)
+        body: error.body || null,
+        // Request options that were used
+        requestOptions: error.requestOptions || null,
         timestamp: new Date().toISOString()
     });
     
@@ -214,12 +219,20 @@ export function initDebugCollector() {
         return originalConsoleError.apply(console, args);
     };
     
-    // 4. Patch fetch
+    // 4. Patch fetch - capture full request/response context
     originalFetch = window.fetch;
     window.fetch = async function(input, init) {
         const url = typeof input === 'string' ? input : input.url;
         const method = init?.method || 'GET';
         const startTime = Date.now();
+        
+        // Capture request options (sanitized - no secrets)
+        const requestOptions = init ? {
+            method: init.method,
+            credentials: init.credentials,
+            mode: init.mode,
+            headers: init.headers ? Object.keys(init.headers) : null
+        } : { method: 'GET' };
         
         try {
             const response = await originalFetch.apply(this, arguments);
@@ -231,12 +244,29 @@ export function initDebugCollector() {
                 data: `${method} ${url} → ${response.status} (${duration}ms)`
             });
             
-            // Store network errors (4xx, 5xx)
+            // Store network errors (4xx, 5xx) with response body
             if (!response.ok) {
+                // Clone response to read body without consuming it
+                const clone = response.clone();
+                let body = null;
+                try {
+                    const text = await clone.text();
+                    // Truncate and try to parse as JSON for readability
+                    if (text.length <= 1000) {
+                        try { body = JSON.parse(text); } 
+                        catch { body = text; }
+                    } else {
+                        body = text.slice(0, 1000) + '... [truncated]';
+                    }
+                } catch { /* ignore */ }
+                
                 storeNetworkError({
                     url: url,
                     method: method,
-                    status: response.status
+                    status: response.status,
+                    statusText: response.statusText,
+                    body: body,
+                    requestOptions: requestOptions
                 });
             }
             
@@ -252,7 +282,8 @@ export function initDebugCollector() {
             storeNetworkError({
                 url: url,
                 method: method,
-                error: error.message
+                error: error.message,
+                requestOptions: requestOptions
             });
             
             throw error;

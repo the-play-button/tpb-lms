@@ -1,5 +1,5 @@
 # LMS Frontend Worker with Auth Token Endpoint
-# Deploy with: npx wrangler deploy -c frontend/wrangler.toml
+# Deploy with: npx wrangler deploy (from frontend-on-cf-worker directory)
 
 name = "lms-viewer"
 main = "_worker.js"

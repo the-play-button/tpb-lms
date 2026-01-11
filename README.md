@@ -1,6 +1,43 @@
-# LMS Execution Scripts
+# TPB LMS
 
 Learning Management System infrastructure built on Cloudflare (Stream, D1, Workers).
+
+## Unified.to Conformity
+
+This LMS is 100% aligned with the [unified.to](https://unified.to) ERD for the LMS domain.
+
+### Naming Conventions
+
+| Prefix | Meaning | Example |
+|--------|---------|---------|
+| (none) | Unified.to standard field | `name`, `media_json` |
+| `sys_` | Technical/internal column | `sys_order_index` |
+| `v_` | View/derived table | `v_user_progress` |
+| `tpb_` | TPB extension (in `raw_json`) | `raw_json.tpb_step_type` |
+
+### Content Architecture
+
+Content is served from GitHub (unified.to REPOSITORY domain):
+
+```
+lms_course.raw_json.tpb_intro_url → https://raw.githubusercontent.com/.../SOM_xxx.md
+lms_class.media[].url → https://raw.githubusercontent.com/.../STEP01.md
+```
+
+### Media Types (unified.to aligned)
+
+| Type | Description | URL Format |
+|------|-------------|------------|
+| `VIDEO` | Cloudflare Stream | `https://iframe.cloudflarestream.com/{id}` |
+| `DOCUMENT` | Markdown content | `https://raw.githubusercontent.com/...` |
+| `WEB` | External web (Tally) | `https://tally.so/r/{id}` |
+
+### Enrollment System
+
+Users can have max 3 active enrollments. Endpoints:
+- `POST /api/courses/:id/enroll` - Enroll in course
+- `POST /api/courses/:id/abandon` - Abandon course
+- `GET /api/enrollments` - List user enrollments
 
 # 0 entropy LMS
 Attention, notre LMS est focus 0

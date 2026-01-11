@@ -28,12 +28,12 @@ function parseStep(row, currentStep) {
     return {
         class_id: row.class_id,
         name: row.name,
-        order_index: row.order_index,
+        order_index: row.sys_order_index,  // Keep API field name for backward compat
         has_quiz: hasQuiz,
         video_completed: videoCompleted,
         quiz_passed: quizPassed,
         step_completed: stepCompleted,
-        can_access: row.order_index <= currentStep + 1
+        can_access: row.sys_order_index <= currentStep + 1
     };
 }
 
@@ -70,13 +70,13 @@ export async function getCourseSignalsHandler(request, env, userContext, courseI
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
     
     const result = await env.DB.prepare(`
-        SELECT c.id as class_id, c.name, c.order_index, c.media_json,
+        SELECT c.id as class_id, c.name, c.sys_order_index, c.media_json,
             COALESCE(p.video_completed, 0) as video_completed,
             COALESCE(p.quiz_passed, 0) as quiz_passed,
             p.video_max_position_sec, p.video_duration_sec
         FROM lms_class c
         LEFT JOIN v_user_progress p ON p.class_id = c.id AND p.user_id = ?
-        WHERE c.course_id = ? ORDER BY c.order_index
+        WHERE c.course_id = ? ORDER BY c.sys_order_index
     `).bind(userId, courseId).all();
     
     // First pass: parse steps and track currentStep + video positions
@@ -85,7 +85,7 @@ export async function getCourseSignalsHandler(request, env, userContext, courseI
     
     const steps = (result.results || []).map(row => {
         const step = parseStep(row, currentStep);
-        if (step.step_completed) currentStep = Math.max(currentStep, row.order_index);
+        if (step.step_completed) currentStep = Math.max(currentStep, row.sys_order_index);
         
         // GAP-102: Track video positions for resume
         if (row.video_max_position_sec > 0) {
@@ -156,7 +156,7 @@ export async function getStepSignals(request, env, userContext, courseId, classI
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
     
     const [cls, progress] = await Promise.all([
-        env.DB.prepare(`SELECT id, name, order_index, media_json FROM lms_class WHERE id = ? AND course_id = ?`)
+        env.DB.prepare(`SELECT id, name, sys_order_index, media_json FROM lms_class WHERE id = ? AND course_id = ?`)
             .bind(classId, courseId).first(),
         env.DB.prepare(`SELECT * FROM v_user_progress WHERE user_id = ? AND class_id = ?`)
             .bind(userId, classId).first()
@@ -174,7 +174,7 @@ export async function getStepSignals(request, env, userContext, courseId, classI
     return jsonResponse({
         class_id: classId,
         class_name: cls.name,
-        order_index: cls.order_index,
+        order_index: cls.sys_order_index,  // Keep API field name for backward compat
         has_quiz: hasQuiz,
         video_completed: videoCompleted,
         quiz_passed: quizPassed,

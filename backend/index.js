@@ -19,6 +19,7 @@ import { getCorsHeaders, jsonResponse } from './cors.js';
 import { authenticateRequest } from './auth.js';
 import { getSession } from './handlers/auth.js';
 import { listCourses, getCourse } from './handlers/courses.js';
+import { listEnrollments, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus, updateProgress } from './handlers/enrollment.js';
 import { listBadges } from './handlers/badges.js';
 import { handleEvent, handleBatchEvents } from './handlers/events.js';
 import { getStepSignals, getCourseSignalsHandler, resetCourseSignals } from './handlers/signals.js';
@@ -31,6 +32,7 @@ import { getAdminStats } from './handlers/admin.js';
 import { listSpaces, getSpace, getPage } from './handlers/kms.js';
 import { getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview } from './handlers/translations.js';
 import { getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary.js';
+import { getGitHubContent, listGitHubDirectory } from './handlers/content.js';
 import { addTraceId, withTraceHeader } from './middleware/trace.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
@@ -108,6 +110,16 @@ export default {
             // Tally webhook - uses extracted auth logic
             if (path === '/api/tally-webhook' && request.method === 'POST') {
                 return await handleTallyWithAuth(request, url, env);
+            }
+            
+            // GitHub content proxy - public for now (DEBUG - token auth issue)
+            // TODO: Re-enable auth after fixing vault token scopes
+            if (path === '/api/content/github' && request.method === 'GET') {
+                return await getGitHubContent(request, env, null);
+            }
+            
+            if (path === '/api/content/github/tree' && request.method === 'GET') {
+                return await listGitHubDirectory(request, env, null);
             }
             
             // ============================================
@@ -208,6 +220,19 @@ export default {
             }
             
             // ------------------------------------------
+            // ENROLLMENTS
+            // ------------------------------------------
+            if (path === '/api/enrollments' && request.method === 'GET') {
+                return await listEnrollments(request, env, userContext);
+            }
+            
+            // PATCH /api/enrollments/:id/progress
+            const enrollmentProgressMatch = path.match(/^\/api\/enrollments\/([^/]+)\/progress$/);
+            if (enrollmentProgressMatch && request.method === 'PATCH') {
+                return await updateProgress(request, env, userContext, enrollmentProgressMatch[1]);
+            }
+            
+            // ------------------------------------------
             // COURSES (formerly SOMs)
             // ------------------------------------------
             if ((path === '/api/courses' || path === '/api/soms') && request.method === 'GET') {
@@ -218,6 +243,30 @@ export default {
             const courseMatch = path.match(/^\/api\/(courses|soms)\/([^/]+)$/);
             if (courseMatch && request.method === 'GET') {
                 return await getCourse(request, env, userContext, courseMatch[2]);
+            }
+            
+            // POST /api/courses/:id/enroll
+            const enrollMatch = path.match(/^\/api\/courses\/([^/]+)\/enroll$/);
+            if (enrollMatch && request.method === 'POST') {
+                return await enrollInCourse(request, env, userContext, enrollMatch[1]);
+            }
+            
+            // POST /api/courses/:id/abandon
+            const abandonMatch = path.match(/^\/api\/courses\/([^/]+)\/abandon$/);
+            if (abandonMatch && request.method === 'POST') {
+                return await abandonCourse(request, env, userContext, abandonMatch[1]);
+            }
+            
+            // POST /api/courses/:id/complete
+            const completeMatch = path.match(/^\/api\/courses\/([^/]+)\/complete$/);
+            if (completeMatch && request.method === 'POST') {
+                return await completeCourse(request, env, userContext, completeMatch[1]);
+            }
+            
+            // GET /api/courses/:id/enrollment
+            const enrollmentStatusMatch = path.match(/^\/api\/courses\/([^/]+)\/enrollment$/);
+            if (enrollmentStatusMatch && request.method === 'GET') {
+                return await getEnrollmentStatus(request, env, userContext, enrollmentStatusMatch[1]);
             }
             
             // ------------------------------------------
@@ -238,6 +287,11 @@ export default {
             if (kmsPageMatch && request.method === 'GET') {
                 return await getPage(request, env, userContext, kmsPageMatch[1]);
             }
+            
+            // ------------------------------------------
+            // CONTENT - GitHub content proxy
+            // (Moved to PUBLIC section - see above)
+            // ------------------------------------------
             
             // ------------------------------------------
             // TRANSLATIONS - Multi-language support

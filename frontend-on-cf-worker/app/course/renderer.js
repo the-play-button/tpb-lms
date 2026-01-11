@@ -3,10 +3,16 @@
  * 
  * Renders current step content, video, quiz UI.
  * Refactored for reduced complexity (split into smaller functions).
+ * 
+ * Unified.to Conformity:
+ * - Reads step_type from raw_json.tpb_step_type
+ * - Fetches content from media[].url for DOCUMENT type
  */
 
 import { getState } from '../state.js';
 import { setupVideoTracking, getResumePosition } from '../video/tracking.js';
+import { fetchMarkdown, getDocumentUrl } from '../content/loader.js';
+import { showContentStepConfirmation } from './confirmModal.js';
 
 /**
  * Get media from class by type
@@ -14,6 +20,14 @@ import { setupVideoTracking, getResumePosition } from '../video/tracking.js';
 function getMediaByType(cls, type, extraCheck = null) {
     const media = cls.media || [];
     return media.find(m => m.type === type && (!extraCheck || m[extraCheck]));
+}
+
+/**
+ * Get document media (DOCUMENT type with url)
+ */
+function getDocumentMedia(cls) {
+    const media = cls.media || [];
+    return media.find(m => m.type === 'DOCUMENT' && m.url);
 }
 
 /**
@@ -121,7 +135,19 @@ function renderVideoContent(ctx) {
         </div>
     ` : '';
     
-    // Has markdown content
+    // Check for DOCUMENT media (unified.to conformity - content served from GitHub)
+    const documentMedia = getDocumentMedia(cls);
+    if (documentMedia) {
+        // Content will be loaded async, return placeholder
+        return `
+            <div id="document-content-${cls.id}" class="document-content loading">
+                <div class="loading-spinner"></div>
+                <p>Chargement du contenu...</p>
+            </div>
+        `;
+    }
+    
+    // Has inline markdown content (legacy - tpb_content_md)
     if (cls.content_md) {
         let html = marked.parse(cls.content_md);
         
@@ -203,6 +229,35 @@ function renderVideoContent(ctx) {
     return cls.description 
         ? `<p class="step-description">${cls.description}</p>` 
         : '<p>Aucun contenu disponible pour cette étape.</p>';
+}
+
+/**
+ * Load document content async after render
+ */
+async function loadDocumentContent(cls) {
+    const documentMedia = getDocumentMedia(cls);
+    if (!documentMedia) return;
+    
+    const container = document.getElementById(`document-content-${cls.id}`);
+    if (!container) return;
+    
+    try {
+        const markdown = await fetchMarkdown(documentMedia.url);
+        const html = marked.parse(markdown);
+        
+        container.classList.remove('loading');
+        container.innerHTML = `<div class="markdown-body">${html}</div>`;
+    } catch (error) {
+        console.error('Failed to load document content:', error);
+        container.classList.remove('loading');
+        container.classList.add('error');
+        container.innerHTML = `
+            <div class="error-message">
+                <p>Erreur lors du chargement du contenu.</p>
+                <button onclick="window.location.reload()">Réessayer</button>
+            </div>
+        `;
+    }
 }
 
 /**
@@ -347,6 +402,12 @@ export function renderCurrentStep() {
     // GAP-102: Get resume position for this class and setup video tracking
     const resumePosition = getResumePosition(cls.id);
     setupVideoTracking(stepIndex, resumePosition);
+    
+    // Load document content async if present
+    const documentMedia = getDocumentMedia(cls);
+    if (documentMedia) {
+        loadDocumentContent(cls);
+    }
 }
 
 /**

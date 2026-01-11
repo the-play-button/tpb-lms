@@ -88,18 +88,21 @@ function enrichClass(cls, currentStep) {
     const quizPassed = cls.quiz_passed === 1;
     const stepCompleted = videoCompleted && (!hasQuiz || quizPassed);
     
+    // Use sys_order_index (unified.to conformity)
+    const orderIndex = cls.sys_order_index ?? 0;
+    
     return {
         id: cls.id,
         name: cls.name,
         description: cls.description,
-        order_index: cls.order_index,
+        order_index: orderIndex, // Keep same API field name for backward compat
         media: media.map(m => enrichMedia(m, videoCompleted, quizPassed, cls)),
         step_type: raw.tpb_step_type || 'CONTENT',
         content_md: raw.tpb_content_md || '',
         video_completed: videoCompleted,
         quiz_passed: quizPassed,
         step_completed: stepCompleted,
-        can_access: cls.order_index <= currentStep + 1
+        can_access: orderIndex <= currentStep + 1
     };
 }
 
@@ -109,10 +112,12 @@ function enrichClass(cls, currentStep) {
 function processClasses(classes) {
     let currentStep = 0;
     const enrichedClasses = classes.map(cls => {
+        // Use sys_order_index (unified.to conformity)
+        const orderIndex = cls.sys_order_index ?? 0;
         const enriched = enrichClass(cls, currentStep);
         if (enriched.step_completed) {
-            currentStep = Math.max(currentStep, cls.order_index);
-            enriched.can_access = cls.order_index <= currentStep + 1;
+            currentStep = Math.max(currentStep, orderIndex);
+            enriched.can_access = orderIndex <= currentStep + 1;
         }
         return enriched;
     });
@@ -192,14 +197,16 @@ export async function getCourse(request, env, userContext, courseId) {
         return jsonResponse({ error: 'Course not found' }, 404, request);
     }
     
+    // Use sys_order_index (unified.to conformity)
     const classes = await env.DB.prepare(`
-        SELECT c.id, c.name, c.description, c.media_json, c.order_index, c.raw_json,
+        SELECT c.id, c.name, c.description, c.media_json, 
+            c.sys_order_index, c.raw_json,
             COALESCE(p.video_completed, 0) as video_completed,
             COALESCE(p.quiz_passed, 0) as quiz_passed,
             p.video_max_position_sec, p.video_duration_sec
         FROM lms_class c
         LEFT JOIN v_user_progress p ON p.class_id = c.id AND p.user_id = ?
-        WHERE c.course_id = ? ORDER BY c.order_index ASC
+        WHERE c.course_id = ? ORDER BY c.sys_order_index ASC
     `).bind(userId, courseId).all();
     
     let enrichedClasses = processClasses(classes.results || []);

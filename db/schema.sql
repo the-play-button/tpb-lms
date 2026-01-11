@@ -2,10 +2,22 @@
 -- TPB LMS D1 Schema - Unified.to Aligned
 -- ============================================
 -- Architecture:
--- - Tables alignées sur Unified.to (CRM, KMS, LMS, HRIS)
+-- - Tables alignées sur Unified.to (CRM, KMS, LMS, HRIS, REPOSITORY)
 -- - Extension gamification (2 tables: badge, award)
 -- - Extension event-sourcing (2 tables: lms_event, lms_signal)
+-- - Extension enrollment (1 table: lms_enrollment)
 -- - Vues monitoring (observabilité uniquement)
+--
+-- Unified.to Conformity (v2.0):
+-- - Colonnes sans préfixe = exactement unified.to
+-- - sys_* = colonnes techniques internes (ex: sys_order_index)
+-- - v_* = vues/tables dérivées (recalculables)
+-- - raw_json.tpb_* = extensions TPB documentées
+--
+-- Content Architecture:
+-- - Contenu servi depuis GitHub (domaine REPOSITORY)
+-- - media[].url pointe vers raw.githubusercontent.com
+-- - raw_json.tpb_intro_url = URL du SOM index
 -- ============================================
 
 -- ============================================
@@ -124,25 +136,76 @@ CREATE TABLE IF NOT EXISTS lms_course (
 );
 
 -- LmsClass (lessons/modules/steps within courses)
+-- Unified.to conformity: uses sys_order_index, raw_json for extensions
 CREATE TABLE IF NOT EXISTS lms_class (
     id TEXT PRIMARY KEY,
     course_id TEXT NOT NULL REFERENCES lms_course(id),
     name TEXT NOT NULL,
     description TEXT,
-    media_json TEXT,           -- [{"url":"...", "type":"VIDEO", "stream_id":"..."}]
+    
+    -- Unified.to: media array with url, type, name
+    -- Types: VIDEO (url=iframe), DOCUMENT (url=raw github), WEB (url=tally)
+    media_json TEXT,           -- [{"url":"...", "type":"VIDEO|DOCUMENT|WEB", "name":"..."}]
+    
     instructor_ids_json TEXT,
     student_ids_json TEXT,
-    order_index INTEGER DEFAULT 0,
+    
+    -- Technical column (not in unified.to, hence sys_ prefix)
+    sys_order_index INTEGER DEFAULT 0,
+    
+    -- DEPRECATED: Use raw_json.tpb_step_type instead
     step_type TEXT DEFAULT 'VIDEO',  -- VIDEO, QUIZ, CONTENT, MIXED
-    content_md TEXT,           -- Markdown content for step
+    
+    -- DEPRECATED: Use media[].url of type DOCUMENT instead
+    content_md TEXT,           -- Markdown content for step (legacy)
+    
     languages_json TEXT,
+    
+    -- Extensions TPB in raw_json:
+    -- - tpb_step_type: VIDEO | QUIZ | CONTENT | MIXED
+    -- - tpb_section: Optional section grouping
+    -- - tpb_content_md: Legacy inline markdown (deprecated)
     raw_json TEXT,
+    
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
 );
 
 CREATE INDEX IF NOT EXISTS idx_lms_class_course ON lms_class(course_id);
-CREATE INDEX IF NOT EXISTS idx_lms_class_order ON lms_class(course_id, order_index);
+CREATE INDEX IF NOT EXISTS idx_lms_class_order ON lms_class(course_id, sys_order_index);
+
+-- ============================================
+-- EXTENSION: LMS ENROLLMENT (TPB)
+-- ============================================
+-- Tracks user enrollments with limit enforcement (max 3 active)
+
+CREATE TABLE IF NOT EXISTS lms_enrollment (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    course_id TEXT NOT NULL,
+    
+    -- Status: active (learning), completed (finished), abandoned (dropped)
+    status TEXT NOT NULL DEFAULT 'active' CHECK (status IN ('active', 'completed', 'abandoned')),
+    
+    -- Progress tracking
+    current_class_id TEXT,
+    completed_classes_count INTEGER DEFAULT 0,
+    
+    -- Timestamps
+    started_at TEXT DEFAULT (datetime('now')),
+    completed_at TEXT,
+    abandoned_at TEXT,
+    last_activity_at TEXT DEFAULT (datetime('now')),
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now')),
+    
+    UNIQUE(user_id, course_id),
+    FOREIGN KEY (course_id) REFERENCES lms_course(id)
+);
+
+CREATE INDEX IF NOT EXISTS idx_lms_enrollment_user ON lms_enrollment(user_id, status);
+CREATE INDEX IF NOT EXISTS idx_lms_enrollment_course ON lms_enrollment(course_id);
+CREATE INDEX IF NOT EXISTS idx_lms_enrollment_active ON lms_enrollment(status) WHERE status = 'active';
 
 -- ============================================
 -- UNIFIED.TO: HRIS (HR/Employees)
