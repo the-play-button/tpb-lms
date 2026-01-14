@@ -103,15 +103,16 @@ function getStepContext() {
         videoId: videoInfo.streamId,
         videoUrl: videoInfo.videoUrl,
         videoDuration: videoInfo.duration,
-        quizMedia: getMediaByType(cls, 'QUIZ', 'tally_form_id'),
+        // Quiz can be type 'QUIZ' (legacy) or 'WEB' (unified.to conformity) with tally_form_id
+        quizMedia: getMediaByType(cls, 'QUIZ', 'tally_form_id') || getMediaByType(cls, 'WEB', 'tally_form_id'),
         ...signalData
     };
 }
 
 /**
- * Render video/content section
+ * Render video section (from media array)
  */
-function renderVideoContent(ctx) {
+function renderVideoSection(ctx) {
     const { cls, stepIndex, currentCourse, videoId, videoUrl, videoDuration, quizPassed, hasQuiz } = ctx;
     
     // Quiz passed - video locked
@@ -124,8 +125,13 @@ function renderVideoContent(ctx) {
         `;
     }
     
-    // Speed control button (GAP-101) - shown when video is present
-    const speedControl = (videoId || videoUrl || cls.content_md) ? `
+    // No video in media array
+    if (!videoId && !videoUrl) {
+        return '';
+    }
+    
+    // Speed control button
+    const speedControl = `
         <div class="video-controls" style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem; gap: 0.5rem;">
             <button class="speed-btn" onclick="window.cycleSpeed()" 
                     title="Changer la vitesse de lecture (0.5x - 2x)"
@@ -133,55 +139,14 @@ function renderVideoContent(ctx) {
                 <span id="speed-display">1x</span> ⚡
             </button>
         </div>
-    ` : '';
+    `;
     
-    // Check for DOCUMENT media (unified.to conformity - content served from GitHub)
-    const documentMedia = getDocumentMedia(cls);
-    if (documentMedia) {
-        // Content will be loaded async, return placeholder
-        return `
-            <div id="document-content-${cls.id}" class="document-content loading">
-                <div class="loading-spinner"></div>
-                <p>Chargement du contenu...</p>
-            </div>
-        `;
-    }
-    
-    // Has inline markdown content (legacy - tpb_content_md)
-    if (cls.content_md) {
-        let html = marked.parse(cls.content_md);
-        
-        // Get current language for CC sync
-        const currentLang = window.i18n?.getLanguage?.() || 'fr';
-        
-        // Transform Stream URLs to iframes with CC enabled
-        html = html.replace(
-            /<p><a href="https:\/\/customer-[\w]+\.cloudflarestream\.com\/([\w]+)\/iframe"[^>]*>[^<]+<\/a><\/p>/g,
-            `<div class="video-container">
-                <iframe src="https://iframe.cloudflarestream.com/$1?preload=metadata&defaultTextTrack=${currentLang}"
-                    style="border: none; width: 100%; aspect-ratio: 16/9; border-radius: 8px;"
-                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                    allowfullscreen="true" id="video-player-${stepIndex}"
-                    data-video-id="$1" data-video-duration="${videoDuration}"
-                    data-course-id="${currentCourse}" data-class-id="${cls.id}">
-                </iframe>
-            </div>`
-        );
-        
-        // Remove dead .md links
-        html = html.replace(/<p>(<a href="[^"]*\.md">[^<]+<\/a>[\s|]*)+<\/p>/g, '');
-        
-        return speedControl + html;
-    }
-    
-    // Has Cloudflare Stream video
+    // Cloudflare Stream video
     if (videoId) {
-        // Get current language for CC sync
         const currentLang = window.i18n?.getLanguage?.() || 'fr';
-        // Build iframe URL with CC enabled and synced to UI language
         const streamParams = new URLSearchParams({
             preload: 'metadata',
-            defaultTextTrack: currentLang  // Auto-enable CC in UI language
+            defaultTextTrack: currentLang
         });
         
         return `
@@ -195,13 +160,11 @@ function renderVideoContent(ctx) {
                     data-course-id="${currentCourse}" data-class-id="${cls.id}">
                 </iframe>
             </div>
-            ${cls.description ? `<p class="step-description">${cls.description}</p>` : ''}
         `;
     }
     
-    // Has external video URL (Descript, YouTube, Vimeo, etc.)
+    // External video URL (Descript, YouTube, Vimeo, etc.)
     if (videoUrl) {
-        // Get subtitle tracks from media
         const subtitles = getSubtitleTracks(cls);
         const currentLang = window.i18n?.getLanguage?.() || 'fr';
         
@@ -221,14 +184,49 @@ function renderVideoContent(ctx) {
                     Your browser does not support the video tag.
                 </video>
             </div>
-            ${cls.description ? `<p class="step-description">${cls.description}</p>` : ''}
         `;
     }
     
-    // No content
-    return cls.description 
-        ? `<p class="step-description">${cls.description}</p>` 
-        : '<p>Aucun contenu disponible pour cette étape.</p>';
+    return '';
+}
+
+/**
+ * Render document content section (placeholder for async load)
+ */
+function renderDocumentSection(cls) {
+    const documentMedia = getDocumentMedia(cls);
+    if (!documentMedia) {
+        return cls.description 
+            ? `<p class="step-description">${cls.description}</p>` 
+            : '';
+    }
+    
+    return `
+        <div id="document-content-${cls.id}" class="document-content loading">
+            <div class="loading-spinner"></div>
+            <p>Chargement du contenu...</p>
+        </div>
+    `;
+}
+
+/**
+ * Render video/content section (combines video + document)
+ */
+function renderVideoContent(ctx) {
+    const { cls } = ctx;
+    
+    // Render video from media array (if present)
+    const videoHtml = renderVideoSection(ctx);
+    
+    // Render document content placeholder (if present)
+    const documentHtml = renderDocumentSection(cls);
+    
+    // Combine: video first, then document content
+    if (videoHtml && documentHtml) {
+        return videoHtml + '<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">' + documentHtml;
+    }
+    
+    return videoHtml || documentHtml || '<p>Aucun contenu disponible pour cette étape.</p>';
 }
 
 /**
@@ -262,6 +260,7 @@ async function loadDocumentContent(cls) {
 
 /**
  * Render quiz section
+ * Supports both legacy tally_form_id and new tally_form_ids (multi-lang object)
  */
 function renderQuizSection(ctx) {
     const { cls, quizMedia, videoCompleted, quizPassed } = ctx;
@@ -269,7 +268,13 @@ function renderQuizSection(ctx) {
     if (!quizMedia) return '';
     
     const quizName = quizMedia.name || 'Quiz de validation';
-    const formId = quizMedia.tally_form_id;
+    
+    // Support both legacy (single string) and new (object by lang) formats
+    // Pass the entire tally_form_ids object to showQuiz for language resolution
+    const formIds = quizMedia.tally_form_ids || quizMedia.tally_form_id;
+    const formIdsJson = typeof formIds === 'object' 
+        ? JSON.stringify(formIds).replace(/"/g, '&quot;')
+        : `"${formIds}"`;
     
     if (quizPassed) {
         return `
@@ -307,7 +312,7 @@ function renderQuizSection(ctx) {
                     <p>Vous n'aurez qu'<strong>une seule tentative</strong> pour ce quiz.</p>
                 </div>
             </div>
-            <button class="quiz-start-btn" onclick="window.showQuiz('${cls.id}', '${formId}', '${quizName.replace(/'/g, "\\'")}')">
+            <button class="quiz-start-btn" onclick="window.showQuiz('${cls.id}', ${formIdsJson}, '${quizName.replace(/'/g, "\\'")}')">
                 Commencer le quiz
             </button>
             <div id="quiz-container-${cls.id}" class="quiz-container" style="display: none;"></div>

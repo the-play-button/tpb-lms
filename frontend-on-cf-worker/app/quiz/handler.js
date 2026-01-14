@@ -15,9 +15,58 @@ import { refreshUserData } from '../notifications.js';
 let currentQuizInfo = null;
 
 /**
- * Show quiz (triggered by button click)
+ * Resolve the appropriate Tally form ID based on current language.
+ * Supports both legacy single ID (string) and multi-lang (object) formats.
+ * 
+ * @param {string|object} tallyFormIds - Single ID or { lang: id, ... } object
+ * @returns {string|null} - The resolved Tally form ID
  */
-export function showQuiz(classId, tallyFormId, quizName) {
+function resolveTallyFormId(tallyFormIds) {
+    if (!tallyFormIds) return null;
+    
+    // Legacy single string format
+    if (typeof tallyFormIds === 'string') {
+        return tallyFormIds;
+    }
+    
+    // Multi-lang object format: { fr: "xxx", en: "yyy", ... }
+    if (typeof tallyFormIds === 'object') {
+        const lang = window.i18n?.getLanguage?.() || 'fr';
+        
+        // Try current language
+        if (tallyFormIds[lang]) {
+            return tallyFormIds[lang];
+        }
+        
+        // Fallback to English
+        if (tallyFormIds['en']) {
+            return tallyFormIds['en'];
+        }
+        
+        // Fallback to first available
+        const firstId = Object.values(tallyFormIds)[0];
+        return firstId || null;
+    }
+    
+    return null;
+}
+
+/**
+ * Show quiz (triggered by button click)
+ * Supports both legacy single tallyFormId and new tally_form_ids object.
+ * 
+ * @param {string} classId - The class ID
+ * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object
+ * @param {string} quizName - Quiz name for display
+ */
+export function showQuiz(classId, tallyFormIds, quizName) {
+    const tallyFormId = resolveTallyFormId(tallyFormIds);
+    
+    if (!tallyFormId) {
+        alert('Quiz non disponible dans cette langue.');
+        return;
+    }
+    
     const confirmed = confirm(
 `⚠️ ATTENTION - UNE SEULE TENTATIVE
 

@@ -15,26 +15,25 @@ let cachedToken = null;
 let tokenExpiry = 0;
 
 /**
- * Get GitHub token from vault via service account
+ * Get GitHub token from vault via native Bearer token
  * 
- * The LMS uses a service account (VAULT_CLIENT_ID/VAULT_CLIENT_SECRET)
- * to authenticate to the vault and fetch the GitHub PAT.
+ * The LMS uses a native Bearer token (iampam_xxx) to authenticate 
+ * to TPB Bastion and fetch the GitHub PAT.
  * 
  * Token path in vault: infra/github_pat_tpb_repos
  * 
  * Required env vars:
  * - VAULT_API_URL: Vault API endpoint
- * - VAULT_CLIENT_ID: LMS service account client ID
- * - VAULT_CLIENT_SECRET: LMS service account client secret
+ * - VAULT_TOKEN: Native Bearer token (iampam_xxx)
  */
 // #region agent debug wrapper
 async function getGitHubTokenWithDebug(env) {
     const debug = {
         cached: false,
         hasVaultUrl: !!env.VAULT_API_URL,
-        hasClientId: !!env.VAULT_CLIENT_ID,
-        hasClientSecret: !!env.VAULT_CLIENT_SECRET,
-        clientIdPrefix: env.VAULT_CLIENT_ID ? env.VAULT_CLIENT_ID.substring(0, 12) : null,
+        hasVaultToken: !!env.VAULT_TOKEN,
+        hasBackendSecret: !!env.TPBIAMPAM_BACKEND_SECRET_KEY,
+        vaultTokenPrefix: env.VAULT_TOKEN ? env.VAULT_TOKEN.substring(0, 12) : null,
         vaultStatus: null,
         vaultError: null
     };
@@ -45,16 +44,30 @@ async function getGitHubTokenWithDebug(env) {
         return { token: cachedToken, debug };
     }
     
-    if (env.VAULT_API_URL && env.VAULT_CLIENT_ID && env.VAULT_CLIENT_SECRET) {
+    // Use Service Binding if available (bypasses CF Access), otherwise fallback to URL
+    if ((env.BASTION || env.VAULT_API_URL) && (env.VAULT_TOKEN || env.TPBIAMPAM_BACKEND_SECRET_KEY)) {
         try {
-            const vaultUrl = `${env.VAULT_API_URL}/secret/data/infra/github_pat_tpb_repos`;
-            const response = await fetch(vaultUrl, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'CF-Access-Client-Id': env.VAULT_CLIENT_ID,
-                    'CF-Access-Client-Secret': env.VAULT_CLIENT_SECRET
-                }
-            });
+            const secretPath = '/secret/data/infra/github_pat_tpb_repos';
+            
+            // Build auth headers - prefer Bearer token (scoped), fallback to Backend Secret
+            const headers = { 'Content-Type': 'application/json' };
+            if (env.VAULT_TOKEN) {
+                headers['Authorization'] = `Bearer ${env.VAULT_TOKEN}`;
+            }
+            if (env.TPBIAMPAM_BACKEND_SECRET_KEY) {
+                headers['X-Backend-Secret'] = env.TPBIAMPAM_BACKEND_SECRET_KEY;
+            }
+            
+            let response;
+            if (env.BASTION) {
+                // Use Service Binding (direct worker-to-worker, bypasses CF Access)
+                debug.useServiceBinding = true;
+                response = await env.BASTION.fetch(new Request(`https://bastion${secretPath}`, { headers }));
+            } else {
+                // Fallback to public URL (may be blocked by CF Access)
+                const vaultUrl = `${env.VAULT_API_URL}${secretPath}`;
+                response = await fetch(vaultUrl, { headers });
+            }
             
             debug.vaultStatus = response.status;
             
@@ -90,6 +103,31 @@ async function getGitHubTokenWithDebug(env) {
 async function getGitHubToken(env) {
     const result = await getGitHubTokenWithDebug(env);
     return result.token;
+}
+
+/**
+ * Inject i18n language into GitHub path.
+ * Transforms: outputs/SOM_xxx/STEPS/STEP01.md -> outputs/SOM_xxx/i18n/{lang}/STEPS/STEP01.md
+ * 
+ * @param {string} path - Original file path
+ * @param {string} lang - Target language code
+ * @returns {string} - Localized path
+ */
+function injectI18nIntoPath(path, lang) {
+    if (!lang) return path;
+    
+    // For paths with /STEPS/ - insert i18n before STEPS
+    if (path.includes('/STEPS/')) {
+        return path.replace('/STEPS/', `/i18n/${lang}/STEPS/`);
+    }
+    
+    // For main SOM file - insert i18n before the filename
+    const match = path.match(/^(.+\/SOM_[^/]+\/)(.+)$/);
+    if (match) {
+        return `${match[1]}i18n/${lang}/${match[2]}`;
+    }
+    
+    return path;
 }
 
 /**
@@ -143,6 +181,7 @@ function parseGitHubUrl(url) {
  * Query params:
  * - url: Full GitHub raw URL or owner/repo/path format
  * - owner, repo, branch, path: Alternative to url
+ * - lang: Optional language code to inject i18n path (e.g., ?lang=en)
  */
 export async function getGitHubContent(request, env, userContext) {
     const url = new URL(request.url);
@@ -151,8 +190,9 @@ export async function getGitHubContent(request, env, userContext) {
     
     // Parse URL parameter
     const urlParam = url.searchParams.get('url');
+    const langParam = url.searchParams.get('lang');
     // #region agent log H3
-    console.log('[DEBUG H3] urlParam:', urlParam);
+    console.log('[DEBUG H3] urlParam:', urlParam, 'lang:', langParam);
     // #endregion
     if (urlParam) {
         const parsed = parseGitHubUrl(decodeURIComponent(urlParam));
@@ -175,8 +215,14 @@ export async function getGitHubContent(request, env, userContext) {
         return jsonResponse({ 
             error: 'Missing required parameters',
             required: 'url OR (owner, repo, path)',
-            optional: 'branch (defaults to main)'
+            optional: 'branch (defaults to main), lang (for i18n)'
         }, 400, request);
+    }
+    
+    // Inject i18n into path if lang parameter is provided
+    if (langParam) {
+        path = injectI18nIntoPath(path, langParam);
+        console.log('[DEBUG] i18n path:', path);
     }
     
     // Get GitHub token

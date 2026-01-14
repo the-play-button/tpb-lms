@@ -11,6 +11,11 @@ binding = "DB"
 database_name = "lms-db"
 database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 
+# Service Binding to Bastion (bypasses CF Access for worker-to-worker calls)
+[[services]]
+binding = "BASTION"
+service = "tpb-vault-infra"
+
 # Cloudflare Access configuration
 # Only team domain needed - signature verification is sufficient, no audience check
 [vars]
@@ -54,6 +59,11 @@ name = "lms-api"
 binding = "DB"
 database_name = "lms-db"
 database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
+
+# Service Binding to Bastion for production
+[[env.production.services]]
+binding = "BASTION"
+service = "tpb-vault-infra"
 
 # Cloudflare Access configuration for production
 [env.production.vars]

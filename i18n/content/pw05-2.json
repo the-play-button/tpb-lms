@@ -32,17 +32,43 @@
     }
   ],
   "translations": {
-    "en": {
+    "de": {
       "course": {
-        "name": "WGE Integration Program",
-        "description": "Integration program for new Wonder Grip Europe employees. Discover company values, meet the team, learn processes and tools."
+        "name": "# Einarbeitungsparcours WGE",
+        "description": "# Einarbeitungsprogramm für neue Mitarbeiter von Wonder Grip Europe. Entdeckung der Werte, des Teams, der Prozesse und der Tools."
       },
       "classes": {
         "step01-valeurs-wge": {
-          "name": "STEP 01: WGE Values"
+          "name": "STEP 01: Die Werte von WGE"
         },
         "step02-vie-entreprise": {
-          "name": "STEP 02: Life at the Company"
+          "name": "STEP 02: Das Leben im Unternehmen"
+        },
+        "step03-process-operations": {
+          "name": "SCHRITT 03: Prozess & Betrieb"
+        },
+        "step04-it-system": {
+          "name": "SCHRITT 04: IT & Systeme"
+        },
+        "step05-presentation-entreprise": {
+          "name": "STEP 05: Unternehmenspräsentation"
+        },
+        "step06-marche-francais": {
+          "name": "STEP 06: Der französische Markt"
+        }
+      }
+    },
+    "en": {
+      "course": {
+        "name": "WGE Integration Path",
+        "description": "Onboarding journey for new employees at Wonder Grip Europe. Discovering the values, the team, the processes, and the tools."
+      },
+      "classes": {
+        "step01-valeurs-wge": {
+          "name": "STEP 01: The values of WGE"
+        },
+        "step02-vie-entreprise": {
+          "name": "STEP 02: Life in the Company"
         },
         "step03-process-operations": {
           "name": "STEP 03: Process & Operations"
@@ -55,6 +81,84 @@
         },
         "step06-marche-francais": {
           "name": "STEP 06: The French Market"
+        }
+      }
+    },
+    "it": {
+      "course": {
+        "name": "Percorso di integrazione WGE",
+        "description": "Percorso di integrazione per i nuovi collaboratori di Wonder Grip Europe. Scoperta dei valori, del team, dei processi e degli strumenti."
+      },
+      "classes": {
+        "step01-valeurs-wge": {
+          "name": "STEP 01: I valori di WGE"
+        },
+        "step02-vie-entreprise": {
+          "name": "STEP 02: La vita nell'azienda"
+        },
+        "step03-process-operations": {
+          "name": "PASSO 03: Processo & Operazioni"
+        },
+        "step04-it-system": {
+          "name": "STEP 04: IT & Systems"
+        },
+        "step05-presentation-entreprise": {
+          "name": "STEP 05: Presentazione dell'azienda"
+        },
+        "step06-marche-francais": {
+          "name": "STEP 06: Il mercato Francese"
+        }
+      }
+    },
+    "ja": {
+      "course": {
+        "name": "WGEの統合プロセス",
+        "description": "Wonder Grip Europeの新しい従業員のためのオンボーディングプロセス。価値観、チーム、プロセス、ツールの発見。"
+      },
+      "classes": {
+        "step01-valeurs-wge": {
+          "name": "STEP 01: WGEの価値"
+        },
+        "step02-vie-entreprise": {
+          "name": "STEP 02: 企業での生活"
+        },
+        "step03-process-operations": {
+          "name": "ステップ 03: プロセス & オペレーション"
+        },
+        "step04-it-system": {
+          "name": "STEP 04: IT & システム"
+        },
+        "step05-presentation-entreprise": {
+          "name": "STEP 05: 企業の紹介"
+        },
+        "step06-marche-francais": {
+          "name": "STEP 06: フランス市場"
+        }
+      }
+    },
+    "zh": {
+      "course": {
+        "name": "WGE 入职流程",
+        "description": "Wonder Grip Europe 新员工的入职培训。探索价值观、团队、流程和工具。"
+      },
+      "classes": {
+        "step01-valeurs-wge": {
+          "name": "STEP 01: WGE 的价值观"
+        },
+        "step02-vie-entreprise": {
+          "name": "STEP 02: 企业生活"
+        },
+        "step03-process-operations": {
+          "name": "步骤 03：流程与操作"
+        },
+        "step04-it-system": {
+          "name": "步骤 04：IT & 系统"
+        },
+        "step05-presentation-entreprise": {
+          "name": "STEP 05: 企业介绍"
+        },
+        "step06-marche-francais": {
+          "name": "STEP 06: 法国市场"
         }
       }
     }

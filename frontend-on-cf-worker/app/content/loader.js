@@ -30,6 +30,49 @@ const contentCache = new Map();
 const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
 /**
+ * Strip YAML frontmatter from markdown content
+ * Frontmatter starts with --- and ends with ---
+ */
+function stripFrontmatter(markdown) {
+    const match = markdown.match(/^---\n[\s\S]*?\n---\n?/);
+    if (match) {
+        return markdown.slice(match[0].length);
+    }
+    return markdown;
+}
+
+/**
+ * Clean up markdown content for LMS display
+ * - Removes video URLs (video is rendered separately from media array)
+ * - Removes dead .md navigation links
+ * - Removes "Vidéo" headers followed by cloudflare URLs
+ */
+function cleanMarkdownForLms(markdown) {
+    let cleaned = markdown;
+    
+    // Remove "## Vidéo" section with cloudflare URL (video rendered separately)
+    cleaned = cleaned.replace(/##\s*Vidéo\s*\n+https?:\/\/[^\s]*cloudflarestream\.com[^\s]*/gi, '');
+    
+    // Remove standalone cloudflare stream URLs (plain text or links)
+    cleaned = cleaned.replace(/https?:\/\/(?:customer-[\w]+\.)?cloudflarestream\.com\/[\w]+\/iframe\s*/g, '');
+    cleaned = cleaned.replace(/https?:\/\/iframe\.cloudflarestream\.com\/[\w]+[^\s]*/g, '');
+    
+    // Remove navigation links to .md files (e.g., [← Retour](../index.md) | [Suivant →](STEP02.md))
+    cleaned = cleaned.replace(/\[([^\]]*)\]\([^)]*\.md\)/g, '');
+    // Clean up leftover separators from navigation
+    cleaned = cleaned.replace(/\s*\|\s*\|\s*/g, '');
+    cleaned = cleaned.replace(/^\s*\|\s*$/gm, '');
+    
+    // Remove empty horizontal rules sections
+    cleaned = cleaned.replace(/---\s*\n+---/g, '---');
+    
+    // Remove multiple consecutive blank lines
+    cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+    
+    return cleaned.trim();
+}
+
+/**
  * Check if URL is a GitHub URL (needs proxy for private repos)
  */
 function isGitHubUrl(url) {
@@ -42,6 +85,98 @@ function isGitHubUrl(url) {
 function buildProxyUrl(originalUrl) {
     const encodedUrl = encodeURIComponent(originalUrl);
     return `${API_BASE}/content/github?url=${encodedUrl}`;
+}
+
+/**
+ * Build localized URL for i18n content.
+ * Transforms: /.../STEPS/STEP01.md -> /.../i18n/{lang}/STEPS/STEP01.md
+ * 
+ * @param {string} originalUrl - Original content URL
+ * @param {string} lang - Target language code
+ * @returns {string} - Localized URL
+ */
+function buildLocalizedUrl(originalUrl, lang) {
+    // Only transform URLs that contain /STEPS/ or /outputs/SOM_
+    if (!originalUrl.includes('/STEPS/') && !originalUrl.includes('/outputs/SOM_')) {
+        return originalUrl;
+    }
+    
+    // For URLs with /outputs/SOM_xxx/STEPS/... pattern
+    // Insert i18n/{lang}/ before STEPS/
+    if (originalUrl.includes('/STEPS/')) {
+        return originalUrl.replace('/STEPS/', `/i18n/${lang}/STEPS/`);
+    }
+    
+    // For main SOM file: /outputs/SOM_xxx/SOM_xxx.md
+    // Insert i18n/{lang}/ before SOM_ filename
+    const match = originalUrl.match(/(.+\/outputs\/SOM_[^/]+\/)(.+)$/);
+    if (match) {
+        return `${match[1]}i18n/${lang}/${match[2]}`;
+    }
+    
+    return originalUrl;
+}
+
+/**
+ * Try to fetch content with i18n fallback.
+ * Order: current lang -> en -> original URL
+ * 
+ * @param {string} url - Original content URL
+ * @returns {Promise<{content: string, lang: string, url: string}>}
+ */
+async function fetchContentWithI18nFallback(url) {
+    const currentLang = window.i18n?.getLanguage?.() || 'fr';
+    
+    // Try current language first
+    try {
+        const localizedUrl = buildLocalizedUrl(url, currentLang);
+        const content = await fetchContentDirect(localizedUrl);
+        return { content, lang: currentLang, url: localizedUrl };
+    } catch (e) {
+        console.log(`[content] ${currentLang} not found, trying fallback...`);
+    }
+    
+    // Fallback to English if not already
+    if (currentLang !== 'en') {
+        try {
+            const enUrl = buildLocalizedUrl(url, 'en');
+            const content = await fetchContentDirect(enUrl);
+            return { content, lang: 'en', url: enUrl };
+        } catch (e) {
+            console.log(`[content] en not found, trying original...`);
+        }
+    }
+    
+    // Fallback to original URL (source content)
+    const content = await fetchContentDirect(url);
+    return { content, lang: 'source', url };
+}
+
+/**
+ * Fetch content directly (no i18n fallback).
+ * Used internally by fetchContentWithI18nFallback.
+ */
+async function fetchContentDirect(url) {
+    // Use proxy for GitHub URLs (private repos need auth)
+    const fetchUrl = isGitHubUrl(url) ? buildProxyUrl(url) : url;
+    
+    const headers = {
+        'Accept': 'text/plain, text/markdown, */*'
+    };
+    
+    // Add JWT for proxy requests
+    if (isGitHubUrl(url)) {
+        const token = await getAuthToken();
+        headers['Cf-Access-Jwt-Assertion'] = token;
+    }
+    
+    const response = await fetch(fetchUrl, { headers });
+    
+    if (!response.ok) {
+        throw new Error(`Failed to fetch content: ${response.status}`);
+    }
+    
+    return await response.text();
 }
 
 /**
@@ -96,19 +231,47 @@ export async function fetchContent(url) {
 }
 
 /**
- * Fetch markdown content and resolve relative URLs
+ * Fetch markdown content and resolve relative URLs.
+ * Automatically tries i18n/{lang}/ path with fallback to en, then source.
+ * 
  * @param {string} url - Raw URL to fetch
  * @param {Object} options - Options
  * @param {boolean} options.resolveImages - Resolve relative image URLs (default: true)
+ * @param {boolean} options.useI18n - Use i18n fallback (default: true)
  * @returns {Promise<string>} - Markdown content with resolved URLs
  */
 export async function fetchMarkdown(url, options = {}) {
-    const { resolveImages = true } = options;
+    const { 
+        resolveImages = true, 
+        stripYamlFrontmatter = true, 
+        cleanForLms = true,
+        useI18n = true 
+    } = options;
     
-    let markdown = await fetchContent(url);
+    let markdown;
+    let actualUrl = url;
+    
+    if (useI18n) {
+        // Use i18n fallback: try current lang -> en -> source
+        const result = await fetchContentWithI18nFallback(url);
+        markdown = result.content;
+        actualUrl = result.url;
+    } else {
+        markdown = await fetchContent(url);
+    }
+    
+    // Strip YAML frontmatter (common in SOM markdown files)
+    if (stripYamlFrontmatter) {
+        markdown = stripFrontmatter(markdown);
+    }
+    
+    // Clean up for LMS display (remove video URLs, dead links, etc.)
+    if (cleanForLms) {
+        markdown = cleanMarkdownForLms(markdown);
+    }
     
     if (resolveImages) {
-        markdown = resolveRelativeUrls(markdown, url);
+        markdown = resolveRelativeUrls(markdown, actualUrl);
     }
     
     return markdown;
