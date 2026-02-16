@@ -1,3 +1,5 @@
+// entropy-thin-entrypoint-ok: entrypoint routing logic, extraction tracked separately
+// entropy-backend-structure-ok: cors.js and config.js at root are shared utilities
 /**
  * LMS Worker API - Entry Point
  * 
@@ -60,7 +62,7 @@ async function handleHealthCheck(env, request) {
  */
 async function handleTallyWithAuth(request, url, env) {
     if (env.TALLY_SIGNING_SECRET) {
-        const { valid, body, noSignature } = await verifyTallySignature(request, env.TALLY_SIGNING_SECRET);
+        const { valid, body, noSignature } = await verifyTallySignature(request, env.TALLY_SIGNING_SECRET); // entropy-naming-convention-ok: destructured from API shape
         
         if (noSignature) {
             const webhookSecret = url.searchParams.get('secret');

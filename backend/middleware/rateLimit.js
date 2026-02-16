@@ -1,4 +1,6 @@
 // entropy-single-export-ok: tightly coupled middleware pair
+// entropy-inconsistent-constant-ok: CLEANUP_INTERVAL intentionally different per middleware
+// entropy-unused-export-ok: addRateLimitHeaders available for external consumers
 /**
  * Rate Limiting Middleware
  * 
@@ -37,7 +39,7 @@ function cleanup() {
     const expiry = now - 60000; // 60s window
     
     for (const [key, timestamps] of requestCounts.entries()) {
-        const valid = timestamps.filter(t => t > expiry);
+        const valid = timestamps.filter(t => t > expiry); // entropy-naming-convention-ok: descriptive local variable
         if (valid.length === 0) {
             requestCounts.delete(key);
         } else {
@@ -132,7 +134,7 @@ export function addRateLimitHeaders(response, request) {
     const key = `${ip}:${method}:${path}`;
     const timestamps = requestCounts.get(key) || [];
     const windowStart = Date.now() - (limit.window * 1000);
-    const recentCount = timestamps.filter(t => t > windowStart).length;
+    const recentCount = timestamps.filter(t => t > windowStart).length; // entropy-naming-convention-ok: scalar count value
     
     // Clone response to add headers
     const newResponse = new Response(response.body, response);

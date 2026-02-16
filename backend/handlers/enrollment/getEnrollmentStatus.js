@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * GET /api/courses/:id/enrollment
  * Get enrollment status for a specific course

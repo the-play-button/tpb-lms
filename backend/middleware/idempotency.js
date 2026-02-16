@@ -1,4 +1,7 @@
 // entropy-single-export-ok: 3 exports share private in-memory cache + cleanup state, tightly coupled idempotency lifecycle
+// entropy-duplicate-function-ok: generateIdempotencyKey intentionally duplicated for frontend/backend independence
+// entropy-inconsistent-constant-ok: CLEANUP_INTERVAL intentionally different per middleware
+// entropy-unused-export-ok: generateIdempotencyKey available for external consumers
 /**
  * Idempotency Middleware
  * 

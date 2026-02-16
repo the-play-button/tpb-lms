@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Batch upsert translations (for AI translation engine)
  * POST /translations/batch

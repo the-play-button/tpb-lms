@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * POST /api/courses/:id/complete
  * Mark a course as completed (called internally when all steps are done)

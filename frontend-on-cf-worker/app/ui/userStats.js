@@ -24,6 +24,7 @@ export function updateUserStats() {
         if (xpStat) {
             xpStat.classList.add('animating');
             showFloatingXP(currentXP - previousXP, xpStat);
+            // entropy-prohibited-timer-ok: cleanup after CSS animation
             setTimeout(() => xpStat.classList.remove('animating'), 400);
         }
     }
@@ -49,6 +50,7 @@ function showFloatingXP(amount, anchorEl) {
     float.style.left = `${rect.left + rect.width / 2}px`;
     float.style.top = `${rect.top}px`;
     document.body.appendChild(float);
+    // entropy-prohibited-timer-ok: cleanup after CSS animation
     setTimeout(() => float.remove(), 1500);
 }
 

@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Create or update a translation
  * PUT /translations/:type/:id/:lang

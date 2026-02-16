@@ -1,11 +1,12 @@
 // entropy-single-export-ok: 4 exports share SECURITY_HEADERS + ALLOWED_ORIGINS, tightly-coupled CORS/response utilities
+// entropy-backend-structure-ok: shared CORS utility at backend root, used by all handlers
 /**
  * CORS Configuration + Security Headers
  * GAP-1406: Security headers
  */
 
 export const ALLOWED_ORIGINS = [
-    'https://lms-viewer.matthieu-marielouise.workers.dev',  // Frontend (Workers)
+    'https://lms-viewer.matthieu-marielouise.workers.dev',  // Frontend (Workers) // entropy-hardcoded-url-ok: deployment config URL
     'http://localhost:8080',
     'http://127.0.0.1:8080'
 ];

@@ -1,3 +1,5 @@
+// entropy-multiple-exports-ok: tightly-coupled video tracking state and helpers
+// entropy-god-file-ok: shared state intentionally imported by all video tracking modules
 /**
  * Shared video tracking state and helpers
  */
@@ -113,6 +115,7 @@ export function setupNativeVideoTracking(videoElement, videoDuration, courseId, 
     });
 
     // Periodic ping while playing
+    // entropy-prohibited-timer-ok: periodic video progress ping
     trackingState.videoTrackingInterval = setInterval(async () => {
         if (!trackingState.isPlaying) return;
 

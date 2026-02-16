@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Delete a glossary term
  * DELETE /glossary/:orgId/:termId

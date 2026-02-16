@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * POST /api/courses/:id/abandon
  * Abandon a course enrollment

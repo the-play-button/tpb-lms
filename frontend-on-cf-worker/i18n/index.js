@@ -1,3 +1,4 @@
+// entropy-unused-export-ok: hasTranslation available for external consumers
 /**
  * i18n Module - Internationalization for LMS UI
  * 
@@ -151,5 +152,5 @@ initLanguage();
 
 // Export for global access (optional)
 if (typeof window !== 'undefined') {
-    window.i18n = { t, setLanguage, getLanguage, getSupportedLanguages, initLanguage };
+    window.i18n = { t, setLanguage, getLanguage, getSupportedLanguages, initLanguage }; // entropy-global-pollution-ok: intentional global for non-module scripts // entropy-orphan-global-ok: inline assignment
 }

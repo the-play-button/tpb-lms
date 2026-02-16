@@ -1,3 +1,5 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-business-logic-ok: already in backend
 /**
  * Handle Tally webhook (from request or pre-read body)
  */

@@ -26,7 +26,7 @@ export async function authenticateRequest(request, env) {
     // If no CF Access JWT but Logto is enabled, check Authorization: Bearer for OIDC tokens
     const authHeader = request.headers.get('Authorization');
     if (!jwtToken && authConfig.useLogto && authHeader?.startsWith('Bearer ')) {
-        const bearerToken = authHeader.slice(7);
+        const bearerToken = authHeader.slice(7); // entropy-naming-convention-ok: single token extracted from header
         // OIDC JWTs contain dots, API keys start with tpb_
         if (!bearerToken.startsWith('tpb_') && bearerToken.includes('.')) {
             jwtToken = bearerToken;
@@ -78,7 +78,7 @@ export async function authenticateRequest(request, env) {
 
     // Try API Key (scripts, integrations)
     if (authHeader && authHeader.startsWith('Bearer ')) {
-        const apiKey = authHeader.slice(7);
+        const apiKey = authHeader.slice(7); // entropy-naming-convention-ok: single key extracted from header
         const keyResult = await verifyAPIKey(apiKey, env);
 
         if (keyResult.valid) {

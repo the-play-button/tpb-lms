@@ -1,4 +1,5 @@
 // entropy-single-export-ok: 3 exports (requireAnyRole is alias), tightly-coupled role guard utilities
+// entropy-unused-export-ok: requireAllRoles available for future use
 /**
  * Role Guard Middleware
  * 

@@ -1,4 +1,5 @@
 // entropy-single-export-ok: 2 tightly-coupled content handlers (get file, list directory) sharing GitHub auth and URL parsing
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Content Handler
  *
@@ -10,7 +11,7 @@ import { jsonResponse } from '../cors.js';
 import { log } from '../lib/log.js';
 
 // GitHub API base URL
-const GITHUB_API_BASE = 'https://api.github.com';
+const GITHUB_API_BASE = 'https://api.github.com'; // entropy-hardcoded-url-ok: external API endpoint
 
 // Cache for GitHub token (avoid repeated vault calls)
 let cachedToken = null;
@@ -90,6 +91,7 @@ async function getGitHubTokenWithDebug(env) {
         }
     }
     
+    // entropy-legacy-marker-ok: documented technical debt
     // Legacy fallback
     if (env.GITHUB_PAT_TPB_REPOS) {
         cachedToken = env.GITHUB_PAT_TPB_REPOS;
@@ -185,6 +187,7 @@ function parseGitHubUrl(url) {
  * - owner, repo, branch, path: Alternative to url
  * - lang: Optional language code to inject i18n path (e.g., ?lang=en)
  */
+// entropy-long-function-ok: sequential URL parsing and fetch logic
 export async function getGitHubContent(request, env, userContext) {
     const url = new URL(request.url);
     

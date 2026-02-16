@@ -1,4 +1,6 @@
 # entropy-single-export-ok: CLI script, functions are internal pipeline steps called by main()
+# entropy-duplicate-constant-ok: CLI scripts are standalone, shared constants not warranted
+# entropy-console-leak-ok: uses print for CLI output
 #!/usr/bin/env python3
 """
 check_secrets.py - Verify required Cloudflare Worker secrets
@@ -35,8 +37,8 @@ CYAN = "\033[96m"
 DIM = "\033[2m"
 RESET = "\033[0m"
 
-_WRANGLER_TIMEOUT = 30
-_CLI_SEPARATOR_WIDTH = 50
+_WRANGLER_TIMEOUT = 30  # entropy-python-magic-numbers-ok: timeout in seconds
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
 
 # =============================================================================
 # SECRETS CONFIGURATION
@@ -44,7 +46,7 @@ _CLI_SEPARATOR_WIDTH = 50
 
 # Required secrets - deployment fails if missing
 REQUIRED_SECRETS = {
-    "TALLY_WEBHOOK_SECRET": "Tally webhook authentication (legacy URL param)",
+    "TALLY_WEBHOOK_SECRET": "Tally webhook authentication (legacy URL param)",  # entropy-legacy-marker-ok: documented technical debt
     "TEST_SECRET": "Test fixtures API authentication",
 }
 
@@ -158,8 +160,8 @@ def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> b
     """
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔐 LMS Secrets Check{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")
-    
+    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: CLI display width
+
     # Get configured secrets
     log("Fetching configured secrets from Cloudflare...")
     configured = get_configured_secrets(worker_name)

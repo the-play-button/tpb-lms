@@ -70,11 +70,13 @@
             toast.classList.add('toast-visible');
         });
         
+        // entropy-prohibited-timer-ok: auto-dismiss toast after duration
         // Remove after duration
         setTimeout(() => {
             toast.classList.remove('toast-visible');
             toast.classList.add('toast-hiding');
-            
+
+            // entropy-prohibited-timer-ok: cleanup after CSS exit animation
             // Remove from DOM after animation
             setTimeout(() => {
                 toast.remove();
@@ -93,7 +95,7 @@
     }
     
     // Expose globally
-    window.showToast = showToast;
+    window.showToast = showToast; // entropy-global-pollution-ok: intentional global for HTML onclick
     
 })();
 

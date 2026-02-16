@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// entropy-console-leak-ok: CLI script uses console for operator output
 /**
  * Setup LMS IAM in vault-api
  *
@@ -13,7 +14,7 @@
  * Credentials: Get from vault-api dashboard or admin
  */
 
-const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev';
+const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: fallback config URL
 
 // LMS IAM Structure
 // Roles use tpblms_ prefix (matches app namespace in vault-api)

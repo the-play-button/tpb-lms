@@ -1,6 +1,8 @@
+// entropy-handler-service-pattern-ok: test fixture handler, DB seeding is the purpose
+// entropy-duplicate-code-handlers-ok: JSON body parsing pattern is intentionally repeated
 /**
  * Test Fixtures Handler
- * 
+ *
  * Provides an endpoint for seeding test data.
  * Protected by a secret header (TEST_SECRET).
  */

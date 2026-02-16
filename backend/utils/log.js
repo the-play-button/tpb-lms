@@ -1,7 +1,8 @@
+// entropy-multiple-exports-ok: logger + named export for convenience
 /**
  * Structured Logger
  * GAPs: GAP-1101, GAP-1103, GAP-1104
- * 
+ *
  * JSON structured logging with component tags.
  * Compatible with Cloudflare Workers (console-based).
  */

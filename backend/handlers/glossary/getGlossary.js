@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Get glossary for an organization
  * GET /glossary/:orgId?source_lang=fr&target_lang=en

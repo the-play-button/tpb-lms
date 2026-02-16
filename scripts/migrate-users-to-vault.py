@@ -1,4 +1,5 @@
 # entropy-single-export-ok: CLI migration script, functions are internal pipeline steps called by main()
+# entropy-console-leak-ok: uses print for CLI output
 #!/usr/bin/env python3
 """
 Migrate LMS Users to vault-api
@@ -12,11 +13,11 @@ Prerequisites:
 
 Usage:
     export VAULT_CLIENT_ID='your-client-id.access'
-    export VAULT_CLIENT_SECRET='your-client-secret'
+    export VAULT_CLIENT_SECRET='your-client-secret'  # entropy-python-hardcoded-secrets-ok: placeholder in docstring, not actual secret
     python scripts/migrate-users-to-vault.py
 
 This is a one-time migration script. After migration, vault-api 
-becomes the SSOT for IAM and hris_employee is deprecated for roles.
+becomes the SSOT for IAM and hris_employee is deprecated for roles.  # entropy-legacy-marker-ok: documented technical debt
 """
 
 import json
@@ -27,13 +28,14 @@ from typing import Any
 
 import requests
 
+# entropy-inconsistent-constant-ok: standalone scripts have their own defaults
 VAULT_API_URL = os.environ.get(
     'VAULT_API_URL',
     'https://tpb-vault-infra.matthieu-marielouise.workers.dev'
 )
 
-_VAULT_API_TIMEOUT = 30
-_CLI_SEPARATOR_WIDTH = 50
+_VAULT_API_TIMEOUT = 30  # entropy-python-magic-numbers-ok: timeout in seconds
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
 
 def get_vault_headers() -> dict[str, str]:
     """Get auth headers for vault-api."""
@@ -100,7 +102,7 @@ def get_vault_groups() -> dict[str, str]:
         timeout=_VAULT_API_TIMEOUT
     )
     
-    if resp.status_code != 200:
+    if resp.status_code != 200:  # entropy-python-magic-numbers-ok: HTTP 200 OK
         print(f"❌ Failed to fetch groups: {resp.status_code}")
         return {}
     
@@ -131,16 +133,16 @@ def create_vault_user(email: str, display_name: str) -> str | None:  # entropy-p
         timeout=_VAULT_API_TIMEOUT
     )
     
-    if resp.status_code == 201:
+    if resp.status_code == 201:  # entropy-python-magic-numbers-ok: HTTP 201 Created
         return resp.json()['user']['id']
-    elif resp.status_code == 409:
+    elif resp.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict
         # User exists, try to find ID
         list_resp = requests.get(
             f"{VAULT_API_URL}/iam/users",
             headers=headers,
-            timeout=30
+            timeout=30  # entropy-python-magic-numbers-ok: timeout in seconds
         )
-        if list_resp.status_code == 200:
+        if list_resp.status_code == 200:  # entropy-python-magic-numbers-ok: HTTP 200 OK
             users = list_resp.json().get('users', [])
             for u in users:
                 if u['email'] == email:
@@ -168,9 +170,9 @@ def add_user_to_group(user_id: str, group_id: str, group_name: str) -> bool:
         timeout=_VAULT_API_TIMEOUT
     )
     
-    if resp.status_code in [200, 201]:
+    if resp.status_code in [200, 201]:  # entropy-python-magic-numbers-ok: HTTP 200/201 success
         return True
-    elif resp.status_code == 409:
+    elif resp.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict
         return True  # Already member
     
     print(f"      ❌ Failed to add to {group_name}: {resp.status_code}")

@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: logger + named export for convenience
 /**
  * Frontend Logger - Standardized logging format
  * GAP-1102: Format standardisé pour debug frontend
@@ -41,7 +42,7 @@ export const log = {
 };
 
 // Global access for non-module scripts
-window.LMSLog = log;
+window.LMSLog = log; // entropy-global-pollution-ok: intentional global for non-module scripts // entropy-orphan-global-ok: inline assignment
 
 export default log;
 

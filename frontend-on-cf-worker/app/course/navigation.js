@@ -151,11 +151,11 @@ async function handlePopState(event) {
  * Expose navigation functions globally
  */
 export function initNavigation() {
-    window.nextStep = nextStep;
-    window.prevStep = prevStep;
-    window.restartModule = restartModule;
-    window.navigateToStep = navigateToStep;
-    window.cycleSpeed = cyclePlaybackSpeed; // GAP-101: Playback speed control
+    window.nextStep = nextStep; // entropy-global-pollution-ok: intentional global for HTML onclick
+    window.prevStep = prevStep; // entropy-global-pollution-ok: intentional global for HTML onclick
+    window.restartModule = restartModule; // entropy-global-pollution-ok: intentional global for HTML onclick
+    window.navigateToStep = navigateToStep; // entropy-global-pollution-ok: intentional global for HTML onclick
+    window.cycleSpeed = cyclePlaybackSpeed; // GAP-101: Playback speed control // entropy-global-pollution-ok: intentional global for HTML onclick // entropy-orphan-global-ok: alias
     
     // Handle browser back/forward (GAP-203)
     window.addEventListener('popstate', handlePopState);

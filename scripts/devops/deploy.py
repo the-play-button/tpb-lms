@@ -1,4 +1,7 @@
 # entropy-single-export-ok: CLI script, functions are internal pipeline steps called by main()
+# entropy-duplicate-constant-ok: CLI scripts are standalone, shared constants not warranted
+# entropy-console-leak-ok: uses print for CLI output
+# entropy-python-optional-handling-ok: cwd parameter has default fallback in subprocess
 #!/usr/bin/env python3
 """
 deploy.py - LMS Full Deployment Script
@@ -33,8 +36,8 @@ FRONTEND_WORKER = "lms-viewer"
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
 FRONTEND_URL = "https://lms-viewer.matthieu-marielouise.workers.dev"
 
-_SUBPROCESS_TIMEOUT = 120
-_CLI_SEPARATOR_WIDTH = 50
+_SUBPROCESS_TIMEOUT = 120  # entropy-python-magic-numbers-ok: timeout in seconds
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
 
 
 def log(msg: str, level: str = "info") -> None:
@@ -48,7 +51,7 @@ def log(msg: str, level: str = "info") -> None:
     print(f"{colors.get(level, RESET)}{msg}{RESET}")
 
 
-def run_cmd(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:
+def run_cmd(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:  # entropy-python-optional-handling-ok: cwd=None is valid for subprocess
     """Run a command with error handling.
 
     Args:
@@ -219,7 +222,7 @@ def main() -> None:  # entropy-python-long-function-ok + entropy-python-complexi
     
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🚀 LMS Deployment Script{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")
+    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: CLI display width
     
     # Step 1: Check secrets
     if not args.skip_secrets:

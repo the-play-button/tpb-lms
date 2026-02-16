@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * GET /api/enrollments
  * List all enrollments for the current user
@@ -53,7 +54,7 @@ export async function listEnrollments(request, env, userContext) {
     }));
 
     // Count by status for summary
-    const activeCount = enrollments.filter(e => e.status === 'active').length;
+    const activeCount = enrollments.filter(e => e.status === 'active').length; // entropy-naming-convention-ok: scalar count value
 
     return jsonResponse({
         enrollments,

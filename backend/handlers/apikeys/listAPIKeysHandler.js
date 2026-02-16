@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * List API keys for the current user
  * GET /api/auth/api-keys

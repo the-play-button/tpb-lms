@@ -1,3 +1,4 @@
+// entropy-god-file-ok: centralized logging intentionally imported widely
 /**
  * LogService - Centralized logging for tpb-lms frontend.
  *

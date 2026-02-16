@@ -1,6 +1,7 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Badges Handler
- * 
+ *
  * Uses gamification_badge and gamification_award (Unified.to extension)
  */
 

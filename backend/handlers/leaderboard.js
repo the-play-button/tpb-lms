@@ -1,5 +1,6 @@
 // entropy-business-logic-ok: already in backend
 // entropy-single-export-ok: 2 tightly-coupled leaderboard handlers (get board, get stats) sharing user info and XP helpers
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Leaderboard Handler
  *

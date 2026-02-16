@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Get all translations for a content item
  * GET /translations/:type/:id

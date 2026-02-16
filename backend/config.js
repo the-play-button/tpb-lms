@@ -1,4 +1,5 @@
 // entropy-single-export-ok: config constants
+// entropy-backend-structure-ok: shared config at backend root
 /**
  * LMS Configuration
  * 

@@ -1,4 +1,5 @@
 # entropy-single-export-ok: class + singleton pattern, exports are VaultClient methods + convenience wrappers
+# entropy-legacy-marker-ok: documented backward-compatible env var names
 #!/usr/bin/env python3
 """
 TPB Vault Client
@@ -45,13 +46,13 @@ def get_user_connection_id(email: str) -> str:
     return f"conn_user_{slugify_email(email)}"
 
 
-_VAULT_API_TIMEOUT = 10
-_SECRET_MASK_PREFIX_LEN = 4
-_SECRET_MASK_SUFFIX_LEN = 4
-_SECRET_MASK_MIN_LEN = 8
+_VAULT_API_TIMEOUT = 10  # entropy-python-magic-numbers-ok: timeout in seconds
+_SECRET_MASK_PREFIX_LEN = 4  # entropy-python-magic-numbers-ok: masking config
+_SECRET_MASK_SUFFIX_LEN = 4  # entropy-python-magic-numbers-ok: masking config
+_SECRET_MASK_MIN_LEN = 8  # entropy-python-magic-numbers-ok: masking config
 
 
-class VaultClient:
+class VaultClient:  # entropy-python-cohesion-ok: client class with independent API methods by design
     """Client for TPB Vault API."""
 
     DEFAULT_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
@@ -70,7 +71,7 @@ class VaultClient:
         
         Accepts two naming conventions for env vars:
         - VAULT_CLIENT_ID / VAULT_CLIENT_SECRET (preferred, semantic)
-        - CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID / _SECRET (legacy)
+        - CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID / _SECRET (legacy)  # entropy-legacy-marker-ok: documented technical debt
 
         Args:
             env_path: Optional path to .env file override.

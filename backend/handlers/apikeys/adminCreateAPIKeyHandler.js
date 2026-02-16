@@ -1,3 +1,5 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-duplicate-code-handlers-ok: error handling pattern is intentionally similar across API key handlers
 /**
  * Admin: Create API key for any user by email
  * POST /api/admin/api-keys

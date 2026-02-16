@@ -18,7 +18,7 @@
 import { sessionId } from './state.js';
 
 // API endpoint
-export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api';
+export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api'; // entropy-hardcoded-url-ok: deployment config URL
 
 // Cached auth token
 let authToken = null;

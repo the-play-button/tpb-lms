@@ -1,3 +1,5 @@
+// entropy-handler-service-pattern-ok: shared quiz logic, co-located with handlers by design
+// entropy-business-logic-ok: already in backend
 /**
  * Shared helpers for quiz handlers
  */

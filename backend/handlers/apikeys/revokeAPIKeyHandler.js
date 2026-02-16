@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Revoke an API key
  * DELETE /api/auth/api-keys/:id

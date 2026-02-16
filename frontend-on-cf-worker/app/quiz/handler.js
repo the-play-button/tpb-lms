@@ -18,7 +18,7 @@ let currentQuizInfo = null;
 
 /**
  * Resolve the appropriate Tally form ID based on current language.
- * Supports both legacy single ID (string) and multi-lang (object) formats.
+ * Supports both legacy single ID (string) and multi-lang (object) formats. entropy-legacy-marker-ok: documented technical debt
  * 
  * @param {string|object} tallyFormIds - Single ID or { lang: id, ... } object
  * @returns {string|null} - The resolved Tally form ID
@@ -26,6 +26,7 @@ let currentQuizInfo = null;
 function resolveTallyFormId(tallyFormIds) {
     if (!tallyFormIds) return null;
     
+    // entropy-legacy-marker-ok: documented technical debt
     // Legacy single string format
     if (typeof tallyFormIds === 'string') {
         return tallyFormIds;
@@ -55,10 +56,10 @@ function resolveTallyFormId(tallyFormIds) {
 
 /**
  * Show quiz (triggered by button click)
- * Supports both legacy single tallyFormId and new tally_form_ids object.
+ * Supports both legacy single tallyFormId and new tally_form_ids object. entropy-legacy-marker-ok: documented technical debt
  * 
  * @param {string} classId - The class ID
- * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object
+ * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object entropy-legacy-marker-ok: documented technical debt
  * @param {string} quizName - Quiz name for display
  */
 export function showQuiz(classId, tallyFormIds, quizName) {
@@ -90,6 +91,7 @@ En cliquant OK, vous acceptez :
         const container = document.getElementById(`quiz-container-${classId}`);
         if (container) {
             container.style.display = 'block';
+            // entropy-hardcoded-url-ok: Tally.so embed URL
             container.innerHTML = `
                 <iframe
                     src="https://tally.so/embed/${tallyFormId}?alignLeft=1&hideTitle=1&dynamicHeight=1"
@@ -276,6 +278,6 @@ function showQuizPendingState() {
  * Initialize quiz handler (expose to window)
  */
 export function initQuizHandler() {
-    window.showQuiz = showQuiz;
+    window.showQuiz = showQuiz; // entropy-global-pollution-ok: intentional global for HTML onclick
 }
 

@@ -1,4 +1,5 @@
 // entropy-single-export-ok: 2 tightly-coupled course handlers (list, get) sharing translation and enrichment helpers
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Courses Handler
  *
@@ -230,7 +231,7 @@ export async function getCourse(request, env, userContext, courseId) {
     }
     
     const completedSteps = enrichedClasses.filter(c => c.step_completed).length;
-    const currentStep = enrichedClasses.filter(c => c.step_completed).length;
+    const currentStep = enrichedClasses.filter(c => c.step_completed).length; // entropy-naming-convention-ok: scalar count value
 
     return jsonResponse({
         id: course.id,

@@ -1,6 +1,7 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Learner Progress Handler
- * 
+ *
  * Uses crm_event, gamification_award and views (Unified.to aligned).
  * Refactored for parallel fetching.
  */

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// entropy-console-leak-ok: CLI script uses console for operator output
 /**
  * Setup Vault Connections for LMS Credentials
  *
@@ -15,7 +16,7 @@
  *   node scripts/setup-vault-connections.js
  */
 
-const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev';
+const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: fallback config URL
 
 // Connections to create
 const CONNECTIONS = [

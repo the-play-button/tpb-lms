@@ -101,7 +101,7 @@ async function callTranslationAPI(text, sourceLang, targetLang, apiKey) {
     const sourceLanguage = langNames[sourceLang] || sourceLang;
     const targetLanguage = langNames[targetLang] || targetLang;
     
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch('https://api.anthropic.com/v1/messages', { // entropy-hardcoded-url-ok: external API endpoint
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

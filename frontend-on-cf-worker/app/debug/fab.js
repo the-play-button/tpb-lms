@@ -1,4 +1,5 @@
 // entropy-single-export-ok: init/destroy pair
+// entropy-unused-export-ok: destroyDebugFab available for lifecycle management
 /**
  * Debug FAB (Floating Action Button)
  * 
@@ -57,6 +58,7 @@ function handleFabClick() {
     
     if (clickCount === 1) {
         // Wait to see if it's a double-click
+        // entropy-prohibited-timer-ok: debounce for double-click detection
         clickTimer = setTimeout(async () => {
             clickCount = 0;
             await handleSingleClick();
@@ -83,6 +85,7 @@ async function handleSingleClick() {
         
         if (result.success) {
             fabElement.classList.add('debug-fab--success');
+            // entropy-prohibited-timer-ok: cleanup after CSS animation
             setTimeout(() => fabElement.classList.remove('debug-fab--success'), 1500);
             
             showToast('📋 Infos copiées ! Double-clic pour console debug.', 'success');
@@ -91,6 +94,7 @@ async function handleSingleClick() {
             log.debug('[Debug] Info copied to clipboard:', result.data);
         } else {
             fabElement.classList.add('debug-fab--error');
+            // entropy-prohibited-timer-ok: cleanup after CSS animation
             setTimeout(() => fabElement.classList.remove('debug-fab--error'), 1500);
 
             showToast('❌ Impossible de copier. Voir la console.', 'error');
@@ -100,8 +104,9 @@ async function handleSingleClick() {
     } catch (error) {
         fabElement.classList.remove('debug-fab--loading');
         fabElement.classList.add('debug-fab--error');
+        // entropy-prohibited-timer-ok: cleanup after CSS animation
         setTimeout(() => fabElement.classList.remove('debug-fab--error'), 1500);
-        
+
         showToast('❌ Erreur lors de la copie', 'error');
         log.error('[Debug] Error:', error);
     }

@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: tightly-coupled content loading primitives
 /**
  * Shared content loading primitives - cache, auth, GitHub proxy, i18n URL building
  */

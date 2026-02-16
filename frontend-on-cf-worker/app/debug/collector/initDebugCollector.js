@@ -1,3 +1,4 @@
+// entropy-long-function-ok: single init function with sequential setup steps
 /**
  * Initialize the debug collector
  * Call this once at app startup
@@ -13,7 +14,7 @@ export function initDebugCollector() {
 
     // 1. Patch window.onerror
     const originalOnError = window.onerror;
-    window.onerror = function(message, url, line, column, error) {
+    window.onerror = function(message, url, line, column, error) { // entropy-global-pollution-ok: intentional global error handler // entropy-orphan-global-ok: patching native
         storeError({
             message: message,
             stack: error?.stack,
@@ -42,7 +43,7 @@ export function initDebugCollector() {
     // 3. Patch console.error
     const originalConsoleError = console.error;
     console.error = function(...args) {
-        const message = args.map(a => {
+        const message = args.map(a => { // entropy-naming-convention-ok: singular message string being built
             if (typeof a === 'object') {
                 try { return JSON.stringify(a); }
                 catch { return String(a); }
@@ -62,7 +63,7 @@ export function initDebugCollector() {
 
     // 4. Patch fetch - capture full request/response context
     const originalFetch = window.fetch;
-    window.fetch = async function(input, init) {
+    window.fetch = async function(input, init) { // entropy-global-pollution-ok: intentional fetch interceptor for debug // entropy-orphan-global-ok: patching native
         const url = typeof input === 'string' ? input : input.url;
         const method = init?.method || 'GET';
         const startTime = Date.now();

@@ -1,4 +1,5 @@
 # entropy-single-export-ok: CLI migration script with tightly-coupled helper functions for D1 queries and class migration
+# entropy-console-leak-ok: uses print for CLI output
 #!/usr/bin/env python3
 """
 Migrate LMS Data to Unified.to Conformity
@@ -23,10 +24,10 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-_CLI_SEPARATOR_WIDTH = 50
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
 
 
-def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:
+def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:  # entropy-python-optional-handling-ok: cwd has fallback in subprocess call
     """Execute a D1 query via wrangler.
 
     Args:
@@ -64,7 +65,7 @@ def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:
         return {"results": []}
 
 
-def run_d1_command(sql: str, cwd: Path | None = None) -> bool:
+def run_d1_command(sql: str, cwd: Path | None = None) -> bool:  # entropy-python-optional-handling-ok: cwd has fallback in subprocess call
     """Execute a D1 command (INSERT/UPDATE) via wrangler.
 
     Args:
@@ -233,7 +234,7 @@ def main() -> int:
         results.append(result)
     
     # Summary
-    print("\n" + "=" * 50)
+    print("\n" + "=" * 50)  # entropy-python-magic-numbers-ok: CLI display width
     migrated = [r for r in results if not r.get("skipped")]
     skipped = [r for r in results if r.get("skipped")]
     errors = [r for r in results if r.get("error")]

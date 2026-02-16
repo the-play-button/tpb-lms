@@ -25,6 +25,7 @@ function createBadgeParticles(container) {
     }
     
     container.appendChild(particlesDiv);
+    // entropy-prohibited-timer-ok: cleanup after CSS animation
     setTimeout(() => particlesDiv.remove(), 1500);
 }
 
@@ -105,6 +106,7 @@ export function showError(message) {
     const viewer = document.getElementById('somViewer');
     if (viewer) {
         const escaped = String(message).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        // entropy-innerhtml-ok: one-time error display render
         viewer.innerHTML = `
             <div class="welcome-screen">
                 <h1>Erreur</h1>
@@ -148,6 +150,6 @@ export async function refreshUserData() {
  * Initialize notifications (expose to window)
  */
 export function initNotifications() {
-    window.closeBadgeModal = closeBadgeModal;
+    window.closeBadgeModal = closeBadgeModal; // entropy-global-pollution-ok: intentional global for HTML onclick
 }
 

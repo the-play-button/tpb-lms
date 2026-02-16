@@ -43,7 +43,7 @@ export async function applyProjections(db, event) {
                 ? JSON.parse(event.payload_json) 
                 : event.payload_json;
             
-            const next = projection.reduce(current || {}, { ...event, payload });
+            const next = projection.reduce(current || {}, { ...event, payload }); // entropy-naming-convention-ok: next state value
             await upsertState(db, key, event.course_id, next);
             
             // Collect result

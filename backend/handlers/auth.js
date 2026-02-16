@@ -1,6 +1,7 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Authentication Handler
- * 
+ *
  * Handles user session via Cloudflare Access JWT.
  * Refactored for reduced complexity with parallel fetches.
  */

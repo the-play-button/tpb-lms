@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Get glossary as lookup map (for translation engine)
  * Internal helper function

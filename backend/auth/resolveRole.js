@@ -36,6 +36,7 @@ export async function resolveRole(email, env) {
     }
 
     // Fallback: local hris_employee check
+    // entropy-legacy-marker-ok: documented technical debt
     // This will be deprecated once vault-api is fully operational
     const employee = await env.DB.prepare(`
     SELECT id, employee_roles_json FROM hris_employee

@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * PATCH /api/enrollments/:id/progress
  * Update enrollment progress (called when navigating to a new step)

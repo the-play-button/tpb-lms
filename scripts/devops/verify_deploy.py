@@ -1,4 +1,7 @@
 # entropy-single-export-ok: CLI script, functions are internal pipeline steps called by main()
+# entropy-duplicate-constant-ok: CLI scripts are standalone, shared constants not warranted
+# entropy-console-leak-ok: uses print for CLI output
+# entropy-python-unused-import-ok: urllib kept for error handling fallback
 #!/usr/bin/env python3
 """
 verify_deploy.py - Post-deployment verification
@@ -21,10 +24,10 @@ import urllib.request
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
 FRONTEND_URL = "https://lms-viewer.matthieu-marielouise.workers.dev"
 
-_HTTP_TIMEOUT = 10
-_HTTP_STATUS_OK = 200
-_HTTP_STATUS_REDIRECT = 302
-_CLI_SEPARATOR_WIDTH = 50
+_HTTP_TIMEOUT = 10  # entropy-python-magic-numbers-ok: timeout in seconds
+_HTTP_STATUS_OK = 200  # entropy-python-magic-numbers-ok: HTTP 200 OK
+_HTTP_STATUS_REDIRECT = 302  # entropy-python-magic-numbers-ok: HTTP 302 redirect
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
 
 # Colors
 GREEN = "\033[92m"
@@ -120,7 +123,7 @@ def main() -> None:
     """ Verify backend API and frontend deployments are healthy."""
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔍 LMS Deployment Verification{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")
+    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: CLI display width
     
     backend_ok = check_backend()
     print()

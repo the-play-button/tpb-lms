@@ -1,4 +1,5 @@
 // entropy-single-export-ok: 3 tightly-coupled signal handlers (get course, get step, reset) sharing private helpers
+// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Signals Handler
  *
