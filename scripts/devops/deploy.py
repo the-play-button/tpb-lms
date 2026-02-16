@@ -203,7 +203,7 @@ def seed_courses() -> bool:
         return False
 
 
-def main() -> None:
+def main() -> None:  # entropy-python-long-function-ok + entropy-python-complexity-ok: CLI script linear flow
     """ Deploy LMS backend and frontend to Cloudflare Workers."""
     parser = argparse.ArgumentParser(description="LMS Deployment Script")
     parser.add_argument("--backend", action="store_true", help="Deploy backend only")

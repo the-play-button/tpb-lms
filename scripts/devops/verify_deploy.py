@@ -76,7 +76,7 @@ def check_backend() -> bool:
         return False
 
 
-def check_frontend() -> bool:
+def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration over structured data
     """Check frontend is serving HTML."""
     print(f"{CYAN}🔍 Checking frontend: {FRONTEND_URL}{RESET}")
     

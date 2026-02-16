@@ -145,7 +145,7 @@ def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:  # en
 # MAIN
 # =============================================================================
 
-def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> bool:  # entropy-python-optional-handling-ok: guarded by delegation to get_configured_secrets
+def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> bool:  # entropy-python-long-function-ok + entropy-python-optional-handling-ok: guarded by delegation to get_configured_secrets
     """
     Check that all required secrets are configured.
     

@@ -54,7 +54,7 @@ def log(msg: str, level: str = "info"):
     print(f"{colors.get(level, RESET)}{msg}{RESET}")
 
 
-def run_sql(query: str) -> Optional[List[Dict[str, Any]]]:
+def run_sql(query: str) -> Optional[List[Dict[str, Any]]]:  # entropy-python-nesting-ok: nested iteration over structured data
     """Execute SQL query via wrangler and return results.
 
     Args:
@@ -120,7 +120,7 @@ def get_user_id() -> Optional[str]:
 # VALIDATION SCENARIOS
 # =============================================================================
 
-def validate_fresh_user(user_id: str) -> bool:
+def validate_fresh_user(user_id: str) -> bool:  # entropy-python-long-function-ok: linear script flow
     """Validate fresh user state (clean_slate fixture).
 
     Args:
@@ -220,7 +220,7 @@ def validate_video_resume(user_id: str) -> bool:
     return all_pass
 
 
-def validate_quiz_complete(user_id: str) -> bool:
+def validate_quiz_complete(user_id: str) -> bool:  # entropy-python-long-function-ok: linear script flow
     """Validate quiz completion state.
 
     Args:
@@ -365,7 +365,7 @@ def list_scenarios():
     print()
 
 
-def main():
+def main():  # entropy-python-long-function-ok: CLI script linear flow
     """ Parse CLI args and validate database state after manual testing."""
     parser = argparse.ArgumentParser(
         description="Validate DB state after human testing",

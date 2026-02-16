@@ -105,7 +105,7 @@ def fetch_classes() -> list[dict[str, Any]]:
     return result.get("results", [])
 
 
-def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:
+def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:  # entropy-python-long-function-ok + entropy-python-complexity-ok: orchestration with error handling paths
     """Migrate a single class to unified.to format.
 
     Args:

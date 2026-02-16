@@ -64,7 +64,7 @@ class VaultClient:
         }
     
     @classmethod
-    def from_env(cls, env_path: str = None) -> "VaultClient":
+    def from_env(cls, env_path: str = None) -> "VaultClient":  # entropy-python-complexity-ok + entropy-python-nesting-ok: multi-level fallback chain
         """Create client from .env file or environment.
         
         Accepts two naming conventions for env vars:

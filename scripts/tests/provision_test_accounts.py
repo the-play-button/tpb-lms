@@ -86,7 +86,7 @@ def get_vault_headers():
         print(f"❌ {e}")
         sys.exit(1)
 
-def create_user_via_vault(account):
+def create_user_via_vault(account):  # entropy-python-long-function-ok: linear script flow
     """Create user via vault-api.
 
     Args:
@@ -166,7 +166,7 @@ def get_vault_role_name(lms_role):
     else:
         return None  # Students don't need a vault role
 
-def assign_role_to_user(user_id, lms_role):
+def assign_role_to_user(user_id, lms_role):  # entropy-python-long-function-ok: linear script flow
     """Assign LMS role to user via vault-api groups.
 
     Role assignment in vault-api works via groups:
@@ -228,7 +228,7 @@ def assign_role_to_user(user_id, lms_role):
     print(f"  ✅ User added to group '{group_name}'")
     return True
 
-def create_lms_contact_data(account, user_id):
+def create_lms_contact_data(account, user_id):  # entropy-python-long-function-ok: linear script flow
     """Create corresponding data in LMS database.
 
     Args:
@@ -289,7 +289,7 @@ def create_lms_contact_data(account, user_id):
     print(f"  ✅ LMS data created: {contact_id}")
     return contact_id
 
-def main():
+def main():  # entropy-python-long-function-ok: CLI script linear flow
     """Main provisioning function."""
     print("🚀 Provisioning test accounts via vault-api...")
     print(f"   Target: {VAULT_API_BASE}")

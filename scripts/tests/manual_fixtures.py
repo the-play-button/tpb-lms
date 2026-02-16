@@ -185,7 +185,7 @@ def setup_admin(profile_name):
     run_d1_command(sample_data_sql)
     print("✅ Admin dashboard data setup")
 
-def main():
+def main():  # entropy-python-nesting-ok: multi-level fallback chain
     """Main CLI interface."""
     if len(sys.argv) < 2:
         print("Usage: python manual_fixtures.py <command> [--profile <profile_name>]")

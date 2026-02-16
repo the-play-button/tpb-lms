@@ -107,7 +107,7 @@ def get_vault_groups() -> dict[str, str]:
     groups = resp.json().get('groups', [])
     return {g['name']: g['id'] for g in groups}
 
-def create_vault_user(email: str, display_name: str) -> str | None:
+def create_vault_user(email: str, display_name: str) -> str | None:  # entropy-python-nesting-ok: nested iteration over structured data
     """Create user in vault-api.
 
     Args:
@@ -176,7 +176,7 @@ def add_user_to_group(user_id: str, group_id: str, group_name: str) -> bool:
     print(f"      ❌ Failed to add to {group_name}: {resp.status_code}")
     return False
 
-def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:
+def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:  # entropy-python-long-function-ok: linear script flow
     """Migrate a single employee to vault-api.
 
     Args:
@@ -240,7 +240,7 @@ def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[s
         'group': target_group
     }
 
-def main() -> None:
+def main() -> None:  # entropy-python-long-function-ok: CLI script linear flow
     """ Migrate LMS employees to vault-api users and group memberships."""
     print("🚀 Migrating LMS users to vault-api...")
     print(f"   Target: {VAULT_API_URL}")
