@@ -14,9 +14,9 @@ Output:
     - issued_at / expires_at
 """
 
-import sys
-import json
 import base64
+import json
+import sys
 from datetime import datetime
 
 

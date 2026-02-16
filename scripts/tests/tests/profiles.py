@@ -11,7 +11,8 @@ Role resolution happens via vault-api based on the user's email/group membership
 """
 
 import requests
-from .conftest import get_api_key_headers, get_api_base, TIMEOUT, log_info, API_KEYS
+
+from .conftest import API_KEYS, TIMEOUT, get_api_base, get_api_key_headers, log_info
 
 
 class Profile:

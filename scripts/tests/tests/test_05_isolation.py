@@ -8,8 +8,9 @@ Now uses distinct profiles (STUDENT, INSTRUCTOR, ADMIN) to test cross-user isola
 """
 
 import requests
-from .conftest import get_api_base, TIMEOUT, log_info
-from .profiles import STUDENT, INSTRUCTOR, ADMIN
+
+from .conftest import TIMEOUT, get_api_base, log_info
+from .profiles import ADMIN, INSTRUCTOR, STUDENT
 
 
 class TestHorizontalIsolation:

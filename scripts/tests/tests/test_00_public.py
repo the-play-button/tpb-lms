@@ -5,7 +5,8 @@ Tests endpoints that should be accessible without any auth.
 """
 
 import requests
-from .conftest import get_api_base, TIMEOUT
+
+from .conftest import TIMEOUT, get_api_base
 
 
 class TestPublicEndpoints:

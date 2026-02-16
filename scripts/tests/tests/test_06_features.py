@@ -7,8 +7,9 @@ Tests for specific features from Pareto Speedruns:
 """
 
 import requests
-from .conftest import get_api_base, TIMEOUT
-from .profiles import STUDENT, ADMIN
+
+from .conftest import TIMEOUT, get_api_base
+from .profiles import ADMIN, STUDENT
 
 
 class TestSecondParetoFeatures:

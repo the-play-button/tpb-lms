@@ -6,8 +6,8 @@ Anonymous requests should get 302 redirect to CF Access login.
 """
 
 import requests
-from .conftest import get_api_base, TIMEOUT
 
+from .conftest import TIMEOUT, get_api_base
 
 # All protected endpoints to test
 PROTECTED_ENDPOINTS = [

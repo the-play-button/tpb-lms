@@ -6,9 +6,9 @@ Fixtures spécialisées pour les tests manuels avec différents profils utilisat
 Complément à fixtures.py pour les tests automatisés.
 """
 
+import json
 import subprocess
 import sys
-import json
 from datetime import datetime, timedelta
 
 # Test profiles for manual testing

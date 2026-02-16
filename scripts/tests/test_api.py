@@ -18,9 +18,10 @@ Tests are split into:
 import json
 import os
 import sys
-import requests
 from datetime import datetime
 from typing import Optional
+
+import requests
 
 # Configuration
 PROD_URL = "https://lms-api.matthieu-marielouise.workers.dev"
@@ -358,7 +359,7 @@ class TestEntropy:
     def test_entropy_violations(self):
         """Run tpb_sdk.entropy module and verify no P1 violations."""
         import subprocess
-        
+
         # Get the script path relative to the test file
         script_dir = os.path.dirname(os.path.abspath(__file__))
         lms_root = os.path.dirname(os.path.dirname(script_dir))

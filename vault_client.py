@@ -18,9 +18,10 @@ Connections:
 # entropy-python-cohesion-ok: client pattern
 
 import os
-import httpx
 from pathlib import Path
-from typing import Dict, Optional, Any, List
+from typing import Any, Dict, List, Optional
+
+import httpx
 
 
 def slugify_email(email: str) -> str:

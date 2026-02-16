@@ -18,28 +18,37 @@ Usage:
     python run_all.py --local  # Test localhost:8787
 """
 
-import sys
 import os
+import sys
 from datetime import datetime
 
 # Add parent directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+# Import test modules
+from tests import (
+    test_00_public,
+    test_01_auth_enforcement,
+    test_02_rbac_student,
+    test_03_rbac_instructor,
+    test_04_rbac_admin,
+    test_05_isolation,
+    test_06_features,
+    test_07_entropy,
+)
 from tests.conftest import (
-    Colors, log_pass, log_fail, log_skip, log_section, log_info,
-    set_api_base, get_api_base, PROD_URL, LOCAL_URL
+    LOCAL_URL,
+    PROD_URL,
+    Colors,
+    get_api_base,
+    log_fail,
+    log_info,
+    log_pass,
+    log_section,
+    log_skip,
+    set_api_base,
 )
 from tests.profiles import Profiles
-
-# Import test modules
-from tests import test_00_public
-from tests import test_01_auth_enforcement
-from tests import test_02_rbac_student
-from tests import test_03_rbac_instructor
-from tests import test_04_rbac_admin
-from tests import test_05_isolation
-from tests import test_06_features
-from tests import test_07_entropy
 
 _CLI_SEPARATOR_WIDTH = 60
 

@@ -17,13 +17,14 @@ One-liner (in Dev Container):
     cd 04.Execution/lms && python scripts/tests/fixtures.py --list
 """
 
+import json
 import os
 import subprocess
-import json
-import requests
 import sys
 from pathlib import Path
 from typing import Optional
+
+import requests
 
 # Add parent directories to path for vault_client
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))

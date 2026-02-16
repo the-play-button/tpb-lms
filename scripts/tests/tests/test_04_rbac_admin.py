@@ -11,8 +11,9 @@ Tests also verify that non-admins are rejected from admin endpoints.
 """
 
 import requests
-from .conftest import get_api_base, TIMEOUT, log_info
-from .profiles import ADMIN, STUDENT, INSTRUCTOR
+
+from .conftest import TIMEOUT, get_api_base, log_info
+from .profiles import ADMIN, INSTRUCTOR, STUDENT
 
 
 class TestRBACAdmin:

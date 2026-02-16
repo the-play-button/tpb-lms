@@ -8,12 +8,13 @@ Users can then login via CF Access with proper roles.
 Uses VaultClient for credentials (reads from .env file automatically).
 """
 
-import requests
 import json
 import os
 import sys
 from datetime import datetime
 from pathlib import Path
+
+import requests
 
 # Add parent directory to path for vault_client import
 sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
@@ -244,7 +245,7 @@ def create_lms_contact_data(account, user_id):  # entropy-python-long-function-o
     # that LMS uses for role resolution
     
     import subprocess
-    
+
     # Create crm_contact
     contact_id = f"contact_{user_id}"
     contact_sql = f"""

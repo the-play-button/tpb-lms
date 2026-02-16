@@ -11,7 +11,8 @@ Instructors should NOT be able to:
 """
 
 import requests
-from .conftest import get_api_base, TIMEOUT, log_info
+
+from .conftest import TIMEOUT, get_api_base, log_info
 from .profiles import INSTRUCTOR
 
 
