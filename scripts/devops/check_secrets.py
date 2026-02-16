@@ -92,7 +92,7 @@ def get_project_root() -> Path:
     return Path(__file__).parent.parent.parent
 
 
-def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:
+def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:  # entropy-python-optional-handling-ok: guarded by truthiness check
     """
     Get list of configured secrets from Cloudflare Worker using wrangler.
 
@@ -145,7 +145,7 @@ def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:
 # MAIN
 # =============================================================================
 
-def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> bool:
+def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> bool:  # entropy-python-optional-handling-ok: guarded by delegation to get_configured_secrets
     """
     Check that all required secrets are configured.
     
@@ -218,6 +218,7 @@ def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> b
 
 
 def main() -> None:
+    """ Parse CLI args and verify Cloudflare Worker secrets are configured."""
     parser = argparse.ArgumentParser(
         description="Check Cloudflare Worker secrets configuration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
