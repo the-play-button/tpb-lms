@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 4 exports share private authToken + buildHeaders, tightly-coupled API client
 /**
  * API Client
  * 

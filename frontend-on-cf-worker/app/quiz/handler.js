@@ -1,6 +1,7 @@
+// entropy-single-export-ok: 3 tightly-coupled quiz handlers (show, handle submission, init) sharing Tally integration state
 /**
  * Quiz Handler
- * 
+ *
  * Handles quiz display, Tally form submission via postMessage.
  */
 

@@ -1,3 +1,4 @@
+# entropy-single-export-ok: CLI script, functions are internal pipeline steps called by main()
 #!/usr/bin/env python3
 """
 verify_deploy.py - Post-deployment verification

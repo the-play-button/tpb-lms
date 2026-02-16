@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 5 exports, tightly-coupled notification lifecycle (badge modal + error + refresh + init)
 /**
  * Notifications
  * 

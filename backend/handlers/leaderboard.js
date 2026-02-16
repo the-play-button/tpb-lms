@@ -1,6 +1,7 @@
+// entropy-single-export-ok: 2 tightly-coupled leaderboard handlers (get board, get stats) sharing user info and XP helpers
 /**
  * Leaderboard Handler
- * 
+ *
  * Uses v_leaderboard view based on lms_signal.
  * Refactored for reduced complexity.
  */

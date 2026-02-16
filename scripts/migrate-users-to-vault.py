@@ -1,3 +1,4 @@
+# entropy-single-export-ok: CLI migration script, functions are internal pipeline steps called by main()
 #!/usr/bin/env python3
 """
 Migrate LMS Users to vault-api

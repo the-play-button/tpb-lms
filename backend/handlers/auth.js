@@ -6,8 +6,8 @@
  */
 
 import { jsonResponse } from '../cors.js';
-import { verifyAccessJWT, getOrCreateContact } from '../auth.js';
-import { getCurrentStreak } from '../helpers/xp.js';
+import { verifyAccessJWT, getOrCreateContact } from '../auth/index.js';
+import { getCurrentStreak } from '../helpers/xp/index.js';
 
 // ============================================
 // Helper functions

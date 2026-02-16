@@ -1,6 +1,7 @@
+// entropy-single-export-ok: 2 tightly-coupled content handlers (get file, list directory) sharing GitHub auth and URL parsing
 /**
  * Content Handler
- * 
+ *
  * Proxies content from private GitHub repositories using API token.
  * Enables frontend to fetch markdown from private repos without exposing tokens.
  */

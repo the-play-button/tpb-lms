@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 5 exports (getState/setState/subscribe + sessionId + default) form core pub/sub state, 16 importers
 /**
  * Reactive State Management
  * 

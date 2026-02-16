@@ -16,27 +16,27 @@
  */
 
 import { getCorsHeaders, jsonResponse } from './cors.js';
-import { authenticateRequest } from './auth.js';
+import { authenticateRequest } from './auth/index.js';
 import { getSession } from './handlers/auth.js';
 import { listCourses, getCourse } from './handlers/courses.js';
-import { listEnrollments, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus, updateProgress } from './handlers/enrollment.js';
+import { listEnrollments, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus, updateProgress } from './handlers/enrollment/index.js';
 import { listBadges } from './handlers/badges.js';
 import { handleEvent, handleBatchEvents } from './handlers/events.js';
 import { getStepSignals, getCourseSignalsHandler, resetCourseSignals } from './handlers/signals.js';
-import { handleQuizSubmission, handleTallyWebhook, handleTallyWebhookWithBody, verifyTallySignature } from './handlers/quiz.js';
+import { handleQuizSubmission, handleTallyWebhook, handleTallyWebhookWithBody, verifyTallySignature } from './handlers/quiz/index.js';
 import { getLearnerProgress } from './handlers/learner.js';
 import { getLeaderboard, getUserStats } from './handlers/leaderboard.js';
 import { handleTestSeed } from './handlers/test.js';
-import { createAPIKeyHandler, listAPIKeysHandler, revokeAPIKeyHandler, adminCreateAPIKeyHandler } from './handlers/apikeys.js';
+import { createAPIKeyHandler, listAPIKeysHandler, revokeAPIKeyHandler, adminCreateAPIKeyHandler } from './handlers/apikeys/index.js';
 import { getAdminStats } from './handlers/admin.js';
 import { listSpaces, getSpace, getPage } from './handlers/kms.js';
-import { getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview } from './handlers/translations.js';
-import { getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary.js';
+import { getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview } from './handlers/translations/index.js';
+import { getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary/index.js';
 import { getGitHubContent, listGitHubDirectory } from './handlers/content.js';
 import { addTraceId, withTraceHeader } from './middleware/trace.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
-import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto.js';
+import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto/index.js';
 import logger from './utils/log.js';
 
 const log = logger('worker');

@@ -1,6 +1,7 @@
+// entropy-single-export-ok: 3 tightly-coupled course loader functions (load, updateURL, refreshSignals) sharing state management
 /**
  * Course Loader
- * 
+ *
  * Handles loading course data and signals from API.
  * Supports multi-language via ?lang= parameter.
  */
@@ -8,7 +9,7 @@
 import { api } from '../api.js';
 import { getState, setState } from '../state.js';
 import { log } from '../log.js';
-import { stopVideoTracking } from '../video/tracking.js';
+import { stopVideoTracking } from '../video/tracking/index.js';
 import { renderCurrentStep } from './renderer.js';
 import { getLanguage } from '../../i18n/index.js';
 

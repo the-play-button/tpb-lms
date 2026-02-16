@@ -1,6 +1,7 @@
+// entropy-single-export-ok: 3 tightly-coupled secret operations (get, mappings, prefetch) sharing vault client singleton
 /**
  * Secrets Helper
- * 
+ *
  * Provides unified access to secrets with fallback:
  * 1. Try vault-api first (if VAULT_CLIENT_ID/SECRET are configured)
  * 2. Fall back to wrangler env secrets (legacy)

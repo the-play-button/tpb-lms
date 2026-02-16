@@ -1,13 +1,14 @@
+// entropy-single-export-ok: 3 tightly-coupled signal handlers (get course, get step, reset) sharing private helpers
 /**
  * Signals Handler
- * 
+ *
  * Read-only API for getting user progress.
  * Reads directly from v_user_progress (materialized view).
  * Refactored for reduced complexity.
  */
 
 import { jsonResponse } from '../cors.js';
-import { checkCourseCompletionBadges, recordCourseCompletion } from '../helpers/xp.js';
+import { checkCourseCompletionBadges, recordCourseCompletion } from '../helpers/xp/index.js';
 
 // ============================================
 // Helper functions

@@ -1,3 +1,4 @@
+# entropy-single-export-ok: class + singleton pattern, exports are VaultClient methods + convenience wrappers
 #!/usr/bin/env python3
 """
 TPB Vault Client

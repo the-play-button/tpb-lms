@@ -11,8 +11,8 @@
  */
 
 import { getState } from '../state.js';
-import { setupVideoTracking, getResumePosition } from '../video/tracking.js';
-import { fetchMarkdown, getDocumentUrl } from '../content/loader.js';
+import { setupVideoTracking, getResumePosition } from '../video/tracking/index.js';
+import { fetchMarkdown, getDocumentUrl } from '../content/loader/index.js';
 import { showContentStepConfirmation } from './confirmModal.js';
 
 /**

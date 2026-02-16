@@ -1,6 +1,7 @@
+// entropy-single-export-ok: 2 tightly-coupled course handlers (list, get) sharing translation and enrichment helpers
 /**
  * Courses Handler
- * 
+ *
  * Uses lms_course and lms_class (Unified.to aligned).
  * Supports multi-language via ?lang= parameter.
  * Refactored for reduced complexity.

@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 5 exports share BADGES config, tightly-coupled mastery badge rendering utilities
 /**
  * Mastery Badge Component
  * 

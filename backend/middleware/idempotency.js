@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 3 exports share private in-memory cache + cleanup state, tightly coupled idempotency lifecycle
 /**
  * Idempotency Middleware
  * 

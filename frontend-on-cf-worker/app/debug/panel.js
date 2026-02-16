@@ -1,9 +1,10 @@
+// entropy-single-export-ok: 3 tightly-coupled debug panel lifecycle functions (open, close, toggle) sharing panel DOM state
 /**
  * Debug Panel
- * 
+ *
  * Admin/dev panel for managing user progress and debugging.
  * Opens on long-press of the debug FAB.
- * 
+ *
  * Future: Access will be restricted to admin role via IAM/PAM.
  */
 

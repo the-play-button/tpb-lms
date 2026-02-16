@@ -1,6 +1,7 @@
+// entropy-single-export-ok: 3 related badge utilities (iconMap, updateGrid, init) sharing rarity config
 /**
  * Badges UI Component
- * 
+ *
  * Displays earned badges in sidebar with tooltips.
  */
 

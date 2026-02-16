@@ -9,7 +9,7 @@
 import { api } from '../api.js';
 import { getState, setState } from '../state.js';
 import { log } from '../log.js';
-import { fetchMarkdown } from '../content/loader.js';
+import { fetchMarkdown } from '../content/loader/index.js';
 import { loadCourse } from './loader.js';
 
 /**

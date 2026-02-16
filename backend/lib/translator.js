@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 4 exports share private glossary pre/post-processing + callTranslationAPI pipeline
 /**
  * Translation Engine
  * 
@@ -5,7 +6,7 @@
  * Uses Claude API for translation with pre/post-processing for business terms.
  */
 
-import { getGlossaryMap } from '../handlers/glossary.js';
+import { getGlossaryMap } from '../handlers/glossary/index.js';
 
 /**
  * Detect language of text using simple heuristics

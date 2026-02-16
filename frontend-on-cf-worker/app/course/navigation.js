@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 5 exports, tightly-coupled step navigation (next/prev/restart/navigate/init)
 /**
  * Course Navigation
  * 
@@ -6,7 +7,7 @@
 
 import { getState, setState } from '../state.js';
 import { apiPost } from '../api.js';
-import { stopVideoTracking, cyclePlaybackSpeed } from '../video/tracking.js';
+import { stopVideoTracking, cyclePlaybackSpeed } from '../video/tracking/index.js';
 import { refreshSignals, updateURL } from './loader.js';
 import { renderCurrentStep } from './renderer.js';
 import { renderModuleEndScreen } from './endScreen.js';

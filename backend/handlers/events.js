@@ -1,8 +1,9 @@
+// entropy-single-export-ok: 2 tightly-coupled event handlers (single + batch) sharing validation and projection logic
 /**
  * Events Handler
- * 
+ *
  * Receives and stores LMS events, then applies projections.
- * 
+ *
  * Flow:
  * 1. Validate & store event in lms_event (SSOT)
  * 2. Apply projections → update v_user_progress

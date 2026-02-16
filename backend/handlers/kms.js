@@ -1,9 +1,10 @@
+// entropy-single-export-ok: 3 tightly-coupled KMS handlers (list spaces, get space, get page) with shared logger
 /**
  * KMS Handlers - Knowledge Management System API
- * 
+ *
  * Endpoints for serving reference documents (REFERENCES/, RULES/)
  * stored in kms_space and kms_page tables.
- * 
+ *
  * Routes:
  * - GET /api/kms/spaces - List all KMS spaces
  * - GET /api/kms/spaces/:id - Get space with its pages

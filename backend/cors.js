@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 4 exports share SECURITY_HEADERS + ALLOWED_ORIGINS, tightly-coupled CORS/response utilities
 /**
  * CORS Configuration + Security Headers
  * GAP-1406: Security headers

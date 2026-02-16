@@ -29,7 +29,7 @@ import { initNavigation } from './course/navigation.js';
 import { renderCurrentStep } from './course/renderer.js';
 
 // Video & Quiz
-import { stopVideoTracking, pauseVideo, isVideoPlaying } from './video/tracking.js';
+import { stopVideoTracking, pauseVideo, isVideoPlaying } from './video/tracking/index.js';
 import { initQuizHandler, handleTallySubmission } from './quiz/handler.js';
 
 // Other
@@ -37,14 +37,14 @@ import { loadLeaderboard } from './leaderboard.js';
 import { showBadgeModal, showError, refreshUserData, initNotifications } from './notifications.js';
 
 // Debug
-import { initDebugCollector, setUserContext } from './debug/collector.js';
+import { initDebugCollector, setUserContext } from './debug/collector/index.js';
 import { initDebugFab } from './debug/fab.js';
 
 // Admin
 import { initAdminDashboard } from './admin/dashboard.js';
 
 // KMS
-import { initKmsLinks } from './kms/viewer.js';
+import { initKmsLinks } from './kms/viewer/index.js';
 
 /**
  * Initialize application

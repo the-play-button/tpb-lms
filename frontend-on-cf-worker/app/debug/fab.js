@@ -6,7 +6,7 @@
  * debug information to clipboard when clicked.
  */
 
-import { copyDebugInfoToClipboard } from './collector.js';
+import { copyDebugInfoToClipboard } from './collector/index.js';
 import { togglePanel } from './panel.js';
 import { log } from '../log.js';
 

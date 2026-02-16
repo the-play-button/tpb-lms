@@ -1,3 +1,4 @@
+// entropy-single-export-ok: 5 exports are modal variants + show/close, all share modal styles and core showConfirmModal
 /**
  * Confirmation Modal
  * 
