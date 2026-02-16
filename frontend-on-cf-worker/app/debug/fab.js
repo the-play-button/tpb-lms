@@ -1,3 +1,4 @@
+// entropy-single-export-ok: init/destroy pair
 /**
  * Debug FAB (Floating Action Button)
  * 

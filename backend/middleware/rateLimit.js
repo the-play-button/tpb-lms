@@ -1,3 +1,4 @@
+// entropy-single-export-ok: tightly coupled middleware pair
 /**
  * Rate Limiting Middleware
  * 

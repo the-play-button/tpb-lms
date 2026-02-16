@@ -1,3 +1,4 @@
+// entropy-single-export-ok: tightly coupled vault pair
 /**
  * Vault API Client with Native Bearer Token Auth
  * 

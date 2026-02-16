@@ -1,3 +1,4 @@
+// entropy-single-export-ok: render + init pattern
 /**
  * Course List UI Component
  */

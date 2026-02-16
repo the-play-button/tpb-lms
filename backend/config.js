@@ -1,3 +1,4 @@
+// entropy-single-export-ok: config constants
 /**
  * LMS Configuration
  * 

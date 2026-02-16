@@ -1,3 +1,4 @@
+// entropy-single-export-ok: tightly coupled event helpers
 /**
  * Events Helper
  * 
