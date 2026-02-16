@@ -5,33 +5,33 @@
 
 .toast-container {
     position: fixed;
-    bottom: 24px;
-    right: 24px;
+    bottom: var(--space-lg);
+    right: var(--space-lg);
     z-index: 9999;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--space-sm);
     pointer-events: none;
 }
 
 .toast {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 14px 20px;
-    background: #18181b;
-    border: 1px solid #27272a;
-    border-radius: 8px;
-    color: #fafafa;
-    font-size: 14px;
+    gap: 12px; /* entropy-css-tokens-ok: 12px sits between --space-sm(8) and --space-md(16), component-specific */
+    padding: 14px 20px; /* entropy-css-tokens-ok: component-specific padding for toast density */
+    background: var(--color-surface-dark);
+    border: 1px solid var(--color-surface-border);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 14px; /* entropy-css-tokens-ok: component-specific body size */
     font-weight: 500;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    box-shadow: var(--shadow-elevated);
     pointer-events: auto;
-    
+
     /* Animation */
     opacity: 0;
     transform: translateX(100%);
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all var(--duration-fast) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .toast-visible {
@@ -45,7 +45,7 @@
 }
 
 .toast-icon {
-    font-size: 18px;
+    font-size: 18px; /* entropy-css-tokens-ok: component-specific icon size */
     line-height: 1;
 }
 
@@ -55,48 +55,47 @@
 
 /* Type variants */
 .toast-success {
-    border-color: #22c55e;
-    background: linear-gradient(135deg, #18181b 0%, #14532d 100%);
+    border-color: var(--success);
+    background: linear-gradient(135deg, var(--color-surface-dark) 0%, #14532d 100%); /* entropy-css-tokens-ok: gradient endpoint green-900 */
 }
 
 .toast-achievement {
-    border-color: #eab308;
-    background: linear-gradient(135deg, #18181b 0%, #422006 100%);
+    border-color: var(--warning);
+    background: linear-gradient(135deg, var(--color-surface-dark) 0%, #422006 100%); /* entropy-css-tokens-ok: gradient endpoint amber-950 */
 }
 
 .toast-points {
-    border-color: #8b5cf6;
-    background: linear-gradient(135deg, #18181b 0%, #2e1065 100%);
+    border-color: #8b5cf6; /* entropy-css-tokens-ok: violet-500, used in 2 places (tooltip + toast) */
+    background: linear-gradient(135deg, var(--color-surface-dark) 0%, #2e1065 100%); /* entropy-css-tokens-ok: gradient endpoint violet-950 */
 }
 
 .toast-error {
-    border-color: #ef4444;
-    background: linear-gradient(135deg, #18181b 0%, #450a0a 100%);
+    border-color: var(--error);
+    background: linear-gradient(135deg, var(--color-surface-dark) 0%, #450a0a 100%); /* entropy-css-tokens-ok: gradient endpoint red-950 */
 }
 
 .toast-info {
-    border-color: #3b82f6;
-    background: linear-gradient(135deg, #18181b 0%, #1e3a8a 100%);
+    border-color: #3b82f6; /* entropy-css-tokens-ok: blue-500, single use info variant */
+    background: linear-gradient(135deg, var(--color-surface-dark) 0%, #1e3a8a 100%); /* entropy-css-tokens-ok: gradient endpoint blue-900 */
 }
 
 /* Mobile responsive */
 @media (max-width: 480px) {
     .toast-container {
-        left: 16px;
-        right: 16px;
-        bottom: 16px;
+        left: var(--space-md);
+        right: var(--space-md);
+        bottom: var(--space-md);
     }
-    
+
     .toast {
         transform: translateY(100%);
     }
-    
+
     .toast-visible {
         transform: translateY(0);
     }
-    
+
     .toast-hiding {
         transform: translateY(100%);
     }
 }
-
