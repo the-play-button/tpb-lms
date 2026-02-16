@@ -23,12 +23,23 @@ from typing import Dict, Optional, Any, List
 
 
 def slugify_email(email: str) -> str:
-    """Convert email to connection ID slug."""
+    """Convert email to connection ID slug.
+
+    Args:
+        email: Email address to slugify.
+    """
     return email.replace("@", "_at_").replace(".", "_")
 
 
 def get_user_connection_id(email: str) -> str:
-    """Get connection ID for a user email."""
+    """Get connection ID for a user email.
+
+    Args:
+        email: User email address.
+
+    Returns:
+        Connection ID string in the format conn_user_<slug>.
+    """
     return f"conn_user_{slugify_email(email)}"
 
 
@@ -58,6 +69,12 @@ class VaultClient:
         Accepts two naming conventions for env vars:
         - VAULT_CLIENT_ID / VAULT_CLIENT_SECRET (preferred, semantic)
         - CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID / _SECRET (legacy)
+
+        Args:
+            env_path: Optional path to .env file override.
+
+        Returns:
+            Configured VaultClient instance.
         """
         # Try both naming conventions (VAULT_* preferred)
         client_id = os.getenv("VAULT_CLIENT_ID") or os.getenv("CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID")
@@ -103,7 +120,11 @@ class VaultClient:
         return resp.json().get("connections", [])
     
     def get_connection(self, connection_id: str) -> Dict[str, Any]:
-        """Get connection with secrets."""
+        """Get connection with secrets.
+
+        Args:
+            connection_id: Vault connection identifier.
+        """
         resp = httpx.get(
             f"{self.base_url}/vault/connections/{connection_id}",
             headers=self.headers,
@@ -113,28 +134,50 @@ class VaultClient:
         return resp.json().get("connection", {})
     
     def get_secrets_raw(self, connection_id: str) -> Dict[str, Dict[str, Any]]:
-        """Get all secrets with full metadata (value, type, description)."""
+        """Get all secrets with full metadata (value, type, description).
+
+        Args:
+            connection_id: Vault connection identifier.
+        """
         conn = self.get_connection(connection_id)
         return conn.get("auth", {}).get("secrets", {})
     
     def get_secrets(self, connection_id: str) -> Dict[str, str]:
-        """Get all secret values for a connection (backwards compatible)."""
+        """Get all secret values for a connection (backwards compatible).
+
+        Args:
+            connection_id: Vault connection identifier.
+        """
         raw = self.get_secrets_raw(connection_id)
         return {name: data["value"] for name, data in raw.items()}
     
     def get_secret(self, connection_id: str, secret_name: str) -> Optional[str]:
-        """Get a single secret value."""
+        """Get a single secret value.
+
+        Args:
+            connection_id: Vault connection identifier.
+            secret_name: Name of the secret to retrieve.
+        """
         raw = self.get_secrets_raw(connection_id)
         secret = raw.get(secret_name)
         return secret["value"] if secret else None
     
     def get_secret_with_metadata(self, connection_id: str, secret_name: str) -> Optional[Dict[str, Any]]:
-        """Get a secret with full metadata (value, type, description)."""
+        """Get a secret with full metadata (value, type, description).
+
+        Args:
+            connection_id: Vault connection identifier.
+            secret_name: Name of the secret to retrieve.
+        """
         raw = self.get_secrets_raw(connection_id)
         return raw.get(secret_name)
     
     def list_secret_refs(self, connection_id: str) -> List[Dict[str, Any]]:
-        """List secret refs (metadata only)."""
+        """List secret refs (metadata only).
+
+        Args:
+            connection_id: Vault connection identifier.
+        """
         resp = httpx.get(
             f"{self.base_url}/vault/connections/{connection_id}/secrets",
             headers=self.headers,
@@ -154,11 +197,20 @@ def get_client() -> VaultClient:
     return _client
 
 def get_secret(connection_id: str, secret_name: str) -> Optional[str]:
-    """Convenience: get a secret value."""
+    """Convenience: get a secret value.
+
+    Args:
+        connection_id: Vault connection identifier.
+        secret_name: Name of the secret to retrieve.
+    """
     return get_client().get_secret(connection_id, secret_name)
 
 def get_secrets(connection_id: str) -> Dict[str, str]:
-    """Convenience: get all secrets for a connection."""
+    """Convenience: get all secrets for a connection.
+
+    Args:
+        connection_id: Vault connection identifier.
+    """
     return get_client().get_secrets(connection_id)
 
 

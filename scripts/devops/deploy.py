@@ -38,13 +38,27 @@ _CLI_SEPARATOR_WIDTH = 50
 
 
 def log(msg: str, level: str = "info"):
-    """Print colored log message."""
+    """Print colored log message.
+
+    Args:
+        msg: Message text to display.
+        level: Log level (info, success, warn, error).
+    """
     colors = {"info": CYAN, "success": GREEN, "warn": YELLOW, "error": RED}
     print(f"{colors.get(level, RESET)}{msg}{RESET}")
 
 
 def run_cmd(cmd: list, cwd: Path = None, check: bool = True) -> subprocess.CompletedProcess:
-    """Run a command with error handling."""
+    """Run a command with error handling.
+
+    Args:
+        cmd: Command and arguments list.
+        cwd: Working directory for the subprocess.
+        check: If True, exit on non-zero return code.
+
+    Returns:
+        Completed process result.
+    """
     try:
         result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=_SUBPROCESS_TIMEOUT)
         if check and result.returncode != 0:
@@ -75,7 +89,14 @@ def check_secrets() -> bool:
 
 
 def setup_database(skip: bool = False) -> bool:
-    """Set up D1 database and apply schema."""
+    """Set up D1 database and apply schema.
+
+    Args:
+        skip: If True, skip database setup entirely.
+
+    Returns:
+        True if database is ready.
+    """
     if skip:
         log("⏭️  Skipping database setup", "warn")
         return True

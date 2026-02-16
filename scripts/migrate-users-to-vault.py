@@ -107,7 +107,15 @@ def get_vault_groups():
     return {g['name']: g['id'] for g in groups}
 
 def create_vault_user(email, display_name):
-    """Create user in vault-api."""
+    """Create user in vault-api.
+
+    Args:
+        email: User email address.
+        display_name: Human-readable name for the user.
+
+    Returns:
+        User ID string if created or found, None on failure.
+    """
     headers = get_vault_headers()
     
     resp = requests.post(
@@ -140,7 +148,16 @@ def create_vault_user(email, display_name):
     return None
 
 def add_user_to_group(user_id, group_id, group_name):
-    """Add user to vault-api group."""
+    """Add user to vault-api group.
+
+    Args:
+        user_id: Vault user identifier.
+        group_id: Vault group identifier.
+        group_name: Group name for logging.
+
+    Returns:
+        True if user was added or already a member.
+    """
     headers = get_vault_headers()
     
     resp = requests.post(
@@ -159,7 +176,15 @@ def add_user_to_group(user_id, group_id, group_name):
     return False
 
 def migrate_employee(employee, groups):
-    """Migrate a single employee to vault-api."""
+    """Migrate a single employee to vault-api.
+
+    Args:
+        employee: Employee record dict from LMS database.
+        groups: Mapping of group names to group IDs.
+
+    Returns:
+        Migration result dict or None on failure.
+    """
     # Parse email
     try:
         emails = json.loads(employee.get('emails_json', '[]'))

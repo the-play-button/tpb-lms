@@ -106,7 +106,15 @@ def check_wrangler_auth() -> tuple[bool, str]:
 
 
 def run_d1_command(command: str, remote: bool = True) -> tuple[bool, str]:
-    """Execute une commande D1 via wrangler."""
+    """Execute une commande D1 via wrangler.
+
+    Args:
+        command: SQL command string to execute.
+        remote: If True, execute against remote D1 database.
+
+    Returns:
+        Tuple of (success, output_or_error).
+    """
     cmd = ["npx", "wrangler", "d1", "execute", "lms-db", "--command", command]
     if remote:
         cmd.append("--remote")
@@ -128,7 +136,15 @@ def run_d1_command(command: str, remote: bool = True) -> tuple[bool, str]:
 
 
 def run_d1_file(file_path: str, remote: bool = True) -> tuple[bool, str]:
-    """Execute un fichier SQL via wrangler."""
+    """Execute un fichier SQL via wrangler.
+
+    Args:
+        file_path: Path to the SQL file to execute.
+        remote: If True, execute against remote D1 database.
+
+    Returns:
+        Tuple of (success, output_or_error).
+    """
     cmd = ["npx", "wrangler", "d1", "execute", "lms-db", "--file", file_path]
     if remote:
         cmd.append("--remote")
@@ -176,7 +192,14 @@ def run_frontend_deploy() -> tuple[bool, str]:
 
 
 def parse_wrangler_json(output: str) -> dict:
-    """Parse la sortie JSON de wrangler d1 execute."""
+    """Parse la sortie JSON de wrangler d1 execute.
+
+    Args:
+        output: Raw stdout from wrangler command.
+
+    Returns:
+        Parsed result dict or empty dict on failure.
+    """
     try:
         # Chercher le bloc JSON dans la sortie
         lines = output.split('\n')
@@ -197,7 +220,15 @@ def parse_wrangler_json(output: str) -> dict:
 
 
 def get_table_count(table: str, remote: bool = True) -> tuple[int, str]:
-    """Récupère le nombre de lignes dans une table. Returns (count, error_msg)."""
+    """Récupère le nombre de lignes dans une table.
+
+    Args:
+        table: Database table name.
+        remote: If True, query remote D1 database.
+
+    Returns:
+        Tuple of (count, error_msg). Count is -1 on error.
+    """
     success, output = run_d1_command(f"SELECT COUNT(*) as c FROM {table};", remote)
     if success:
         data = parse_wrangler_json(output)
@@ -211,7 +242,15 @@ def get_table_count(table: str, remote: bool = True) -> tuple[int, str]:
 
 
 def clear_table(table: str, remote: bool = True) -> tuple[bool, int]:
-    """Vide une table et retourne le nombre de lignes supprimées."""
+    """Vide une table et retourne le nombre de lignes supprimées.
+
+    Args:
+        table: Database table name to clear.
+        remote: If True, execute against remote D1 database.
+
+    Returns:
+        Tuple of (success, deleted_count).
+    """
     count_before, _ = get_table_count(table, remote)
     success, output = run_d1_command(f"DELETE FROM {table};", remote)
     if not success:
@@ -224,7 +263,14 @@ def clear_table(table: str, remote: bool = True) -> tuple[bool, int]:
 
 
 def seed_courses(remote: bool = True) -> bool:
-    """Re-seed courses from 03.Orchestration/lms/courses/*.json"""
+    """Re-seed courses from 03.Orchestration/lms/courses/*.json.
+
+    Args:
+        remote: If True, seed against remote D1 database.
+
+    Returns:
+        True if all courses were seeded successfully.
+    """
     if not COURSES_DIR.exists():
         print(f"  {YELLOW}⚠ Dossier courses non trouvé: {COURSES_DIR}{RESET}")
         return False
@@ -262,7 +308,14 @@ def seed_courses(remote: bool = True) -> bool:
 
 
 def verify_database_state(remote: bool = True) -> dict:
-    """Vérifie l'état de la base de données."""
+    """Vérifie l'état de la base de données.
+
+    Args:
+        remote: If True, query remote D1 database.
+
+    Returns:
+        State dict with cleared, seeded, reference, and errors keys.
+    """
     state = {
         "cleared": {},
         "seeded": {},
@@ -298,7 +351,14 @@ def verify_database_state(remote: bool = True) -> dict:
 
 
 def print_database_state(state: dict):
-    """Affiche l'état de la base de données."""
+    """Affiche l'état de la base de données.
+
+    Args:
+        state: Database state dict from verify_database_state.
+
+    Returns:
+        True if database state is healthy.
+    """
     print(f"\n{BOLD}📊 État de la base de données{RESET}")
     print("─" * _CLI_SEPARATOR_WIDTH)
     

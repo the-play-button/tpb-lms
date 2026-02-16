@@ -26,7 +26,15 @@ _CLI_SEPARATOR_WIDTH = 50
 
 
 def run_d1_query(sql: str, cwd: Path = None) -> dict:
-    """Execute a D1 query via wrangler."""
+    """Execute a D1 query via wrangler.
+
+    Args:
+        sql: SQL query string to execute.
+        cwd: Working directory for the wrangler command.
+
+    Returns:
+        Parsed query result dict.
+    """
     cmd = [
         "npx", "wrangler", "d1", "execute", "lms-db", "--remote",
         "--command", sql
@@ -56,7 +64,15 @@ def run_d1_query(sql: str, cwd: Path = None) -> dict:
 
 
 def run_d1_command(sql: str, cwd: Path = None) -> bool:
-    """Execute a D1 command (INSERT/UPDATE) via wrangler."""
+    """Execute a D1 command (INSERT/UPDATE) via wrangler.
+
+    Args:
+        sql: SQL command string to execute.
+        cwd: Working directory for the wrangler command.
+
+    Returns:
+        True if the command succeeded.
+    """
     cmd = [
         "npx", "wrangler", "d1", "execute", "lms-db", "--remote",
         "--command", sql
@@ -89,7 +105,15 @@ def fetch_classes() -> list:
 
 
 def migrate_class(cls: dict, dry_run: bool = True) -> dict:
-    """Migrate a single class to unified.to format."""
+    """Migrate a single class to unified.to format.
+
+    Args:
+        cls: Class record dict from the database.
+        dry_run: If True, preview changes without applying.
+
+    Returns:
+        Result dict with class ID, changes list, and status.
+    """
     class_id = cls["id"]
     
     # Parse existing JSON fields

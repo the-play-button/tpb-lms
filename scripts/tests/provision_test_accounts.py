@@ -87,7 +87,14 @@ def get_vault_headers():
         sys.exit(1)
 
 def create_user_via_vault(account):
-    """Create user via vault-api."""
+    """Create user via vault-api.
+
+    Args:
+        account: Account config dict with email, display_name, and lms_role.
+
+    Returns:
+        User ID string if created or found, None on failure.
+    """
     print(f"🔧 Creating user: {account['email']} ({account['lms_role']})")
     
     headers = get_vault_headers()
@@ -142,9 +149,15 @@ def create_user_via_vault(account):
     return user_id
 
 def get_vault_role_name(lms_role):
-    """
-    Map LMS role to vault-api role name.
+    """Map LMS role to vault-api role name.
+
     Uses tpblms namespace prefix (matches app namespace).
+
+    Args:
+        lms_role: LMS role name (admin, instructor, or student).
+
+    Returns:
+        Vault role name string or None for students.
     """
     if lms_role == 'admin':
         return 'tpblms_admin'
@@ -154,13 +167,19 @@ def get_vault_role_name(lms_role):
         return None  # Students don't need a vault role
 
 def assign_role_to_user(user_id, lms_role):
-    """
-    Assign LMS role to user via vault-api groups.
-    
+    """Assign LMS role to user via vault-api groups.
+
     Role assignment in vault-api works via groups:
     1. User added to group (e.g., lms_admins)
     2. Group has role assigned (e.g., lms_admin)
     3. User inherits role through group membership
+
+    Args:
+        user_id: Vault user identifier.
+        lms_role: LMS role name (admin, instructor, or student).
+
+    Returns:
+        True if role was assigned successfully.
     """
     vault_role = get_vault_role_name(lms_role)
     
@@ -210,7 +229,15 @@ def assign_role_to_user(user_id, lms_role):
     return True
 
 def create_lms_contact_data(account, user_id):
-    """Create corresponding data in LMS database."""
+    """Create corresponding data in LMS database.
+
+    Args:
+        account: Account config dict with email, display_name, and lms_role.
+        user_id: Vault user identifier.
+
+    Returns:
+        Contact ID string if created, False on failure.
+    """
     print(f"📊 Creating LMS data for {account['email']}")
     
     # This creates the crm_contact and hris_employee records

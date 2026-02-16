@@ -77,7 +77,12 @@ OPTIONAL_SECRETS = {
 # =============================================================================
 
 def log(msg: str, level: str = "info"):
-    """Print colored log message."""
+    """Print colored log message.
+
+    Args:
+        msg: Message text to display.
+        level: Log level (info, success, warn, error, dim).
+    """
     colors = {"info": CYAN, "success": GREEN, "warn": YELLOW, "error": RED, "dim": DIM}
     print(f"{colors.get(level, RESET)}{msg}{RESET}")
 
@@ -90,7 +95,10 @@ def get_project_root() -> Path:
 def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:
     """
     Get list of configured secrets from Cloudflare Worker using wrangler.
-    
+
+    Args:
+        worker_name: Optional worker name override.
+
     Returns:
         Set of secret names currently configured in the worker.
     """

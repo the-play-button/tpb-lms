@@ -44,13 +44,25 @@ _CLI_SEPARATOR_WIDTH = 50
 
 
 def log(msg: str, level: str = "info"):
-    """Print colored log message."""
+    """Print colored log message.
+
+    Args:
+        msg: Message text to display.
+        level: Log level (info, success, warn, error, dim).
+    """
     colors = {"info": CYAN, "success": GREEN, "warn": YELLOW, "error": RED, "dim": DIM}
     print(f"{colors.get(level, RESET)}{msg}{RESET}")
 
 
 def run_sql(query: str) -> Optional[List[Dict[str, Any]]]:
-    """Execute SQL query via wrangler and return results."""
+    """Execute SQL query via wrangler and return results.
+
+    Args:
+        query: SQL query string to execute.
+
+    Returns:
+        List of result dicts or None on error.
+    """
     cmd = [
         "npx", "wrangler", "d1", "execute", "lms-db",
         "--remote", "--command", query
@@ -109,7 +121,14 @@ def get_user_id() -> Optional[str]:
 # =============================================================================
 
 def validate_fresh_user(user_id: str) -> bool:
-    """Validate fresh user state (clean_slate fixture)."""
+    """Validate fresh user state (clean_slate fixture).
+
+    Args:
+        user_id: User identifier to validate.
+
+    Returns:
+        True if all fresh-user checks pass.
+    """
     log("\n🔍 Validating: Fresh User State", "info")
     
     all_pass = True
@@ -157,7 +176,14 @@ def validate_fresh_user(user_id: str) -> bool:
 
 
 def validate_video_resume(user_id: str) -> bool:
-    """Validate video resume state (video position saved)."""
+    """Validate video resume state (video position saved).
+
+    Args:
+        user_id: User identifier to validate.
+
+    Returns:
+        True if video resume state is valid.
+    """
     log("\n🔍 Validating: Video Resume State", "info")
     
     all_pass = True
@@ -195,7 +221,14 @@ def validate_video_resume(user_id: str) -> bool:
 
 
 def validate_quiz_complete(user_id: str) -> bool:
-    """Validate quiz completion state."""
+    """Validate quiz completion state.
+
+    Args:
+        user_id: User identifier to validate.
+
+    Returns:
+        True if quiz completion state is valid.
+    """
     log("\n🔍 Validating: Quiz Complete State", "info")
     
     all_pass = True
@@ -253,7 +286,14 @@ def validate_quiz_complete(user_id: str) -> bool:
 
 
 def validate_step_progress(user_id: str) -> bool:
-    """Validate step completion progress."""
+    """Validate step completion progress.
+
+    Args:
+        user_id: User identifier to validate.
+
+    Returns:
+        True if step progress state is valid.
+    """
     log("\n🔍 Validating: Step Progress State", "info")
     
     all_pass = True

@@ -45,7 +45,15 @@ _CLI_SEPARATOR_WIDTH = 60
 
 
 def run_test_module(module_name, tests):
-    """Run a list of tests and return (passed, failed) counts."""
+    """Run a list of tests and return (passed, failed) counts.
+
+    Args:
+        module_name: Display name for the test module section.
+        tests: List of (name, test_fn) tuples to execute.
+
+    Returns:
+        Tuple of (passed_count, failed_count).
+    """
     log_section(module_name)
     
     passed = 0
