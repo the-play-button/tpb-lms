@@ -18,6 +18,7 @@
 
 import { jsonResponse } from './cors.js';
 import { VaultClient } from './lib/vaultClient.js';
+import { getAuthConfig } from './config/auth.js';
 
 // Cache for JWKS keys
 let jwksCache = null;
@@ -331,65 +332,195 @@ export async function getOrCreateContact(email, env) {
 }
 
 // ============================================
+// Logto OIDC JWT Validation
+// ============================================
+
+// JWKS cache for OIDC providers
+let oidcJwksCache = null;
+let oidcJwksCacheTime = 0;
+
+/**
+ * Fetch and cache JWKS from an OIDC provider (Logto)
+ */
+async function getOidcJWKS(issuer, jwksUri) {
+    const now = Date.now();
+    if (oidcJwksCache && (now - oidcJwksCacheTime) < JWKS_CACHE_TTL) {
+        return oidcJwksCache;
+    }
+
+    const url = jwksUri || `${issuer}/jwks`;
+    const response = await fetch(url);
+    if (!response.ok) {
+        throw new Error(`Failed to fetch OIDC JWKS from ${url}: ${response.status}`);
+    }
+
+    oidcJwksCache = await response.json();
+    oidcJwksCacheTime = now;
+    return oidcJwksCache;
+}
+
+/**
+ * Verify Logto OIDC JWT with full signature validation
+ */
+export async function verifyOidcJWT(token, env) {
+    if (!token) {
+        return { valid: false, error: 'No token provided' };
+    }
+
+    const authConfig = getAuthConfig(env);
+
+    try {
+        const parts = token.split('.');
+        if (parts.length !== 3) {
+            return { valid: false, error: 'Invalid JWT format' };
+        }
+
+        const [headerB64, payloadB64, signatureB64] = parts;
+        const header = JSON.parse(new TextDecoder().decode(base64urlDecode(headerB64)));
+        const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(payloadB64)));
+
+        // Check expiration
+        const now = Math.floor(Date.now() / 1000);
+        if (payload.exp && payload.exp < now) {
+            return { valid: false, error: 'Token expired' };
+        }
+
+        // Validate issuer
+        if (payload.iss !== authConfig.logto.issuer) {
+            return { valid: false, error: `Invalid issuer: ${payload.iss}` };
+        }
+
+        // Validate audience if configured
+        if (authConfig.logto.appId && payload.aud) {
+            const audiences = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
+            if (!audiences.includes(authConfig.logto.appId)) {
+                return { valid: false, error: 'Token not issued for this application' };
+            }
+        }
+
+        // Verify signature against JWKS
+        if (header.kid) {
+            const jwks = await getOidcJWKS(authConfig.logto.issuer, authConfig.logto.jwksUri);
+            const key = jwks.keys.find(k => k.kid === header.kid);
+
+            if (!key) {
+                return { valid: false, error: 'Key not found in OIDC JWKS' };
+            }
+
+            const publicKey = await importPublicKey(key);
+            const signatureBytes = base64urlDecode(signatureB64);
+            const dataToVerify = new TextEncoder().encode(`${headerB64}.${payloadB64}`);
+
+            const valid = await crypto.subtle.verify(
+                'RSASSA-PKCS1-v1_5',
+                publicKey,
+                signatureBytes,
+                dataToVerify
+            );
+
+            if (!valid) {
+                return { valid: false, error: 'Invalid OIDC signature' };
+            }
+        }
+
+        return {
+            valid: true,
+            email: payload.email || payload.sub,
+            payload,
+            authMethod: 'logto'
+        };
+
+    } catch (error) {
+        console.error('OIDC JWT verification error:', error);
+        return { valid: false, error: error.message };
+    }
+}
+
+// ============================================
 // Main Authentication Function
 // ============================================
 
 /**
  * Authenticate request using JWT OR API Key
- * 
+ *
  * Checks in order:
- * 1. Cf-Access-Jwt-Assertion header (JWT from CF Access)
- * 2. Authorization: Bearer header (API Key)
+ * 1. Cf-Access-Jwt-Assertion header (JWT from CF Access or Logto)
+ * 2. Authorization: Bearer header (API Key or Logto OIDC token)
  */
 export async function authenticateRequest(request, env) {
+    const authConfig = getAuthConfig(env);
+
     // Try JWT first (browser users + CF Service Tokens)
-    const jwtToken = request.headers.get('Cf-Access-Jwt-Assertion');
+    let jwtToken = request.headers.get('Cf-Access-Jwt-Assertion');
+    let jwtSource = 'cf-access';
+
+    // If no CF Access JWT but Logto is enabled, check Authorization: Bearer for OIDC tokens
+    const authHeader = request.headers.get('Authorization');
+    if (!jwtToken && authConfig.useLogto && authHeader?.startsWith('Bearer ')) {
+        const bearerToken = authHeader.slice(7);
+        // OIDC JWTs contain dots, API keys start with tpb_
+        if (!bearerToken.startsWith('tpb_') && bearerToken.includes('.')) {
+            jwtToken = bearerToken;
+            jwtSource = 'bearer-oidc';
+        }
+    }
+
     if (jwtToken) {
-        const jwtResult = await verifyAccessJWT(jwtToken, env);
-        
+        // Detect token type by peeking at issuer
+        let jwtResult;
+        try {
+            const peekPayload = JSON.parse(new TextDecoder().decode(base64urlDecode(jwtToken.split('.')[1])));
+            const isLogtoToken = peekPayload.iss && !peekPayload.iss.includes('cloudflareaccess.com');
+
+            if (authConfig.useLogto && isLogtoToken) {
+                jwtResult = await verifyOidcJWT(jwtToken, env);
+            } else {
+                jwtResult = await verifyAccessJWT(jwtToken, env);
+            }
+        } catch {
+            // Fallback: try CF Access validation
+            jwtResult = await verifyAccessJWT(jwtToken, env);
+        }
+
         if (jwtResult.valid) {
             const contact = await getOrCreateContact(jwtResult.email, env);
             const role = await resolveRole(jwtResult.email, env);
-            
-            return { 
-                user: { 
-                    email: jwtResult.email, 
-                    role, 
-                    payload: jwtResult.payload 
-                }, 
+
+            return {
+                user: {
+                    email: jwtResult.email,
+                    role,
+                    payload: jwtResult.payload
+                },
                 contact,
                 learner: contact,
-                authMethod: 'jwt'
+                authMethod: jwtResult.authMethod || 'jwt'
             };
         }
-        
+
         // JWT was provided but invalid
-        return { 
-            error: jsonResponse({ 
+        return {
+            error: jsonResponse({
                 error: `Authentication failed: ${jwtResult.error}`,
-                authMethod: 'jwt'
-            }, 403, request) 
+                authMethod: jwtResult.authMethod || 'jwt'
+            }, 403, request)
         };
     }
-    
+
     // Try API Key (scripts, integrations)
-    const authHeader = request.headers.get('Authorization');
     if (authHeader && authHeader.startsWith('Bearer ')) {
         const apiKey = authHeader.slice(7);
         const keyResult = await verifyAPIKey(apiKey, env);
-        
+
         if (keyResult.valid) {
-            // For API keys, we may or may not have a user_id
-            // If we do, resolve the contact
             let contact = null;
-            let role = 'student'; // Default for API keys
-            
+            let role = 'student';
+
             if (keyResult.userId) {
                 contact = await env.DB.prepare(`
                     SELECT * FROM crm_contact WHERE id = ?
                 `).bind(keyResult.userId).first();
-                
-                // Try to resolve role from contact email if available
+
                 if (contact?.emails_json) {
                     const emails = JSON.parse(contact.emails_json);
                     if (emails.length > 0) {
@@ -397,34 +528,34 @@ export async function authenticateRequest(request, env) {
                     }
                 }
             }
-            
-            return { 
-                user: { 
+
+            return {
+                user: {
                     keyId: keyResult.keyId,
                     keyName: keyResult.keyName,
                     scopes: keyResult.scopes,
                     role
-                }, 
+                },
                 contact,
                 learner: contact,
                 authMethod: 'api_key'
             };
         }
-        
+
         // API Key was provided but invalid
-        return { 
-            error: jsonResponse({ 
+        return {
+            error: jsonResponse({
                 error: `Authentication failed: ${keyResult.error}`,
                 authMethod: 'api_key'
-            }, 403, request) 
+            }, 403, request)
         };
     }
-    
+
     // No authentication provided
-    return { 
-        error: jsonResponse({ 
+    return {
+        error: jsonResponse({
             error: 'Missing authentication. Provide Cf-Access-Jwt-Assertion or Authorization: Bearer header.',
             hint: 'Use JWT for browser access, API Key for programmatic access.'
-        }, 401, request) 
+        }, 401, request)
     };
 }

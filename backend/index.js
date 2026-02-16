@@ -36,6 +36,7 @@ import { getGitHubContent, listGitHubDirectory } from './handlers/content.js';
 import { addTraceId, withTraceHeader } from './middleware/trace.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
+import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto.js';
 import logger from './utils/log.js';
 
 const log = logger('worker');
@@ -105,6 +106,17 @@ export default {
             
             if (path === '/api/health') {
                 return await handleHealthCheck(env, request);
+            }
+
+            // Logto OAuth routes (public, only active when USE_LOGTO=true)
+            if (path === '/auth/login' && request.method === 'GET') {
+                return await handleLogin(request, env);
+            }
+            if (path === '/auth/callback' && request.method === 'GET') {
+                return await handleCallback(request, env);
+            }
+            if (path === '/auth/logout' && request.method === 'GET') {
+                return await handleLogout(request, env);
             }
             
             // Tally webhook - uses extracted auth logic
