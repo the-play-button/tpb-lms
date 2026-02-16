@@ -39,6 +39,9 @@ RESET = "\033[0m"
 # Project root
 LMS_ROOT = Path(__file__).parent.parent.parent
 
+_SQL_TIMEOUT = 30
+_CLI_SEPARATOR_WIDTH = 50
+
 
 def log(msg: str, level: str = "info"):
     """Print colored log message."""
@@ -59,7 +62,7 @@ def run_sql(query: str) -> Optional[List[Dict[str, Any]]]:
             capture_output=True,
             text=True,
             cwd=LMS_ROOT,
-            timeout=30
+            timeout=_SQL_TIMEOUT
         )
         
         if result.returncode != 0:
@@ -361,7 +364,7 @@ Examples:
             log("No user found in database. Run some tests first.", "error")
             sys.exit(1)
     
-    print(f"\n{CYAN}{'='*50}{RESET}")
+    print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔍 LMS State Validation{RESET}")
     print(f"{CYAN}{'='*50}{RESET}")
     print(f"   Scenario: {args.scenario}")

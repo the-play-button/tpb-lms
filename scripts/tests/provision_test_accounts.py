@@ -22,6 +22,9 @@ from vault_client import VaultClient
 # vault-api endpoint
 VAULT_API_BASE = VaultClient.DEFAULT_URL
 
+_VAULT_API_TIMEOUT = 30
+_CLI_SEPARATOR_WIDTH = 50
+
 # Test accounts to create
 # Uses real emails with +alias for actual authentication via CF Access
 # Role names use tpblms_ namespace prefix in vault-api
@@ -101,7 +104,7 @@ def create_user_via_vault(account):
         f"{VAULT_API_BASE}/iam/users",
         headers=headers,
         json=user_payload,
-        timeout=30
+        timeout=_VAULT_API_TIMEOUT
     )
     
     if response.status_code == 409:
@@ -110,7 +113,7 @@ def create_user_via_vault(account):
         user_response = requests.get(
             f"{VAULT_API_BASE}/iam/users",
             headers=headers,
-            timeout=30
+            timeout=_VAULT_API_TIMEOUT
         )
         if user_response.status_code == 200:
             users = user_response.json().get('users', [])
@@ -174,7 +177,7 @@ def assign_role_to_user(user_id, lms_role):
     groups_response = requests.get(
         f"{VAULT_API_BASE}/iam/groups",
         headers=headers,
-        timeout=30
+        timeout=_VAULT_API_TIMEOUT
     )
     
     if groups_response.status_code != 200:
@@ -193,7 +196,7 @@ def assign_role_to_user(user_id, lms_role):
         f"{VAULT_API_BASE}/iam/groups/{target_group['id']}/members",
         headers=headers,
         json={'user_id': user_id},
-        timeout=30
+        timeout=_VAULT_API_TIMEOUT
     )
     
     if add_member_response.status_code == 409:
@@ -297,7 +300,7 @@ def main():
     
     # Summary
     print("📊 Provisioning Summary:")
-    print("=" * 50)
+    print("=" * _CLI_SEPARATOR_WIDTH)
     
     for result in results:
         status_icon = "✅" if result['status'] == 'success' else "⚠️"

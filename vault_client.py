@@ -32,9 +32,15 @@ def get_user_connection_id(email: str) -> str:
     return f"conn_user_{slugify_email(email)}"
 
 
+_VAULT_API_TIMEOUT = 10
+_SECRET_MASK_PREFIX_LEN = 4
+_SECRET_MASK_SUFFIX_LEN = 4
+_SECRET_MASK_MIN_LEN = 8
+
+
 class VaultClient:
     """Client for TPB Vault API."""
-    
+
     DEFAULT_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
     ENV_FILE = Path(__file__).parent / "lms/core/vault-api/.env"
     
@@ -82,7 +88,7 @@ class VaultClient:
     
     def health(self) -> Dict[str, Any]:
         """Health check (public)."""
-        resp = httpx.get(f"{self.base_url}/health", timeout=10)
+        resp = httpx.get(f"{self.base_url}/health", timeout=_VAULT_API_TIMEOUT)
         resp.raise_for_status()
         return resp.json()
     
@@ -91,7 +97,7 @@ class VaultClient:
         resp = httpx.get(
             f"{self.base_url}/vault/connections",
             headers=self.headers,
-            timeout=10
+            timeout=_VAULT_API_TIMEOUT
         )
         resp.raise_for_status()
         return resp.json().get("connections", [])
@@ -101,7 +107,7 @@ class VaultClient:
         resp = httpx.get(
             f"{self.base_url}/vault/connections/{connection_id}",
             headers=self.headers,
-            timeout=10
+            timeout=_VAULT_API_TIMEOUT
         )
         resp.raise_for_status()
         return resp.json().get("connection", {})
@@ -132,7 +138,7 @@ class VaultClient:
         resp = httpx.get(
             f"{self.base_url}/vault/connections/{connection_id}/secrets",
             headers=self.headers,
-            timeout=10
+            timeout=_VAULT_API_TIMEOUT
         )
         resp.raise_for_status()
         return resp.json().get("secrets", [])
@@ -182,7 +188,7 @@ if __name__ == "__main__":
         for name, data in secrets.items():
             value = data.get("value", "")
             desc = data.get("description", "")
-            masked = value[:4] + "..." + value[-4:] if len(value) > 8 else "****"
+            masked = value[:_SECRET_MASK_PREFIX_LEN] + "..." + value[-_SECRET_MASK_SUFFIX_LEN:] if len(value) > _SECRET_MASK_MIN_LEN else "****"
             desc_str = f" ({desc})" if desc else ""
             print(f"  {name}: {masked}{desc_str}")
 

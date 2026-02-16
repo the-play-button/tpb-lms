@@ -57,6 +57,11 @@ RESET = "\033[0m"
 # Project root (where wrangler.toml is)
 PROJECT_ROOT = Path(__file__).parent.parent.parent  # scripts/tests/ -> scripts/ -> lms/
 
+_WRANGLER_AUTH_TIMEOUT = 30
+_NODE_MINIMUM_VERSION = 20
+_CLI_SEPARATOR_WIDTH = 50
+_CLI_WIDE_SEPARATOR_WIDTH = 60
+
 
 def check_node_version() -> tuple[bool, str]:
     """Vérifie que Node.js >= 20 est disponible (requis par Wrangler)."""
@@ -67,7 +72,7 @@ def check_node_version() -> tuple[bool, str]:
         version = result.stdout.strip()
         # Parse version (e.g., "v22.16.0" -> 22)
         major = int(version.lstrip("v").split(".")[0])
-        if major < 20:
+        if major < _NODE_MINIMUM_VERSION:
             return False, f"Node {version} < v20 (requis par Wrangler)"
         return True, version
     except Exception as e:
@@ -84,7 +89,7 @@ def check_wrangler_auth() -> tuple[bool, str]:
     try:
         result = subprocess.run(
             ["npx", "wrangler", "whoami"],
-            capture_output=True, text=True, cwd=PROJECT_ROOT, timeout=30
+            capture_output=True, text=True, cwd=PROJECT_ROOT, timeout=_WRANGLER_AUTH_TIMEOUT
         )
         output = result.stdout + result.stderr
         if result.returncode != 0:
@@ -295,7 +300,7 @@ def verify_database_state(remote: bool = True) -> dict:
 def print_database_state(state: dict):
     """Affiche l'état de la base de données."""
     print(f"\n{BOLD}📊 État de la base de données{RESET}")
-    print("─" * 50)
+    print("─" * _CLI_SEPARATOR_WIDTH)
     
     # Tables vidées
     print(f"\n{CYAN}Tables de données (doivent être vides) :{RESET}")
@@ -338,17 +343,17 @@ def print_database_state(state: dict):
     print()
     is_ok = all_empty and seeded_ok and not state["errors"]
     if is_ok:
-        print(f"{GREEN}{'='*50}{RESET}")
+        print(f"{GREEN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
         print(f"{GREEN}✓ Base de données prête pour les tests !{RESET}")
-        print(f"{GREEN}{'='*50}{RESET}")
+        print(f"{GREEN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     elif state["errors"]:
-        print(f"{RED}{'='*50}{RESET}")
+        print(f"{RED}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
         print(f"{RED}✗ Des erreurs sont survenues{RESET}")
-        print(f"{RED}{'='*50}{RESET}")
+        print(f"{RED}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     else:
-        print(f"{YELLOW}{'='*50}{RESET}")
+        print(f"{YELLOW}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
         print(f"{YELLOW}⚠ Vérifiez l'état des tables ci-dessus{RESET}")
-        print(f"{YELLOW}{'='*50}{RESET}")
+        print(f"{YELLOW}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     
     return is_ok
 
@@ -370,9 +375,9 @@ def main():
     # Check Node version first (Wrangler requires Node >= 20)
     node_ok, node_info = check_node_version()
     if not node_ok:
-        print(f"\n{RED}{'='*60}{RESET}")
+        print(f"\n{RED}{'=' * _CLI_WIDE_SEPARATOR_WIDTH}{RESET}")
         print(f"{RED}❌ ERREUR NODE.JS{RESET}")
-        print(f"{RED}{'='*60}{RESET}")
+        print(f"{RED}{'=' * _CLI_WIDE_SEPARATOR_WIDTH}{RESET}")
         print(f"\n{YELLOW}Wrangler requiert Node.js >= 20.0.0{RESET}")
         print(f"Version actuelle: {RED}{node_info}{RESET}")
         print(f"\n{CYAN}Solution:{RESET}")
@@ -385,9 +390,9 @@ def main():
     # Check Wrangler auth (especially for Docker/CI)
     auth_ok, auth_info = check_wrangler_auth()
     if not auth_ok:
-        print(f"\n{RED}{'='*60}{RESET}")
+        print(f"\n{RED}{'=' * _CLI_WIDE_SEPARATOR_WIDTH}{RESET}")
         print(f"{RED}❌ ERREUR AUTHENTIFICATION WRANGLER{RESET}")
-        print(f"{RED}{'='*60}{RESET}")
+        print(f"{RED}{'=' * _CLI_WIDE_SEPARATOR_WIDTH}{RESET}")
         if auth_info == "AUTH_NONINTERACTIVE":
             print(f"\n{YELLOW}Environnement non-interactif détecté (Docker/CI){RESET}")
             print(f"\n{CYAN}Solution:{RESET}")
@@ -422,9 +427,9 @@ def main():
         sys.exit(0 if not state["errors"] else 1)
     
     # Avertissement
-    print(f"\n{YELLOW}{'='*60}{RESET}")
+    print(f"\n{YELLOW}{'=' * _CLI_WIDE_SEPARATOR_WIDTH}{RESET}")
     print(f"{YELLOW}⚠️  LMS DATABASE RESET - DEV MODE ONLY{RESET}")
-    print(f"{YELLOW}{'='*60}{RESET}\n")
+    print(f"{YELLOW}{'=' * _CLI_WIDE_SEPARATOR_WIDTH}{RESET}\n")
     
     if args.full:
         print(f"{RED}Mode FULL : Va réappliquer schema.sql (perte totale){RESET}")

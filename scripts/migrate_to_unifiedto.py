@@ -22,6 +22,8 @@ import json
 import subprocess
 from pathlib import Path
 
+_CLI_SEPARATOR_WIDTH = 50
+
 
 def run_d1_query(sql: str, cwd: Path = None) -> dict:
     """Execute a D1 query via wrangler."""
@@ -181,7 +183,7 @@ def main():
         return 1
     
     print("🔄 LMS Unified.to Migration")
-    print("=" * 50)
+    print("=" * _CLI_SEPARATOR_WIDTH)
     
     if args.dry_run:
         print("📋 DRY RUN - No changes will be made\n")

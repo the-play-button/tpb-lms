@@ -29,6 +29,9 @@ LOCAL_URL = "http://localhost:8787"
 # Default to prod
 API_BASE = PROD_URL
 
+_HTTP_TIMEOUT = 10
+_CLI_SEPARATOR_WIDTH = 50
+
 # Cloudflare Access Service Token (for authenticated tests)
 # SECURITY: No hardcoded credentials - must be provided via environment
 CF_ACCESS_CLIENT_ID = os.environ.get("CF_ACCESS_CLIENT_ID")
@@ -106,7 +109,7 @@ class TestLMSAPI:
         response = requests.options(
             f"{API_BASE}/api/health",
             headers={"Origin": "https://example.com"},
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         # OPTIONS should return 204
         assert response.status_code == 204, f"Expected 204, got {response.status_code}"
@@ -115,7 +118,7 @@ class TestLMSAPI:
         """Unknown endpoints should require auth (302 redirect to CF Access)."""
         response = requests.get(
             f"{API_BASE}/api/nonexistent-endpoint-xyz",
-            timeout=10,
+            timeout=_HTTP_TIMEOUT,
             allow_redirects=False
         )
         # Cloudflare Access returns 302 redirect to login
@@ -130,7 +133,7 @@ class TestLMSAPI:
         """Protected endpoints should redirect to CF Access login."""
         response = requests.get(
             f"{API_BASE}/api/courses",
-            timeout=10,
+            timeout=_HTTP_TIMEOUT,
             allow_redirects=False
         )
         # Cloudflare Access returns 302 redirect to login
@@ -147,7 +150,7 @@ class TestLMSAPI:
                 "class_id": "test",
                 "payload": {"position_sec": 10, "duration_sec": 100}
             },
-            timeout=10,
+            timeout=_HTTP_TIMEOUT,
             allow_redirects=False
         )
         # Cloudflare Access returns 302 redirect to login
@@ -157,7 +160,7 @@ class TestLMSAPI:
         """GET /api/leaderboard should require auth."""
         response = requests.get(
             f"{API_BASE}/api/leaderboard",
-            timeout=10,
+            timeout=_HTTP_TIMEOUT,
             allow_redirects=False
         )
         # Cloudflare Access returns 302 redirect to login
@@ -172,7 +175,7 @@ class TestLMSAPI:
         response = requests.post(
             f"{API_BASE}/api/tally-webhook?secret=wrong_secret",
             json={"eventType": "FORM_RESPONSE", "data": {}},
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         assert response.status_code == 403, f"Expected 403, got {response.status_code}"
 
@@ -185,7 +188,7 @@ class TestLMSAPI:
         response = requests.get(
             f"{API_BASE}/api/courses",
             headers=get_auth_headers(),
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         data = response.json()
@@ -196,7 +199,7 @@ class TestLMSAPI:
         response = requests.get(
             f"{API_BASE}/api/leaderboard",
             headers=get_auth_headers(),
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         data = response.json()
@@ -207,7 +210,7 @@ class TestLMSAPI:
         response = requests.get(
             f"{API_BASE}/api/badges",
             headers=get_auth_headers(),
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         data = response.json()
@@ -218,7 +221,7 @@ class TestLMSAPI:
         response = requests.get(
             f"{API_BASE}/api/auth/session",
             headers=get_auth_headers(),
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         # Session might return user info or error if service token doesn't have user context
         assert response.status_code in [200, 401], f"Expected 200/401, got {response.status_code}"
@@ -231,7 +234,7 @@ class TestLMSAPI:
         """API should return rate limit headers (GAP-1415)."""
         response = requests.get(
             f"{API_BASE}/api/health",
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         # Rate limit only applies to POST requests, but headers should be present
         assert response.status_code == 200
@@ -241,7 +244,7 @@ class TestLMSAPI:
         response = requests.get(
             f"{API_BASE}/api/signals/wge-onboarding",
             headers=get_auth_headers(),
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         data = response.json()
@@ -255,7 +258,7 @@ class TestLMSAPI:
         response = requests.get(
             f"{API_BASE}/api/signals/wge-onboarding",
             headers=get_auth_headers(),
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         assert response.status_code == 200, f"Expected 200, got {response.status_code}"
         data = response.json()
@@ -279,7 +282,7 @@ class TestLMSAPI:
                 "class_id": "wge-onboarding-1",
                 "payload": {"position_sec": 10, "duration_sec": 100}
             },
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         # Should work with auth (201) or fail gracefully
         assert response.status_code in [201, 200, 401], f"Expected 201/200/401, got {response.status_code}"
@@ -292,7 +295,7 @@ class TestLMSAPI:
         """Request without any auth should return 401 (not 302 redirect)."""
         response = requests.get(
             f"{API_BASE}/api/courses",
-            timeout=10,
+            timeout=_HTTP_TIMEOUT,
             allow_redirects=False
         )
         # Once CF Access is removed from backend, we expect 401 not 302
@@ -304,7 +307,7 @@ class TestLMSAPI:
         response = requests.get(
             f"{API_BASE}/api/courses",
             headers={"Authorization": "Bearer tpb_invalid_key_12345"},
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         assert response.status_code == 403, f"Expected 403, got {response.status_code}"
         data = response.json()
@@ -316,7 +319,7 @@ class TestLMSAPI:
         response = requests.get(
             f"{API_BASE}/api/courses",
             headers={"Authorization": "Bearer wrong_format_key"},
-            timeout=10
+            timeout=_HTTP_TIMEOUT
         )
         assert response.status_code == 403, f"Expected 403, got {response.status_code}"
         data = response.json()
@@ -326,7 +329,7 @@ class TestLMSAPI:
         """GET /api/auth/api-keys without auth should fail."""
         response = requests.get(
             f"{API_BASE}/api/auth/api-keys",
-            timeout=10,
+            timeout=_HTTP_TIMEOUT,
             allow_redirects=False
         )
         # Should require authentication
@@ -337,7 +340,7 @@ class TestLMSAPI:
         response = requests.post(
             f"{API_BASE}/api/auth/api-keys",
             json={"name": "Test Key"},
-            timeout=10,
+            timeout=_HTTP_TIMEOUT,
             allow_redirects=False
         )
         # Should require authentication
@@ -606,7 +609,7 @@ def run_all_tests():
     total_failed += failed
     
     # Summary
-    print(f"\n{'='*50}")
+    print(f"\n{'=' * _CLI_SEPARATOR_WIDTH}")
     if total_failed == 0:
         print(f"{Colors.GREEN}📊 ALL TESTS PASSED: {total_passed}/{total_passed + total_failed}{Colors.END}")
     else:

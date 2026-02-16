@@ -21,6 +21,11 @@ import urllib.request
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
 FRONTEND_URL = "https://lms-viewer.matthieu-marielouise.workers.dev"
 
+_HTTP_TIMEOUT = 10
+_HTTP_STATUS_OK = 200
+_HTTP_STATUS_REDIRECT = 302
+_CLI_SEPARATOR_WIDTH = 50
+
 # Colors
 GREEN = "\033[92m"
 YELLOW = "\033[93m"
@@ -38,8 +43,8 @@ def check_backend() -> bool:
         ctx = ssl.create_default_context()
         req = urllib.request.Request(url, headers={"User-Agent": "LMS-Deploy-Check"})
         
-        with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
-            if resp.status != 200:
+        with urllib.request.urlopen(req, timeout=_HTTP_TIMEOUT, context=ctx) as resp:
+            if resp.status != _HTTP_STATUS_OK:
                 print(f"{RED}   ❌ HTTP {resp.status}{RESET}")
                 return False
             
@@ -79,10 +84,10 @@ def check_frontend() -> bool:
         ctx = ssl.create_default_context()
         req = urllib.request.Request(FRONTEND_URL, headers={"User-Agent": "LMS-Deploy-Check"})
         
-        with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
+        with urllib.request.urlopen(req, timeout=_HTTP_TIMEOUT, context=ctx) as resp:
             # Frontend behind Cloudflare Access will return 302
             # Direct access returns 200 with HTML
-            if resp.status == 200:
+            if resp.status == _HTTP_STATUS_OK:
                 content = resp.read().decode()
                 if "<html" in content.lower() or "<!doctype" in content.lower():
                     print(f"{GREEN}   ✅ Serving HTML{RESET}")
@@ -98,7 +103,7 @@ def check_frontend() -> bool:
                 
     except urllib.error.HTTPError as e:
         # 302 is expected with Cloudflare Access
-        if e.code == 302:
+        if e.code == _HTTP_STATUS_REDIRECT:
             print(f"{GREEN}   ✅ Redirecting (Cloudflare Access){RESET}")
             return True
         print(f"{RED}   ❌ HTTP Error: {e.code}{RESET}")
@@ -112,7 +117,7 @@ def check_frontend() -> bool:
 
 
 def main():
-    print(f"\n{CYAN}{'='*50}{RESET}")
+    print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔍 LMS Deployment Verification{RESET}")
     print(f"{CYAN}{'='*50}{RESET}\n")
     

@@ -41,6 +41,8 @@ from tests import test_05_isolation
 from tests import test_06_features
 from tests import test_07_entropy
 
+_CLI_SEPARATOR_WIDTH = 60
+
 
 def run_test_module(module_name, tests):
     """Run a list of tests and return (passed, failed) counts."""
@@ -98,12 +100,12 @@ def run_all_tests():
         total_failed += failed
     
     # Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * _CLI_SEPARATOR_WIDTH}")
     if total_failed == 0:
         print(f"{Colors.GREEN}📊 ALL TESTS PASSED: {total_passed}/{total_passed + total_failed}{Colors.END}")
     else:
         print(f"{Colors.RED}📊 RESULTS: {total_passed} passed, {total_failed} failed{Colors.END}")
-    print(f"{'='*60}")
+    print(f"{'=' * _CLI_SEPARATOR_WIDTH}")
     
     return total_failed == 0
 

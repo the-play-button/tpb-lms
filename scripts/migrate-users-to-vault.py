@@ -27,9 +27,12 @@ import sys
 import requests
 
 VAULT_API_URL = os.environ.get(
-    'VAULT_API_URL', 
+    'VAULT_API_URL',
     'https://tpb-vault-infra.matthieu-marielouise.workers.dev'
 )
+
+_VAULT_API_TIMEOUT = 30
+_CLI_SEPARATOR_WIDTH = 50
 
 def get_vault_headers():
     """Get auth headers for vault-api."""
@@ -93,7 +96,7 @@ def get_vault_groups():
     resp = requests.get(
         f"{VAULT_API_URL}/iam/groups",
         headers=headers,
-        timeout=30
+        timeout=_VAULT_API_TIMEOUT
     )
     
     if resp.status_code != 200:
@@ -116,7 +119,7 @@ def create_vault_user(email, display_name):
             'user_type': 'human',
             'grant_vault_access': True
         },
-        timeout=30
+        timeout=_VAULT_API_TIMEOUT
     )
     
     if resp.status_code == 201:
@@ -144,7 +147,7 @@ def add_user_to_group(user_id, group_id, group_name):
         f"{VAULT_API_URL}/iam/groups/{group_id}/members",
         headers=headers,
         json={'user_id': user_id},
-        timeout=30
+        timeout=_VAULT_API_TIMEOUT
     )
     
     if resp.status_code in [200, 201]:
@@ -246,9 +249,9 @@ def main():
     print()
     
     # Summary
-    print("=" * 50)
+    print("=" * _CLI_SEPARATOR_WIDTH)
     print("📊 Migration Summary")
-    print("=" * 50)
+    print("=" * _CLI_SEPARATOR_WIDTH)
     print(f"   Total employees: {len(employees)}")
     print(f"   Successfully migrated: {len(results)}")
     print()

@@ -33,6 +33,9 @@ FRONTEND_WORKER = "lms-viewer"
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
 FRONTEND_URL = "https://lms-viewer.matthieu-marielouise.workers.dev"
 
+_SUBPROCESS_TIMEOUT = 120
+_CLI_SEPARATOR_WIDTH = 50
+
 
 def log(msg: str, level: str = "info"):
     """Print colored log message."""
@@ -43,7 +46,7 @@ def log(msg: str, level: str = "info"):
 def run_cmd(cmd: list, cwd: Path = None, check: bool = True) -> subprocess.CompletedProcess:
     """Run a command with error handling."""
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=120)
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=_SUBPROCESS_TIMEOUT)
         if check and result.returncode != 0:
             log(f"❌ Command failed: {' '.join(cmd)}", "error")
             if result.stderr:
@@ -192,7 +195,7 @@ def main():
     # Default: deploy both if neither specified
     deploy_both = not args.backend and not args.frontend
     
-    print(f"\n{CYAN}{'='*50}{RESET}")
+    print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🚀 LMS Deployment Script{RESET}")
     print(f"{CYAN}{'='*50}{RESET}\n")
     
@@ -233,9 +236,9 @@ def main():
         print()
     
     # Done
-    print(f"{GREEN}{'='*50}{RESET}")
+    print(f"{GREEN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{GREEN}✅ Deployment complete!{RESET}")
-    print(f"{GREEN}{'='*50}{RESET}")
+    print(f"{GREEN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print()
     print(f"   Backend:  {BACKEND_URL}")
     print(f"   Frontend: {FRONTEND_URL}")

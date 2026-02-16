@@ -33,6 +33,8 @@ from vault_client import VaultClient
 API_BASE = "https://lms-api.matthieu-marielouise.workers.dev"
 LMS_ROOT = Path(__file__).parent.parent.parent
 
+_FIXTURE_TIMEOUT = 30
+
 
 def _get_access_credentials():
     """Get Cloudflare Access credentials from vault."""
@@ -130,7 +132,7 @@ def apply_fixture(fixture: str, user_id: str, email: str = None, api_base: str =
             f"{api_base}/api/test/seed",
             json=payload,
             headers=headers,
-            timeout=30
+            timeout=_FIXTURE_TIMEOUT
         )
         
         if resp.status_code == 200:

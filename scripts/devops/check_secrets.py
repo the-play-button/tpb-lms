@@ -35,6 +35,9 @@ CYAN = "\033[96m"
 DIM = "\033[2m"
 RESET = "\033[0m"
 
+_WRANGLER_TIMEOUT = 30
+_CLI_SEPARATOR_WIDTH = 50
+
 # =============================================================================
 # SECRETS CONFIGURATION
 # =============================================================================
@@ -103,7 +106,7 @@ def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:
             capture_output=True,
             text=True,
             cwd=root,
-            timeout=30
+            timeout=_WRANGLER_TIMEOUT
         )
         
         if result.returncode != 0:
@@ -145,7 +148,7 @@ def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> b
     Returns:
         True if all required secrets are present
     """
-    print(f"\n{CYAN}{'='*50}{RESET}")
+    print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔐 LMS Secrets Check{RESET}")
     print(f"{CYAN}{'='*50}{RESET}\n")
     
