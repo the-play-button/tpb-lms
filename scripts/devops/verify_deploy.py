@@ -116,7 +116,7 @@ def check_frontend() -> bool:
         return False
 
 
-def main():
+def main() -> None:
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔍 LMS Deployment Verification{RESET}")
     print(f"{CYAN}{'='*50}{RESET}\n")

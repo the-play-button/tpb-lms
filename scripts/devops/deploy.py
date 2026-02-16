@@ -37,7 +37,7 @@ _SUBPROCESS_TIMEOUT = 120
 _CLI_SEPARATOR_WIDTH = 50
 
 
-def log(msg: str, level: str = "info"):
+def log(msg: str, level: str = "info") -> None:
     """Print colored log message.
 
     Args:
@@ -48,7 +48,7 @@ def log(msg: str, level: str = "info"):
     print(f"{colors.get(level, RESET)}{msg}{RESET}")
 
 
-def run_cmd(cmd: list, cwd: Path = None, check: bool = True) -> subprocess.CompletedProcess:
+def run_cmd(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:
     """Run a command with error handling.
 
     Args:
@@ -203,7 +203,7 @@ def seed_courses() -> bool:
         return False
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(description="LMS Deployment Script")
     parser.add_argument("--backend", action="store_true", help="Deploy backend only")
     parser.add_argument("--frontend", action="store_true", help="Deploy frontend only")

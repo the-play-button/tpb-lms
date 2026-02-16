@@ -23,6 +23,7 @@ import json
 import os
 import subprocess
 import sys
+from typing import Any
 
 import requests
 
@@ -34,7 +35,7 @@ VAULT_API_URL = os.environ.get(
 _VAULT_API_TIMEOUT = 30
 _CLI_SEPARATOR_WIDTH = 50
 
-def get_vault_headers():
+def get_vault_headers() -> dict[str, str]:
     """Get auth headers for vault-api."""
     client_id = os.environ.get('VAULT_CLIENT_ID')
     client_secret = os.environ.get('VAULT_CLIENT_SECRET')
@@ -50,7 +51,7 @@ def get_vault_headers():
         'Content-Type': 'application/json'
     }
 
-def fetch_lms_employees():
+def fetch_lms_employees() -> list[dict[str, Any]]:
     """Fetch employees from LMS D1 database."""
     print("📊 Fetching employees from LMS database...")
     
@@ -89,7 +90,7 @@ def fetch_lms_employees():
     
     return []
 
-def get_vault_groups():
+def get_vault_groups() -> dict[str, str]:
     """Fetch existing groups from vault-api."""
     headers = get_vault_headers()
     
@@ -106,7 +107,7 @@ def get_vault_groups():
     groups = resp.json().get('groups', [])
     return {g['name']: g['id'] for g in groups}
 
-def create_vault_user(email, display_name):
+def create_vault_user(email: str, display_name: str) -> str | None:
     """Create user in vault-api.
 
     Args:
@@ -147,7 +148,7 @@ def create_vault_user(email, display_name):
     
     return None
 
-def add_user_to_group(user_id, group_id, group_name):
+def add_user_to_group(user_id: str, group_id: str, group_name: str) -> bool:
     """Add user to vault-api group.
 
     Args:
@@ -175,7 +176,7 @@ def add_user_to_group(user_id, group_id, group_name):
     print(f"      ❌ Failed to add to {group_name}: {resp.status_code}")
     return False
 
-def migrate_employee(employee, groups):
+def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:
     """Migrate a single employee to vault-api.
 
     Args:
@@ -239,7 +240,7 @@ def migrate_employee(employee, groups):
         'group': target_group
     }
 
-def main():
+def main() -> None:
     print("🚀 Migrating LMS users to vault-api...")
     print(f"   Target: {VAULT_API_URL}")
     print()

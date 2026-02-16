@@ -21,11 +21,12 @@ import argparse
 import json
 import subprocess
 from pathlib import Path
+from typing import Any
 
 _CLI_SEPARATOR_WIDTH = 50
 
 
-def run_d1_query(sql: str, cwd: Path = None) -> dict:
+def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:
     """Execute a D1 query via wrangler.
 
     Args:
@@ -63,7 +64,7 @@ def run_d1_query(sql: str, cwd: Path = None) -> dict:
         return {"results": []}
 
 
-def run_d1_command(sql: str, cwd: Path = None) -> bool:
+def run_d1_command(sql: str, cwd: Path | None = None) -> bool:
     """Execute a D1 command (INSERT/UPDATE) via wrangler.
 
     Args:
@@ -92,7 +93,7 @@ def run_d1_command(sql: str, cwd: Path = None) -> bool:
     return True
 
 
-def fetch_classes() -> list:
+def fetch_classes() -> list[dict[str, Any]]:
     """Fetch all lms_class records."""
     sql = """
         SELECT id, course_id, name, step_type, content_md, media_json, raw_json, sys_order_index
@@ -104,7 +105,7 @@ def fetch_classes() -> list:
     return result.get("results", [])
 
 
-def migrate_class(cls: dict, dry_run: bool = True) -> dict:
+def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:
     """Migrate a single class to unified.to format.
 
     Args:
@@ -196,7 +197,7 @@ def migrate_class(cls: dict, dry_run: bool = True) -> dict:
     return {"id": class_id, "changes": changes}
 
 
-def main():
+def main() -> int:
     parser = argparse.ArgumentParser(description="Migrate LMS data to unified.to format")
     parser.add_argument("--dry-run", action="store_true", help="Preview changes without applying")
     parser.add_argument("--execute", action="store_true", help="Apply changes to database")

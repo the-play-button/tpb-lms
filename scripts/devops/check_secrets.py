@@ -76,7 +76,7 @@ OPTIONAL_SECRETS = {
 # HELPERS
 # =============================================================================
 
-def log(msg: str, level: str = "info"):
+def log(msg: str, level: str = "info") -> None:
     """Print colored log message.
 
     Args:
@@ -217,7 +217,7 @@ def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> b
     return True
 
 
-def main():
+def main() -> None:
     parser = argparse.ArgumentParser(
         description="Check Cloudflare Worker secrets configuration",
         formatter_class=argparse.RawDescriptionHelpFormatter,
