@@ -15,6 +15,7 @@
  */
 
 import { VaultClient, getCachedSecret } from './vaultClient.js';
+import { log } from './log.js';
 
 // Singleton vault client
 let vaultClient = null;
@@ -47,7 +48,7 @@ export async function getSecret(env, vaultPath, envKey) {
         return value;
       }
     } catch (err) {
-      console.warn(`Failed to fetch secret from vault (${vaultPath}):`, err.message);
+      log.warn(`Failed to fetch secret from vault (${vaultPath}):`, err.message);
     }
   }
   

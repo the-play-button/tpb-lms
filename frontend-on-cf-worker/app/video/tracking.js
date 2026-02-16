@@ -8,7 +8,7 @@
 import { apiPost, generateIdempotencyKey } from '../api.js';
 import { refreshSignals } from '../course/loader.js';
 import { updateUIWithoutVideoReset } from '../course/renderer.js';
-import { log } from '../../utils/log.js';
+import { log } from '../log.js';
 import { getState } from '../state.js';
 
 // Video tracking state
@@ -41,7 +41,7 @@ function setupNativeVideoTracking(videoElement, videoDuration, courseId, classId
     
     // Play event
     videoElement.addEventListener('play', async () => {
-        console.log('▶️ Video started playing (native)');
+        log.debug('▶️ Video started playing (native)');
         isPlaying = true;
         const currentTime = Math.floor(videoElement.currentTime || 0);
         await sendVideoEvent('VIDEO_PLAY', 'external', currentTime, videoDuration, courseId, classId);
@@ -49,14 +49,14 @@ function setupNativeVideoTracking(videoElement, videoDuration, courseId, classId
     
     // Pause event
     videoElement.addEventListener('pause', () => {
-        console.log('⏸️ Video paused (native)');
+        log.debug('⏸️ Video paused (native)');
         isPlaying = false;
     });
     
     // Ended event
     videoElement.addEventListener('ended', async () => {
         if (videoCompletedHandled) return;
-        console.log('🏁 Video ended (native)');
+        log.debug('🏁 Video ended (native)');
         videoCompletedHandled = true;
         isPlaying = false;
         await sendVideoEvent('VIDEO_COMPLETE', 'external', videoDuration, videoDuration, courseId, classId);
@@ -125,7 +125,7 @@ export function setupVideoTracking(stepIndex, resumePosition = null) {
         if (resumePosition && resumePosition >= RESUME_THRESHOLD) {
             // Use loadeddata event to know when we can seek
             streamPlayer.addEventListener('loadeddata', () => {
-                console.log(`⏩ Resuming video at ${resumePosition}s`);
+                log.debug(`⏩ Resuming video at ${resumePosition}s`);
                 streamPlayer.currentTime = resumePosition;
                 lastPingPosition = Math.floor(resumePosition / 10) * 10 - 10;
             }, { once: true });
@@ -133,7 +133,7 @@ export function setupVideoTracking(stepIndex, resumePosition = null) {
         
         // Listen to play event
         streamPlayer.addEventListener('play', async () => {
-            console.log('▶️ Video started playing');
+            log.debug('▶️ Video started playing');
             isPlaying = true;
             const currentTime = Math.floor(streamPlayer.currentTime || 0);
             await sendVideoEvent('VIDEO_PLAY', videoId, currentTime, videoDuration, courseId, classId);
@@ -141,7 +141,7 @@ export function setupVideoTracking(stepIndex, resumePosition = null) {
         
         // Listen to pause event
         streamPlayer.addEventListener('pause', async () => {
-            console.log('⏸️ Video paused');
+            log.debug('⏸️ Video paused');
             isPlaying = false;
             const currentTime = Math.floor(streamPlayer.currentTime || 0);
             await sendVideoEvent('VIDEO_PAUSE', videoId, currentTime, videoDuration, courseId, classId);
@@ -149,7 +149,7 @@ export function setupVideoTracking(stepIndex, resumePosition = null) {
         
         // Listen to ended event
         streamPlayer.addEventListener('ended', async () => {
-            console.log('⏹️ Video ended');
+            log.debug('⏹️ Video ended');
             isPlaying = false;
             
             // Send final ping at 100%
@@ -170,10 +170,10 @@ export function setupVideoTracking(stepIndex, resumePosition = null) {
             }
         });
         
-        console.log('✅ Stream SDK tracking initialized');
+        log.debug('✅ Stream SDK tracking initialized');
         
     } catch (error) {
-        console.error('❌ Failed to initialize Stream SDK:', error);
+        log.error('❌ Failed to initialize Stream SDK:', error);
     }
 }
 
@@ -198,7 +198,7 @@ export function getResumePosition(classId) {
  */
 async function sendVideoEvent(eventType, videoId, position, duration, courseId, classId) {
     const progress = duration > 0 ? Math.floor((position / duration) * 100) : 0;
-    console.log(`📊 ${eventType}: ${position}s / ${duration}s (${progress}%)`);
+    log.debug(`📊 ${eventType}: ${position}s / ${duration}s (${progress}%)`);
     
     try {
         // Generate idempotency key for deduplication (GAP-711)
@@ -216,12 +216,12 @@ async function sendVideoEvent(eventType, videoId, position, duration, courseId, 
             }
         }, { idempotencyKey });
         
-        console.log(`📤 ${eventType} sent:`, result);
+        log.debug(`📤 ${eventType} sent:`, result);
         
         // If video completed, update UI to unlock quiz
         if (result.video_completed && !videoCompletedHandled) {
             videoCompletedHandled = true;
-            console.log('✅ Video completed! Updating UI to unlock quiz...');
+            log.debug('✅ Video completed! Updating UI to unlock quiz...');
             showToast('Quiz débloqué !', 'success');
             await refreshSignals();
             updateUIWithoutVideoReset();
@@ -230,7 +230,7 @@ async function sendVideoEvent(eventType, videoId, position, duration, courseId, 
         return result;
         
     } catch (error) {
-        console.warn(`Failed to send ${eventType}:`, error.message);
+        log.warn(`Failed to send ${eventType}:`, error.message);
     }
 }
 
@@ -246,7 +246,7 @@ async function sendVideoPing(videoId, position, duration, courseId, classId) {
  */
 export function stopVideoTracking() {
     if (streamPlayer) {
-        console.log('⏹️ Stopping video tracking');
+        log.debug('⏹️ Stopping video tracking');
         streamPlayer = null;
         lastPingPosition = -10;
         isPlaying = false;
@@ -263,7 +263,7 @@ export function stopVideoTracking() {
  */
 export function pauseVideo() {
     if (streamPlayer && isPlaying) {
-        console.log('👁️ Tab hidden - pausing video');
+        log.debug('👁️ Tab hidden - pausing video');
         streamPlayer.pause();
     }
 }

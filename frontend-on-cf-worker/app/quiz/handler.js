@@ -6,6 +6,7 @@
 
 import { getState, setState } from '../state.js';
 import { apiPost } from '../api.js';
+import { log } from '../log.js';
 import { refreshSignals } from '../course/loader.js';
 import { renderCurrentStep } from '../course/renderer.js';
 import { loadLeaderboard } from '../leaderboard.js';
@@ -110,11 +111,11 @@ En cliquant OK, vous acceptez :
  * Handle Tally form submission via postMessage
  */
 export async function handleTallySubmission(tallyEvent) {
-    console.log('📋 Quiz Tally submitted!', tallyEvent.payload);
-    console.log('📋 [DEBUG] currentQuizInfo:', currentQuizInfo);
+    log.debug('📋 Quiz Tally submitted!', tallyEvent.payload);
+    log.debug('📋 [DEBUG] currentQuizInfo:', currentQuizInfo);
     
     if (!currentQuizInfo) {
-        console.error('❌ No quiz info stored - cannot process submission');
+        log.error('❌ No quiz info stored - cannot process submission');
         return;
     }
     
@@ -131,14 +132,14 @@ export async function handleTallySubmission(tallyEvent) {
     
     try {
         // Call our API directly
-        console.log('📤 [DEBUG] Calling /api/quiz with payload:', payload);
+        log.debug('📤 [DEBUG] Calling /api/quiz with payload:', payload);
         const result = await apiPost('/quiz', payload);
         
-        console.log('📥 [DEBUG] Quiz API response:', result);
+        log.debug('📥 [DEBUG] Quiz API response:', result);
         
         if (result.passed) {
             // REUSSITE: Afficher corrections si pas 100%
-            console.log('✅ Quiz passed!');
+            log.debug('✅ Quiz passed!');
             
             if (result.wrongAnswers && result.wrongAnswers.length > 0) {
                 // Afficher le modal avec les corrections
@@ -161,7 +162,7 @@ export async function handleTallySubmission(tallyEvent) {
             refreshUserData();
         } else {
             // ECHEC: Afficher modal d'échec (video_completed a été reset côté backend)
-            console.log('❌ Quiz failed - must rewatch video');
+            log.debug('❌ Quiz failed - must rewatch video');
             showFailureModal(result.score, result.maxScore, result.percentage);
         }
         
@@ -170,7 +171,7 @@ export async function handleTallySubmission(tallyEvent) {
         renderCurrentStep();
         
     } catch (error) {
-        console.error('❌ [DEBUG] Failed to submit quiz:', error);
+        log.error('❌ [DEBUG] Failed to submit quiz:', error);
         alert('Erreur lors de la soumission du quiz. Veuillez rafraîchir la page.');
     }
 }
@@ -267,7 +268,7 @@ function showQuizPendingState() {
         }
     }
     
-    console.log('🔄 Quiz pending state shown');
+    log.debug('🔄 Quiz pending state shown');
 }
 
 /**

@@ -7,6 +7,7 @@
 
 import { api } from '../api.js';
 import { getState, setState } from '../state.js';
+import { log } from '../log.js';
 import { stopVideoTracking } from '../video/tracking.js';
 import { renderCurrentStep } from './renderer.js';
 import { getLanguage } from '../../i18n/index.js';
@@ -73,7 +74,7 @@ export async function loadCourse(courseId, initialStepIndex = null) {
         renderCurrentStep();
         
     } catch (error) {
-        console.error('Failed to load course:', error);
+        log.error('Failed to load course:', error);
         document.getElementById('somViewer').innerHTML = `
             <div class="error">Erreur: ${error.message}</div>
         `;
@@ -104,7 +105,7 @@ export async function refreshSignals() {
         setState('signals', signals);
         return signals;
     } catch (error) {
-        console.warn('Failed to refresh signals:', error.message);
+        log.warn('Failed to refresh signals:', error.message);
         return null;
     }
 }

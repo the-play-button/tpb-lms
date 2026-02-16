@@ -7,6 +7,7 @@
 import { api } from './api.js';
 import { getState, setState } from './state.js';
 import { iconMap } from './ui/badges.js';
+import { log } from './log.js';
 
 function createBadgeParticles(container) {
     const particlesDiv = document.createElement('div');
@@ -138,7 +139,7 @@ export async function refreshUserData() {
         setState('allBadges', updatedBadges);
         
     } catch (error) {
-        console.warn('Failed to refresh user data:', error.message);
+        log.warn('Failed to refresh user data:', error.message);
     }
 }
 

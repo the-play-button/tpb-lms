@@ -7,6 +7,7 @@
  */
 
 import { API_BASE } from '../api.js';
+import { log } from '../log.js';
 
 // Auth token cache (shared with api.js pattern)
 let authToken = null;
@@ -133,7 +134,7 @@ async function fetchContentWithI18nFallback(url) {
         const content = await fetchContentDirect(localizedUrl);
         return { content, lang: currentLang, url: localizedUrl };
     } catch (e) {
-        console.log(`[content] ${currentLang} not found, trying fallback...`);
+        log.debug(`[content] ${currentLang} not found, trying fallback...`);
     }
     
     // Fallback to English if not already
@@ -143,7 +144,7 @@ async function fetchContentWithI18nFallback(url) {
             const content = await fetchContentDirect(enUrl);
             return { content, lang: 'en', url: enUrl };
         } catch (e) {
-            console.log(`[content] en not found, trying original...`);
+            log.debug(`[content] en not found, trying original...`);
         }
     }
     
@@ -225,7 +226,7 @@ export async function fetchContent(url) {
         
         return content;
     } catch (error) {
-        console.error('Content fetch error:', error);
+        log.error('Content fetch error:', error);
         throw error;
     }
 }

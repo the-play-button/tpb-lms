@@ -10,6 +10,8 @@
  * - App state
  */
 
+import { log } from '../log.js';
+
 // Storage limits
 const MAX_ERRORS = 10;
 const MAX_BREADCRUMBS = 50;
@@ -164,7 +166,7 @@ function getAppState() {
  */
 export function initDebugCollector() {
     if (storage.initialized) {
-        console.warn('[Debug] Collector already initialized');
+        log.debug('[Debug] Collector already initialized');
         return;
     }
     
@@ -344,7 +346,7 @@ export function initDebugCollector() {
     });
     
     storage.initialized = true;
-    console.log('[Debug] Collector initialized');
+    log.debug('[Debug] Collector initialized');
 }
 
 /**

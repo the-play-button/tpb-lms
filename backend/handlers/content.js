@@ -6,6 +6,7 @@
  */
 
 import { jsonResponse } from '../cors.js';
+import { log } from '../lib/log.js';
 
 // GitHub API base URL
 const GITHUB_API_BASE = 'https://api.github.com';
@@ -192,12 +193,12 @@ export async function getGitHubContent(request, env, userContext) {
     const urlParam = url.searchParams.get('url');
     const langParam = url.searchParams.get('lang');
     // #region agent log H3
-    console.log('[DEBUG H3] urlParam:', urlParam, 'lang:', langParam);
+    log.debug('[DEBUG H3] urlParam:', urlParam, 'lang:', langParam);
     // #endregion
     if (urlParam) {
         const parsed = parseGitHubUrl(decodeURIComponent(urlParam));
         // #region agent log H3
-        console.log('[DEBUG H3] parsed:', JSON.stringify(parsed));
+        log.debug('[DEBUG H3] parsed:', JSON.stringify(parsed));
         // #endregion
         if (!parsed) {
             return jsonResponse({ error: 'Invalid GitHub URL format' }, 400, request);
@@ -222,20 +223,20 @@ export async function getGitHubContent(request, env, userContext) {
     // Inject i18n into path if lang parameter is provided
     if (langParam) {
         path = injectI18nIntoPath(path, langParam);
-        console.log('[DEBUG] i18n path:', path);
+        log.debug('[DEBUG] i18n path:', path);
     }
     
     // Get GitHub token
     const tokenResult = await getGitHubTokenWithDebug(env);
     const token = tokenResult.token;
     // #region agent log H1
-    console.log('[DEBUG H1] token fetched:', token ? `yes (${token.substring(0,8)}...)` : 'NO TOKEN');
+    log.debug('[DEBUG H1] token fetched:', token ? `yes (${token.substring(0,8)}...)` : 'NO TOKEN');
     // #endregion
     
     // Build API URL
     const apiUrl = `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
     // #region agent log H3
-    console.log('[DEBUG H3] apiUrl:', apiUrl);
+    log.debug('[DEBUG H3] apiUrl:', apiUrl);
     // #endregion
     
     try {
@@ -250,13 +251,13 @@ export async function getGitHubContent(request, env, userContext) {
         
         const response = await fetch(apiUrl, { headers });
         // #region agent log H2 H4
-        console.log('[DEBUG H2/H4] GitHub response:', response.status, response.statusText);
+        log.debug('[DEBUG H2/H4] GitHub response:', response.status, response.statusText);
         // #endregion
         
         if (!response.ok) {
             // #region agent log H2 H4
             const errorBody = await response.text();
-            console.log('[DEBUG H2/H4] GitHub error body:', errorBody);
+            log.debug('[DEBUG H2/H4] GitHub error body:', errorBody);
             // #endregion
             if (response.status === 404) {
                 return jsonResponse({ 
@@ -310,7 +311,7 @@ export async function getGitHubContent(request, env, userContext) {
         });
         
     } catch (error) {
-        console.error('GitHub content fetch error:', error);
+        log.error('GitHub content fetch error:', error);
         return jsonResponse({ 
             error: 'Failed to fetch content',
             message: error.message

@@ -14,6 +14,7 @@
  *   setLanguage('en');
  */
 
+import { log } from '../app/log.js';
 import fr from './fr.json' with { type: 'json' };
 import en from './en.json' with { type: 'json' };
 import de from './de.json' with { type: 'json' };
@@ -68,7 +69,7 @@ export function getLanguage() {
  */
 export function setLanguage(lang) {
     if (!SUPPORTED_LANGUAGES.includes(lang)) {
-        console.warn(`[i18n] Unsupported language: ${lang}`);
+        log.warn(`[i18n] Unsupported language: ${lang}`);
         return false;
     }
     
@@ -123,7 +124,7 @@ export function t(key, params = {}) {
     
     // Return key if still not found
     if (value === undefined) {
-        console.warn(`[i18n] Missing translation: ${key}`);
+        log.warn(`[i18n] Missing translation: ${key}`);
         return key;
     }
     

@@ -7,6 +7,7 @@
 
 import { api } from '../api.js';
 import { getState, setState } from '../state.js';
+import { log } from '../log.js';
 import { fetchMarkdown } from '../content/loader.js';
 import { loadCourse } from './loader.js';
 
@@ -39,7 +40,7 @@ export async function renderCourseOverview(course, enrollmentStatus = null) {
                 const markdown = await fetchMarkdown(introUrl);
                 introContent = marked.parse(markdown);
             } catch (error) {
-                console.warn('Failed to fetch intro:', error);
+                log.warn('Failed to fetch intro:', error);
                 introContent = `<p>${course.description || 'Aucune description disponible.'}</p>`;
             }
         } else {
@@ -97,7 +98,7 @@ export async function renderCourseOverview(course, enrollmentStatus = null) {
         setupOverviewHandlers(course.id);
         
     } catch (error) {
-        console.error('Failed to render overview:', error);
+        log.error('Failed to render overview:', error);
         viewer.innerHTML = `
             <div class="course-overview error">
                 <h2>Erreur</h2>
@@ -154,7 +155,7 @@ function setupOverviewHandlers(courseId) {
             // Reload course to start
             await loadCourse(courseId);
         } catch (error) {
-            console.error('Enrollment failed:', error);
+            log.error('Enrollment failed:', error);
             btn.disabled = false;
             btn.textContent = 'Erreur - Réessayer';
             alert(`Erreur: ${error.message}`);
@@ -181,7 +182,7 @@ function setupOverviewHandlers(courseId) {
             // Return to course list
             window.location.href = '/';
         } catch (error) {
-            console.error('Abandon failed:', error);
+            log.error('Abandon failed:', error);
             btn.disabled = false;
             btn.textContent = 'Abandonner le cours';
             alert(`Erreur: ${error.message}`);
@@ -203,7 +204,7 @@ export async function showCourseOverview(courseId) {
         
         await renderCourseOverview(course, enrollmentStatus);
     } catch (error) {
-        console.error('Failed to show overview:', error);
+        log.error('Failed to show overview:', error);
         const viewer = document.getElementById('somViewer');
         if (viewer) {
             viewer.innerHTML = `

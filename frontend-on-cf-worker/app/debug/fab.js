@@ -7,6 +7,7 @@
 
 import { copyDebugInfoToClipboard } from './collector.js';
 import { togglePanel } from './panel.js';
+import { log } from '../log.js';
 
 // showToast is exposed globally by components/toast.js
 const showToast = (...args) => window.showToast?.(...args);
@@ -20,7 +21,7 @@ let clickTimer = null;
  */
 export function initDebugFab() {
     if (fabElement) {
-        console.warn('[Debug] FAB already initialized');
+        log.debug('[Debug] FAB already initialized');
         return;
     }
     
@@ -44,7 +45,7 @@ export function initDebugFab() {
     // Mount to body
     document.body.appendChild(fabElement);
     
-    console.log('[Debug] FAB initialized');
+    log.debug('[Debug] FAB initialized');
 }
 
 /**
@@ -86,14 +87,14 @@ async function handleSingleClick() {
             showToast('📋 Infos copiées ! Double-clic pour console debug.', 'success');
             
             // Log for debugging
-            console.log('[Debug] Info copied to clipboard:', result.data);
+            log.debug('[Debug] Info copied to clipboard:', result.data);
         } else {
             fabElement.classList.add('debug-fab--error');
             setTimeout(() => fabElement.classList.remove('debug-fab--error'), 1500);
-            
+
             showToast('❌ Impossible de copier. Voir la console.', 'error');
-            console.error('[Debug] Failed to copy:', result.error);
-            console.log('[Debug] Data that should have been copied:', JSON.stringify(result.data, null, 2));
+            log.error('[Debug] Failed to copy:', result.error);
+            log.debug('[Debug] Data that should have been copied:', JSON.stringify(result.data, null, 2));
         }
     } catch (error) {
         fabElement.classList.remove('debug-fab--loading');
@@ -101,7 +102,7 @@ async function handleSingleClick() {
         setTimeout(() => fabElement.classList.remove('debug-fab--error'), 1500);
         
         showToast('❌ Erreur lors de la copie', 'error');
-        console.error('[Debug] Error:', error);
+        log.error('[Debug] Error:', error);
     }
 }
 

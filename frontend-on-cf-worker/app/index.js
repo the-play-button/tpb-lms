@@ -11,6 +11,7 @@
 
 import { setState, getState } from './state.js';
 import { api } from './api.js';
+import { log } from './log.js';
 
 // UI Components
 import { updateUserStats, initUserStats } from './ui/userStats.js';
@@ -60,7 +61,7 @@ async function init() {
         setState('profile', session.profile);
         setState('badges', session.badges || []);
         
-        console.log('🔐 Session loaded:', session.user.email);
+        log.info('🔐 Session loaded:', session.user.email);
         
         // Sentry: Set user context for error tracking
         if (window.Sentry) {
@@ -135,7 +136,7 @@ async function init() {
         }
         
     } catch (error) {
-        console.error('Failed to initialize:', error);
+        log.error('Failed to initialize:', error);
         showError(error.message);
     }
 }
@@ -368,7 +369,7 @@ function setupEventListeners() {
     
     // Reload courses when language changes (preserve current step position)
     window.addEventListener('languagechange', async (e) => {
-        console.log('🌐 Language changed to:', e.detail.lang);
+        log.debug('🌐 Language changed to:', e.detail.lang);
         try {
             // Preserve current step before reloading
             const currentStepIndex = getState('currentStepIndex');
@@ -388,7 +389,7 @@ function setupEventListeners() {
                 renderCurrentStep();
             }
         } catch (error) {
-            console.error('Failed to reload with new language:', error);
+            log.error('Failed to reload with new language:', error);
         }
     });
     
@@ -399,7 +400,7 @@ function setupEventListeners() {
             return;
         }
         
-        console.log('📨 [TALLY] postMessage:', event.data);
+        log.debug('📨 [TALLY] postMessage:', event.data);
         
         // Tally sends { event: 'Tally.FormSubmitted', payload: {...} }
         let tallyEvent;
