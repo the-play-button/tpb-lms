@@ -45,6 +45,26 @@
     --radius-xl: 1rem;
     --radius-full: 9999px;
 
+    /* Durations */
+    --duration-fast: 0.3s;
+    --duration-normal: 0.5s;
+    --duration-medium: 1s;
+    --duration-slow: 1.5s;
+    --duration-long: 2s;
+    --duration-very-slow: 3s;
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+
+    /* Shadows */
+    --shadow-glow-sm: 0 0 10px rgba(99, 102, 241, 0.2);
+    --shadow-glow-md: 0 0 20px rgba(99, 102, 241, 0.3);
+    --shadow-glow-lg: 0 0 30px rgba(99, 102, 241, 0.4);
+    --shadow-card: 0 4px 16px rgba(0, 0, 0, 0.3);
+    --shadow-gold-sm: 0 0 10px rgba(251, 191, 36, 0.3);
+    --shadow-gold-lg: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 30px rgba(251, 191, 36, 0.3);
+    --shadow-epic-sm: 0 0 8px rgba(168, 85, 247, 0.3);
+    --shadow-epic-lg: 0 0 15px rgba(168, 85, 247, 0.5);
+
     /* Aliases & supplementary tokens (entropy: resolve undefined refs) */
     --accent: var(--accent-primary);
     --accent-light: var(--accent-secondary);

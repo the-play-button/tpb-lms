@@ -39,7 +39,7 @@
     color: var(--accent-secondary);
     pointer-events: none;
     z-index: 9999;
-    animation: floatUp 1.5s ease forwards;
+    animation: floatUp var(--duration-slow) ease forwards;
     text-shadow: 0 0 10px var(--accent-glow);
 }
 
@@ -50,7 +50,7 @@
 }
 
 .stat.streak .stat-icon {
-    animation: flicker 0.5s ease infinite;
+    animation: flicker var(--duration-normal) ease infinite;
 }
 
 .stat.streak.high .stat-icon {
@@ -102,7 +102,7 @@
     height: 8px;
     background: var(--gold);
     border-radius: 50%;
-    animation: particle 1s ease forwards;
+    animation: particle var(--duration-medium) ease forwards;
 }
 
 /* entropy-css-tokens-ok: JS-set transform values */
@@ -119,28 +119,28 @@
 
 /* Badge Rarity Glow */
 .badge-item.legendary {
-    animation: legendaryGlow 2s ease infinite;
+    animation: legendaryGlow var(--duration-long) ease infinite;
 }
 
 @keyframes legendaryGlow {
     0%, 100% {
-        box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+        box-shadow: var(--shadow-gold-sm);
     }
     50% {
-        box-shadow: 0 0 20px rgba(251, 191, 36, 0.6), 0 0 30px rgba(251, 191, 36, 0.3);
+        box-shadow: var(--shadow-gold-lg);
     }
 }
 
 .badge-item.epic {
-    animation: epicGlow 2s ease infinite;
+    animation: epicGlow var(--duration-long) ease infinite;
 }
 
 @keyframes epicGlow {
     0%, 100% {
-        box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
+        box-shadow: var(--shadow-epic-sm);
     }
     50% {
-        box-shadow: 0 0 15px rgba(168, 85, 247, 0.5);
+        box-shadow: var(--shadow-epic-lg);
     }
 }
 
@@ -221,7 +221,7 @@
     bottom: 0;
     width: 10px;
     height: 10px;
-    animation: confetti 3s ease forwards;
+    animation: confetti var(--duration-very-slow) ease forwards;
 }
 
 .confetti-piece:nth-child(odd) {
@@ -292,7 +292,7 @@
         var(--bg-tertiary) 75%
     );
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    animation: shimmer var(--duration-slow) infinite;
     border-radius: var(--radius-md);
 }
 
@@ -325,7 +325,7 @@
         transparent
     );
     background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
+    animation: shimmer var(--duration-slow) infinite;
 }
 
 /* Shine effect for premium/loading elements */
@@ -342,7 +342,7 @@
         transparent 100%
     );
     background-size: 200% 100%;
-    animation: shine 3s linear infinite;
+    animation: shine var(--duration-very-slow) linear infinite;
 }
 
 /* Hover Lift Effect */
@@ -352,7 +352,7 @@
 
 .hover-lift:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-card);
 }
 
 /* Focus States */
@@ -375,7 +375,7 @@ button:focus {
 }
 
 .badge-earned .badge-glow {
-    animation: glowPulse 1.5s ease infinite;
+    animation: glowPulse var(--duration-slow) ease infinite;
 }
 
 @keyframes glowPulse {
