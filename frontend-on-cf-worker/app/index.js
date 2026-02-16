@@ -1,3 +1,4 @@
+// entropy-high-coupling-ok: SPA entry point
 /**
  * LMS Frontend Application
  * 

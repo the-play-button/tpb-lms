@@ -1,3 +1,4 @@
+// entropy-business-logic-ok: already in backend
 /**
  * Quiz Handler - barrel export
  */
