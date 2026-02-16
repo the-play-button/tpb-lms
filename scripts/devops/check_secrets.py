@@ -24,7 +24,7 @@ import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Set, Optional
+from typing import Optional, Set
 
 # Colors
 GREEN = "\033[92m"

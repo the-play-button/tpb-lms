@@ -18,10 +18,11 @@ This is a one-time migration script. After migration, vault-api
 becomes the SSOT for IAM and hris_employee is deprecated for roles.
 """
 
-import subprocess
 import json
 import os
+import subprocess
 import sys
+
 import requests
 
 VAULT_API_URL = os.environ.get(

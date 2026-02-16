@@ -16,9 +16,9 @@ Usage:
     python migrate_to_unifiedto.py --execute    # Apply changes
 """
 
-import subprocess
-import json
 import argparse
+import json
+import subprocess
 from pathlib import Path
 
 

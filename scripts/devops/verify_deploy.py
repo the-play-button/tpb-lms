@@ -10,11 +10,11 @@ One-liner (in Dev Container):
     cd 04.Execution/lms && python scripts/devops/verify_deploy.py
 """
 
-import sys
-import urllib.request
-import urllib.error
 import json
 import ssl
+import sys
+import urllib.error
+import urllib.request
 
 # Configuration
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
