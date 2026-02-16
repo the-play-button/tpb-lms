@@ -49,7 +49,7 @@ def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:
     )
     
     if result.returncode != 0:
-        raise Exception(f"D1 query failed: {result.stderr}")
+        raise RuntimeError(f"D1 query failed: {result.stderr}")
     
     # Parse JSON output
     output = result.stdout
