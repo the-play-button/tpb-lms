@@ -102,10 +102,11 @@ export function closeBadgeModal() {
 export function showError(message) {
     const viewer = document.getElementById('somViewer');
     if (viewer) {
+        const escaped = String(message).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         viewer.innerHTML = `
             <div class="welcome-screen">
                 <h1>Erreur</h1>
-                <p>${message}</p>
+                <p>${escaped}</p>
                 <p>Veuillez réessayer ou contacter le support.</p>
             </div>
         `;
