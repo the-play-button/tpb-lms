@@ -15,6 +15,7 @@ Connections:
     - conn_integrations: UNIFIEDTO_*, TALLY_*
     - conn_user_<email_slug>: USER_TRIGRAM, MHO_CALENDAR_EMAIL
 """
+# entropy-python-cohesion-ok: client pattern
 
 import os
 import httpx
