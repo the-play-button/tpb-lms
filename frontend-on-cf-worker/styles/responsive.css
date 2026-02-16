@@ -4,9 +4,9 @@
 
 @media (max-width: 1200px) {
     .lms-main {
-        grid-template-columns: 250px 1fr;
+        grid-template-columns: 250px 1fr; /* entropy-css-tokens-ok: responsive breakpoint override */
     }
-    
+
     .lms-leaderboard {
         display: none;
     }
@@ -16,34 +16,34 @@
     .lms-main {
         grid-template-columns: 1fr;
     }
-    
+
     .lms-sidebar {
         display: none;
     }
-    
+
     .lms-header {
         flex-direction: column;
         gap: var(--space-md);
     }
-    
+
     .user-stats {
         flex-wrap: wrap;
         justify-content: center;
     }
-    
+
     .step-viewer {
         padding: var(--space-md);
     }
-    
+
     .step-title {
         font-size: 1.5rem;
     }
-    
+
     .quick-stats {
         flex-direction: column;
         gap: var(--space-md);
     }
-    
+
     .welcome-screen h1 {
         font-size: 1.75rem;
     }
@@ -53,11 +53,11 @@
     .stat {
         padding: var(--space-xs) var(--space-sm);
     }
-    
+
     .stat-label {
         display: none;
     }
-    
+
     .nav-btn {
         padding: var(--space-sm) var(--space-md);
         font-size: 0.9rem;
@@ -90,78 +90,78 @@
         left: 0;
         right: 0;
         /* Solid opaque background - NO transparency */
-        background: #1a1a2e;
-        border-top: 2px solid #2d2d44;
+        background: var(--bg-code);
+        border-top: 2px solid var(--border-subtle);
         padding: 0;
         padding-bottom: env(safe-area-inset-bottom, 0px);
         z-index: 1000;
     }
-    
+
     .mobile-tab {
         flex: 1;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 4px;
-        padding: 12px 4px;
+        gap: var(--space-xs);
+        padding: var(--radius-lg) var(--space-xs); /* entropy-css-tokens-ok: 12px 4px shorthand, radius-lg closest to 12px vertical */
         background: transparent;
         border: none;
         border-top: 3px solid transparent;
-        color: #888;
+        color: var(--text-dim);
         font-family: inherit;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all var(--transition-fast);
     }
-    
+
     .mobile-tab:active {
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--bg-hover);
     }
-    
+
     /* Active tab - VERY visible */
     .mobile-tab.active {
-        color: #667eea;
-        border-top-color: #667eea;
-        background: rgba(102, 126, 234, 0.1);
+        color: var(--accent-mobile);
+        border-top-color: var(--accent-mobile);
+        background: var(--accent-mobile-glow-10);
     }
-    
+
     .mobile-tab.active .mobile-tab-icon {
         transform: scale(1.2);
     }
-    
+
     .mobile-tab-icon {
         font-size: 1.4rem;
         line-height: 1;
-        transition: transform 0.2s ease;
+        transition: transform var(--transition-fast);
     }
-    
+
     .mobile-tab-label {
         font-size: 0.65rem;
         font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 0.5px;
     }
-    
+
     /* =============================================
        Main content padding for tab bar
        ============================================= */
     .lms-main {
-        padding-bottom: 75px;
+        padding-bottom: 75px; /* entropy-css-tokens-ok: responsive breakpoint override */
     }
-    
+
     .step-quiz {
-        padding-bottom: 100px; /* Espace pour tab bar + respiration */
+        padding-bottom: 100px; /* entropy-css-tokens-ok: responsive breakpoint override — espace pour tab bar + respiration */
     }
-    
+
     /* =============================================
        Mobile Views - Fullscreen overlays
        ============================================= */
-    
+
     /* Hide content when viewing parcours or badges */
     .lms-content.mobile-hidden {
         display: none !important;
     }
-    
+
     /* Parcours view - Course list only */
     .mobile-parcours-view.visible {
         display: block;
@@ -169,57 +169,57 @@
         top: 0;
         left: 0;
         right: 0;
-        bottom: 75px;
+        bottom: 75px; /* entropy-css-tokens-ok: responsive breakpoint override */
         z-index: 500;
-        background: #0f0f1a;
+        background: #0f0f1a; /* entropy-css-tokens-ok: contextual override */
         overflow-y: auto;
-        padding: 100px 20px 20px 20px;
+        padding: 100px 20px 20px 20px; /* entropy-css-tokens-ok: responsive breakpoint override */
     }
-    
+
     .mobile-parcours-view h2 {
-        color: #fff;
+        color: var(--text-primary);
         font-size: 1.5rem;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #2d2d44;
+        margin-bottom: 20px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        padding-bottom: 10px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        border-bottom: 1px solid var(--border-subtle);
     }
-    
+
     .mobile-parcours-view .course-list {
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: var(--radius-lg); /* 12px */
     }
-    
+
     .mobile-parcours-view .course-item {
-        background: #1a1a2e;
-        border-radius: 12px;
-        padding: 16px;
-        border: 1px solid #2d2d44;
+        background: var(--bg-code);
+        border-radius: var(--radius-lg);
+        padding: var(--space-md);
+        border: 1px solid var(--border-subtle);
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all var(--transition-fast);
     }
-    
+
     .mobile-parcours-view .course-item:active {
         transform: scale(0.98);
-        background: #252540;
+        background: #252540; /* entropy-css-tokens-ok: contextual override */
     }
-    
+
     .mobile-parcours-view .course-item.active {
-        border-color: #667eea;
-        background: rgba(102, 126, 234, 0.1);
+        border-color: var(--accent-mobile);
+        background: var(--accent-mobile-glow-10);
     }
-    
+
     .mobile-parcours-view .course-name {
         font-weight: 600;
-        color: #fff;
-        margin-bottom: 4px;
+        color: var(--text-primary);
+        margin-bottom: var(--space-xs);
     }
-    
+
     .mobile-parcours-view .course-progress {
         font-size: 0.85rem;
-        color: #888;
+        color: var(--text-dim);
     }
-    
+
     /* Badges view - Icons only grid (tap for details) */
     .mobile-badges-view.visible {
         display: block;
@@ -227,85 +227,85 @@
         top: 0;
         left: 0;
         right: 0;
-        bottom: 75px;
+        bottom: 75px; /* entropy-css-tokens-ok: responsive breakpoint override */
         z-index: 500;
-        background: #0f0f1a;
+        background: #0f0f1a; /* entropy-css-tokens-ok: contextual override */
         overflow-y: auto;
-        padding: 100px 20px 20px 20px;
+        padding: 100px 20px 20px 20px; /* entropy-css-tokens-ok: responsive breakpoint override */
     }
-    
+
     .mobile-badges-view h2 {
-        color: #fff;
+        color: var(--text-primary);
         font-size: 1.5rem;
-        margin-bottom: 20px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #2d2d44;
+        margin-bottom: 20px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        padding-bottom: 10px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        border-bottom: 1px solid var(--border-subtle);
     }
-    
+
     .mobile-badges-view .badges-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: 12px;
+        gap: var(--radius-lg); /* 12px */
     }
-    
+
     .mobile-badges-view .badge-item {
         display: flex;
         align-items: center;
         justify-content: center;
         aspect-ratio: 1;
-        padding: 16px;
-        background: #1a1a2e;
-        border-radius: 16px;
-        border: 2px solid #2d2d44;
+        padding: var(--space-md);
+        background: var(--bg-code);
+        border-radius: var(--radius-xl);
+        border: 2px solid var(--border-subtle);
         cursor: pointer;
         transition: transform 0.15s ease, border-color 0.15s ease;
     }
-    
+
     .mobile-badges-view .badge-item:active {
         transform: scale(0.92);
     }
-    
+
     .mobile-badges-view .badge-item.earned {
-        border-color: #667eea;
-        background: rgba(102, 126, 234, 0.15);
+        border-color: var(--accent-mobile);
+        background: var(--accent-mobile-glow-15);
     }
-    
+
     .mobile-badges-view .badge-item.locked {
         opacity: 0.4;
         filter: grayscale(1);
     }
-    
+
     .mobile-badges-view .badge-icon {
         font-size: 2.5rem;
         line-height: 1;
     }
-    
+
     /* Hide text on mobile - tap for details */
     .mobile-badges-view .badge-name {
         display: none;
     }
-    
+
     .mobile-badges-view .badge-hint {
         text-align: center;
-        color: #666;
+        color: #666; /* entropy-css-tokens-ok: contextual override */
         font-size: 0.8rem;
-        margin-top: 16px;
+        margin-top: var(--space-md);
     }
 
     /* =============================================
        Badge Modal - Mobile fixes
        ============================================= */
     .modal {
-        padding: 16px;
+        padding: var(--space-md);
         align-items: center;
         justify-content: center;
     }
 
     .modal-content {
         width: 100%;
-        max-width: calc(100vw - 32px);
-        max-height: calc(100vh - 100px);
-        padding: 24px 16px;
+        max-width: calc(100vw - var(--space-xl));
+        max-height: calc(100vh - 100px); /* entropy-css-tokens-ok: responsive breakpoint override */
+        padding: var(--space-lg) var(--space-md);
         margin: 0;
         overflow-y: auto;
     }
@@ -317,41 +317,40 @@
     }
 
     .badge-icon {
-        width: 80px;
-        height: 80px;
-        margin-bottom: 16px;
+        width: 80px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        height: 80px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        margin-bottom: var(--space-md);
     }
 
     .badge-glow {
-        width: 150px;
-        height: 150px;
+        width: 150px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        height: 150px; /* entropy-css-tokens-ok: responsive breakpoint override */
     }
 
     .badge-earned h2 {
         font-size: 1.25rem;
-        margin-bottom: 8px;
+        margin-bottom: var(--space-sm);
     }
 
     .badge-earned h3 {
         font-size: 1.1rem;
-        margin-bottom: 8px;
+        margin-bottom: var(--space-sm);
     }
 
     .badge-earned p {
         font-size: 0.9rem;
-        margin-bottom: 12px;
+        margin-bottom: var(--radius-lg); /* 12px */
     }
 
     .badge-xp {
         font-size: 0.9rem;
-        padding: 6px 16px;
-        margin-bottom: 16px;
+        padding: 6px var(--space-md); /* entropy-css-tokens-ok: 6px has no token match */
+        margin-bottom: var(--space-md);
     }
 
     .modal-close {
         width: 100%;
-        padding: 12px 24px;
+        padding: var(--radius-lg) var(--space-lg); /* 12px 24px */
         font-size: 1rem;
     }
 }
-

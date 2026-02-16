@@ -74,6 +74,18 @@
     --bg-hover: rgba(255, 255, 255, 0.05);
     --bg-code: #1a1a2e;
     --border-hover: rgba(255, 255, 255, 0.15);
+
+    /* Supplementary tokens (entropy: responsive.css audit) */
+    --border-subtle: #2d2d44;
+    --accent-mobile: #667eea;
+    --accent-mobile-glow-10: rgba(102, 126, 234, 0.1);
+    --accent-mobile-glow-15: rgba(102, 126, 234, 0.15);
+    --text-dim: #888;
+
+    /* Surface tokens (entropy: tooltip/toast surfaces) */
+    --color-surface-dark: #18181b;
+    --color-surface-border: #27272a;
+    --shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.5);
 }
 
 * {
