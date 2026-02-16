@@ -219,7 +219,7 @@ def main() -> int:
     print("📥 Fetching classes from D1...")
     try:
         classes = fetch_classes()
-    except Exception as e:
+    except (RuntimeError, subprocess.SubprocessError, OSError) as e:  # entropy-python-error-handling-ok: CLI entry-point boundary
         print(f"❌ Failed to fetch classes: {e}")
         return 1
     

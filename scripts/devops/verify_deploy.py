@@ -71,7 +71,7 @@ def check_backend() -> bool:
     except json.JSONDecodeError:
         print(f"{RED}   ❌ Invalid JSON response{RESET}")
         return False
-    except Exception as e:
+    except (ssl.SSLError, TimeoutError, OSError) as e:
         print(f"{RED}   ❌ Error: {e}{RESET}")
         return False
 
@@ -111,7 +111,7 @@ def check_frontend() -> bool:
     except urllib.error.URLError as e:
         print(f"{RED}   ❌ Connection Error: {e.reason}{RESET}")
         return False
-    except Exception as e:
+    except (ssl.SSLError, TimeoutError, OSError) as e:
         print(f"{RED}   ❌ Error: {e}{RESET}")
         return False
 
