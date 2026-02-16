@@ -241,6 +241,7 @@ def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[s
     }
 
 def main() -> None:
+    """ Migrate LMS employees to vault-api users and group memberships."""
     print("🚀 Migrating LMS users to vault-api...")
     print(f"   Target: {VAULT_API_URL}")
     print()

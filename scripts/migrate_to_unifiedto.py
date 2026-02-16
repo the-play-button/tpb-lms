@@ -198,6 +198,7 @@ def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:
 
 
 def main() -> int:
+    """ Parse CLI args and migrate LMS class data to unified.to format."""
     parser = argparse.ArgumentParser(description="Migrate LMS data to unified.to format")
     parser.add_argument("--dry-run", action="store_true", help="Preview changes without applying")
     parser.add_argument("--execute", action="store_true", help="Apply changes to database")

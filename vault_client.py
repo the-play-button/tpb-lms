@@ -192,6 +192,7 @@ class VaultClient:
 _client: Optional[VaultClient] = None
 
 def get_client() -> VaultClient:
+    """ Return the singleton VaultClient instance, creating it on first call."""
     global _client
     if _client is None:
         _client = VaultClient.from_env()

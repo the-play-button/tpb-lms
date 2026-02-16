@@ -53,6 +53,7 @@ def format_timestamp(ts: int) -> str:
 
 
 def main():
+    """ Decode and display a Cloudflare Access JWT from the command line."""
     if len(sys.argv) < 2:
         print("Usage: python cloudflare_access_jwt_decode.py <JWT_TOKEN>")
         print("\nReads a Cloudflare Access JWT and extracts user info.")

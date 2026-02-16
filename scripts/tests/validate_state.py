@@ -366,6 +366,7 @@ def list_scenarios():
 
 
 def main():
+    """ Parse CLI args and validate database state after manual testing."""
     parser = argparse.ArgumentParser(
         description="Validate DB state after human testing",
         formatter_class=argparse.RawDescriptionHelpFormatter,

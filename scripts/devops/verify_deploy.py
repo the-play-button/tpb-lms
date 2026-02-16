@@ -117,6 +117,7 @@ def check_frontend() -> bool:
 
 
 def main() -> None:
+    """ Verify backend API and frontend deployments are healthy."""
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔍 LMS Deployment Verification{RESET}")
     print(f"{CYAN}{'='*50}{RESET}\n")

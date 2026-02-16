@@ -419,6 +419,7 @@ def print_database_state(state: dict):
 
 
 def main():
+    """ Parse CLI args and reset the LMS D1 database for dev testing."""
     parser = argparse.ArgumentParser(description="Reset LMS Database (Dev Mode)")
     parser.add_argument("--confirm", action="store_true", help="Confirmer le reset")
     parser.add_argument("--deploy", action="store_true", help="Déployer le Worker API après reset")

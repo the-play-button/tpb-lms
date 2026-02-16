@@ -51,6 +51,7 @@ def get_auth_headers():
 
 
 class Colors:
+    """ ANSI color code constants for terminal output."""
     GREEN = '\033[92m'
     RED = '\033[91m'
     YELLOW = '\033[93m'
@@ -59,18 +60,22 @@ class Colors:
 
 
 def log_pass(name):
+    """ Print a green pass message for a test."""
     print(f"  {Colors.GREEN}✅ {name}{Colors.END}")
 
 
 def log_fail(name, error):
+    """ Print a red failure message with error details."""
     print(f"  {Colors.RED}❌ {name}: {error}{Colors.END}")
 
 
 def log_skip(name, reason):
+    """ Print a yellow skip message with reason."""
     print(f"  {Colors.YELLOW}⏭️  {name}: {reason}{Colors.END}")
 
 
 def log_section(name):
+    """ Print a blue section header."""
     print(f"\n{Colors.BLUE}▶ {name}{Colors.END}")
 
 

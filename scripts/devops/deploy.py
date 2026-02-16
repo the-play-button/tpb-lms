@@ -204,6 +204,7 @@ def seed_courses() -> bool:
 
 
 def main() -> None:
+    """ Deploy LMS backend and frontend to Cloudflare Workers."""
     parser = argparse.ArgumentParser(description="LMS Deployment Script")
     parser.add_argument("--backend", action="store_true", help="Deploy backend only")
     parser.add_argument("--frontend", action="store_true", help="Deploy frontend only")

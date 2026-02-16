@@ -162,6 +162,7 @@ def list_fixtures():
 
 
 def main():
+    """ Parse CLI args and apply a test fixture via the LMS backend API."""
     import argparse
     
     parser = argparse.ArgumentParser(
