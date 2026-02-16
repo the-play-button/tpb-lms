@@ -44,6 +44,16 @@
     --radius-lg: 0.75rem;
     --radius-xl: 1rem;
     --radius-full: 9999px;
+
+    /* Aliases & supplementary tokens (entropy: resolve undefined refs) */
+    --accent: var(--accent-primary);
+    --accent-light: var(--accent-secondary);
+    --primary: var(--accent-primary);
+    --primary-dark: #4f46e5;
+    --text-tertiary: var(--text-muted);
+    --bg-hover: rgba(255, 255, 255, 0.05);
+    --bg-code: #1a1a2e;
+    --border-hover: rgba(255, 255, 255, 0.15);
 }
 
 * {

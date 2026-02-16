@@ -105,6 +105,7 @@
     animation: particle 1s ease forwards;
 }
 
+/* entropy-css-tokens-ok: JS-set transform values */
 @keyframes particle {
     0% {
         transform: translate(0, 0) scale(1);
@@ -383,6 +384,7 @@ button:focus {
 }
 
 /* Reduced Motion */
+/* entropy-css-tokens-ok: prefers-reduced-motion accessibility override */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
