@@ -35,54 +35,54 @@
 }
 
 .admin-dashboard .stat-card {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    background: white; /* entropy-css-tokens-ok: admin light-theme background */
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* entropy-css-tokens-ok: admin light-theme subtle shadow */
     display: flex;
     align-items: center;
-    gap: 1rem;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    gap: var(--space-md);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .admin-dashboard .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1); /* entropy-css-tokens-ok: admin light-theme hover shadow */
 }
 
 .admin-dashboard .stat-icon {
     width: 52px;
     height: 52px;
-    border-radius: 12px;
+    border-radius: var(--radius-lg);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    background: linear-gradient(135deg, #f0f4ff, #e8f0fe);
+    background: linear-gradient(135deg, #f0f4ff, #e8f0fe); /* entropy-css-tokens-ok: category-specific background */
 }
 
 .admin-dashboard .stat-card.stat-users .stat-icon {
-    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe); /* entropy-css-tokens-ok: category-specific background */
 }
 
 .admin-dashboard .stat-card.stat-courses .stat-icon {
-    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0); /* entropy-css-tokens-ok: category-specific background */
 }
 
 .admin-dashboard .stat-card.stat-events .stat-icon {
-    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    background: linear-gradient(135deg, #fef3c7, #fde68a); /* entropy-css-tokens-ok: category-specific background */
 }
 
 .admin-dashboard .stat-card.stat-completions .stat-icon {
-    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0); /* entropy-css-tokens-ok: category-specific background */
 }
 
 .admin-dashboard .stat-card.stat-badges .stat-icon {
-    background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+    background: linear-gradient(135deg, #fce7f3, #fbcfe8); /* entropy-css-tokens-ok: category-specific background */
 }
 
 .admin-dashboard .stat-card.stat-xp .stat-icon {
-    background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+    background: linear-gradient(135deg, #ede9fe, #ddd6fe); /* entropy-css-tokens-ok: category-specific background */
 }
 
 .admin-dashboard .stat-content {
@@ -105,11 +105,11 @@
 
 /* Admin Sections */
 .admin-section {
-    background: white;
-    border-radius: 12px;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    background: white; /* entropy-css-tokens-ok: admin light-theme background */
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06); /* entropy-css-tokens-ok: admin light-theme subtle shadow */
 }
 
 .admin-section h2 {
@@ -131,8 +131,8 @@
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem;
-    background: #f9fafb;
-    border-radius: 8px;
+    background: #f9fafb; /* entropy-css-tokens-ok: admin light-theme activity background */
+    border-radius: var(--radius-md);
     font-size: 0.875rem;
 }
 
@@ -191,8 +191,8 @@
 .admin-loading .spinner {
     width: 40px;
     height: 40px;
-    border: 3px solid #e5e7eb;
-    border-top-color: var(--primary, #667eea);
+    border: 3px solid #e5e7eb; /* entropy-css-tokens-ok: admin light-theme spinner track */
+    border-top-color: var(--primary);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }
@@ -205,7 +205,7 @@
 .admin-footer {
     text-align: center;
     padding-top: 2rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid #e5e7eb; /* entropy-css-tokens-ok: admin light-theme border */
     margin-top: 2rem;
 }
 
@@ -214,16 +214,16 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.75rem 1.5rem;
-    background: var(--primary, #667eea);
+    background: var(--primary);
     color: white;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     text-decoration: none;
     font-weight: 500;
-    transition: background 0.2s ease;
+    transition: background var(--transition-fast);
 }
 
 .back-btn:hover {
-    background: var(--primary-dark, #5a67d8);
+    background: var(--primary-dark);
 }
 
 /* Responsive */

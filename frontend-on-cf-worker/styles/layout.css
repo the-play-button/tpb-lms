@@ -210,12 +210,12 @@
     border-color: var(--border);
 }
 
-.badge-item.common { border-color: #9ca3af; }
-.badge-item.rare { border-color: #3b82f6; }
-.badge-item.epic { border-color: #a855f7; }
-.badge-item.legendary { 
+.badge-item.common { border-color: #9ca3af; } /* entropy-css-tokens-ok: common-rarity gray, no matching token */
+.badge-item.rare { border-color: #3b82f6; } /* entropy-css-tokens-ok: rare-rarity blue, no matching token */
+.badge-item.epic { border-color: #a855f7; } /* entropy-css-tokens-ok: epic-rarity purple, matches shadow-epic color */
+.badge-item.legendary {
     border-color: var(--gold);
-    box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+    box-shadow: var(--shadow-gold-sm);
 }
 
 /* Content area */
@@ -293,7 +293,7 @@
     background: var(--bg-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    box-shadow: var(--shadow-card);
     min-width: 140px;
     opacity: 0;
     visibility: hidden;
