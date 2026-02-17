@@ -1,5 +1,5 @@
 // entropy-unused-export-ok: hasTranslation available for external consumers
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — no legacy markers found, ACK retained for header completeness
 /**
  * i18n Module - Internationalization for LMS UI
  * 

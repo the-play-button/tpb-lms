@@ -6,11 +6,11 @@ import { Email } from '../../domain/value-objects/index.js';
 import { filterFields } from '../filters/FieldSecurityFilter.js';
 
 export interface SharedByMeEntry {
-  shareId: string;
-  contentRefId: string;
-  sharedWithEmail: string;
+  id: string;
+  content_ref_id: string;
+  shared_with: string;
   role: string;
-  createdAt: string;
+  created_at: string;
 }
 
 /**
@@ -29,11 +29,11 @@ export async function sharedByMeHandle(
 
     const entries = shares.map((s) => {
       const raw: SharedByMeEntry = {
-        shareId: s.id.value,
-        contentRefId: s.contentRefId.value,
-        sharedWithEmail: s.sharedWithEmail.value,
-        role: s.role,
-        createdAt: s.createdAt.toISOString(),
+        id: s.id.value,
+        content_ref_id: s.contentRefId.value,
+        shared_with: s.sharedWithEmail.value,
+        role: s.role === 'editor' ? 'WRITE' : 'READ',
+        created_at: s.createdAt.toISOString(),
       };
       // FLS: viewer is the owner (current user), so no fields are stripped
       return filterFields(

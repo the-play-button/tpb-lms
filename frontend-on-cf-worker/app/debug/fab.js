@@ -1,6 +1,6 @@
 // entropy-single-export-ok: init/destroy pair
 // entropy-unused-export-ok: destroyDebugFab available for lifecycle management
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — no legacy markers found, ACK retained for header completeness
 // entropy-prohibited-timer-ok: timer use is intentional
 /**
  * Debug FAB (Floating Action Button)

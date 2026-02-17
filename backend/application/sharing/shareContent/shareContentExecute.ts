@@ -10,9 +10,9 @@ import type { ShareContentContext } from './shareContentHydrateContext.js';
 import type { ShareContentInput } from './shareContentValidateInput.js';
 
 export interface ShareContentOutput {
-  shareId: string;
-  contentRefId: string;
-  sharedWithEmail: string;
+  share_id: string;
+  content_ref_id: string;
+  shared_with: string;
   role: string;
 }
 
@@ -57,9 +57,9 @@ export async function shareContentExecute(
   );
 
   return succeed({
-    shareId: shareIdResult.value.value,
-    contentRefId: context.contentRef.id.value,
-    sharedWithEmail: input.email,
+    share_id: shareIdResult.value.value,
+    content_ref_id: context.contentRef.id.value,
+    shared_with: input.email,
     role: input.role,
   });
 }

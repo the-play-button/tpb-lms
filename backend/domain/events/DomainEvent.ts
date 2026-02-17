@@ -1,5 +1,5 @@
 // entropy-multiple-exports-ok: cohesive module exports
-// entropy-god-file-ok: cohesive module
+// entropy-god-file-ok: domain event base — DomainEvent interface + createEvent factory, single source of truth for event shape
 /**
  * Domain Event - Base interface for all domain events
  *

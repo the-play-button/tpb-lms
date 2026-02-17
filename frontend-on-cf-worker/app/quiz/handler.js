@@ -1,5 +1,5 @@
 // entropy-single-export-ok: 3 tightly-coupled quiz handlers (show, handle submission, init) sharing Tally integration state
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — supports legacy single-string tallyFormId alongside new multi-lang tally_form_ids object format
 // entropy-hardcoded-url-ok: URL is stable
 /**
  * Quiz Handler

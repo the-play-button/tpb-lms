@@ -3,10 +3,11 @@ import { shareContentHandle } from './shareContentHandle.js';
 
 export async function shareContentController(
   request: Request,
-  ctx: HandlerContext
+  ctx: HandlerContext,
+  refId: string
 ): Promise<Response> {
   try {
-    const result = await shareContentHandle(request, ctx);
+    const result = await shareContentHandle(request, ctx, refId);
     if (!result.ok) {
       const status = result.error === 'NOT_FOUND' ? 404
         : result.error === 'FORBIDDEN' ? 403

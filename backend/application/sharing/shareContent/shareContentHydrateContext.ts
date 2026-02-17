@@ -16,9 +16,10 @@ export interface ShareContentContext {
  */
 export async function shareContentHydrateContext(
   input: ShareContentInput,
-  ctx: HandlerContext
+  ctx: HandlerContext,
+  rawRefId: string
 ): Promise<Result<'NOT_FOUND', ShareContentContext>> {
-  const refId = ContentRefId.reconstitute(input.ref_id);
+  const refId = ContentRefId.reconstitute(rawRefId);
 
   const contentRef = await ctx.contentRefsRepository.findById(refId);
   if (!contentRef) {

@@ -1,5 +1,5 @@
-// entropy-class-method-length-ok: cohesive method
-// entropy-god-file-ok: cohesive module
+// entropy-class-method-length-ok: DDD entity — factory create() with self-share guard + reconstitute + revoke command + 7 property getters, coupled by ShareProps invariant
+// entropy-god-file-ok: DDD entity — factory + reconstitute + revoke command + property accessors for ActiveShare
 import { fail, succeed, type Result } from '../../core/Result.js';
 import type { ShareId, ContentRefId, Email } from '../../value-objects/index.js';
 import type { ShareRole } from '../ContentRef/SharedContentRef.js';

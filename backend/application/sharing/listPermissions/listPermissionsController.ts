@@ -3,10 +3,11 @@ import { listPermissionsHandle } from './listPermissionsHandle.js';
 
 export async function listPermissionsController(
   request: Request,
-  ctx: HandlerContext
+  ctx: HandlerContext,
+  refId: string
 ): Promise<Response> {
   try {
-    const result = await listPermissionsHandle(request, ctx);
+    const result = await listPermissionsHandle(refId, ctx);
     if (!result.ok) {
       const status = result.error === 'NOT_FOUND' ? 404 : result.error === 'FORBIDDEN' ? 403 : 400;
       return new Response(JSON.stringify({ error: result.error }), {

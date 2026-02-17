@@ -1,4 +1,4 @@
-// entropy-class-method-length-ok: cohesive method
+// entropy-class-method-length-ok: DDD value object — regex validation + normalization + factory + reconstitute + equality + domain getter for Email, tightly coupled by invariant
 import { fail, succeed, type Result } from '../core/Result.js';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

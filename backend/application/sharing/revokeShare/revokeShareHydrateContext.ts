@@ -4,7 +4,6 @@ import type { ActiveShare } from '../../../domain/entities/Share/ActiveShare.js'
 import type { ContentRef } from '../../../domain/repositories/ContentRefsRepository.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { ShareId } from '../../../domain/value-objects/index.js';
-import type { RevokeShareInput } from './revokeShareValidateInput.js';
 
 export interface RevokeShareContext {
   share: ActiveShare;
@@ -16,10 +15,10 @@ export interface RevokeShareContext {
  * HydrateContext step: load the share and its parent contentRef.
  */
 export async function revokeShareHydrateContext(
-  input: RevokeShareInput,
+  rawShareId: string,
   ctx: HandlerContext
 ): Promise<Result<'NOT_FOUND', RevokeShareContext>> {
-  const shareId = ShareId.reconstitute(input.share_id);
+  const shareId = ShareId.reconstitute(rawShareId);
 
   const share = await ctx.sharesRepository.findById(shareId);
   if (!share) {

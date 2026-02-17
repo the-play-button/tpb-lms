@@ -1,5 +1,5 @@
 // entropy-multiple-exports-ok: cohesive module exports
-// entropy-god-file-ok: cohesive module
+// entropy-god-file-ok: DDD entity — reconstitute + share command with duplicate/self-share guards + property accessors for SharedContentRef
 import { fail, succeed, type Result } from '../../core/Result.js';
 import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
 import type { ContentRefProps, ContentType, ContentUsage } from './types.js';

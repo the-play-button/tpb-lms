@@ -35,8 +35,12 @@ export async function getCloudPitchExecute(
     }
     // For binary files via PAM, we get content as base64 string and decode
     const pamResult = await ctx.pamClient.getContent(connectionId, fileId, ctx.userEmail);
-    const encoder = new TextEncoder();
-    binary = encoder.encode(pamResult.content).buffer as ArrayBuffer;
+    const binaryString = atob(pamResult.content);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    binary = bytes.buffer as ArrayBuffer;
   }
 
   // Emit domain event

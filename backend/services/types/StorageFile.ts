@@ -1,5 +1,5 @@
 // entropy-multiple-exports-ok: cohesive module exports
-// entropy-god-file-ok: cohesive module
+// entropy-god-file-ok: service DTOs — StorageFile + StoragePermission interfaces normalized from Unified.to responses
 /**
  * StorageFile - Represents a file in cloud storage
  *

@@ -1,6 +1,6 @@
 // entropy-multiple-exports-ok: cohesive module exports
 // entropy-error-hierarchy-ok: error structure appropriate
-// entropy-god-file-ok: cohesive module
+// entropy-god-file-ok: Result monad — Failure/Success types + fail/succeed/unwrap constructors, single source of truth for domain error handling
 /**
  * Result type - Either<Failure, Success>
  *

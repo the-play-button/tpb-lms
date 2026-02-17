@@ -1,7 +1,7 @@
 // entropy-multiple-exports-ok: tightly-coupled content loading primitives
-// entropy-god-file-ok: cohesive module
+// entropy-god-file-ok: content loading primitives — auth token cache, GitHub proxy, i18n URL building, cloud content fetch with fallback, markdown cleanup
 // entropy-unused-export-ok: fetchCloudContentWithI18nFallback available for external consumers
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — GitHub proxy URL builder is legacy path, needed until all content migrated to cloud refs (BYOC)
 /**
  * Shared content loading primitives - cache, auth, GitHub proxy, i18n URL building
  */

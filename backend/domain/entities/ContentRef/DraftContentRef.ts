@@ -1,4 +1,4 @@
-// entropy-class-method-length-ok: cohesive method
+// entropy-class-method-length-ok: DDD entity — factory create() with 3 field validations + 10 nullable params + reconstitute + 12 property getters, coupled by ContentRefProps invariant
 import { fail, succeed, type Result } from '../../core/Result.js';
 import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
 import type { ContentRefProps, ContentType, ContentUsage } from './types.js';

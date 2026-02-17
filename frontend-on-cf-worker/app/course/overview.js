@@ -1,5 +1,5 @@
 // entropy-single-export-ok: tightly coupled render pair
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — overview fetches intro from legacy GitHub URL path when cloud ref unavailable
 /**
  * Course Overview
  * 

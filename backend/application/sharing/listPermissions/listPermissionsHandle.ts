@@ -6,15 +6,15 @@ import { ContentRefId } from '../../../domain/value-objects/index.js';
 import { filterFields } from '../../filters/FieldSecurityFilter.js';
 
 export interface PermissionEntry {
-  shareId: string;
-  sharedWithEmail: string;
+  id: string;
+  shared_with: string;
   role: string;
-  createdAt: string;
+  created_at: string;
 }
 
 export interface ListPermissionsOutput {
-  contentRefId: string;
-  ownerEmail: string;
+  content_ref_id: string;
+  owner_email: string;
   permissions: PermissionEntry[];
 }
 
@@ -26,18 +26,11 @@ type ListPermissionsError = 'NOT_FOUND' | 'FORBIDDEN' | string;
  * Simple use case - inline pipeline without separate step files.
  */
 export async function listPermissionsHandle(
-  request: Request,
+  rawRefId: string,
   ctx: HandlerContext
 ): Promise<Result<ListPermissionsError, ListPermissionsOutput>> {
-  // 1. ValidateInput
-  const url = new URL(request.url);
-  const refIdRaw = url.searchParams.get('ref_id');
-  if (!refIdRaw) {
-    return fail('ref_id is required');
-  }
-
-  // 2. HydrateContext
-  const refId = ContentRefId.reconstitute(refIdRaw);
+  // 1. HydrateContext
+  const refId = ContentRefId.reconstitute(rawRefId);
   const contentRef = await ctx.contentRefsRepository.findById(refId);
   if (!contentRef) {
     return fail('NOT_FOUND' as const);
@@ -52,10 +45,10 @@ export async function listPermissionsHandle(
   // 4. Execute
   const shares = await ctx.sharesRepository.findActiveByContentRef(contentRef.id);
   const permissions: PermissionEntry[] = shares.map((s) => ({
-    shareId: s.id.value,
-    sharedWithEmail: s.sharedWithEmail.value,
-    role: s.role,
-    createdAt: s.createdAt.toISOString(),
+    id: s.id.value,
+    shared_with: s.sharedWithEmail.value,
+    role: s.role === 'editor' ? 'WRITE' : 'READ',
+    created_at: s.createdAt.toISOString(),
   }));
 
   // 5. Filter - FLS on each permission entry
@@ -70,8 +63,8 @@ export async function listPermissionsHandle(
   ) as unknown as PermissionEntry[];
 
   return succeed({
-    contentRefId: contentRef.id.value,
-    ownerEmail: contentRef.ownerEmail.value,
+    content_ref_id: contentRef.id.value,
+    owner_email: contentRef.ownerEmail.value,
     permissions: filteredPermissions,
   });
 }

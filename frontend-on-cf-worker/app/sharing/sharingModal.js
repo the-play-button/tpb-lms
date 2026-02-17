@@ -1,4 +1,4 @@
-// entropy-event-listeners-ok: acknowledged
+// entropy-event-listeners-ok: modal uses imperative DOM event listeners (click-to-close, submit, revoke) because this is a vanilla JS module without a framework — listeners are scoped to the modal element and cleaned up on modal.remove()
 // entropy-innerhtml-modal-or-error-ok: one-time modal render
 /**
  * Sharing Modal - Share .pitch files with learners
@@ -7,7 +7,7 @@
  * Uses the /api/content/:refId/share endpoint.
  */
 
-import { api, apiPost } from '../api.js';
+import { api, apiPost, apiDelete } from '../api.js';
 import { log } from '../log.js';
 
 /**
@@ -133,9 +133,7 @@ async function loadPermissions(contentRefId) {
                 if (!confirm('Révoquer cet accès ?')) return;
 
                 try {
-                    await fetch(`${api.API_BASE}/content/${refId}/share/${shareId}`, {
-                        method: 'DELETE'
-                    });
+                    await apiDelete(`/content/${refId}/share/${shareId}`);
                     loadPermissions(refId);
                 } catch (error) {
                     log.error('Revoke failed:', error);

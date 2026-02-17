@@ -6,11 +6,13 @@ import { Email } from '../../domain/value-objects/index.js';
 import { filterFields } from '../filters/FieldSecurityFilter.js';
 
 export interface SharedWithMeEntry {
-  shareId: string;
-  contentRefId: string;
-  sharedByEmail: string;
+  id: string;
+  content_ref_id: string;
+  shared_by: string;
   role: string;
-  createdAt: string;
+  name: string;
+  content_type: string;
+  created_at: string;
 }
 
 /**
@@ -27,21 +29,26 @@ export async function sharedWithMeHandle(
 
     const shares = await ctx.sharesRepository.findBySharedWith(emailResult.value);
 
-    const entries = shares.map((s) => {
+    const entries: SharedWithMeEntry[] = [];
+    for (const s of shares) {
+      const contentRef = await ctx.contentRefsRepository.findById(s.contentRefId);
       const raw: SharedWithMeEntry = {
-        shareId: s.id.value,
-        contentRefId: s.contentRefId.value,
-        sharedByEmail: s.sharedByEmail.value,
-        role: s.role,
-        createdAt: s.createdAt.toISOString(),
+        id: s.id.value,
+        content_ref_id: s.contentRefId.value,
+        shared_by: s.sharedByEmail.value,
+        role: s.role === 'editor' ? 'WRITE' : 'READ',
+        name: contentRef?.name ?? '',
+        content_type: contentRef?.contentType ?? '',
+        created_at: s.createdAt.toISOString(),
       };
       // FLS: viewer is the current user, owner is whoever shared it
-      return filterFields(
+      const filtered = filterFields(
         raw as unknown as Record<string, unknown>,
         ctx.userEmail,
         s.sharedByEmail.value
       ) as unknown as SharedWithMeEntry;
-    });
+      entries.push(filtered);
+    }
 
     return succeed(entries);
   } catch (error) {

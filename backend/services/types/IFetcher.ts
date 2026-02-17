@@ -1,4 +1,4 @@
-// entropy-god-file-ok: cohesive module
+// entropy-god-file-ok: port interface — IFetcher fetch-compatible contract for Cloudflare worker-to-worker service bindings
 /**
  * IFetcher - Interface for fetch-compatible service bindings
  *

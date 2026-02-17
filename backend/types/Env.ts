@@ -1,4 +1,4 @@
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — legacy env bindings (GITHUB_PAT, VAULT_CLIENT_*, TALLY_*) to be removed post-migration
 /**
  * Cloudflare Worker Environment Bindings
  *

@@ -1,4 +1,4 @@
-// entropy-class-method-length-ok: cohesive method
+// entropy-class-method-length-ok: repository — D1 queries (findById/findByCourseId/findByClassId/save) + row-to-domain reconstitution with 12 nullable columns and active share loading
 /**
  * ContentRefsDatabaseRepository - D1 implementation of ContentRefsRepository
  *

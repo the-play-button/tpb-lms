@@ -1,6 +1,6 @@
 // entropy-thin-entrypoint-ok: entrypoint routing logic, extraction tracked separately
 // entropy-backend-structure-ok: cors.js and config.js at root are shared utilities
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — TODO re-enable auth on GitHub content proxy after fixing vault token scopes
 /**
  * LMS Worker API - Entry Point
  * 
@@ -53,6 +53,23 @@ import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto
 import logger from './utils/log.js';
 
 const log = logger('worker');
+
+/**
+ * Add CORS headers to a BYOC controller response.
+ * BYOC controllers return bare Response objects; this wraps them
+ * with the same CORS headers used by legacy jsonResponse().
+ */
+function withCors(response, request) {
+    const newHeaders = new Headers(response.headers);
+    for (const [key, value] of Object.entries(getCorsHeaders(request))) {
+        newHeaders.set(key, value);
+    }
+    return new Response(response.body, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: newHeaders
+    });
+}
 
 /**
  * Handle health check endpoint
@@ -318,12 +335,12 @@ export default {
             // ------------------------------------------
             if (path === '/api/content/cloud' && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
-                return getCloudContentController(request, ctx);
+                return withCors(await getCloudContentController(request, ctx), request);
             }
 
             if (path === '/api/content/cloud/pitch' && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
-                return getCloudPitchController(request, ctx);
+                return withCors(await getCloudPitchController(request, ctx), request);
             }
 
             // ------------------------------------------
@@ -331,12 +348,12 @@ export default {
             // ------------------------------------------
             if (path === '/api/connections' && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
-                return listConnectionsController(request, ctx);
+                return withCors(await listConnectionsController(request, ctx), request);
             }
 
             if (path === '/api/connections/default' && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
-                return getDefaultConnectionController(request, ctx);
+                return withCors(await getDefaultConnectionController(request, ctx), request);
             }
 
             // ------------------------------------------
@@ -345,29 +362,29 @@ export default {
             const shareMatch = path.match(/^\/api\/content\/([^/]+)\/share$/);
             if (shareMatch && request.method === 'POST') {
                 const ctx = await createByocContext(request, env, userContext);
-                return shareContentController(request, ctx, shareMatch[1]);
+                return withCors(await shareContentController(request, ctx, shareMatch[1]), request);
             }
 
             const revokeShareMatch = path.match(/^\/api\/content\/([^/]+)\/share\/([^/]+)$/);
             if (revokeShareMatch && request.method === 'DELETE') {
                 const ctx = await createByocContext(request, env, userContext);
-                return revokeShareController(request, ctx, revokeShareMatch[1], revokeShareMatch[2]);
+                return withCors(await revokeShareController(request, ctx, revokeShareMatch[1], revokeShareMatch[2]), request);
             }
 
             const permissionsMatch = path.match(/^\/api\/content\/([^/]+)\/permissions$/);
             if (permissionsMatch && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
-                return listPermissionsController(request, ctx, permissionsMatch[1]);
+                return withCors(await listPermissionsController(request, ctx, permissionsMatch[1]), request);
             }
 
             if (path === '/api/content/shared-with-me' && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
-                return sharedWithMeController(request, ctx);
+                return withCors(await sharedWithMeController(request, ctx), request);
             }
 
             if (path === '/api/content/shared-by-me' && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
-                return sharedByMeController(request, ctx);
+                return withCors(await sharedByMeController(request, ctx), request);
             }
 
             // ------------------------------------------

@@ -19,8 +19,7 @@ export async function getCloudPitchController(
       headers: {
         'Content-Type': 'application/zip',
         'Content-Disposition': `attachment; filename="${result.value.fileName}"`,
-        'Cache-Control': 'public, max-age=300',
-        'Access-Control-Allow-Origin': '*'
+        'Cache-Control': 'private, max-age=300'
       }
     });
   } catch (error) {

@@ -1,7 +1,7 @@
 // entropy-single-export-ok: 2 tightly-coupled content handlers (get file, list directory) sharing GitHub auth and URL parsing
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
-// entropy-legacy-marker-ok: tracked in backlog
-// entropy-long-function-ok: acknowledged
+// entropy-legacy-marker-ok: debt — legacy fallback to GITHUB_PAT_TPB_REPOS env var when vault token unavailable
+// entropy-long-function-ok: getGitHubContent is a sequential handler — URL parsing + i18n path injection + vault token fetch + GitHub API call + error mapping; splitting would scatter the linear request flow
 /**
  * Content Handler
  *

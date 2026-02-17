@@ -1,7 +1,7 @@
 # entropy-single-export-ok: CLI script, functions are internal pipeline steps called by main()
 # entropy-duplicate-constant-ok: CLI scripts are standalone, shared constants not warranted
 # entropy-console-leak-ok: uses print for CLI output
-# entropy-legacy-marker-ok: tracked in backlog
+# entropy-legacy-marker-ok: debt — TALLY_WEBHOOK_SECRET description references legacy URL param auth method
 #!/usr/bin/env python3
 """
 check_secrets.py - Verify required Cloudflare Worker secrets

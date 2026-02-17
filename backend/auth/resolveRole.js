@@ -1,4 +1,4 @@
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — local hris_employee fallback for role resolution, to be removed once vault-api is fully operational
 /**
  * Resolve user role from email
  *

@@ -1,5 +1,5 @@
 // entropy-subfolders-pattern-ok: structure is intentional
-// entropy-duplicate-constant-ok: acknowledged
+// entropy-duplicate-constant-ok: UNIFIED_API base URL duplicated in request.ts and other adapters — each adapter is independently deployable, a shared constant would couple their release cycles
 import { ServiceUnavailableError } from '../../../../types/errors.js';
 
 const UNIFIED_API = 'https://api.unified.to';

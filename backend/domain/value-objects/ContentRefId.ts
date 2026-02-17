@@ -1,4 +1,4 @@
-// entropy-class-method-length-ok: cohesive method
+// entropy-class-method-length-ok: DDD value object — validation + factory + reconstitute + equality + toString for ContentRefId, tightly coupled by single-value invariant
 import { fail, succeed, type Result } from '../core/Result.js';
 
 /**

@@ -1,5 +1,5 @@
 // entropy-multiple-exports-ok: cohesive module exports
-// entropy-god-file-ok: cohesive module
+// entropy-god-file-ok: port interfaces — ResolveConnectionOptions + ConnectionResolverConfig + ConnectionResolverPort for multi-tenant connection routing
 /**
  * ConnectionResolver Port - Interface for multi-tenant connection routing
  *

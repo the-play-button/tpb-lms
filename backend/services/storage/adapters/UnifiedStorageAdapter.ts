@@ -1,5 +1,5 @@
 // entropy-multiple-exports-ok: cohesive module exports
-// entropy-class-method-length-ok: cohesive method
+// entropy-class-method-length-ok: UnifiedStorageAdapter — lazy token resolution + listFiles/getFileContent/getFileBinary all coupled by shared accessToken and Unified.to API
 /**
  * Unified Storage Adapter - Production implementation via Unified.to
  *

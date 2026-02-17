@@ -7,9 +7,9 @@ import { shareRevoked } from '../../../domain/events/events/ShareRevoked.js';
 import type { RevokeShareContext } from './revokeShareHydrateContext.js';
 
 export interface RevokeShareOutput {
-  shareId: string;
-  contentRefId: string;
-  revokedAt: string;
+  share_id: string;
+  content_ref_id: string;
+  revoked_at: string;
 }
 
 /**
@@ -40,8 +40,8 @@ export async function revokeShareExecute(
   );
 
   return succeed({
-    shareId: context.share.id.value,
-    contentRefId: context.contentRef.id.value,
-    revokedAt: revokedShare.revokedAt.toISOString(),
+    share_id: context.share.id.value,
+    content_ref_id: context.contentRef.id.value,
+    revoked_at: revokedShare.revokedAt.toISOString(),
   });
 }

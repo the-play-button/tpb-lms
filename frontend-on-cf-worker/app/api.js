@@ -139,6 +139,36 @@ export async function apiPost(path, data, options = {}) {
 }
 
 /**
+ * DELETE request to API with auto-retry on auth failure
+ * @param {string} path - API path
+ */
+export async function apiDelete(path) {
+    const headers = await buildHeaders();
+
+    let response = await fetch(`${API_BASE}${path}`, {
+        method: 'DELETE',
+        headers
+    });
+
+    // Retry once with fresh token if auth failed
+    if (isAuthError(response.status)) {
+        clearAuthToken();
+        const freshHeaders = await buildHeaders();
+        response = await fetch(`${API_BASE}${path}`, {
+            method: 'DELETE',
+            headers: freshHeaders
+        });
+    }
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(error.error || `HTTP ${response.status}`);
+    }
+
+    return response.json();
+}
+
+/**
  * Generate idempotency key for an event
  * Format: {eventType}-{courseId}-{classId}-{timestamp_seconds}
  */

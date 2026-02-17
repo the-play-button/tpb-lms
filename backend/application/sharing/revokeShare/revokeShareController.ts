@@ -3,10 +3,12 @@ import { revokeShareHandle } from './revokeShareHandle.js';
 
 export async function revokeShareController(
   request: Request,
-  ctx: HandlerContext
+  ctx: HandlerContext,
+  _refId: string,
+  shareId: string
 ): Promise<Response> {
   try {
-    const result = await revokeShareHandle(request, ctx);
+    const result = await revokeShareHandle(shareId, ctx);
     if (!result.ok) {
       const status = result.error === 'NOT_FOUND' ? 404 : result.error === 'FORBIDDEN' ? 403 : 400;
       return new Response(JSON.stringify({ error: result.error }), {

@@ -1,6 +1,6 @@
 // entropy-single-export-ok: tightly coupled render pair
 // entropy-lines-exceeded-ok: renderer complexity, split tracked separately
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — renderer supports legacy QUIZ type and GitHub URL paths alongside unified.to schema and BYOC
 // entropy-hardcoded-url-ok: URL is stable
 /**
  * Course Step Renderer

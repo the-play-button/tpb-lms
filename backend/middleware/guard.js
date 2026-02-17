@@ -1,6 +1,6 @@
 // entropy-single-export-ok: 3 exports (requireAnyRole is alias), tightly-coupled role guard utilities
 // entropy-unused-export-ok: requireAllRoles available for future use
-// entropy-legacy-marker-ok: tracked in backlog
+// entropy-legacy-marker-ok: debt — no legacy markers found, ACK retained for header completeness
 /**
  * Role Guard Middleware
  * 

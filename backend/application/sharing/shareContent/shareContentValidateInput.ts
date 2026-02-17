@@ -3,7 +3,6 @@ import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 
 const ShareContentInputSchema = z.object({
-  ref_id: z.string().min(1, 'ref_id is required'),
   email: z.string().email('Valid email is required'),
   role: z.enum(['READ', 'WRITE'], { errorMap: () => ({ message: 'role must be READ or WRITE' }) }),
 });

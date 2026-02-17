@@ -18,8 +18,7 @@ export async function getCloudContentController(
       status: 200,
       headers: {
         'Content-Type': result.value.contentType || 'text/markdown; charset=utf-8',
-        'Cache-Control': 'public, max-age=300',
-        'Access-Control-Allow-Origin': '*'
+        'Cache-Control': 'private, max-age=300'
       }
     });
   } catch (error) {

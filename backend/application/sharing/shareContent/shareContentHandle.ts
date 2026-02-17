@@ -14,14 +14,15 @@ type ShareContentError = 'NOT_FOUND' | 'FORBIDDEN' | string;
  */
 export async function shareContentHandle(
   request: Request,
-  ctx: HandlerContext
+  ctx: HandlerContext,
+  refId: string
 ): Promise<Result<ShareContentError, Partial<ShareContentOutput>>> {
   // 1. ValidateInput
   const inputResult = await shareContentValidateInput(request);
   if (!inputResult.ok) return fail(inputResult.error);
 
   // 2. HydrateContext
-  const contextResult = await shareContentHydrateContext(inputResult.value, ctx);
+  const contextResult = await shareContentHydrateContext(inputResult.value, ctx, refId);
   if (!contextResult.ok) return fail(contextResult.error);
 
   // 3. CheckPolicies

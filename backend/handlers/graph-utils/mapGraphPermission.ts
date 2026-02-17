@@ -1,6 +1,6 @@
 // entropy-multiple-exports-ok: cohesive module exports
 // entropy-handler-service-pattern-ok: pattern appropriate
-// entropy-duplicate-type-ok: acknowledged
+// entropy-duplicate-type-ok: GraphPermission and StoragePermission are defined locally rather than imported — this module is the canonical mapping layer and owns both the input shape (Graph API) and output shape (internal), avoiding coupling to Microsoft SDK types
 /**
  * Map a Graph API permission to our StoragePermission format
  * Supports all Graph API permission formats: grantedTo/V2, grantedToIdentities/V2, invitation

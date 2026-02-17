@@ -1,4 +1,4 @@
-// entropy-class-method-length-ok: cohesive method
+// entropy-class-method-length-ok: repository — D1 queries (findById/findActiveByContentRef/findBySharedWith/findBySharedBy) + save active/revoked + row reconstitution with 8 columns
 /**
  * SharesDatabaseRepository - D1 implementation of SharesRepository
  *
@@ -87,21 +87,31 @@ export class SharesDatabaseRepository implements SharesRepository {
 
   // === Private helpers ===
 
+  /** Map domain role ('editor'/'viewer') to DB role ('WRITE'/'READ'). */
+  private domainRoleToDb(role: ShareRole): string {
+    return role === 'editor' ? 'WRITE' : 'READ';
+  }
+
+  /** Map DB role ('READ'/'WRITE') to domain role ('viewer'/'editor'). */
+  private dbRoleToDomain(role: string): ShareRole {
+    return role === 'WRITE' ? 'editor' : 'viewer';
+  }
+
   private async saveActive(share: ActiveShare): Promise<void> {
     const props = share.toProps();
 
     await this.db
       .prepare(
         `INSERT OR REPLACE INTO lms_content_share
-           (id, content_ref_id, shared_by, shared_with, role, shared_at, revoked_at)
-         VALUES (?, ?, ?, ?, ?, ?, NULL)`,
+           (id, content_ref_id, shared_by, shared_with, role, provider_permission_id, shared_at, revoked_at)
+         VALUES (?, ?, ?, ?, ?, NULL, ?, NULL)`,
       )
       .bind(
         props.id.value,
         props.contentRefId.value,
         props.sharedByEmail.value,
         props.sharedWithEmail.value,
-        props.role.toUpperCase(),
+        this.domainRoleToDb(props.role),
         props.createdAt.toISOString(),
       )
       .run();
@@ -113,15 +123,15 @@ export class SharesDatabaseRepository implements SharesRepository {
     await this.db
       .prepare(
         `INSERT OR REPLACE INTO lms_content_share
-           (id, content_ref_id, shared_by, shared_with, role, shared_at, revoked_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+           (id, content_ref_id, shared_by, shared_with, role, provider_permission_id, shared_at, revoked_at)
+         VALUES (?, ?, ?, ?, ?, NULL, ?, ?)`,
       )
       .bind(
         props.id.value,
         props.contentRefId.value,
         props.sharedByEmail.value,
         props.sharedWithEmail.value,
-        props.role.toUpperCase(),
+        this.domainRoleToDb(props.role),
         props.createdAt.toISOString(),
         props.revokedAt.toISOString(),
       )
@@ -144,7 +154,7 @@ export class SharesDatabaseRepository implements SharesRepository {
       contentRefId: ContentRefId.reconstitute(row.content_ref_id),
       sharedByEmail: Email.reconstitute(row.shared_by),
       sharedWithEmail: Email.reconstitute(row.shared_with),
-      role: row.role.toLowerCase() as ShareRole,
+      role: this.dbRoleToDomain(row.role),
       createdAt: new Date(row.shared_at),
       updatedAt: new Date(row.shared_at),
     });
@@ -156,7 +166,7 @@ export class SharesDatabaseRepository implements SharesRepository {
       contentRefId: ContentRefId.reconstitute(row.content_ref_id),
       sharedByEmail: Email.reconstitute(row.shared_by),
       sharedWithEmail: Email.reconstitute(row.shared_with),
-      role: row.role.toLowerCase() as ShareRole,
+      role: this.dbRoleToDomain(row.role),
       createdAt: new Date(row.shared_at),
       updatedAt: new Date(row.shared_at),
       revokedAt: new Date(row.revoked_at!),
