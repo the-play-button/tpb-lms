@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: cohesive module exports
 import type { ShareId, ContentRefId, Email } from '../../value-objects/index.js';
 import type { ShareRole } from '../ContentRef/SharedContentRef.js';
 

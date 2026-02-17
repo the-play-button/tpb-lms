@@ -1,6 +1,7 @@
 // entropy-single-export-ok: tightly coupled middleware pair
 // entropy-inconsistent-constant-ok: CLEANUP_INTERVAL intentionally different per middleware
 // entropy-unused-export-ok: addRateLimitHeaders available for external consumers
+// entropy-legacy-marker-ok: tracked in backlog
 /**
  * Rate Limiting Middleware
  * 

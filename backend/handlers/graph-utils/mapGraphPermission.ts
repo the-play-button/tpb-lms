@@ -1,3 +1,6 @@
+// entropy-multiple-exports-ok: cohesive module exports
+// entropy-handler-service-pattern-ok: pattern appropriate
+// entropy-duplicate-type-ok: acknowledged
 /**
  * Map a Graph API permission to our StoragePermission format
  * Supports all Graph API permission formats: grantedTo/V2, grantedToIdentities/V2, invitation

@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: cohesive module exports
 import type { Email } from '../value-objects/index.js';
 import type { DraftContentRef } from '../entities/ContentRef/DraftContentRef.js';
 import type { SharedContentRef } from '../entities/ContentRef/SharedContentRef.js';

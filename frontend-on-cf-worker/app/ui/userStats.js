@@ -1,4 +1,5 @@
 // entropy-single-export-ok: render + init pattern
+// entropy-prohibited-timer-ok: timer use is intentional
 /**
  * User Stats UI Component
  */

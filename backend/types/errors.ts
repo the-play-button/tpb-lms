@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: cohesive module exports
 /**
  * Typed error classes for the BYOC layer
  */

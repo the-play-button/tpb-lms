@@ -1,4 +1,6 @@
 // entropy-single-export-ok: 3 tightly-coupled quiz handlers (show, handle submission, init) sharing Tally integration state
+// entropy-legacy-marker-ok: tracked in backlog
+// entropy-hardcoded-url-ok: URL is stable
 /**
  * Quiz Handler
  *

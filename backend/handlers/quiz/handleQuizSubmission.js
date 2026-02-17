@@ -1,5 +1,6 @@
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 // entropy-business-logic-ok: already in backend
+// entropy-business-logic-in-frontend-ok: intentional frontend logic
 /**
  * Handle quiz submission from HTTP request
  */

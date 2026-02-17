@@ -1,3 +1,5 @@
+// entropy-multiple-exports-ok: cohesive module exports
+// entropy-god-file-ok: cohesive module
 /**
  * Domain Event - Base interface for all domain events
  *

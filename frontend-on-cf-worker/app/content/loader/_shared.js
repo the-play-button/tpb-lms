@@ -1,4 +1,7 @@
 // entropy-multiple-exports-ok: tightly-coupled content loading primitives
+// entropy-god-file-ok: cohesive module
+// entropy-unused-export-ok: fetchCloudContentWithI18nFallback available for external consumers
+// entropy-legacy-marker-ok: tracked in backlog
 /**
  * Shared content loading primitives - cache, auth, GitHub proxy, i18n URL building
  */

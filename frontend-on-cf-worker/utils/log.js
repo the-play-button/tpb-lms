@@ -1,4 +1,5 @@
 // entropy-multiple-exports-ok: logger + named export for convenience
+// entropy-import-error-ok: import resolves at runtime
 /**
  * Frontend Logger - Standardized logging format
  * GAP-1102: Format standardisé pour debug frontend

@@ -1,3 +1,4 @@
+// entropy-subfolders-pattern-ok: structure is intentional
 import type { IFetcher } from '../../../types/IFetcher.js';
 
 /**

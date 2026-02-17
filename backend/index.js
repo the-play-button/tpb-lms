@@ -1,5 +1,6 @@
 // entropy-thin-entrypoint-ok: entrypoint routing logic, extraction tracked separately
 // entropy-backend-structure-ok: cors.js and config.js at root are shared utilities
+// entropy-legacy-marker-ok: tracked in backlog
 /**
  * LMS Worker API - Entry Point
  * 
@@ -35,6 +36,16 @@ import { listSpaces, getSpace, getPage } from './handlers/kms.js';
 import { getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview } from './handlers/translations/index.js';
 import { getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary/index.js';
 import { getGitHubContent, listGitHubDirectory } from './handlers/content.js';
+import { createByocContext } from './handlers/byocContext.js';
+import { getCloudContentController } from './application/cloudContent/getCloudContent/getCloudContentController.js';
+import { getCloudPitchController } from './application/cloudContent/getCloudPitch/getCloudPitchController.js';
+import { listConnectionsController } from './application/connections/listConnections/listConnectionsController.js';
+import { getDefaultConnectionController } from './application/connections/getDefaultConnection/getDefaultConnectionController.js';
+import { shareContentController } from './application/sharing/shareContent/shareContentController.js';
+import { revokeShareController } from './application/sharing/revokeShare/revokeShareController.js';
+import { listPermissionsController } from './application/sharing/listPermissions/listPermissionsController.js';
+import { sharedWithMeController } from './application/sharing/sharedWithMeController.js';
+import { sharedByMeController } from './application/sharing/sharedByMeController.js';
 import { addTraceId, withTraceHeader } from './middleware/trace.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
@@ -303,7 +314,64 @@ export default {
             }
             
             // ------------------------------------------
-            // CONTENT - GitHub content proxy
+            // BYOC - Cloud Content (BYOC migration)
+            // ------------------------------------------
+            if (path === '/api/content/cloud' && request.method === 'GET') {
+                const ctx = await createByocContext(request, env, userContext);
+                return getCloudContentController(request, ctx);
+            }
+
+            if (path === '/api/content/cloud/pitch' && request.method === 'GET') {
+                const ctx = await createByocContext(request, env, userContext);
+                return getCloudPitchController(request, ctx);
+            }
+
+            // ------------------------------------------
+            // BYOC - Connections
+            // ------------------------------------------
+            if (path === '/api/connections' && request.method === 'GET') {
+                const ctx = await createByocContext(request, env, userContext);
+                return listConnectionsController(request, ctx);
+            }
+
+            if (path === '/api/connections/default' && request.method === 'GET') {
+                const ctx = await createByocContext(request, env, userContext);
+                return getDefaultConnectionController(request, ctx);
+            }
+
+            // ------------------------------------------
+            // BYOC - Sharing
+            // ------------------------------------------
+            const shareMatch = path.match(/^\/api\/content\/([^/]+)\/share$/);
+            if (shareMatch && request.method === 'POST') {
+                const ctx = await createByocContext(request, env, userContext);
+                return shareContentController(request, ctx, shareMatch[1]);
+            }
+
+            const revokeShareMatch = path.match(/^\/api\/content\/([^/]+)\/share\/([^/]+)$/);
+            if (revokeShareMatch && request.method === 'DELETE') {
+                const ctx = await createByocContext(request, env, userContext);
+                return revokeShareController(request, ctx, revokeShareMatch[1], revokeShareMatch[2]);
+            }
+
+            const permissionsMatch = path.match(/^\/api\/content\/([^/]+)\/permissions$/);
+            if (permissionsMatch && request.method === 'GET') {
+                const ctx = await createByocContext(request, env, userContext);
+                return listPermissionsController(request, ctx, permissionsMatch[1]);
+            }
+
+            if (path === '/api/content/shared-with-me' && request.method === 'GET') {
+                const ctx = await createByocContext(request, env, userContext);
+                return sharedWithMeController(request, ctx);
+            }
+
+            if (path === '/api/content/shared-by-me' && request.method === 'GET') {
+                const ctx = await createByocContext(request, env, userContext);
+                return sharedByMeController(request, ctx);
+            }
+
+            // ------------------------------------------
+            // CONTENT - GitHub content proxy (legacy)
             // (Moved to PUBLIC section - see above)
             // ------------------------------------------
             

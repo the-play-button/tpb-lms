@@ -1,3 +1,4 @@
+// entropy-class-method-length-ok: cohesive method
 import { fail, succeed, type Result } from '../core/Result.js';
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

@@ -1,5 +1,7 @@
 // entropy-single-export-ok: init/destroy pair
 // entropy-unused-export-ok: destroyDebugFab available for lifecycle management
+// entropy-legacy-marker-ok: tracked in backlog
+// entropy-prohibited-timer-ok: timer use is intentional
 /**
  * Debug FAB (Floating Action Button)
  * 

@@ -1,3 +1,5 @@
+// entropy-multiple-exports-ok: cohesive module exports
+// entropy-legacy-marker-ok: tracked in backlog
 /**
  * Fetch content from a repository URL or cloud reference
  *

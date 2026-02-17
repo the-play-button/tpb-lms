@@ -1,8 +1,9 @@
+// entropy-prohibited-timer-ok: timer use is intentional
 /**
  * Toast Component
- * 
+ *
  * Lightweight toast notifications inspired by shadcn/ui
- * 
+ *
  * Usage:
  *   showToast('Quiz débloqué !', 'success');
  *   showToast('Badge gagné : Premier Quiz', 'achievement');

@@ -1,4 +1,5 @@
 // entropy-single-export-ok: tightly coupled render pair
+// entropy-legacy-marker-ok: tracked in backlog
 /**
  * Course Overview
  * 

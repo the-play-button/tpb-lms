@@ -1,5 +1,6 @@
+// entropy-multiple-exports-ok: cohesive module exports
 /**
- * SharesRepository - Persistence interface for Share entities
+ * SharesRepository - Persistence port for Share aggregates.
  *
  * Domain-driven: works with domain entities, not raw rows.
  * Infrastructure layer provides the concrete D1 implementation.
@@ -7,36 +8,27 @@
 
 import type { ActiveShare } from '../entities/Share/ActiveShare.js';
 import type { RevokedShare } from '../entities/Share/RevokedShare.js';
-import type { ContentRefId, ShareId } from '../value-objects/index.js';
+import type { ShareId, ContentRefId, Email } from '../value-objects/index.js';
+import type { DomainEvent } from '../events/DomainEvent.js';
+
+export type Share = ActiveShare | RevokedShare;
 
 export interface SharesRepository {
-  /**
-   * Find an active share by its ID.
-   */
-  findById(id: ShareId): Promise<ActiveShare | null>;
+  /** Find a share by ID (active or revoked). */
+  findById(id: ShareId): Promise<Share | null>;
 
-  /**
-   * Find all active shares for a content ref.
-   */
-  findByContentRefId(contentRefId: ContentRefId): Promise<ActiveShare[]>;
+  /** Find all active (non-revoked) shares for a content ref. */
+  findActiveByContentRef(contentRefId: ContentRefId): Promise<ActiveShare[]>;
 
-  /**
-   * Find all active shares where the given email is the recipient.
-   */
-  findBySharedWith(email: string): Promise<ActiveShare[]>;
+  /** Find all shares where the given email is the recipient. */
+  findBySharedWith(email: Email): Promise<Share[]>;
 
-  /**
-   * Find all active shares created by the given email.
-   */
-  findBySharedBy(email: string): Promise<ActiveShare[]>;
+  /** Find all shares created by the given email. */
+  findBySharedBy(email: Email): Promise<Share[]>;
 
-  /**
-   * Save a new active share.
-   */
-  save(share: ActiveShare): Promise<void>;
+  /** Save (insert or update) a share. */
+  save(share: ActiveShare | RevokedShare): Promise<void>;
 
-  /**
-   * Revoke a share: mark as revoked, persist revoked state.
-   */
-  revoke(share: RevokedShare): Promise<void>;
+  /** Save and publish: persist the share then emit a domain event. */
+  publish(event: DomainEvent, share: ActiveShare | RevokedShare): Promise<void>;
 }

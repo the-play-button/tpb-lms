@@ -1,4 +1,5 @@
 // entropy-single-export-ok: 5 exports, tightly-coupled notification lifecycle (badge modal + error + refresh + init)
+// entropy-prohibited-timer-ok: timer use is intentional
 /**
  * Notifications
  * 

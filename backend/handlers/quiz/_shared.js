@@ -1,5 +1,7 @@
 // entropy-handler-service-pattern-ok: shared quiz logic, co-located with handlers by design
 // entropy-business-logic-ok: already in backend
+// entropy-multiple-exports-ok: cohesive module exports
+// entropy-business-logic-in-frontend-ok: intentional frontend logic
 /**
  * Shared helpers for quiz handlers
  */

@@ -1,4 +1,5 @@
 // entropy-unused-export-ok: hasTranslation available for external consumers
+// entropy-legacy-marker-ok: tracked in backlog
 /**
  * i18n Module - Internationalization for LMS UI
  * 

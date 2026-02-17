@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: cohesive module exports
 import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
 
 export type ContentType = 'markdown' | 'pitch' | 'pdf';

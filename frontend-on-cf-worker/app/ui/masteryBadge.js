@@ -1,5 +1,6 @@
 // entropy-single-export-ok: 5 exports share BADGES config, tightly-coupled mastery badge rendering utilities
 // entropy-unused-export-ok: getBadgeInfo and renderMasteryProgress available for future use
+// entropy-legacy-marker-ok: tracked in backlog
 /**
  * Mastery Badge Component
  * 

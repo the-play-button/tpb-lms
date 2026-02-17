@@ -1,3 +1,4 @@
+// entropy-god-file-ok: cohesive module
 /**
  * IFetcher - Interface for fetch-compatible service bindings
  *

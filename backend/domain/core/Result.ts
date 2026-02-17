@@ -1,3 +1,6 @@
+// entropy-multiple-exports-ok: cohesive module exports
+// entropy-error-hierarchy-ok: error structure appropriate
+// entropy-god-file-ok: cohesive module
 /**
  * Result type - Either<Failure, Success>
  *

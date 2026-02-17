@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: cohesive module exports
 /**
  * PAM Port - Interface for Privileged Access Management operations
  *

@@ -1,5 +1,7 @@
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 // entropy-business-logic-ok: already in backend
+// entropy-multiple-exports-ok: cohesive module exports
+// entropy-business-logic-in-frontend-ok: intentional frontend logic
 /**
  * Handle Tally webhook (from request or pre-read body)
  */

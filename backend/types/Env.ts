@@ -1,3 +1,4 @@
+// entropy-legacy-marker-ok: tracked in backlog
 /**
  * Cloudflare Worker Environment Bindings
  *

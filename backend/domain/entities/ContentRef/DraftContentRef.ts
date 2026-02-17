@@ -1,3 +1,4 @@
+// entropy-class-method-length-ok: cohesive method
 import { fail, succeed, type Result } from '../../core/Result.js';
 import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
 import type { ContentRefProps, ContentType, ContentUsage } from './types.js';

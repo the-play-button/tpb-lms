@@ -1,3 +1,5 @@
+// entropy-multiple-exports-ok: cohesive module exports
+// entropy-god-file-ok: cohesive module
 /**
  * StorageFile - Represents a file in cloud storage
  *

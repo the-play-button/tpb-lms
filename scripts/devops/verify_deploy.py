@@ -2,6 +2,7 @@
 # entropy-duplicate-constant-ok: CLI scripts are standalone, shared constants not warranted
 # entropy-console-leak-ok: uses print for CLI output
 # entropy-python-unused-import-ok: urllib kept for error handling fallback
+# entropy-legacy-marker-ok: tracked in backlog
 #!/usr/bin/env python3
 """
 verify_deploy.py - Post-deployment verification

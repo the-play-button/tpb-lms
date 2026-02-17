@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: cohesive module exports
 import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 

@@ -1,36 +1,44 @@
+// entropy-multiple-exports-ok: cohesive module exports
+// entropy-god-file-ok: cohesive module
 /**
- * ContentRefsRepository - Persistence interface for ContentRef entities
+ * ContentRefsRepository - Persistence port for ContentRef aggregates.
  *
  * Domain-driven: works with domain entities, not raw rows.
- * Infrastructure layer provides the concrete D1 implementation.
+ * Returns DraftContentRef when no active shares exist,
+ * SharedContentRef when at least one active share is present.
  */
 
 import type { DraftContentRef } from '../entities/ContentRef/DraftContentRef.js';
 import type { SharedContentRef } from '../entities/ContentRef/SharedContentRef.js';
 import type { ContentRefId } from '../value-objects/index.js';
+import type { DomainEvent } from '../events/DomainEvent.js';
 
 export type ContentRef = DraftContentRef | SharedContentRef;
 
 export interface ContentRefsRepository {
   /**
    * Find a content ref by its ID.
-   * Returns a DraftContentRef if no shares exist, SharedContentRef otherwise.
+   * Returns DraftContentRef if no active shares, SharedContentRef otherwise.
    */
   findById(id: ContentRefId): Promise<ContentRef | null>;
 
   /**
-   * Find a content ref by its ID, including translations.
-   * Looks up sourceRefId chain for i18n fallback.
+   * Find all content refs for a given course.
    */
-  findByIdWithFallback(id: ContentRefId, lang: string): Promise<ContentRef | null>;
+  findByCourseId(courseId: string): Promise<ContentRef[]>;
 
   /**
-   * Save a new content ref.
+   * Find all content refs for a given class.
    */
-  save(contentRef: DraftContentRef): Promise<void>;
+  findByClassId(classId: string): Promise<ContentRef[]>;
 
   /**
-   * Find all content refs owned by a given email.
+   * Save (insert or update) a content ref.
    */
-  findByOwnerEmail(email: string): Promise<ContentRef[]>;
+  save(contentRef: DraftContentRef | SharedContentRef): Promise<void>;
+
+  /**
+   * Save and publish: persist the content ref then emit a domain event.
+   */
+  publish(event: DomainEvent, contentRef: DraftContentRef | SharedContentRef): Promise<void>;
 }

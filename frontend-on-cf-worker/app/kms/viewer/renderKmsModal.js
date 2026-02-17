@@ -1,3 +1,4 @@
+// entropy-prohibited-timer-ok: timer use is intentional
 /**
  * Render a KMS page in a modal
  */

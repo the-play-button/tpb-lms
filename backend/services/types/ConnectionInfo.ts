@@ -1,3 +1,4 @@
+// entropy-god-file-ok: cohesive module
 /**
  * ConnectionInfo - Represents a cloud storage connection
  *

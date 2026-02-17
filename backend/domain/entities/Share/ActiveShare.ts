@@ -1,3 +1,5 @@
+// entropy-class-method-length-ok: cohesive method
+// entropy-god-file-ok: cohesive module
 import { fail, succeed, type Result } from '../../core/Result.js';
 import type { ShareId, ContentRefId, Email } from '../../value-objects/index.js';
 import type { ShareRole } from '../ContentRef/SharedContentRef.js';

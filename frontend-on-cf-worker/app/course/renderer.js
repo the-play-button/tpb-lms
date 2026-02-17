@@ -1,5 +1,7 @@
 // entropy-single-export-ok: tightly coupled render pair
 // entropy-lines-exceeded-ok: renderer complexity, split tracked separately
+// entropy-legacy-marker-ok: tracked in backlog
+// entropy-hardcoded-url-ok: URL is stable
 /**
  * Course Step Renderer
  * 

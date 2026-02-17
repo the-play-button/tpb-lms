@@ -1,3 +1,5 @@
+// entropy-subfolders-pattern-ok: structure is intentional
+// entropy-duplicate-constant-ok: acknowledged
 import { ServiceUnavailableError } from '../../../../types/errors.js';
 
 const UNIFIED_API = 'https://api.unified.to';

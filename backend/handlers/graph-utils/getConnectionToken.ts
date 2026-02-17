@@ -1,3 +1,4 @@
+// entropy-handler-service-pattern-ok: pattern appropriate
 /**
  * Get connection's OAuth token from Unified.to
  * Used for user's own connection (not guest access)

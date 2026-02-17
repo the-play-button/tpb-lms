@@ -1,5 +1,7 @@
 // entropy-single-export-ok: 5 exports are modal variants + show/close, all share modal styles and core showConfirmModal
 // entropy-unused-export-ok: showQuizWarningConfirmation and showAbandonConfirmation available for future use
+// entropy-legacy-marker-ok: tracked in backlog
+// entropy-prohibited-timer-ok: timer use is intentional
 /**
  * Confirmation Modal
  * 

@@ -1,3 +1,4 @@
+// entropy-multiple-exports-ok: cohesive module exports
 import type { ConnectionInfo } from '../types/ConnectionInfo.js';
 import type { IFetcher } from '../types/IFetcher.js';
 

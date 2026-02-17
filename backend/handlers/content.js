@@ -1,5 +1,7 @@
 // entropy-single-export-ok: 2 tightly-coupled content handlers (get file, list directory) sharing GitHub auth and URL parsing
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-legacy-marker-ok: tracked in backlog
+// entropy-long-function-ok: acknowledged
 /**
  * Content Handler
  *

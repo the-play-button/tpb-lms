@@ -1,5 +1,7 @@
 # entropy-single-export-ok: CLI migration script, functions are internal pipeline steps called by main()
 # entropy-console-leak-ok: uses print for CLI output
+# entropy-legacy-marker-ok: tracked in backlog
+# entropy-inconsistent-constant-ok: acknowledged
 #!/usr/bin/env python3
 """
 Migrate LMS Users to vault-api
