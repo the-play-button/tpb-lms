@@ -43,7 +43,7 @@
     background: rgba(100, 100, 100, 0.25);
     color: rgba(80, 80, 80, 0.9);
     transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--shadow-debug-hover);
 }
 
 .debug-fab:active {
@@ -73,14 +73,14 @@
 .debug-fab--success {
     background: rgba(72, 187, 120, 0.3);
     border-color: rgba(72, 187, 120, 0.5);
-    color: #48bb78;
+    color: var(--color-debug-success);
 }
 
 /* Error state */
 .debug-fab--error {
     background: rgba(245, 101, 101, 0.3);
     border-color: rgba(245, 101, 101, 0.5);
-    color: #f56565;
+    color: var(--color-debug-error);
 }
 
 /* SVG icon */

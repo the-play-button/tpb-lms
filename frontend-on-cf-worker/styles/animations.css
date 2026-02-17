@@ -385,14 +385,13 @@ button:focus {
 }
 
 /* Reduced Motion */
-/* entropy-css-tokens-ok: prefers-reduced-motion accessibility override */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
     *::after {
-        animation-duration: 0.01ms !important;
+        animation-duration: var(--duration-zero) !important;
         animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
+        transition-duration: var(--duration-zero) !important;
     }
 }
 

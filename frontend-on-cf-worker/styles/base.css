@@ -86,6 +86,82 @@
     --color-surface-dark: #18181b;
     --color-surface-border: #27272a;
     --shadow-elevated: 0 10px 40px rgba(0, 0, 0, 0.5);
+
+    /* Spacing extended (entropy: responsive overrides) */
+    --space-10: 0.625rem;
+    --space-12: 0.75rem;
+    --space-14: 0.875rem;
+    --space-20: 1.25rem;
+    --space-75: 4.6875rem;
+    --space-100: 6.25rem;
+
+    /* Debug state colors */
+    --color-debug-success: #48bb78;
+    --color-debug-error: #f56565;
+
+    /* Dark mobile backgrounds */
+    --color-bg-deep: #0f0f1a;
+    --color-bg-surface-dark: #252540;
+    --color-text-hint: #666;
+
+    /* Admin light-theme colors */
+    --color-admin-icon-default-from: #f0f4ff;
+    --color-admin-icon-default-to: #e8f0fe;
+    --color-admin-icon-users-from: #dbeafe;
+    --color-admin-icon-users-to: #bfdbfe;
+    --color-admin-icon-courses-from: #dcfce7;
+    --color-admin-icon-courses-to: #bbf7d0;
+    --color-admin-icon-events-from: #fef3c7;
+    --color-admin-icon-events-to: #fde68a;
+    --color-admin-icon-completions-from: #d1fae5;
+    --color-admin-icon-completions-to: #a7f3d0;
+    --color-admin-icon-badges-from: #fce7f3;
+    --color-admin-icon-badges-to: #fbcfe8;
+    --color-admin-icon-xp-from: #ede9fe;
+    --color-admin-icon-xp-to: #ddd6fe;
+    --color-admin-activity-bg: #f9fafb;
+    --color-admin-border: #e5e7eb;
+
+    /* Achievement medal colors */
+    --color-medal-silver: #c0c0c0;
+    --color-medal-bronze: #cd7f32;
+
+    /* Amber accent (instructor/badge points) */
+    --color-amber-600: #d97706;
+
+    /* Rarity colors */
+    --color-rarity-common-bg: #374151;
+    --color-rarity-common-text: #9ca3af;
+    --color-rarity-rare-bg: #1e3a8a;
+    --color-rarity-rare-text: #60a5fa;
+    --color-rarity-epic-bg: #581c87;
+    --color-rarity-epic-text: #c084fc;
+    --color-rarity-legendary-bg: #78350f;
+
+    /* Badge rarity border colors */
+    --color-rarity-common-border: #9ca3af;
+    --color-rarity-epic-border: #a855f7;
+
+    /* Violet accent (points) */
+    --color-violet-500: #8b5cf6;
+
+    /* Shadows extended */
+    --shadow-debug-hover: 0 4px 12px rgba(0, 0, 0, 0.15);
+    --shadow-admin-hover: 0 4px 16px rgba(0, 0, 0, 0.1);
+    --shadow-modal-deep: 0 20px 40px rgba(0, 0, 0, 0.4);
+    --shadow-subtle-glow: 0 0 20px 4px rgba(255, 255, 255, 0.03);
+    --glow-danger: 0 4px 15px rgba(239, 68, 68, 0.4);
+    --glow-warning: 0 4px 15px rgba(234, 179, 8, 0.4);
+    --glow-success: 0 0 30px rgba(34, 197, 94, 0.2);
+
+    /* Durations extended */
+    --duration-pulse: 2s;
+    --duration-pulse-badge: 1.5s;
+    --duration-zero: 0.01ms;
+
+    /* JS-animated transform values (set via element.style) */
+    --tx: 0;
+    --ty: 0;
 }
 
 * {

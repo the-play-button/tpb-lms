@@ -13,7 +13,8 @@
 
 import { getState } from '../state.js';
 import { setupVideoTracking, getResumePosition } from '../video/tracking/index.js';
-import { fetchMarkdown, getDocumentUrl } from '../content/loader/index.js';
+import { fetchMarkdown, getDocumentUrl, isCloudRef, fetchCloudContent } from '../content/loader/index.js';
+import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
 import { showContentStepConfirmation } from './confirmModal.js';
 
 /**
@@ -25,11 +26,11 @@ function getMediaByType(cls, type, extraCheck = null) {
 }
 
 /**
- * Get document media (DOCUMENT type with url)
+ * Get document media (DOCUMENT type with url or cloud content_ref_id)
  */
 function getDocumentMedia(cls) {
     const media = cls.media || [];
-    return media.find(m => m.type === 'DOCUMENT' && m.url);
+    return media.find(m => m.type === 'DOCUMENT' && (m.url || isCloudRef(m)));
 }
 
 /**
@@ -235,18 +236,30 @@ function renderVideoContent(ctx) {
 
 /**
  * Load document content async after render
+ * Supports both GitHub URLs (legacy) and cloud content refs (BYOC)
  */
 async function loadDocumentContent(cls) {
     const documentMedia = getDocumentMedia(cls);
     if (!documentMedia) return;
-    
+
     const container = document.getElementById(`document-content-${cls.id}`);
     if (!container) return;
-    
+
     try {
-        const markdown = await fetchMarkdown(documentMedia.url);
+        let markdown;
+
+        if (isCloudRef(documentMedia)) {
+            // BYOC: fetch from cloud via API
+            const raw = await fetchCloudContent(documentMedia.content_ref_id);
+            markdown = stripFrontmatter(raw);
+            markdown = cleanMarkdownForLms(markdown);
+        } else {
+            // Legacy: fetch from GitHub
+            markdown = await fetchMarkdown(documentMedia.url);
+        }
+
         const html = marked.parse(markdown);
-        
+
         container.classList.remove('loading');
         container.innerHTML = `<div class="markdown-body">${html}</div>`;
     } catch (error) {

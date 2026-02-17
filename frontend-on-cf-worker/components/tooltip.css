@@ -50,24 +50,24 @@
 .badge-tooltip-header {
     display: flex;
     align-items: center;
-    gap: 10px; /* entropy-css-tokens-ok: 10px sits between --space-sm(8) and --space-md(16), component-specific */
+    gap: var(--space-10);
     margin-bottom: var(--space-sm);
 }
 
 .badge-tooltip-icon {
-    font-size: 28px; /* entropy-css-tokens-ok: component-specific icon size */
+    font-size: 1.75rem;
     line-height: 1;
 }
 
 .badge-tooltip-title {
-    font-size: 14px; /* entropy-css-tokens-ok: component-specific body size */
+    font-size: 0.875rem;
     font-weight: 600;
     color: var(--text-primary);
     margin: 0;
 }
 
 .badge-tooltip-rarity {
-    font-size: 10px; /* entropy-css-tokens-ok: component-specific micro label */
+    font-size: 0.625rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
@@ -77,33 +77,33 @@
 }
 
 .badge-tooltip-rarity.common {
-    background: #374151; /* entropy-css-tokens-ok: rarity-specific color (gray-700) */
-    color: #9ca3af; /* entropy-css-tokens-ok: rarity-specific color (gray-400) */
+    background: var(--color-rarity-common-bg);
+    color: var(--color-rarity-common-text);
 }
 .badge-tooltip-rarity.rare {
-    background: #1e3a8a; /* entropy-css-tokens-ok: rarity-specific color (blue-900) */
-    color: #60a5fa; /* entropy-css-tokens-ok: rarity-specific color (blue-400) */
+    background: var(--color-rarity-rare-bg);
+    color: var(--color-rarity-rare-text);
 }
 .badge-tooltip-rarity.epic {
-    background: #581c87; /* entropy-css-tokens-ok: rarity-specific color (purple-900) */
-    color: #c084fc; /* entropy-css-tokens-ok: rarity-specific color (purple-400) */
+    background: var(--color-rarity-epic-bg);
+    color: var(--color-rarity-epic-text);
 }
 .badge-tooltip-rarity.legendary {
-    background: #78350f; /* entropy-css-tokens-ok: rarity-specific color (amber-900) */
+    background: var(--color-rarity-legendary-bg);
     color: var(--gold);
 }
 
 .badge-tooltip-desc {
-    font-size: 12px; /* entropy-css-tokens-ok: component-specific small text */
+    font-size: 0.75rem;
     color: var(--text-secondary);
     line-height: 1.4;
     margin: 0 0 var(--space-sm) 0;
 }
 
 .badge-tooltip-points {
-    font-size: 12px; /* entropy-css-tokens-ok: component-specific small text */
+    font-size: 0.75rem;
     font-weight: 600;
-    color: #8b5cf6; /* entropy-css-tokens-ok: violet-500, used in 2 places (tooltip + toast) */
+    color: var(--color-violet-500);
     display: flex;
     align-items: center;
     gap: var(--space-xs);

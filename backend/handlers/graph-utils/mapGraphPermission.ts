@@ -1,0 +1,70 @@
+/**
+ * Map a Graph API permission to our StoragePermission format
+ * Supports all Graph API permission formats: grantedTo/V2, grantedToIdentities/V2, invitation
+ */
+
+export interface GraphPermission {
+  id: string;
+  roles?: string[];
+  grantedTo?: { user?: { id?: string; email?: string; displayName?: string } };
+  grantedToV2?: { user?: { id?: string; email?: string; displayName?: string } };
+  grantedToIdentities?: Array<{ user?: { id?: string; email?: string; displayName?: string } }>;
+  grantedToIdentitiesV2?: Array<{
+    user?: { id?: string; email?: string; displayName?: string };
+    siteUser?: { email?: string; displayName?: string };
+  }>;
+  invitation?: {
+    email?: string;
+    invitedBy?: { user?: { displayName?: string } };
+  };
+  link?: { scope?: string };
+}
+
+export interface StoragePermission {
+  id: string;
+  roles: string[];
+  email?: string;
+  display_name?: string;
+  user_id?: string;
+  type: 'user' | 'group' | 'link' | 'anyone';
+  is_public: boolean;
+}
+
+export function mapGraphPermission(perm: GraphPermission): StoragePermission {
+  const email =
+    perm.grantedToV2?.user?.email ||
+    perm.grantedTo?.user?.email ||
+    perm.grantedToIdentitiesV2?.[0]?.user?.email ||
+    perm.grantedToIdentitiesV2?.[0]?.siteUser?.email ||
+    perm.grantedToIdentities?.[0]?.user?.email ||
+    perm.invitation?.email;
+
+  const display_name =
+    perm.grantedToV2?.user?.displayName ||
+    perm.grantedTo?.user?.displayName ||
+    perm.grantedToIdentitiesV2?.[0]?.user?.displayName ||
+    perm.grantedToIdentitiesV2?.[0]?.siteUser?.displayName ||
+    perm.grantedToIdentities?.[0]?.user?.displayName ||
+    perm.invitation?.invitedBy?.user?.displayName;
+
+  const user_id =
+    perm.grantedToV2?.user?.id ||
+    perm.grantedTo?.user?.id ||
+    perm.grantedToIdentitiesV2?.[0]?.user?.id ||
+    perm.grantedToIdentities?.[0]?.user?.id;
+
+  let type: 'user' | 'group' | 'link' | 'anyone' = 'user';
+  if (perm.link) {
+    type = perm.link.scope === 'anonymous' ? 'anyone' : 'link';
+  }
+
+  return {
+    id: perm.id,
+    roles: perm.roles?.map((r: string) => r.toUpperCase()) || [],
+    email,
+    display_name,
+    user_id,
+    type,
+    is_public: perm.link?.scope === 'anonymous',
+  };
+}

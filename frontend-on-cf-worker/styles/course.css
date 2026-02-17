@@ -209,7 +209,7 @@
 
 .quiz-start-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(234, 179, 8, 0.4); /* entropy-css-tokens-ok: warning-specific glow, no matching token */
+    box-shadow: var(--glow-warning);
 }
 
 /* Quiz In Progress */
@@ -356,7 +356,7 @@
 
 .quiz-pending .quiz-badge {
     background: var(--accent-primary);
-    animation: pulseBadge 1.5s ease infinite;
+    animation: pulseBadge var(--duration-pulse-badge) ease infinite;
 }
 
 @keyframes pulseBadge {
@@ -413,7 +413,7 @@
 
 .module-success {
     border-color: var(--success);
-    box-shadow: 0 0 30px rgba(34, 197, 94, 0.2); /* entropy-css-tokens-ok: success-specific glow, no matching token */
+    box-shadow: var(--glow-success);
 }
 
 .module-failure {

@@ -211,9 +211,9 @@
     border-color: var(--border);
 }
 
-.badge-item.common { border-color: #9ca3af; } /* entropy-css-tokens-ok: common-rarity gray, no matching token */
+.badge-item.common { border-color: var(--color-rarity-common-border); }
 .badge-item.rare { border-color: #3b82f6; } /* entropy-css-tokens-ok: rare-rarity blue, no matching token */
-.badge-item.epic { border-color: #a855f7; } /* entropy-css-tokens-ok: epic-rarity purple, matches shadow-epic color */
+.badge-item.epic { border-color: var(--color-rarity-epic-border); }
 .badge-item.legendary {
     border-color: var(--gold);
     box-shadow: var(--shadow-gold-sm);

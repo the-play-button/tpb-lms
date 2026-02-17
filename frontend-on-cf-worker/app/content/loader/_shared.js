@@ -159,6 +159,84 @@ export async function fetchContentWithI18nFallback(url) {
     return { content, lang: 'source', url };
 }
 
+// ============================================
+// BYOC Cloud Content Helpers
+// ============================================
+
+/**
+ * Check if media references cloud content (BYOC)
+ */
+export function isCloudRef(media) {
+    return media?.source === 'cloud' && media?.content_ref_id;
+}
+
+/**
+ * Build API URL for cloud content
+ */
+export function buildCloudContentUrl(contentRefId, lang) {
+    let url = `${API_BASE}/content/cloud?ref_id=${contentRefId}`;
+    if (lang) url += `&lang=${lang}`;
+    return url;
+}
+
+/**
+ * Build API URL for cloud pitch file
+ */
+export function buildCloudPitchUrl(contentRefId) {
+    return `${API_BASE}/content/cloud/pitch?ref_id=${contentRefId}`;
+}
+
+/**
+ * Fetch cloud content directly (no i18n fallback).
+ */
+export async function fetchCloudContentDirect(contentRefId, lang) {
+    const fetchUrl = buildCloudContentUrl(contentRefId, lang);
+
+    const token = await getAuthToken();
+    const headers = {
+        'Accept': 'text/plain, text/markdown, */*',
+        'Cf-Access-Jwt-Assertion': token,
+    };
+
+    const response = await fetch(fetchUrl, { headers });
+
+    if (!response.ok) {
+        throw new Error(`Failed to fetch cloud content: ${response.status}`);
+    }
+
+    return await response.text();
+}
+
+/**
+ * Fetch cloud content with i18n fallback.
+ * Order: current lang -> en -> source
+ */
+export async function fetchCloudContentWithI18nFallback(contentRefId) {
+    const currentLang = window.i18n?.getLanguage?.() || 'fr';
+
+    // Try current language first
+    try {
+        const content = await fetchCloudContentDirect(contentRefId, currentLang);
+        return { content, lang: currentLang };
+    } catch (e) {
+        log.debug(`[content] cloud ${currentLang} not found, trying fallback...`);
+    }
+
+    // Fallback to English
+    if (currentLang !== 'en') {
+        try {
+            const content = await fetchCloudContentDirect(contentRefId, 'en');
+            return { content, lang: 'en' };
+        } catch (e) {
+            log.debug(`[content] cloud en not found, trying source...`);
+        }
+    }
+
+    // Fallback to source (no lang param)
+    const content = await fetchCloudContentDirect(contentRefId);
+    return { content, lang: 'source' };
+}
+
 /**
  * Resolve a relative path against a base URL
  */

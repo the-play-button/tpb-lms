@@ -72,7 +72,7 @@
 }
 
 .som-content:hover {
-    box-shadow: 0 0 20px 4px rgba(255, 255, 255, 0.03); /* entropy-css-tokens-ok: subtle white glow, distinct from accent-based shadow tokens */
+    box-shadow: var(--shadow-subtle-glow);
 }
 
 .som-header {
@@ -184,12 +184,12 @@
 }
 
 .leaderboard-list li:nth-child(2) .rank {
-    background: #c0c0c0; /* entropy-css-tokens-ok: silver medal color */
+    background: var(--color-medal-silver);
     color: black;
 }
 
 .leaderboard-list li:nth-child(3) .rank {
-    background: #cd7f32; /* entropy-css-tokens-ok: bronze medal color */
+    background: var(--color-medal-bronze);
     color: black;
 }
 
@@ -312,7 +312,7 @@
     height: 200px;
     background: radial-gradient(circle, var(--accent-glow), transparent);
     transform: translate(-50%, -50%);
-    animation: pulse 2s ease infinite;
+    animation: pulse var(--duration-pulse) ease infinite;
 }
 
 @keyframes pulse {
@@ -424,7 +424,7 @@
 
 .btn-danger:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4); /* entropy-css-tokens-ok: error-specific glow, no matching token */
+    box-shadow: var(--glow-danger);
 }
 
 /* Spinner */
@@ -664,7 +664,7 @@
 
 .user-role-badge.instructor {
     background: rgba(234, 179, 8, 0.15);
-    color: #d97706; /* entropy-css-tokens-ok: amber-600 for instructor, intentionally distinct from --warning */
+    color: var(--color-amber-600);
 }
 
 .user-role-badge.student {
@@ -780,7 +780,7 @@
 
 .badge-earned .badge-points {
     background: rgba(251, 191, 36, 0.2);
-    color: #d97706; /* entropy-css-tokens-ok: amber-600 for badge points, intentionally distinct from --warning */
+    color: var(--color-amber-600);
     padding: 2px var(--space-sm); /* entropy-css-tokens-ok: 2px vertical is sub-atomic */
     border-radius: var(--radius-sm);
     font-size: 0.75rem;

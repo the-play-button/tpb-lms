@@ -9,7 +9,8 @@
 import { api } from '../api.js';
 import { getState, setState } from '../state.js';
 import { log } from '../log.js';
-import { fetchMarkdown } from '../content/loader/index.js';
+import { fetchMarkdown, fetchCloudContent } from '../content/loader/index.js';
+import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
 import { loadCourse } from './loader.js';
 
 /**
@@ -30,13 +31,23 @@ export async function renderCourseOverview(course, enrollmentStatus = null) {
     `;
     
     try {
-        // Get intro URL from course raw data
+        // Get intro URL or cloud ref from course raw data
         const raw = course.raw ? JSON.parse(course.raw) : {};
         const introUrl = raw.tpb_intro_url;
-        
-        // Fetch intro content if available
+        const introRefId = raw.tpb_intro_ref_id;
+
+        // Fetch intro content: cloud ref (BYOC) > GitHub URL (legacy) > description
         let introContent = '';
-        if (introUrl) {
+        if (introRefId) {
+            try {
+                const rawMd = await fetchCloudContent(introRefId);
+                const cleaned = cleanMarkdownForLms(stripFrontmatter(rawMd));
+                introContent = marked.parse(cleaned);
+            } catch (error) {
+                log.warn('Failed to fetch cloud intro:', error);
+                introContent = `<p>${course.description || 'Aucune description disponible.'}</p>`;
+            }
+        } else if (introUrl) {
             try {
                 const markdown = await fetchMarkdown(introUrl);
                 introContent = marked.parse(markdown);
