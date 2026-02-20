@@ -1,6 +1,7 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
+import { getCloudPitchAssert } from './getCloudPitchAssert.js';
 import { getCloudPitchValidateInput } from './getCloudPitchValidateInput.js';
 import { getCloudPitchHydrateContext } from './getCloudPitchHydrateContext.js';
 import { getCloudPitchCheckPolicies } from './getCloudPitchCheckPolicies.js';
@@ -9,7 +10,7 @@ import { getCloudPitchExecute, type GetCloudPitchOutput } from './getCloudPitchE
 type GetCloudPitchError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 
 /**
- * Handle orchestrator: ValidateInput -> HydrateContext -> CheckPolicies -> Execute
+ * Handle orchestrator: Assert -> ValidateInput -> HydrateContext -> CheckPolicies -> Execute
  *
  * No separate Filter step for binary pitch files -- no metadata to strip.
  */
@@ -17,6 +18,10 @@ export async function getCloudPitchHandle(
   request: Request,
   ctx: HandlerContext
 ): Promise<Result<GetCloudPitchError, GetCloudPitchOutput>> {
+  // 0. Assert
+  const assertResult = getCloudPitchAssert(request);
+  if (!assertResult.ok) return fail(assertResult.error);
+
   // 1. ValidateInput
   const inputResult = getCloudPitchValidateInput(request);
   if (!inputResult.ok) return fail(inputResult.error);

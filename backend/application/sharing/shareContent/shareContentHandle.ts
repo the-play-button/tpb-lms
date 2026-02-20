@@ -1,6 +1,7 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
+import { shareContentAssert } from './shareContentAssert.js';
 import { shareContentValidateInput } from './shareContentValidateInput.js';
 import { shareContentHydrateContext } from './shareContentHydrateContext.js';
 import { shareContentCheckPolicies } from './shareContentCheckPolicies.js';
@@ -10,13 +11,17 @@ import { shareContentFilter } from './shareContentFilter.js';
 type ShareContentError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 
 /**
- * Handle orchestrator: ValidateInput -> HydrateContext -> CheckPolicies -> Execute -> Filter
+ * Handle orchestrator: Assert -> ValidateInput -> HydrateContext -> CheckPolicies -> Execute -> Filter
  */
 export async function shareContentHandle(
   request: Request,
   ctx: HandlerContext,
   refId: string
 ): Promise<Result<ShareContentError, Partial<ShareContentOutput>>> {
+  // 0. Assert
+  const assertResult = shareContentAssert(refId);
+  if (!assertResult.ok) return fail(assertResult.error);
+
   // 1. ValidateInput
   const inputResult = await shareContentValidateInput(request);
   if (!inputResult.ok) return fail(inputResult.error);

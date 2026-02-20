@@ -1,19 +1,20 @@
-import { fail, succeed, type Result } from '../../../domain/core/Result.js';
+import type { Result } from '../../../domain/core/Result.js';
+import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import type { ConnectionInfo } from '../../../services/types/ConnectionInfo.js';
+import { getDefaultConnectionAssert } from './getDefaultConnectionAssert.js';
+import { getDefaultConnectionExecute } from './getDefaultConnectionExecute.js';
 
 /**
- * Handle: fetch the user's default storage connection.
- *
- * Simple use case - uses connectionResolver.getDefaultConnection() directly.
+ * Handle orchestrator: Assert -> Execute
  */
 export async function getDefaultConnectionHandle(
   ctx: HandlerContext
 ): Promise<Result<string, ConnectionInfo>> {
-  try {
-    const connection = await ctx.connectionResolver.getDefaultConnection();
-    return succeed(connection);
-  } catch (error) {
-    return fail((error as Error).message);
-  }
+  // 0. Assert
+  const assertResult = getDefaultConnectionAssert();
+  if (!assertResult.ok) return fail(assertResult.error);
+
+  // 1. Execute
+  return getDefaultConnectionExecute(ctx);
 }

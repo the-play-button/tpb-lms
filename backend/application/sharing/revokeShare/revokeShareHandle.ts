@@ -1,6 +1,7 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
+import { revokeShareAssert } from './revokeShareAssert.js';
 import { revokeShareHydrateContext } from './revokeShareHydrateContext.js';
 import { revokeShareCheckPolicies } from './revokeShareCheckPolicies.js';
 import { revokeShareExecute, type RevokeShareOutput } from './revokeShareExecute.js';
@@ -8,13 +9,17 @@ import { revokeShareExecute, type RevokeShareOutput } from './revokeShareExecute
 type RevokeShareError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 
 /**
- * Handle orchestrator: HydrateContext -> CheckPolicies -> Execute
+ * Handle orchestrator: Assert -> HydrateContext -> CheckPolicies -> Execute
  * shareId comes from the URL path param (no body parsing needed for DELETE).
  */
 export async function revokeShareHandle(
   shareId: string,
   ctx: HandlerContext
 ): Promise<Result<RevokeShareError, RevokeShareOutput>> {
+  // 0. Assert
+  const assertResult = revokeShareAssert(shareId);
+  if (!assertResult.ok) return fail(assertResult.error);
+
   // 1. HydrateContext
   const contextResult = await revokeShareHydrateContext(shareId, ctx);
   if (!contextResult.ok) return fail(contextResult.error);

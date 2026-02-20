@@ -1,6 +1,7 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
+import { getCloudContentAssert } from './getCloudContentAssert.js';
 import { getCloudContentValidateInput } from './getCloudContentValidateInput.js';
 import { getCloudContentHydrateContext } from './getCloudContentHydrateContext.js';
 import { getCloudContentCheckPolicies } from './getCloudContentCheckPolicies.js';
@@ -10,12 +11,16 @@ import { getCloudContentFilter } from './getCloudContentFilter.js';
 type GetCloudContentError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 
 /**
- * Handle orchestrator: ValidateInput -> HydrateContext -> CheckPolicies -> Execute -> Filter
+ * Handle orchestrator: Assert -> ValidateInput -> HydrateContext -> CheckPolicies -> Execute -> Filter
  */
 export async function getCloudContentHandle(
   request: Request,
   ctx: HandlerContext
 ): Promise<Result<GetCloudContentError, GetCloudContentOutput>> {
+  // 0. Assert
+  const assertResult = getCloudContentAssert(request);
+  if (!assertResult.ok) return fail(assertResult.error);
+
   // 1. ValidateInput
   const inputResult = getCloudContentValidateInput(request);
   if (!inputResult.ok) return fail(inputResult.error);
