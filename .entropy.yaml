@@ -13,6 +13,43 @@ thresholds:
 ignore:
   - vault-api       # Separate subproject with its own config
 
+# OPT-OUT: LMS est un projet JS/Node classique sans DDD ni pipeline HCHADVE
+tpb_checks:
+  # Fleet-specific: pas pertinent
+  fleet_queue_side_effect_inline: false
+  fleet_websocket_auth_missing: false
+  fleet_do_notification_missing: false
+  # COCK Python testing: pas pertinent
+  pytest_bdd_structure: false
+  test_inline_construction: false
+  mock_runner_detection: false
+  domain_function_throw: false
+  # COCK-specific DDD (Python): pas pertinent
+  ddd_generic_crud_usage: false
+  ddd_direct_event_publish: false
+  # Fleet WebSocket EntityStore: pas pertinent
+  websocket_event_mapping_incomplete: false
+  cache_invalidation_without_debounce: false
+  reconnect_callback_stale_closure: false
+  # DDD + pipeline: LMS n'a pas ce pattern architectural
+  ddd_aggregate_void_commands: false
+  ddd_result_type_usage: false
+  ddd_domain_event_emission: false
+  ddd_state_enum_antipattern: false
+  ddd_domain_policy_location: false
+  ddd_repository_event_publishing: false
+  ddd_value_object_primitives: false
+  ddd_application_layer_purity: false
+  ddd_aggregate_immutability: false
+  ddd_checkpolicies_missing: false
+  use_case_pipeline: false
+  assert_layer: false
+  ddd_assert_schema_validation: false
+  ddd_handle_purity: false
+  ddd_hydrate_context_read_only: false
+  ddd_inline_authorization: false
+  ddd_frontend_data_pattern: false
+
 # Project-specific exceptions
 exceptions:
   # Files allowed to have high coupling (entry points, orchestrators)
