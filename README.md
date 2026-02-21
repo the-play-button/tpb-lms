@@ -1,3 +1,5 @@
+> **Repo git independant**, nested dans le workspace squelette `the-play-button-business`.
+
 # TPB LMS
 
 Learning Management System infrastructure built on Cloudflare (Stream, D1, Workers).
