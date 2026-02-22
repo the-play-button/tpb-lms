@@ -13,7 +13,7 @@ thresholds:
 ignore:
   - vault-api       # Separate subproject with its own config
 
-# OPT-OUT: LMS est un projet JS/Node classique sans DDD ni pipeline HCHADVE
+# OPT-OUT: LMS est un projet JS/Node classique sans DDD ni pipeline CHVHVCEF
 tpb_checks:
   # Fleet-specific: pas pertinent
   fleet_queue_side_effect_inline: false
@@ -43,7 +43,7 @@ tpb_checks:
   ddd_aggregate_immutability: false
   ddd_checkpolicies_missing: false
   use_case_pipeline: false
-  assert_layer: false
+  validate_input_layer: false
   ddd_assert_schema_validation: false
   ddd_handle_purity: false
   ddd_hydrate_context_read_only: false
