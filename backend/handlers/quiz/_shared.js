@@ -21,13 +21,12 @@ export { jsonResponse, recordQuizEvent, checkQuizBadges, checkStreakBadges, appl
  * Get pass threshold from quiz class media_json
  */
 export function getPassThreshold(quizClass) {
-    try {
-        const media = JSON.parse(quizClass?.media_json || '[]');
-        const quizMedia = media.find(m => m.type === 'QUIZ');
-        return quizMedia?.pass_threshold || 80;
-    } catch {
+    if (!quizClass?.media_json) {
         return 80;
     }
+    const media = JSON.parse(quizClass.media_json);
+    const quizMedia = media.find(m => m.type === 'QUIZ' || m.type === 'WEB');
+    return quizMedia?.pass_threshold || 80;
 }
 
 /**
@@ -81,49 +80,46 @@ export function extractFieldsFromPayload(fields) {
  * Calculate quiz score from answers and config
  */
 export function calculateScore(answers, quizClass) {
-    if (!quizClass?.raw_json) {
-        return { score: 0, maxScore: 1 };
+    if (!quizClass) {
+        throw new Error('calculateScore: quizClass is null — quiz lookup failed');
+    }
+    if (!quizClass.raw_json) {
+        throw new Error(`calculateScore: raw_json missing on class ${quizClass.id}`);
     }
 
-    try {
-        const config = JSON.parse(quizClass.raw_json);
-        const correctAnswers = config.correct_answers || {};
-        const maxScore = Object.keys(correctAnswers).length;
-
-        if (maxScore === 0) {
-            return { score: 0, maxScore: 1 };
-        }
-
-        let score = 0;
-
-        if (Array.isArray(answers)) {
-            for (const field of answers) {
-                const questionText = field.title || field.label;
-                const userAnswer = field.answer?.value || field.value;
-                const correct = correctAnswers[questionText];
-
-                log.info('Checking answer', {
-                    questionText,
-                    userAnswer,
-                    expected: correct,
-                    match: userAnswer === correct
-                });
-
-                if (correct && userAnswer === correct) {
-                    score++;
-                }
-            }
-        } else {
-            for (const [key, correct] of Object.entries(correctAnswers)) {
-                if (answers[key] === correct) score++;
-            }
-        }
-
-        return { score, maxScore };
-    } catch (e) {
-        log.warn('Quiz config parse error', { error: e.message });
-        return { score: 0, maxScore: 1 };
+    const config = JSON.parse(quizClass.raw_json);
+    const correctAnswers = config.correct_answers;
+    if (!correctAnswers || Object.keys(correctAnswers).length === 0) {
+        throw new Error(`calculateScore: no correct_answers in class ${quizClass.id}`);
     }
+
+    const maxScore = Object.keys(correctAnswers).length;
+    let score = 0;
+
+    if (Array.isArray(answers)) {
+        for (const field of answers) {
+            const questionText = field.title || field.label;
+            const userAnswer = field.answer?.value || field.value;
+            const correct = correctAnswers[questionText];
+
+            log.info('Checking answer', {
+                questionText,
+                userAnswer,
+                expected: correct,
+                match: userAnswer === correct
+            });
+
+            if (correct && userAnswer === correct) {
+                score++;
+            }
+        }
+    } else {
+        for (const [key, correct] of Object.entries(correctAnswers)) {
+            if (answers[key] === correct) score++;
+        }
+    }
+
+    return { score, maxScore };
 }
 
 /**

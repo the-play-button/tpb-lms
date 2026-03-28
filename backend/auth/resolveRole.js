@@ -40,8 +40,8 @@ export async function resolveRole(email, env) {
     // entropy-legacy-marker-ok: documented technical debt
     // This will be deprecated once vault-api is fully operational
     const employee = await env.DB.prepare(`
-    SELECT id, employee_roles_json FROM hris_employee
-    WHERE json_extract(emails_json, '$[0].email') = ?
+    SELECT he.id, he.employee_roles_json FROM hris_employee he, json_each(he.emails_json) je
+    WHERE json_extract(je.value, '$.email') = ?
   `).bind(email).first();
 
     if (employee) {

@@ -40,7 +40,8 @@ async function processTallyPayload(payload, env, request) {
     }
 
     const quizClass = await env.DB.prepare(`
-        SELECT * FROM lms_class WHERE json_extract(media_json, '$[1].tally_form_id') = ?
+        SELECT lc.* FROM lms_class lc, json_each(lc.media_json) je
+        WHERE json_extract(je.value, '$.tally_form_id') = ?
     `).bind(formId).first();
 
     const { score, maxScore } = calculateScore(answers, quizClass);

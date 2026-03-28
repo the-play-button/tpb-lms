@@ -37,30 +37,28 @@ async function getGitHubTokenWithDebug(env) {
         cached: false,
         hasVaultUrl: !!env.VAULT_API_URL,
         hasVaultToken: !!env.VAULT_TOKEN,
-        hasBackendSecret: !!env.TPBIAMPAM_BACKEND_SECRET_KEY,
         vaultTokenPrefix: env.VAULT_TOKEN ? env.VAULT_TOKEN.substring(0, 12) : null,
         vaultStatus: null,
         vaultError: null
     };
-    
+
     // Check cache first
     if (cachedToken && Date.now() < tokenExpiry) {
         debug.cached = true;
         return { token: cachedToken, debug };
     }
-    
+
     // Use Service Binding if available (bypasses CF Access), otherwise fallback to URL
-    if ((env.BASTION || env.VAULT_API_URL) && (env.VAULT_TOKEN || env.TPBIAMPAM_BACKEND_SECRET_KEY)) {
+    if ((env.BASTION || env.VAULT_API_URL) && env.VAULT_TOKEN) {
         try {
             const secretPath = '/secret/data/infra/github_pat_tpb_repos';
             
-            // Build auth headers - prefer Bearer token (scoped), fallback to Backend Secret
+            // Auth via Bearer token (scoped service token)
+            // Do NOT send X-Backend-Secret — Bastion checks it first and rejects
+            // mismatched secrets before reaching Bearer token validation
             const headers = { 'Content-Type': 'application/json' };
             if (env.VAULT_TOKEN) {
                 headers['Authorization'] = `Bearer ${env.VAULT_TOKEN}`;
-            }
-            if (env.TPBIAMPAM_BACKEND_SECRET_KEY) {
-                headers['X-Backend-Secret'] = env.TPBIAMPAM_BACKEND_SECRET_KEY;
             }
             
             let response;

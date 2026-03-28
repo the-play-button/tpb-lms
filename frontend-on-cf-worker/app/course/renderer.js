@@ -292,9 +292,9 @@ function renderQuizSection(ctx) {
     // Support both legacy (single string) and new (object by lang) formats
     // Pass the entire tally_form_ids object to showQuiz for language resolution
     const formIds = quizMedia.tally_form_ids || quizMedia.tally_form_id;
-    const formIdsJson = typeof formIds === 'object' 
+    const formIdsJson = typeof formIds === 'object'
         ? JSON.stringify(formIds).replace(/"/g, '&quot;')
-        : `"${formIds}"`;
+        : `&quot;${formIds}&quot;`;
     
     if (quizPassed) {
         return `

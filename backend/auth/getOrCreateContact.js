@@ -6,8 +6,10 @@ export async function getOrCreateContact(email, env) {
     // Try to find existing contact
     let contact = await env.DB.prepare(`
         SELECT * FROM crm_contact
-        WHERE json_extract(emails_json, '$[0].email') = ?
-           OR id = ?
+        WHERE id IN (
+            SELECT cc.id FROM crm_contact cc, json_each(cc.emails_json) je
+            WHERE json_extract(je.value, '$.email') = ?
+        ) OR id = ?
     `).bind(email, email).first();
 
     if (contact) return contact;

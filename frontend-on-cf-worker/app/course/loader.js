@@ -77,9 +77,12 @@ export async function loadCourse(courseId, initialStepIndex = null) {
         
     } catch (error) {
         log.error('Failed to load course:', error);
-        document.getElementById('somViewer').innerHTML = `
-            <div class="error">Erreur: ${error.message}</div>
-        `;
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error';
+        errorDiv.textContent = `Erreur: ${error.message}`;
+        const viewer = document.getElementById('somViewer');
+        viewer.innerHTML = '';
+        viewer.appendChild(errorDiv);
     }
 }
 
