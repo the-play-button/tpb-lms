@@ -1,4 +1,3 @@
-import type { IFetcher } from '../../../types/IFetcher.js';
 import type { StorageFile } from '../../../types/StorageFile.js';
 import { ServiceUnavailableError } from '../../../../types/errors.js';
 import { pamFetch } from './pamFetch.js';
@@ -7,13 +6,13 @@ import { pamFetch } from './pamFetch.js';
  * List files in a folder via PAM delegated access
  */
 export async function listFiles(
-  fetcher: IFetcher,
+  bastionUrl: string,
   getToken: () => string,
   connectionId: string,
   parentId: string,
   guestEmail: string
 ): Promise<StorageFile[]> {
-  const response = await pamFetch(fetcher, getToken, 'storage', 'folder', 'list', {
+  const response = await pamFetch(bastionUrl, getToken, 'storage', 'folder', 'list', {
     connectionId,
     entityId: parentId,
     guestEmail,

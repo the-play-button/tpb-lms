@@ -1,13 +1,12 @@
 /**
- * Bastion Cloudflare Adapter - Production implementation
+ * Bastion HTTP Adapter - Production implementation
  *
- * Connects to TPB Bastion via Cloudflare Service Binding.
+ * Connects to TPB Bastion via HTTP.
  * Uses CF Access JWT for authentication.
  */
 
 import type { BastionPort, BastionConfig } from '../BastionPort.js';
 import type { ConnectionInfo } from '../../types/ConnectionInfo.js';
-import type { IFetcher } from '../../types/IFetcher.js';
 import { bastionFetch } from './BastionCloudflareAdapter.functions/bastionFetch.js';
 import { getSecret } from './BastionCloudflareAdapter.functions/getSecret.js';
 import { getAllStorageConnections } from './BastionCloudflareAdapter.functions/getAllStorageConnections.js';
@@ -15,32 +14,32 @@ import { getConnectionsByProvider } from './BastionCloudflareAdapter.functions/g
 import { getDefaultStorageConnection } from './BastionCloudflareAdapter.functions/getDefaultStorageConnection.js';
 
 export class BastionCloudflareAdapter implements BastionPort {
-  private fetcher: IFetcher;
+  private bastionUrl: string;
 
   constructor(config: BastionConfig) {
-    this.fetcher = config.fetcher;
+    this.bastionUrl = config.bastionUrl;
   }
 
   /**
    * Make authenticated request to bastion
    */
   private async bastionFetch(path: string, jwt: string): Promise<Response> {
-    return bastionFetch(this.fetcher, path, jwt);
+    return bastionFetch(this.bastionUrl, path, jwt);
   }
 
   async getSecret(jwt: string, path: string): Promise<string | null> {
-    return getSecret(this.fetcher, jwt, path);
+    return getSecret(this.bastionUrl, jwt, path);
   }
 
   async getAllStorageConnections(jwt: string): Promise<ConnectionInfo[]> {
-    return getAllStorageConnections(this.fetcher, jwt);
+    return getAllStorageConnections(this.bastionUrl, jwt);
   }
 
   async getConnectionsByProvider(jwt: string, provider: string): Promise<ConnectionInfo[]> {
-    return getConnectionsByProvider(this.fetcher, jwt, provider);
+    return getConnectionsByProvider(this.bastionUrl, jwt, provider);
   }
 
   async getDefaultStorageConnection(jwt: string): Promise<ConnectionInfo> {
-    return getDefaultStorageConnection(this.fetcher, jwt);
+    return getDefaultStorageConnection(this.bastionUrl, jwt);
   }
 }

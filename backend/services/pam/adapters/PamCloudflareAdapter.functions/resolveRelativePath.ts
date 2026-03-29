@@ -1,4 +1,3 @@
-import type { IFetcher } from '../../../types/IFetcher.js';
 import type { StorageFile } from '../../../types/StorageFile.js';
 import { ValidationError, NotFoundError, ServiceUnavailableError } from '../../../../types/errors.js';
 import { listFiles } from './listFiles.js';
@@ -12,7 +11,7 @@ const FOLDER_MIME_TYPE = 'application/vnd.folder';
  * Uses PAM delegated access so owner tokens are never exposed.
  */
 export async function resolveRelativePath(
-  fetcher: IFetcher,
+  bastionUrl: string,
   getToken: () => string,
   connectionId: string,
   baseFolderId: string,
@@ -31,7 +30,7 @@ export async function resolveRelativePath(
     const segment = segments[i];
     const isLast = i === segments.length - 1;
 
-    const files = await listFiles(fetcher, getToken, connectionId, currentFolderId, guestEmail);
+    const files = await listFiles(bastionUrl, getToken, connectionId, currentFolderId, guestEmail);
     const match = files.find(f => f.name === segment);
 
     if (!match) {

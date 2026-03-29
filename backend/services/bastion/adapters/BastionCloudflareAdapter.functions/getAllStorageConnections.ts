@@ -1,9 +1,8 @@
-import type { IFetcher } from '../../../types/IFetcher.js';
 import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
 import { bastionFetch } from './bastionFetch.js';
 
-export async function getAllStorageConnections(fetcher: IFetcher, jwt: string): Promise<ConnectionInfo[]> {
-  const response = await bastionFetch(fetcher, '/core/connections/me?category=storage', jwt);
+export async function getAllStorageConnections(bastionUrl: string, jwt: string): Promise<ConnectionInfo[]> {
+  const response = await bastionFetch(bastionUrl, '/core/connections/me?category=storage', jwt);
   if (!response.ok) {
     return [];
   }

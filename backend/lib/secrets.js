@@ -27,8 +27,8 @@ let vaultClient = null;
  * Get or create VaultClient singleton
  */
 function getVaultClient(env) {
-  if (!vaultClient && env.VAULT_API_URL && env.VAULT_CLIENT_ID && env.VAULT_CLIENT_SECRET) {
-    vaultClient = new VaultClient(env.VAULT_API_URL, env);
+  if (!vaultClient && env.BASTION_URL && env.VAULT_TOKEN) {
+    vaultClient = new VaultClient(env.BASTION_URL, env);
   }
   return vaultClient;
 }

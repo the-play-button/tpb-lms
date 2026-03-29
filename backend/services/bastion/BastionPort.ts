@@ -1,6 +1,5 @@
 // entropy-multiple-exports-ok: cohesive module exports
 import type { ConnectionInfo } from '../types/ConnectionInfo.js';
-import type { IFetcher } from '../types/IFetcher.js';
 
 /**
  * Bastion Port interface
@@ -43,5 +42,5 @@ export interface BastionPort {
  * Configuration for Bastion adapters
  */
 export interface BastionConfig {
-  fetcher: IFetcher;
+  bastionUrl: string;
 }

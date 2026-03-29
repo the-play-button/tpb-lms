@@ -8,21 +8,18 @@
  * - Secrets and configuration vars
  */
 
-import type { IFetcher } from '../services/types/IFetcher.js';
-
 export interface Env {
   // --- D1 Database ---
   DB: D1Database;
 
-  // --- Service Bindings ---
-  BASTION: IFetcher;
+  // --- Bastion (HTTP) ---
+  BASTION_URL: string;
 
   // --- Secrets ---
   VAULT_TOKEN: string;
 
   // --- Vars ---
   ACCESS_TEAM_DOMAIN: string;
-  VAULT_API_URL: string;
   USE_LOGTO: string;
   LOGTO_ENDPOINT: string;
 

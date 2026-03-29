@@ -12,9 +12,9 @@ import { VaultClient } from '../lib/vaultClient.js';
 
 export async function resolveRole(email, env) {
     // Try vault-api first (SSOT for IAM)
-    if (env.VAULT_API_URL && env.VAULT_CLIENT_ID && env.VAULT_CLIENT_SECRET) {
+    if (env.BASTION_URL && env.VAULT_TOKEN) {
         try {
-            const vault = new VaultClient(env.VAULT_API_URL, env);
+            const vault = new VaultClient(env.BASTION_URL, env);
             const data = await vault.getUserRoles(email);
             const roleNames = (data.roles || []).map(r => r.name);
 

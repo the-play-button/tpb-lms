@@ -2,7 +2,7 @@
  * PAM Service - Privileged Access Management
  *
  * USAGE:
- * const pam = createPamClient({ fetcher: env.BASTION, getToken: () => token });
+ * const pam = createPamClient({ bastionUrl: env.BASTION_URL, getToken: () => token });
  * const result = await pam.verifyAccess(connectionId, fileId, guestEmail);
  */
 

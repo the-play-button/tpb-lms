@@ -1,9 +1,8 @@
-import type { IFetcher } from '../../../types/IFetcher.js';
 import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
 import { bastionFetch } from './bastionFetch.js';
 
-export async function getConnectionsByProvider(fetcher: IFetcher, jwt: string, provider: string): Promise<ConnectionInfo[]> {
-  const response = await bastionFetch(fetcher, `/core/connections/me?integrationType=${provider}`, jwt);
+export async function getConnectionsByProvider(bastionUrl: string, jwt: string, provider: string): Promise<ConnectionInfo[]> {
+  const response = await bastionFetch(bastionUrl, `/core/connections/me?integrationType=${provider}`, jwt);
   if (!response.ok) {
     return [];
   }

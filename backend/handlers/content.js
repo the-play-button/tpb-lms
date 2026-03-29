@@ -28,14 +28,14 @@ let tokenExpiry = 0;
  * Token path in vault: infra/github_pat_tpb_repos
  * 
  * Required env vars:
- * - VAULT_API_URL: Vault API endpoint
+ * - BASTION_URL: Bastion API endpoint (https://iampam.tunnels.digital)
  * - VAULT_TOKEN: Native Bearer token (iampam_xxx)
  */
 // #region agent debug wrapper
 async function getGitHubTokenWithDebug(env) {
     const debug = {
         cached: false,
-        hasVaultUrl: !!env.VAULT_API_URL,
+        hasBastionUrl: !!env.BASTION_URL,
         hasVaultToken: !!env.VAULT_TOKEN,
         vaultTokenPrefix: env.VAULT_TOKEN ? env.VAULT_TOKEN.substring(0, 12) : null,
         vaultStatus: null,
@@ -48,29 +48,16 @@ async function getGitHubTokenWithDebug(env) {
         return { token: cachedToken, debug };
     }
 
-    // Use Service Binding if available (bypasses CF Access), otherwise fallback to URL
-    if ((env.BASTION || env.VAULT_API_URL) && env.VAULT_TOKEN) {
+    if (env.BASTION_URL && env.VAULT_TOKEN) {
         try {
             const secretPath = '/secret/data/infra/github_pat_tpb_repos';
-            
-            // Auth via Bearer token (scoped service token)
-            // Do NOT send X-Backend-Secret — Bastion checks it first and rejects
-            // mismatched secrets before reaching Bearer token validation
-            const headers = { 'Content-Type': 'application/json' };
-            if (env.VAULT_TOKEN) {
-                headers['Authorization'] = `Bearer ${env.VAULT_TOKEN}`;
-            }
-            
-            let response;
-            if (env.BASTION) {
-                // Use Service Binding (direct worker-to-worker, bypasses CF Access)
-                debug.useServiceBinding = true;
-                response = await env.BASTION.fetch(new Request(`https://bastion${secretPath}`, { headers }));
-            } else {
-                // Fallback to public URL (may be blocked by CF Access)
-                const vaultUrl = `${env.VAULT_API_URL}${secretPath}`;
-                response = await fetch(vaultUrl, { headers });
-            }
+
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${env.VAULT_TOKEN}`,
+            };
+
+            const response = await fetch(`${env.BASTION_URL}${secretPath}`, { headers });
             
             debug.vaultStatus = response.status;
             

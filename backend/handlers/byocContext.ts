@@ -45,7 +45,7 @@ export async function createByocContext(
   const userEmail = userContext.user.email;
 
   // --- Ports ---
-  const bastionClient = new BastionCloudflareAdapter({ fetcher: env.BASTION });
+  const bastionClient = new BastionCloudflareAdapter({ bastionUrl: env.BASTION_URL });
 
   const storageService = new UnifiedStorageAdapter({
     getApiToken: async () => {
@@ -57,7 +57,7 @@ export async function createByocContext(
   await storageService.initialize();
 
   const pamClient = new PamCloudflareAdapter({
-    fetcher: env.BASTION,
+    bastionUrl: env.BASTION_URL,
     getToken: () => env.VAULT_TOKEN,
   });
 

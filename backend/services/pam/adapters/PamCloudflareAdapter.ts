@@ -1,13 +1,12 @@
 /**
- * PAM Cloudflare Adapter - Production implementation
+ * PAM HTTP Adapter - Production implementation
  *
- * Connects to TPB PAM via Cloudflare Service Binding.
+ * Connects to TPB PAM via HTTP.
  * Provides secure delegated access to storage via owner's connection.
  * Owner's token is NEVER exposed - all access goes through PAM.
  */
 
 import type { PamPort, PamConfig, PamVerifyResult } from '../PamPort.js';
-import type { IFetcher } from '../../types/IFetcher.js';
 import type { StorageFile } from '../../types/StorageFile.js';
 import { ServiceUnavailableError } from '../../../types/errors.js';
 import { pamFetch } from './PamCloudflareAdapter.functions/pamFetch.js';
@@ -16,11 +15,11 @@ import { listFiles } from './PamCloudflareAdapter.functions/listFiles.js';
 import { resolveRelativePath } from './PamCloudflareAdapter.functions/resolveRelativePath.js';
 
 export class PamCloudflareAdapter implements PamPort {
-  private fetcher: IFetcher;
+  private bastionUrl: string;
   private getToken: () => string;
 
   constructor(config: PamConfig) {
-    this.fetcher = config.fetcher;
+    this.bastionUrl = config.bastionUrl;
     this.getToken = config.getToken;
   }
 
@@ -29,7 +28,7 @@ export class PamCloudflareAdapter implements PamPort {
     fileId: string,
     guestEmail: string
   ): Promise<PamVerifyResult> {
-    return verifyAccess(this.fetcher, this.getToken, connectionId, fileId, guestEmail);
+    return verifyAccess(this.bastionUrl, this.getToken, connectionId, fileId, guestEmail);
   }
 
   async getContent(
@@ -37,7 +36,7 @@ export class PamCloudflareAdapter implements PamPort {
     fileId: string,
     guestEmail: string
   ): Promise<{ content: string }> {
-    const response = await pamFetch(this.fetcher, this.getToken, 'storage', 'file', 'read', {
+    const response = await pamFetch(this.bastionUrl, this.getToken, 'storage', 'file', 'read', {
       connectionId,
       entityId: fileId,
       guestEmail,
@@ -56,7 +55,7 @@ export class PamCloudflareAdapter implements PamPort {
     parentId: string,
     guestEmail: string
   ): Promise<StorageFile[]> {
-    return listFiles(this.fetcher, this.getToken, connectionId, parentId, guestEmail);
+    return listFiles(this.bastionUrl, this.getToken, connectionId, parentId, guestEmail);
   }
 
   async resolveRelativePath(
@@ -65,6 +64,6 @@ export class PamCloudflareAdapter implements PamPort {
     relativePath: string,
     guestEmail: string
   ): Promise<StorageFile> {
-    return resolveRelativePath(this.fetcher, this.getToken, connectionId, baseFolderId, relativePath, guestEmail);
+    return resolveRelativePath(this.bastionUrl, this.getToken, connectionId, baseFolderId, relativePath, guestEmail);
   }
 }

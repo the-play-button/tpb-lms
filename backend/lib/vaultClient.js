@@ -7,7 +7,7 @@
  * - Token is stored in env.VAULT_TOKEN (via wrangler secret or .devcontainer/.env)
  * 
  * Usage:
- *   const vault = new VaultClient(env.VAULT_API_URL, env);
+ *   const vault = new VaultClient(env.BASTION_URL, env);
  *   const roles = await vault.getUserRoles('user@example.com');
  */
 

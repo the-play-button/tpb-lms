@@ -11,7 +11,6 @@
  * Owner's token is NEVER exposed - all access goes through PAM.
  */
 
-import type { IFetcher } from '../types/IFetcher.js';
 import type { StorageFile } from '../types/StorageFile.js';
 
 export interface PamVerifyResult {
@@ -20,7 +19,7 @@ export interface PamVerifyResult {
 }
 
 export interface PamConfig {
-  fetcher: IFetcher;
+  bastionUrl: string;
   getToken: () => string;
 }
 

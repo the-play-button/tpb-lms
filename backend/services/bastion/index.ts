@@ -2,7 +2,7 @@
  * Bastion Service - Secret & Connection Management
  *
  * USAGE:
- * const bastion = createBastionClient({ fetcher: env.BASTION });
+ * const bastion = createBastionClient({ bastionUrl: env.BASTION_URL });
  * const secret = await bastion.getSecret(jwt, 'integrations/api_key');
  */
 

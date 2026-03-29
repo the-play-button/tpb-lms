@@ -1,4 +1,3 @@
-import type { IFetcher } from '../../../types/IFetcher.js';
 import type { PamVerifyResult } from '../../PamPort.js';
 import { pamFetch } from './pamFetch.js';
 
@@ -9,13 +8,13 @@ import { pamFetch } from './pamFetch.js';
  * since access denial is a normal control flow outcome.
  */
 export async function verifyAccess(
-  fetcher: IFetcher,
+  bastionUrl: string,
   getToken: () => string,
   connectionId: string,
   fileId: string,
   guestEmail: string
 ): Promise<PamVerifyResult> {
-  const response = await pamFetch(fetcher, getToken, 'storage', 'file', 'verify', {
+  const response = await pamFetch(bastionUrl, getToken, 'storage', 'file', 'verify', {
     connectionId,
     entityId: fileId,
     guestEmail,

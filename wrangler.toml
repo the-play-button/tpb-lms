@@ -11,15 +11,10 @@ binding = "DB"
 database_name = "lms-db"
 database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 
-# Service Binding to Bastion (bypasses CF Access for worker-to-worker calls)
-[[services]]
-binding = "BASTION"
-service = "tpb-vault-infra"
-
 # Authentication configuration
 [vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
-VAULT_API_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
+BASTION_URL = "https://iampam.tunnels.digital"
 # Logto SSO (set to "true" to enable, "false" to use CF Access)
 USE_LOGTO = "false"
 LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
@@ -66,15 +61,10 @@ binding = "DB"
 database_name = "lms-db"
 database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 
-# Service Binding to Bastion for production
-[[env.production.services]]
-binding = "BASTION"
-service = "tpb-vault-infra"
-
 # Authentication configuration for production
 [env.production.vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
-VAULT_API_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
+BASTION_URL = "https://iampam.tunnels.digital"
 USE_LOGTO = "false"
 LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
 
