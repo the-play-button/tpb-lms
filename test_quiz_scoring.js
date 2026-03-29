@@ -43,12 +43,8 @@ const incorrectSubmission = {
 async function testQuizScoring() {
     const API_BASE = "https://lms-api.matthieu-marielouise.workers.dev";
     
-    console.log("🧪 Test du système de scoring des quiz");
-    console.log("=====================================");
     
     // Test avec bonnes réponses
-    console.log("\n1️⃣ Test avec BONNES réponses:");
-    console.log("Réponses:", correctSubmission.answers.map(a => `${a.label}: ${a.value}`));
     
     try {
         const response = await fetch(`${API_BASE}/api/quiz`, {
@@ -61,17 +57,12 @@ async function testQuizScoring() {
         });
         
         const result = await response.json();
-        console.log("✅ Résultat:", result);
-        console.log(`   Score: ${result.score}/${result.maxScore} (${result.percentage}%)`);
-        console.log(`   Réussi: ${result.passed ? 'OUI' : 'NON'}`);
         
     } catch (error) {
         console.error("❌ Erreur:", error.message);
     }
     
     // Test avec mauvaises réponses
-    console.log("\n2️⃣ Test avec MAUVAISES réponses:");
-    console.log("Réponses:", incorrectSubmission.answers.map(a => `${a.label}: ${a.value}`));
     
     try {
         const response = await fetch(`${API_BASE}/api/quiz`, {
@@ -84,9 +75,6 @@ async function testQuizScoring() {
         });
         
         const result = await response.json();
-        console.log("✅ Résultat:", result);
-        console.log(`   Score: ${result.score}/${result.maxScore} (${result.percentage}%)`);
-        console.log(`   Réussi: ${result.passed ? 'OUI' : 'NON'}`);
         
     } catch (error) {
         console.error("❌ Erreur:", error.message);

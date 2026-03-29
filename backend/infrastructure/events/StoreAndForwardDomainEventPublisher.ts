@@ -24,7 +24,6 @@ export class StoreAndForwardDomainEventPublisher implements DomainEvents {
     }
 
     // Always log
-    console.log(`[domain-event] ${event.type}`, JSON.stringify(event.payload));
   }
 
   async publishAll(events: DomainEvent[]): Promise<void> {

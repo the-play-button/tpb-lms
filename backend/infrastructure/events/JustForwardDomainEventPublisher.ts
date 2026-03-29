@@ -9,7 +9,6 @@ import type { DomainEvent } from '../../domain/events/DomainEvent.js';
  */
 export class JustForwardDomainEventPublisher implements DomainEvents {
   async publish(event: DomainEvent): Promise<void> {
-    console.log(`[domain-event] ${event.type}`, JSON.stringify(event.payload));
   }
 
   async publishAll(events: DomainEvent[]): Promise<void> {
