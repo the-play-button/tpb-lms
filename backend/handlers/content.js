@@ -28,7 +28,7 @@ let tokenExpiry = 0;
  * Token path in vault: infra/github_pat_tpb_repos
  * 
  * Required env vars:
- * - BASTION_URL: Bastion API endpoint (https://iampam.tunnels.digital)
+ * - BASTION_URL: Bastion API endpoint (https://tpb-vault-infra.matthieu-marielouise.workers.dev)
  * - VAULT_TOKEN: Native Bearer token (iampam_xxx)
  */
 // #region agent debug wrapper
