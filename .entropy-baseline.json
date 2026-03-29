@@ -1,5 +1,35 @@
 {
-  "count": 0,
-  "updated": "2026-02-17",
-  "note": "Vague 4 baseline — clean"
+  "version": 2,
+  "updated": "2026-03-29",
+  "total": 1701,
+  "by_check": {
+    "audit_trail": 2,
+    "callback_destructuring": 43,
+    "catch_return_default": 11,
+    "ddd_barrel_zero_logic": 4,
+    "ddd_direct_cf_access_parsing": 8,
+    "ddd_entity_pattern": 4,
+    "ddd_layer_first_violation": 1,
+    "ddd_legacy_folder_names": 2,
+    "ddd_ports_consolidation": 6,
+    "ddd_shared_secret_auth": 1,
+    "destructuring_rename": 52,
+    "explanatory_comments": 560,
+    "god_file": 1,
+    "handle_orchestration": 9,
+    "http_error_silent_fallback": 1,
+    "js_function_declaration": 316,
+    "magic_timeout": 10,
+    "missing_required_page": 2,
+    "missing_testid": 34,
+    "multiple_exports": 9,
+    "optional_chaining": 196,
+    "positional_args_excess": 64,
+    "project_structure": 2,
+    "single_use_variables": 304,
+    "then_catch_finally": 9,
+    "ts_dot_notation": 45,
+    "wrangler_global_fetch_public": 2,
+    "wrangler_secret_whitelist": 3
+  }
 }
