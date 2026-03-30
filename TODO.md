@@ -112,3 +112,12 @@ Priorité : Ollama local (gratuit) → OpenAI API (fallback payant).
 - OpenAI : `gpt-4o-mini` via API
 
 Ne pas forcer un seul backend. La détection auto est la bonne approche.
+
+## CRUD+List Endpoint Granularity (entropy: `ddd_endpoint_granularity`)
+
+4 violations detectees. Plan detaille : `plans/2026-03_crud-list-endpoint-refactor/01-rename-endpoints.plan.md`
+
+- [ ] Rename `sharedByMe` → `listSharedByMe` (entite Share — lister les partages crees par moi) {tags:entropy+ddd+crud-list}
+- [ ] Rename `sharedWithMe` → `listSharedWithMe` (entite Share — lister les partages recus) {tags:entropy+ddd+crud-list}
+- [ ] Rename `revokeShare` → `deleteShare` (entite Share — revoquer = supprimer) {tags:entropy+ddd+crud-list}
+- [ ] Rename `shareContent` → `createShare` (entite Share — partager = creer un partage) {tags:entropy+ddd+crud-list}

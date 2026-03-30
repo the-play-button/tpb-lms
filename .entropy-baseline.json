@@ -1,7 +1,7 @@
 {
   "version": 2,
   "updated": "2026-03-30",
-  "total": 1693,
+  "total": 1695,
   "by_check": {
     "audit_trail": 2,
     "callback_destructuring": 30,
@@ -34,6 +34,7 @@
     "ts_dot_notation": 45,
     "unused_export": 1,
     "wrangler_global_fetch_public": 2,
-    "wrangler_secret_whitelist": 3
+    "wrangler_secret_whitelist": 3,
+    "wrangler_url_allowlist": 2
   }
 }
