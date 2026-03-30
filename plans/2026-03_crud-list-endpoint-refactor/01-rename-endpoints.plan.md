@@ -1,5 +1,7 @@
 # Plan: CRUD+List Endpoint Refactor — tpb-lms
 
+> **CE PLAN N'EST PAS ACTIONNABLE EN L'ETAT.** Il decrit la direction (quels endpoints renommer vers quelles entites) mais ne garantit pas zero regression. Avant d'executer, l'agent DOIT : (1) analyser la codebase en profondeur pour chaque rename, (2) identifier tous les consumers internes et externes, (3) verifier que le rename ne casse aucune feature existante, (4) adapter le plan si necessaire. Le plan est un guide d'intention, pas un script d'execution.
+
 ## Contexte
 
 L'entropy check `ddd_endpoint_granularity` a detecte 4 endpoints dont le nommage ne suit pas la convention CRUD+list.

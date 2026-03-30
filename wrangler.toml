@@ -14,7 +14,7 @@ database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 # Authentication configuration
 [vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
-BASTION_URL = "https://bastion.tunnels.digital"
+BASTION_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
 # Logto SSO (set to "true" to enable, "false" to use CF Access)
 USE_LOGTO = "false"
 LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
@@ -64,7 +64,7 @@ database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 # Authentication configuration for production
 [env.production.vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
-BASTION_URL = "https://bastion.tunnels.digital"
+BASTION_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
 USE_LOGTO = "false"
 LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
 

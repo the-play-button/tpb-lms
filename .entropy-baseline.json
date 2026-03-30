@@ -1,7 +1,7 @@
 {
   "version": 2,
   "updated": "2026-03-30",
-  "total": 1695,
+  "total": 1643,
   "by_check": {
     "audit_trail": 2,
     "callback_destructuring": 30,
@@ -14,7 +14,7 @@
     "ddd_legacy_folder_names": 2,
     "ddd_ports_consolidation": 6,
     "ddd_shared_secret_auth": 1,
-    "destructuring_rename": 52,
+    "destructuring_rename": 2,
     "duplicate_function": 1,
     "explanatory_comments": 560,
     "god_file": 1,
@@ -34,7 +34,6 @@
     "ts_dot_notation": 45,
     "unused_export": 1,
     "wrangler_global_fetch_public": 2,
-    "wrangler_secret_whitelist": 3,
-    "wrangler_url_allowlist": 2
+    "wrangler_secret_whitelist": 3
   }
 }
