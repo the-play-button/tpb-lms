@@ -116,10 +116,10 @@ export async function getCourseSignalsHandler(request, env, userContext, courseI
     }
     
     // Calculate course progress (GAP-601)
-    const completedSteps = steps.filter(s => s.step_completed).length;
+    const completedSteps = steps.filter(({ step_completed }) => step_completed).length;
     const totalSteps = steps.length;
     const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
-    const courseCompleted = steps.every(s => s.step_completed) && steps.length > 0;
+    const courseCompleted = steps.every(({ step_completed }) => step_completed) && steps.length > 0;
     
     // Award badges when course is completed for the first time
     let badgesEarned = [];

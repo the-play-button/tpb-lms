@@ -183,8 +183,8 @@ async function main() {
   console.log('✨ LMS IAM setup complete!'); // entropy-console-leak-ok: CLI script
   console.log(''); // entropy-console-leak-ok: CLI script
   console.log('📊 Created:'); // entropy-console-leak-ok: CLI script
-  console.log(`   • ${LMS_ROLES.length} roles: ${LMS_ROLES.map(r => r.name).join(', ')}`); // entropy-console-leak-ok: CLI script
-  console.log(`   • ${LMS_GROUPS.length} groups: ${LMS_GROUPS.map(g => g.name).join(', ')}`); // entropy-console-leak-ok: CLI script
+  console.log(`   • ${LMS_ROLES.length} roles: ${LMS_ROLES.map(({ name }) => name).join(', ')}`); // entropy-console-leak-ok: CLI script
+  console.log(`   • ${LMS_GROUPS.length} groups: ${LMS_GROUPS.map(({ name }) => name).join(', ')}`); // entropy-console-leak-ok: CLI script
   console.log(''); // entropy-console-leak-ok: CLI script
   console.log('🎯 Next steps:'); // entropy-console-leak-ok: CLI script
   console.log('   1. Add users to groups via vault-api'); // entropy-console-leak-ok: CLI script

@@ -125,7 +125,10 @@ export function calculateScore(answers, quizClass) {
 /**
  * Store quiz event in lms_event and run projections
  */
-export async function storeQuizEvent(env, { userId, quizId, courseId, classId, score, maxScore, percentage, passed }) {
+export async function storeQuizEvent(
+    env,
+    { userId, quizId, courseId, classId, score, maxScore, percentage, passed } = {}
+) {
     const eventId = generateEventId();
     const now = new Date().toISOString();
     const payload = { quiz_id: quizId, score, max_score: maxScore, percentage, passed };

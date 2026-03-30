@@ -26,7 +26,7 @@ export function generateEventId() {
  * @param {Object} params.payload - Event payload
  * @returns {Promise<string>} - Generated event ID
  */
-export async function storeEvent(db, { type, userId, courseId, classId, payload }) {
+export async function storeEvent(db, { type, userId, courseId, classId, payload } = {}) {
     const eventId = generateEventId();
     const now = new Date().toISOString();
     

@@ -147,7 +147,7 @@ ${text}`
  * @param {string} options.apiKey - Claude API key
  * @returns {Promise<string>} Translated text
  */
-export async function translate({ text, sourceLang, targetLang, orgId, env, apiKey }) {
+export async function translate({ text, sourceLang, targetLang, orgId, env, apiKey } = {}) {
     if (!text || text.trim().length === 0) return text;
     if (sourceLang === targetLang) return text;
     
@@ -180,7 +180,7 @@ export async function translate({ text, sourceLang, targetLang, orgId, env, apiK
  * @param {string} options.apiKey - Claude API key
  * @returns {Promise<object>} Object with translated fields
  */
-export async function translateFields({ content, fields, sourceLang, targetLang, orgId, env, apiKey }) {
+export async function translateFields({ content, fields, sourceLang, targetLang, orgId, env, apiKey } = {}) {
     const result = {};
     
     for (const field of fields) {
@@ -212,7 +212,7 @@ export async function translateFields({ content, fields, sourceLang, targetLang,
  * @param {string} options.apiKey - Claude API key
  * @returns {Promise<object>} Object with course and class translations
  */
-export async function translateCourse({ course, classes, sourceLang, targetLang, orgId, env, apiKey }) {
+export async function translateCourse({ course, classes, sourceLang, targetLang, orgId, env, apiKey } = {}) {
     const translations = [];
     
     // Translate course fields

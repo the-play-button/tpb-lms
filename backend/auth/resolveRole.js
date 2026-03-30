@@ -16,7 +16,7 @@ export async function resolveRole(email, env) {
         try {
             const vault = new VaultClient(env.BASTION_URL, env);
             const data = await vault.getUserRoles(email);
-            const roleNames = (data.roles || []).map(r => r.name);
+            const roleNames = (data.roles || []).map(({ name }) => name);
 
             // LMS-SPECIFIC MAPPING (this logic belongs to LMS, not vault-api)
             // Namespace is 'tpblms' so roles are tpblms_admin, tpblms_instructor
