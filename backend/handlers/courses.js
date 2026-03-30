@@ -230,8 +230,8 @@ export async function getCourse(request, env, userContext, courseId) {
         }));
     }
     
-    const completedSteps = enrichedClasses.filter(({ step_completed }) => step_completed).length;
-    const currentStep = enrichedClasses.filter(({ step_completed }) => step_completed).length; // entropy-naming-convention-ok: scalar count value
+    const completedSteps = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length;
+    const currentStep = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length; // entropy-naming-convention-ok: scalar count value
 
     return jsonResponse({
         id: course.id,

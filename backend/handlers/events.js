@@ -162,7 +162,7 @@ export async function handleBatchEvents(request, env, userContext) {
     return jsonResponse({
         success: true,
         total: events.length,
-        succeeded: results.filter(({ success }) => success).length,
+        succeeded: results.filter(({ success } = {}) => success).length,
         results
     }, 201, request);
 }

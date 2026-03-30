@@ -134,7 +134,7 @@ export async function refreshUserData() {
         setState('badges', badges);
         
         // Update earned status in allBadges (triggers updateBadgesGrid)
-        const earnedIds = new Set(badges.map(({ id }) => id));
+        const earnedIds = new Set(badges.map(({ id } = {}) => id));
         const allBadges = getState('allBadges') || [];
         const updatedBadges = allBadges.map(badge => ({
             ...badge,

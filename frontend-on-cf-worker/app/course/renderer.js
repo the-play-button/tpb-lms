@@ -56,7 +56,7 @@ function getSubtitleTracks(cls) {
         url: sub.url || sub.vtt_url,
         lang: sub.lang || 'en',
         label: sub.label || langLabels[sub.lang] || sub.lang
-    })).filter(({ url }) => url);
+    })).filter(({ url } = {}) => url);
 }
 
 /**

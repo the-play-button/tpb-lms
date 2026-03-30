@@ -28,8 +28,8 @@ export function renderStepsSidebar(options = {}) {
     // Get completed steps from signals
     const completedSteps = new Set(
         (signals?.steps || [])
-            .filter(({ step_completed }) => step_completed)
-            .map(({ class_id }) => class_id)
+            .filter(({ step_completed } = {}) => step_completed)
+            .map(({ class_id } = {}) => class_id)
     );
     
     // Group steps by section if enabled
