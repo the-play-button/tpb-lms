@@ -24,6 +24,5 @@ export async function verifyAccess(
     return { allowed: false };
   }
 
-  const result = await response.json() as { success?: boolean; allowed: boolean; owner?: { email: string } };
-  return result;
+  return await response.json() as { success?: boolean; allowed: boolean; owner?: { email: string } };
 }

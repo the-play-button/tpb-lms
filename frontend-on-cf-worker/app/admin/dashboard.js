@@ -14,8 +14,7 @@ import { getState } from '../state.js';
  */
 async function loadAdminStats() {
     try {
-        const response = await api('/admin/stats');
-        return response;
+        return await api('/admin/stats');
     } catch (err) {
         console.error('Admin stats error:', err);
         return null;
