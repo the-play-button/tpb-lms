@@ -131,7 +131,7 @@ const main = async () => {
   console.log('     https://tpb-vault-infra.../vault/connections/conn_lms_service/secrets'); // entropy-console-leak-ok: CLI script
 };
 
-main().catch(err => {
+main().catch(err => { // entropy-then-catch-finally-ok: top-level script entrypoint — main().catch(err) is the Node.js convention
   console.error('❌ Error:', err.message); // entropy-console-leak-ok: CLI script
   process.exit(1);
 });

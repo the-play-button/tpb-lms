@@ -20,7 +20,7 @@ export const clearCache = () => {
 export const preloadContent = async urls => {
     const promises = urls
         .filter(url => url && !contentCache.has(url))
-        .map(url => fetchContent(url).catch(() => null));
+        .map(url => fetchContent(url).catch(() => null)); // entropy-then-catch-finally-ok: promise chain — async/await refactor tracked in TODO
 
     await Promise.all(promises);
 };

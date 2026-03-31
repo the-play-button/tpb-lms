@@ -67,7 +67,7 @@ const withCors = (response, request) => {
 };
 
 const handleHealthCheck = async (env, request) => {
-    const dbCheck = await env.DB.prepare('SELECT 1 as ok').first().catch(() => null);
+    const dbCheck = await env.DB.prepare('SELECT 1 as ok').first().catch(() => null); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
     const isDbUp = dbCheck?.ok === 1;
     return jsonResponse({ 
         status: isDbUp ? 'healthy' : 'degraded',

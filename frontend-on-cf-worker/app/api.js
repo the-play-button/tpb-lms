@@ -30,7 +30,7 @@ const getAuthToken = async (forceRefresh = false) => {
     const response = await fetch('/__auth/token');
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Auth failed' }));
+        const error = await response.json().catch(() => ({ error: 'Auth failed' })); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
         throw new Error(error.error || 'Failed to get auth token');
     }
     
@@ -71,7 +71,7 @@ export const api = async path => {
     }
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
         throw new Error(error.error || `HTTP ${response.status}`);
     }
     
@@ -114,7 +114,7 @@ export const apiPost = async (path, data, options = {}) => {
     }
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
         throw new Error(error.error || `HTTP ${response.status}`);
     }
     
@@ -143,7 +143,7 @@ export const apiDelete = async path => {
     }
 
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
         throw new Error(error.error || `HTTP ${response.status}`);
     }
 
