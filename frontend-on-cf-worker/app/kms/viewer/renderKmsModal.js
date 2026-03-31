@@ -20,7 +20,7 @@ export const renderKmsModal = page => {
     modal.className = 'kms-modal';
     // entropy-innerhtml-ok: one-time modal render
     modal.innerHTML = `
-        <div class="kms-modal-backdrop" onclick="window.closeKmsModal()"></div>
+        <div class="kms-modal-backdrop" data-testid="kms-modal-backdrop" onclick="window.closeKmsModal()"></div>
         <div class="kms-modal-content">
             <div class="kms-modal-header">
                 <div class="kms-breadcrumb">
@@ -28,7 +28,7 @@ export const renderKmsModal = page => {
                     <span class="kms-separator">\u203A</span>
                     <span class="kms-title">${page.title}</span>
                 </div>
-                <button class="kms-close-btn" onclick="window.closeKmsModal()" title="Fermer">\u2715</button>
+                <button class="kms-close-btn" data-testid="kms-modal-close" onclick="window.closeKmsModal()" title="Fermer">\u2715</button>
             </div>
             <div class="kms-modal-body markdown-body">
                 ${marked.parse(page.content_md || '*Aucun contenu disponible*')}

@@ -26,20 +26,20 @@ export const showSharingModal = (contentRefId, contentName) => {
         <div class="modal-content sharing-modal">
             <div class="modal-header">
                 <h3>Partager "${contentName}"</h3>
-                <button class="modal-close" data-action="close">&times;</button>
+                <button class="modal-close" data-testid="sharing-modal-close" data-action="close">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="share-form">
                     <label for="share-email">Email du destinataire</label>
-                    <input type="email" id="share-email" placeholder="nom@exemple.com" required />
+                    <input type="email" id="share-email" data-testid="sharing-email-input" placeholder="nom@exemple.com" required />
 
                     <label for="share-role">Permission</label>
-                    <select id="share-role">
+                    <select id="share-role" data-testid="sharing-role-select">
                         <option value="READ">Lecture seule</option>
                         <option value="WRITE">Lecture et modification</option>
                     </select>
 
-                    <button class="btn-primary" id="share-submit">Partager</button>
+                    <button class="btn-primary" id="share-submit" data-testid="sharing-submit-btn">Partager</button>
                 </div>
                 <div id="share-status" class="share-status"></div>
 
@@ -114,7 +114,7 @@ const loadPermissions = async (contentRefId) => {
                     <span class="permission-email">${shared_with}</span>
                     <span class="permission-role">${role === 'WRITE' ? 'Modification' : 'Lecture'}</span>
                 </div>
-                <button class="btn-danger-sm" data-action="revoke" data-ref="${contentRefId}" data-share="${id}">
+                <button class="btn-danger-sm" data-testid="sharing-revoke-btn" data-action="revoke" data-ref="${contentRefId}" data-share="${id}">
                     Révoquer
                 </button>
             </div>

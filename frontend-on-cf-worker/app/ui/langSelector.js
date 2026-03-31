@@ -18,7 +18,7 @@ export const renderLangSelector = () => {
     
     return `
         <div class="lang-selector" id="langSelector">
-            <button class="lang-btn" id="langBtn" aria-label="Change language" title="Change language">
+            <button class="lang-btn" id="langBtn" data-testid="lang-selector-toggle" aria-label="Change language" title="Change language">
                 <span class="lang-flag">${current.flag}</span>
                 <span class="lang-code">${current.code.toUpperCase()}</span>
                 <span class="lang-arrow">▼</span>
@@ -26,7 +26,7 @@ export const renderLangSelector = () => {
             <div class="lang-dropdown" id="langDropdown">
                 ${languages.map(({ code, flag, label } = {}) => `
                     <button class="lang-option ${code === currentLang ? 'active' : ''}" 
-                            data-lang="${code}">
+                            data-testid="lang-option-${code}" data-lang="${code}">
                         <span class="lang-flag">${flag}</span>
                         <span class="lang-label">${label}</span>
                         ${code === currentLang ? '<span class="lang-check">✓</span>' : ''}

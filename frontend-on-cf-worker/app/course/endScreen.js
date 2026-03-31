@@ -43,7 +43,7 @@ export const renderModuleEndScreen = () => {
                     <p>🏆 +${totalPoints} pts gagnés</p>
                     ${badgesHtml || '<p class="no-new-badge">Continuez pour débloquer plus de badges !</p>'}
                 </div>
-                <button class="btn-primary" onclick="window.location.href='/'">
+                <button class="btn-primary" data-testid="end-screen-home-btn" onclick="window.location.href='/'">
                     Retour à l'accueil
                 </button>
             </div>

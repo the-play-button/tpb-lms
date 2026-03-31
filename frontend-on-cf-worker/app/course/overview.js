@@ -110,7 +110,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
             <div class="course-overview error">
                 <h2>Erreur</h2>
                 <p>Impossible de charger le cours: ${error.message}</p>
-                <button class="btn-primary" onclick="window.location.reload()">Réessayer</button>
+                <button class="btn-primary" data-testid="overview-reload-btn" onclick="window.location.reload()">Réessayer</button>
             </div>
         `;
     }
@@ -123,10 +123,10 @@ const renderEnrollmentButton = (course, isEnrolled, canEnroll, enrollmentStatus)
     if (isEnrolled) {
         const { enrollment: { progress_percent: progress = 0 } = {} } = enrollmentStatus ?? {};
         return `
-            <button class="btn-primary btn-start" data-action="continue" data-course="${course.id}">
+            <button class="btn-primary btn-start" data-testid="course-continue-btn" data-action="continue" data-course="${course.id}">
                 ${progress > 0 ? `Continuer (${progress}%)` : 'Commencer le cours'} →
             </button>
-            <button class="btn-secondary btn-abandon" data-action="abandon" data-course="${course.id}">
+            <button class="btn-secondary btn-abandon" data-testid="course-abandon-btn" data-action="abandon" data-course="${course.id}">
                 Abandonner le cours
             </button>
         `;
@@ -134,14 +134,14 @@ const renderEnrollmentButton = (course, isEnrolled, canEnroll, enrollmentStatus)
     
     if (canEnroll) {
         return `
-            <button class="btn-primary btn-enroll" data-action="enroll" data-course="${course.id}">
+            <button class="btn-primary btn-enroll" data-testid="course-enroll-btn" data-action="enroll" data-course="${course.id}">
                 S'inscrire au cours
             </button>
         `;
     }
     
     return `
-        <button class="btn-disabled" disabled>
+        <button class="btn-disabled" data-testid="course-limit-btn" disabled>
             Limite d'inscriptions atteinte
         </button>
     `;

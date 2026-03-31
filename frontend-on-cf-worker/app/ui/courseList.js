@@ -25,7 +25,7 @@ export const renderCourseList = () => {
         
         return `
             <li>
-                <a href="#" class="${statusClass} ${activeClass}" data-som-id="${course.id}">
+                <a href="#" class="${statusClass} ${activeClass}" data-testid="course-list-item-${course.id}" data-som-id="${course.id}">
                     <span class="course-title">${course.title}</span>
                     <span class="course-badges">
                         ${masteryBadge}

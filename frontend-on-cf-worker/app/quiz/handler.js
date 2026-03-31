@@ -185,7 +185,7 @@ const showCorrectionsModal = (wrongAnswers, score, maxScore) => {
                     </li>
                 `).join('')}
             </ul>
-            <button class="quiz-modal-btn" onclick="this.closest('.quiz-modal-overlay').remove()">
+            <button class="quiz-modal-btn" data-testid="quiz-success-continue-btn" onclick="this.closest('.quiz-modal-overlay').remove()">
                 Continuer
             </button>
         </div>
@@ -213,7 +213,7 @@ const showFailureModal = (score, maxScore, percentage) => {
             <p class="failure-instruction">
                 <strong>Vous devez revoir la vidéo avant de retenter le quiz.</strong>
             </p>
-            <button class="quiz-modal-btn" onclick="this.closest('.quiz-modal-overlay').remove()">
+            <button class="quiz-modal-btn" data-testid="quiz-failure-dismiss-btn" onclick="this.closest('.quiz-modal-overlay').remove()">
                 Compris
             </button>
         </div>

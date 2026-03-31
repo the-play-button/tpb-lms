@@ -55,8 +55,8 @@ export const showConfirmModal = options => {
                 <p>${message}</p>
             </div>
             <div class="modal-footer">
-                <button class="btn-secondary modal-cancel" data-action="cancel">${cancelText}</button>
-                <button class="btn-primary modal-confirm" data-action="confirm">${confirmText}</button>
+                <button class="btn-secondary modal-cancel" data-testid="confirm-modal-cancel" data-action="cancel">${cancelText}</button>
+                <button class="btn-primary modal-confirm" data-testid="confirm-modal-confirm" data-action="confirm">${confirmText}</button>
             </div>
         </div>
     `;

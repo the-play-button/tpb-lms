@@ -30,7 +30,7 @@ export const renderAdminDashboard = async container => {
                     <span class="error-icon">🔒</span>
                     <h2>Accès refusé</h2>
                     <p>Cette page est réservée aux administrateurs.</p>
-                    <a href="/" class="back-btn">← Retour à l'accueil</a>
+                    <a href="/" class="back-btn" data-testid="admin-back-home-link">← Retour à l'accueil</a>
                 </div>
             </div>
         `;
@@ -113,7 +113,7 @@ export const renderAdminDashboard = async container => {
             ` : ''}
             
             <footer class="admin-footer">
-                <a href="/" class="back-btn">← Retour au LMS</a>
+                <a href="/" class="back-btn" data-testid="admin-back-lms-link">← Retour au LMS</a>
             </footer>
         </div>
     `;

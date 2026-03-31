@@ -48,7 +48,7 @@ export const renderSharedWithMe = async container => {
                             <div class="shared-actions">
                                 ${content_type === 'pitch' ? `
                                     <a href="${buildCloudPitchUrl(content_ref_id)}"
-                                       class="btn-primary-sm" download>
+                                       class="btn-primary-sm" data-testid="shared-download-pitch-btn" download>
                                         Télécharger .pitch
                                     </a>
                                 ` : ''}

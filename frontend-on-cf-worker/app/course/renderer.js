@@ -114,7 +114,7 @@ const renderVideoSection = ctx => {
     
     const speedControl = `
         <div class="video-controls" style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem; gap: 0.5rem;">
-            <button class="speed-btn" onclick="window.cycleSpeed()" 
+            <button class="speed-btn" data-testid="video-speed-btn" onclick="window.cycleSpeed()" 
                     title="Changer la vitesse de lecture (0.5x - 2x)"
                     style="padding: 0.5rem 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: all 0.2s;">
                 <span id="speed-display">1x</span> ⚡
@@ -229,7 +229,7 @@ const loadDocumentContent = async cls => {
         container.innerHTML = `
             <div class="error-message">
                 <p>Erreur lors du chargement du contenu.</p>
-                <button onclick="window.location.reload()">Réessayer</button>
+                <button data-testid="content-reload-btn" onclick="window.location.reload()">Réessayer</button>
             </div>
         `;
     }
@@ -284,7 +284,7 @@ const renderQuizSection = ctx => {
                     <p>Vous n'aurez qu'<strong>une seule tentative</strong> pour ce quiz.</p>
                 </div>
             </div>
-            <button class="quiz-start-btn" onclick="window.showQuiz('${cls.id}', ${formIdsJson}, '${quizName.replace(/'/g, "\\'")}')">
+            <button class="quiz-start-btn" data-testid="quiz-start-btn" onclick="window.showQuiz('${cls.id}', ${formIdsJson}, '${quizName.replace(/'/g, "\\'")}')">
                 Commencer le quiz
             </button>
             <div id="quiz-container-${cls.id}" class="quiz-container" style="display: none;"></div>
@@ -359,8 +359,8 @@ export const renderCurrentStep = () => {
             ${renderQuizSection(ctx)}
             
             <div class="step-navigation">
-                <button class="nav-btn prev" disabled title="Progression linéaire - pas de retour">← Précédent</button>
-                <button class="nav-btn next" ${canProceed ? '' : 'disabled'} onclick="window.nextStep()" 
+                <button class="nav-btn prev" data-testid="nav-prev-btn" disabled title="Progression linéaire - pas de retour">← Précédent</button>
+                <button class="nav-btn next" data-testid="nav-next-btn" ${canProceed ? '' : 'disabled'} onclick="window.nextStep()" 
                     title="${!canProceed ? 'Complétez la vidéo et le quiz pour continuer' : (isLastStep ? 'Terminer le module' : 'Étape suivante')}">
                     ${isLastStep ? 'Terminer 🎉' : 'Suivant →'}
                 </button>

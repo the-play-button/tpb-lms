@@ -31,8 +31,8 @@ export const initUserMenu = (user, profile) => {
                 <span class="user-email" title="${email}">${truncateEmail(email)}</span>
                 <span class="user-role-badge ${role}">${displayRole}</span>
             </div>
-            ${role === 'admin' ? `<a href="/admin" class="admin-link" title="Dashboard Admin">📊</a>` : ''}
-            <button class="logout-btn" onclick="window.location.href='${CF_ACCESS_LOGOUT_URL}'" title="Se déconnecter">
+            ${role === 'admin' ? `<a href="/admin" class="admin-link" data-testid="admin-dashboard-link" title="Dashboard Admin">📊</a>` : ''}
+            <button class="logout-btn" data-testid="logout-btn" onclick="window.location.href='${CF_ACCESS_LOGOUT_URL}'" title="Se déconnecter">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                     <polyline points="16 17 21 12 16 7"></polyline>

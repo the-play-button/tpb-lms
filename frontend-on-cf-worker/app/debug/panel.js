@@ -26,7 +26,7 @@ const createPanel = () => {
         <div class="debug-panel__content">
             <div class="debug-panel__header">
                 <h3>🛠️ Console de Debug</h3>
-                <button class="debug-panel__close" aria-label="Fermer">✕</button>
+                <button class="debug-panel__close" data-testid="debug-panel-close" aria-label="Fermer">✕</button>
             </div>
             <div class="debug-panel__body">
                 <section class="debug-panel__section">
@@ -35,10 +35,10 @@ const createPanel = () => {
                         Cours actuel: <strong>—</strong>
                     </div>
                     <div class="debug-panel__actions">
-                        <button id="debug-reset-current" class="debug-btn debug-btn--warning">
+                        <button id="debug-reset-current" class="debug-btn debug-btn--warning" data-testid="debug-reset-current-btn">
                             🔄 Réinitialiser ce parcours
                         </button>
-                        <button id="debug-reset-all" class="debug-btn debug-btn--danger">
+                        <button id="debug-reset-all" class="debug-btn debug-btn--danger" data-testid="debug-reset-all-btn">
                             ⚠️ Réinitialiser TOUS les parcours
                         </button>
                     </div>
@@ -46,7 +46,7 @@ const createPanel = () => {
                 <section class="debug-panel__section">
                     <h4>Navigation</h4>
                     <div class="debug-panel__actions">
-                        <button id="debug-goto-step" class="debug-btn">
+                        <button id="debug-goto-step" class="debug-btn" data-testid="debug-goto-step-btn">
                             ↗️ Aller à une étape...
                         </button>
                     </div>
