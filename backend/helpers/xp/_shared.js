@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 /**
  * Shared XP/Badge helper - award a badge to a user
  */

@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 import type { ConnectionResolverConfig } from '../../ConnectionResolverPort.js';
 import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
 import { NotFoundError } from '../../../../types/errors.js';

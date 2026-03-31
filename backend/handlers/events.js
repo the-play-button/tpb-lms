@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-single-export-ok: 2 tightly-coupled event handlers (single + batch) sharing validation and projection logic
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 // entropy-duplicate-code-handlers-ok: JSON body parsing pattern is intentionally repeated

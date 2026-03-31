@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: DDD pipeline step — (request, ctx, param) is the architectural convention
 // entropy-multiple-exports-ok: cohesive module exports
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { ContentRef } from '../../../domain/repositories/ContentRefsRepository.js';

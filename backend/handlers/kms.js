@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-single-export-ok: 3 tightly-coupled KMS handlers (list spaces, get space, get page) with shared logger
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**

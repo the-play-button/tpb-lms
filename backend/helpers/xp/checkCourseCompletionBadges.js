@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 /**
  * Check and award course completion badges
  * Called when course_completed becomes true

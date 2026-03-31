@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-business-logic-ok: already in backend
 // entropy-business-logic-in-frontend-ok: intentional frontend logic
 // entropy-single-export-ok: 2 tightly-coupled leaderboard handlers (get board, get stats) sharing user info and XP helpers

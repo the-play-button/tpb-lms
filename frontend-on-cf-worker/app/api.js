@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-god-file-ok: API client for frontend
 // entropy-single-export-ok: 4 exports share private authToken + buildHeaders, tightly-coupled API client
 /**

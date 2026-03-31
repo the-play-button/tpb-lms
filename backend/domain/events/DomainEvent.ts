@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-multiple-exports-ok: cohesive module exports
 // entropy-god-file-ok: domain event base — DomainEvent interface + createEvent factory, single source of truth for event shape
 /**

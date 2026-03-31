@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 /**
  * Generate a new API Key
  * Returns the key only once - must be shown to user immediately

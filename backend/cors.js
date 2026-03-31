@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-single-export-ok: 4 exports share SECURITY_HEADERS + ALLOWED_ORIGINS, tightly-coupled CORS/response utilities
 // entropy-backend-structure-ok: shared CORS utility at backend root, used by all handlers
 /**

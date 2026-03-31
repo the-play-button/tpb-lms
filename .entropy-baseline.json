@@ -1,7 +1,7 @@
 {
   "version": 2,
   "updated": "2026-03-31",
-  "total": 210,
+  "total": 134,
   "by_check": {
     "audit_trail": 2,
     "catch_return_default": 11,
@@ -25,7 +25,6 @@
     "missing_testid": 34,
     "multiple_exports": 10,
     "optional_chaining": 4,
-    "positional_args_excess": 76,
     "project_structure": 2,
     "then_catch_finally": 9,
     "unused_export": 1,

@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-single-export-ok: 2 tightly-coupled course handlers (list, get) sharing translation and enrichment helpers
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**

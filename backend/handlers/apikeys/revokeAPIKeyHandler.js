@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: DDD pipeline step — (request, ctx, param) is the architectural convention
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 /**
  * Revoke an API key

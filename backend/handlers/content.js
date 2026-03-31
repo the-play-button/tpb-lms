@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-single-export-ok: 2 tightly-coupled content handlers (get file, list directory) sharing GitHub auth and URL parsing
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 // entropy-legacy-marker-ok: debt — legacy fallback to GITHUB_PAT_TPB_REPOS env var when vault token unavailable

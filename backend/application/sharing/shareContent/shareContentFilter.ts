@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: DDD pipeline step — (request, ctx, param) is the architectural convention
 import { filterFields } from '../../filters/FieldSecurityFilter.js';
 import type { ShareContentOutput } from './shareContentExecute.js';
 

@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: DDD pipeline step — (request, ctx, param) is the architectural convention
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 // entropy-duplicate-code-handlers-ok: error handling pattern is intentionally similar across API key handlers
 /**

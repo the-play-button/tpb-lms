@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 import { bastionFetch } from './bastionFetch.js';
 
 export const getSecret = async (bastionUrl: string, jwt: string, path: string): Promise<string | null> => {

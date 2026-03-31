@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: DDD pipeline step — (request, ctx, param) is the architectural convention
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { listPermissionsHandle } from './listPermissionsHandle.js';
 

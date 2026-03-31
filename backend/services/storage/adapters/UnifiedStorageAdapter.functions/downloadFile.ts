@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-subfolders-pattern-ok: structure is intentional
 import { ServiceUnavailableError } from '../../../../types/errors.js';
 

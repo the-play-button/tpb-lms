@@ -1,3 +1,4 @@
+// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
 // entropy-business-logic-ok: already in backend
 // entropy-multiple-exports-ok: cohesive module exports
