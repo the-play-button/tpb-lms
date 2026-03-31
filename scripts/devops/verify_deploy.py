@@ -68,16 +68,16 @@ def check_backend() -> bool:
                 
     except urllib.error.HTTPError as e:
         print(f"{RED}   ❌ HTTP Error: {e.code}{RESET}")
-        return False
+        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
     except urllib.error.URLError as e:
         print(f"{RED}   ❌ Connection Error: {e.reason}{RESET}")
-        return False
+        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
     except json.JSONDecodeError:
         print(f"{RED}   ❌ Invalid JSON response{RESET}")
-        return False
+        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
     except (ssl.SSLError, TimeoutError, OSError) as e:
         print(f"{RED}   ❌ Error: {e}{RESET}")
-        return False
+        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
 
 
 def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration over structured data
@@ -111,13 +111,13 @@ def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration ove
             print(f"{GREEN}   ✅ Redirecting (Cloudflare Access){RESET}")
             return True
         print(f"{RED}   ❌ HTTP Error: {e.code}{RESET}")
-        return False
+        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
     except urllib.error.URLError as e:
         print(f"{RED}   ❌ Connection Error: {e.reason}{RESET}")
-        return False
+        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
     except (ssl.SSLError, TimeoutError, OSError) as e:
         print(f"{RED}   ❌ Error: {e}{RESET}")
-        return False
+        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
 
 
 def main() -> None:

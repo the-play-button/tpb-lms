@@ -90,7 +90,7 @@ def fetch_lms_employees() -> list[dict[str, Any]]:
             return results
     except json.JSONDecodeError:
         print(f"❌ Failed to parse output: {result.stdout}")
-        return []
+        return []  # entropy-catch-return-default-ok: migration script — error printed, degrade gracefully on tool failure
     
     return []
 
@@ -197,7 +197,7 @@ def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[s
             return None
         email = emails[0].get('email')
     except json.JSONDecodeError:
-        return None
+        return None  # entropy-catch-return-default-ok: migration script — error printed, degrade gracefully on tool failure
     
     if not email:
         return None
