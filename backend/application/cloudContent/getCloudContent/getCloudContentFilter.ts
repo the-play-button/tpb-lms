@@ -14,10 +14,11 @@ export const getCloudContentFilter = (
   context: GetCloudContentContext,
   viewerEmail: string
 ): GetCloudContentOutput => {
+  const { contentRef } = context;
   const filtered = filterFields(
     output as unknown as Record<string, unknown>,
     viewerEmail,
-    context.contentRef.ownerEmail.value
+    contentRef.ownerEmail.value
   );
   return {
     content: output.content,

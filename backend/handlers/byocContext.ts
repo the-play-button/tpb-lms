@@ -35,7 +35,8 @@ const extractJwt = (request: Request): string => {
  */
 export const createByocContext = async (request: Request, env: Env, userContext: UserContext): Promise<HandlerContext> => {
   const jwt = extractJwt(request);
-  const userEmail = userContext.user.email;
+  const { user } = userContext;
+  const userEmail = user.email;
 
   // --- Ports ---
   const bastionClient = new BastionCloudflareAdapter({ bastionUrl: env.BASTION_URL });

@@ -35,8 +35,10 @@ export const getConnectionToken = async (getSecret: (path: string) => Promise<st
     throw new NotFoundError('Connection', connectionId);
   }
 
+  const accessToken = conn.auth!.access_token!;
+
   return {
-    accessToken: conn.auth.access_token,
+    accessToken,
     provider: conn.integration_type.toLowerCase(),
   };
 };

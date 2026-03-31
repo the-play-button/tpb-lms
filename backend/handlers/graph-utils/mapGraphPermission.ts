@@ -61,7 +61,8 @@ export const mapGraphPermission = (perm: GraphPermission): StoragePermission => 
 
   let type: 'user' | 'group' | 'link' | 'anyone' = 'user';
   if (perm.link) {
-    type = perm.link.scope === 'anonymous' ? 'anyone' : 'link';
+    const { scope: linkScope } = perm.link;
+    type = linkScope === 'anonymous' ? 'anyone' : 'link';
   }
 
   return {

@@ -30,12 +30,13 @@ export const shareContentExecute = async (
   const shareIdResult = ShareId.create(crypto.randomUUID());
   if (!shareIdResult.ok) return fail(shareIdResult.error);
 
+  const { contentRef } = context;
   const domainRole: ShareRole = input.role === 'WRITE' ? 'editor' : 'viewer';
 
   const shareResult = ActiveShare.create({
     id: shareIdResult.value,
-    contentRefId: context.contentRef.id,
-    sharedByEmail: context.contentRef.ownerEmail,
+    contentRefId: contentRef.id,
+    sharedByEmail: contentRef.ownerEmail,
     sharedWithEmail: targetEmailResult.value,
     role: domainRole,
   });
@@ -45,7 +46,7 @@ export const shareContentExecute = async (
 
   await ctx.domainEvents.publish(
     contentShared(
-      context.contentRef.id.value,
+      contentRef.id.value,
       shareIdResult.value.value,
       ctx.userEmail,
       input.email,
@@ -55,7 +56,7 @@ export const shareContentExecute = async (
 
   return succeed({
     share_id: shareIdResult.value.value,
-    content_ref_id: context.contentRef.id.value,
+    content_ref_id: contentRef.id.value,
     shared_with: input.email,
     role: input.role,
   });

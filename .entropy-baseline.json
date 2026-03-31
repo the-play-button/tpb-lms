@@ -1,7 +1,7 @@
 {
   "version": 2,
   "updated": "2026-03-31",
-  "total": 691,
+  "total": 281,
   "by_check": {
     "audit_trail": 2,
     "catch_return_default": 11,
@@ -29,9 +29,7 @@
     "optional_chaining": 4,
     "positional_args_excess": 76,
     "project_structure": 2,
-    "single_use_variables": 365,
     "then_catch_finally": 9,
-    "ts_dot_notation": 45,
     "unused_export": 1,
     "wrangler_global_fetch_public": 1,
     "wrangler_secret_whitelist": 3

@@ -16,10 +16,11 @@ export interface RevokeShareOutput {
  * Execute step: revoke the share in domain, persist, emit event.
  */
 export const revokeShareExecute = async (context: RevokeShareContext, ctx: HandlerContext): Promise<Result<string, RevokeShareOutput>> => {
+  const { share, contentRef } = context;
   const revokerEmailResult = Email.create(ctx.userEmail);
   if (!revokerEmailResult.ok) return fail(revokerEmailResult.error);
 
-  const revokeResult = context.share.revoke(revokerEmailResult.value);
+  const revokeResult = share.revoke(revokerEmailResult.value);
   if (!revokeResult.ok) return fail(revokeResult.error);
 
   const revokedShare = revokeResult.value;
@@ -28,15 +29,15 @@ export const revokeShareExecute = async (context: RevokeShareContext, ctx: Handl
 
   await ctx.domainEvents.publish(
     shareRevoked(
-      context.share.id.value,
-      context.contentRef.id.value,
+      share.id.value,
+      contentRef.id.value,
       ctx.userEmail
     )
   );
 
   return succeed({
-    share_id: context.share.id.value,
-    content_ref_id: context.contentRef.id.value,
+    share_id: share.id.value,
+    content_ref_id: contentRef.id.value,
     revoked_at: revokedShare.revokedAt.toISOString(),
   });
 };
