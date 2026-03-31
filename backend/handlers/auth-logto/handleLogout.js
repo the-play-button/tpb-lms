@@ -5,7 +5,7 @@
 
 import { getAuthConfig } from '../../config/auth.js';
 
-export async function handleLogout(request, env) {
+export const handleLogout = async (request, env) => {
     const authConfig = getAuthConfig(env);
 
     if (!authConfig.useLogto) {
@@ -26,4 +26,4 @@ export async function handleLogout(request, env) {
     );
 
     return new Response(null, { status: 302, headers });
-}
+};

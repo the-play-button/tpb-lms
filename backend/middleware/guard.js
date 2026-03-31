@@ -13,7 +13,7 @@
  * @param {...string} allowedRoles - Roles that are allowed (e.g., 'admin', 'instructor', 'student')
  * @returns {Function} Guard function that takes userContext
  */
-export function requireRole(...allowedRoles) {
+export const requireRole = (...allowedRoles) => {
   return (userContext) => {
     const role = userContext?.user?.role || 'student';
     
@@ -27,7 +27,7 @@ export function requireRole(...allowedRoles) {
     
     return null; // OK - no error
   };
-}
+};
 
 /**
  * Check if user has any of the required roles
@@ -39,7 +39,7 @@ export const requireAnyRole = requireRole;
  * Check if user has ALL of the required roles (admin only for now)
  * @param {...string} requiredRoles
  */
-export function requireAllRoles(...requiredRoles) {
+export const requireAllRoles = (...requiredRoles) => {
   return (userContext) => {
     const role = userContext?.user?.role || 'student';
     
@@ -54,5 +54,5 @@ export function requireAllRoles(...requiredRoles) {
     
     return null; // OK
   };
-}
+};
 

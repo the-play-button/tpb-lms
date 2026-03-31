@@ -38,7 +38,7 @@ let currentLang = DEFAULT_LANGUAGE;
 /**
  * Initialize language from storage or browser preference
  */
-export function initLanguage() {
+export const initLanguage = () => {
     // 1. Check localStorage
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored && SUPPORTED_LANGUAGES.includes(stored)) {
@@ -57,19 +57,19 @@ export function initLanguage() {
     // 3. Default to French
     currentLang = DEFAULT_LANGUAGE;
     return currentLang;
-}
+};
 
 /**
  * Get current language
  */
-export function getLanguage() {
+export const getLanguage = () => {
     return currentLang;
-}
+};
 
 /**
  * Set language and persist to storage
  */
-export function setLanguage(lang) {
+export const setLanguage = lang => {
     if (!SUPPORTED_LANGUAGES.includes(lang)) {
         log.warn(`[i18n] Unsupported language: ${lang}`);
         return false;
@@ -82,12 +82,12 @@ export function setLanguage(lang) {
     window.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
     
     return true;
-}
+};
 
 /**
  * Get list of supported languages with labels
  */
-export function getSupportedLanguages() {
+export const getSupportedLanguages = () => {
     return [
         { code: 'fr', label: 'Français', flag: '🇫🇷' },
         { code: 'en', label: 'English', flag: '🇬🇧' },
@@ -96,18 +96,13 @@ export function getSupportedLanguages() {
         { code: 'ja', label: '日本語', flag: '🇯🇵' },
         { code: 'zh', label: '中文', flag: '🇨🇳' }
     ];
-}
+};
 
-/**
- * Get nested value from object using dot notation
- * @param {object} obj - Source object
- * @param {string} path - Dot-separated path (e.g., "nav.next")
- */
-function getNestedValue(obj, path) {
+const getNestedValue = (obj, path) => {
     return path.split('.').reduce((current, key) => {
         return current && current[key] !== undefined ? current[key] : undefined;
     }, obj);
-}
+};
 
 /**
  * Translate a key
@@ -115,7 +110,7 @@ function getNestedValue(obj, path) {
  * @param {object} params - Interpolation parameters
  * @returns {string} Translated string or key if not found
  */
-export function t(key, params = {}) {
+export const t = (key, params = {}) => {
     const langData = translations[currentLang] || translations[DEFAULT_LANGUAGE];
     let value = getNestedValue(langData, key);
     
@@ -138,15 +133,15 @@ export function t(key, params = {}) {
     }
     
     return value;
-}
+};
 
 /**
  * Check if a translation key exists
  */
-export function hasTranslation(key) {
+export const hasTranslation = key => {
     const langData = translations[currentLang] || translations[DEFAULT_LANGUAGE];
     return getNestedValue(langData, key) !== undefined;
-}
+};
 
 // Initialize on module load
 initLanguage();

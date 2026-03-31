@@ -6,7 +6,7 @@
 
 import { jsonResponse, MAX_ACTIVE_ENROLLMENTS, getUserId } from './_shared.js';
 
-export async function abandonCourse(request, env, userContext, courseId) {
+export const abandonCourse = async (request, env, userContext, courseId) => {
     const userId = getUserId(userContext);
 
     if (!userId) {
@@ -43,4 +43,4 @@ export async function abandonCourse(request, env, userContext, courseId) {
         active_enrollments: activeCount.count,
         max_active: MAX_ACTIVE_ENROLLMENTS,
     }, 200, request);
-}
+};

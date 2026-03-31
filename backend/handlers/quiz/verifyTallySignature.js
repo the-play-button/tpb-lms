@@ -4,7 +4,7 @@
 
 import { log } from './_shared.js';
 
-export async function verifyTallySignature(request, signingSecret) {
+export const verifyTallySignature = async (request, signingSecret) => {
     const signature = request.headers.get('Tally-Signature');
     const body = await request.text();
 
@@ -23,4 +23,4 @@ export async function verifyTallySignature(request, signingSecret) {
         log.error('Signature verification error', { error });
         return { valid: false, body, noSignature: false, error: error.message };
     }
-}
+};

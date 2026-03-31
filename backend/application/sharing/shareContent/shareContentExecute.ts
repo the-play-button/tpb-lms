@@ -19,11 +19,11 @@ export interface ShareContentOutput {
 /**
  * Execute step: create the share in domain, persist, emit event.
  */
-export async function shareContentExecute(
+export const shareContentExecute = async (
   input: ShareContentInput,
   context: ShareContentContext,
   ctx: HandlerContext
-): Promise<Result<string, ShareContentOutput>> {
+): Promise<Result<string, ShareContentOutput>> => {
   const targetEmailResult = Email.create(input.email);
   if (!targetEmailResult.ok) return fail(targetEmailResult.error);
 
@@ -62,4 +62,4 @@ export async function shareContentExecute(
     shared_with: input.email,
     role: input.role,
   });
-}
+};

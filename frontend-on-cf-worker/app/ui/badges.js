@@ -32,7 +32,7 @@ const rarityLabels = {
  * Update badges grid display
  * Shows ALL badges - earned ones have tooltip, locked ones are grayed out
  */
-export function updateBadgesGrid() {
+export const updateBadgesGrid = () => {
     const grid = document.getElementById('badgesGrid');
     if (!grid) return;
     
@@ -77,12 +77,12 @@ export function updateBadgesGrid() {
             </div>
         `;
     }).join('');
-}
+};
 
 /**
  * Initialize subscriptions
  */
-export function initBadges() {
+export const initBadges = () => {
     subscribe('allBadges', updateBadgesGrid);
-}
+};
 

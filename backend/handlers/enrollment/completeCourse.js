@@ -6,7 +6,7 @@
 
 import { jsonResponse, getUserId } from './_shared.js';
 
-export async function completeCourse(request, env, userContext, courseId) {
+export const completeCourse = async (request, env, userContext, courseId) => {
     const userId = getUserId(userContext);
 
     if (!userId) {
@@ -40,4 +40,4 @@ export async function completeCourse(request, env, userContext, courseId) {
         enrollment_id: enrollment.id,
         course_id: courseId,
     }, 200, request);
-}
+};

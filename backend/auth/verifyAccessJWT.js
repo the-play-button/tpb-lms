@@ -4,7 +4,7 @@
 
 import { base64urlDecode, importPublicKey, getJWKS } from './_shared.js';
 
-export async function verifyAccessJWT(token, env) {
+export const verifyAccessJWT = async (token, env) => {
     if (!token) {
         return { valid: false, error: 'No token provided' };
     }
@@ -60,4 +60,4 @@ export async function verifyAccessJWT(token, env) {
         console.error('JWT verification error:', error);
         return { valid: false, error: error.message };
     }
-}
+};

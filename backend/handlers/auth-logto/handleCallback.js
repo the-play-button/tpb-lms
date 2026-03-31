@@ -6,7 +6,7 @@
 
 import { getAuthConfig } from '../../config/auth.js';
 
-export async function handleCallback(request, env) {
+export const handleCallback = async (request, env) => {
     const authConfig = getAuthConfig(env);
 
     if (!authConfig.useLogto) {
@@ -60,4 +60,4 @@ export async function handleCallback(request, env) {
     );
 
     return new Response(null, { status: 302, headers });
-}
+};

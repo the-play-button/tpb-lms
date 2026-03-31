@@ -20,7 +20,7 @@ import { generateEventId, storeEvent } from '../helpers/events.js';
 /**
  * POST /api/events
  */
-export async function handleEvent(request, env, userContext) {
+export const handleEvent = async (request, env, userContext) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
     
     if (!userId) {
@@ -83,7 +83,7 @@ export async function handleEvent(request, env, userContext) {
         quiz_passed: quizPassed,
         step_completed: stepCompleted
     }, 201, request);
-}
+};
 
 /**
  * Check if class has a quiz
@@ -102,7 +102,7 @@ async function checkHasQuiz(db, classId) {
 /**
  * Handle batch events (for offline sync)
  */
-export async function handleBatchEvents(request, env, userContext) {
+export const handleBatchEvents = async (request, env, userContext) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
     
     if (!userId) {
@@ -165,4 +165,4 @@ export async function handleBatchEvents(request, env, userContext) {
         succeeded: results.filter(({ success } = {}) => success).length,
         results
     }, 201, request);
-}
+};

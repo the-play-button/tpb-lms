@@ -1,10 +1,7 @@
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { getCloudContentHandle } from './getCloudContentHandle.js';
 
-export async function getCloudContentController(
-  request: Request,
-  ctx: HandlerContext
-): Promise<Response> {
+export const getCloudContentController = async (request: Request, ctx: HandlerContext): Promise<Response> => {
   try {
     const result = await getCloudContentHandle(request, ctx);
     if (!result.ok) {
@@ -27,4 +24,4 @@ export async function getCloudContentController(
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
+};

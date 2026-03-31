@@ -19,27 +19,17 @@ import { fetchMarkdown, getDocumentUrl, isCloudRef, fetchCloudContent } from '..
 import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
 import { showContentStepConfirmation } from './confirmModal.js';
 
-/**
- * Get media from class by type
- */
-function getMediaByType(cls, type, extraCheck = null) {
+const getMediaByType = (cls, type, extraCheck = null) => {
     const media = cls.media || [];
     return media.find(m => m.type === type && (!extraCheck || m[extraCheck]));
-}
+};
 
-/**
- * Get document media (DOCUMENT type with url or cloud content_ref_id)
- */
-function getDocumentMedia(cls) {
+const getDocumentMedia = cls => {
     const media = cls.media || [];
     return media.find(m => m.type === 'DOCUMENT' && (m.url || isCloudRef(m)));
-}
+};
 
-/**
- * Get subtitle tracks from class media
- * @returns {Array<{url: string, lang: string, label: string}>}
- */
-function getSubtitleTracks(cls) {
+const getSubtitleTracks = cls => {
     const media = cls.media || [];
     const subtitles = media.filter(m => m.type === 'SUBTITLE' || m.type === 'CAPTION');
     
@@ -57,12 +47,9 @@ function getSubtitleTracks(cls) {
         lang: sub.lang || 'en',
         label: sub.label || langLabels[sub.lang] || sub.lang
     })).filter(({ url } = {}) => url);
-}
+};
 
-/**
- * Get video info from media (supports stream_id or video_url)
- */
-function getVideoInfo(cls) {
+const getVideoInfo = cls => {
     const videoMedia = getMediaByType(cls, 'VIDEO');
     if (!videoMedia) return { hasVideo: false };
     
@@ -72,12 +59,9 @@ function getVideoInfo(cls) {
         videoUrl: videoMedia.video_url,
         duration: videoMedia.duration_sec || 300
     };
-}
+};
 
-/**
- * Get step signal data with defaults
- */
-function getStepSignalData(signals, classId) {
+const getStepSignalData = (signals, classId) => {
     const stepSignal = signals?.steps?.find(s => s.class_id === classId) || {};
     return {
         hasQuiz: stepSignal.has_quiz || false,
@@ -85,12 +69,9 @@ function getStepSignalData(signals, classId) {
         quizPassed: stepSignal.quiz_passed || false,
         stepCompleted: stepSignal.step_completed || false
     };
-}
+};
 
-/**
- * Get step context (state + signals)
- */
-function getStepContext() {
+const getStepContext = () => {
     const course = getState('courseData');
     if (!course?.classes?.length) return null;
     
@@ -113,12 +94,9 @@ function getStepContext() {
         quizMedia: getMediaByType(cls, 'QUIZ', 'tally_form_id') || getMediaByType(cls, 'WEB', 'tally_form_id'),
         ...signalData
     };
-}
+};
 
-/**
- * Render video section (from media array)
- */
-function renderVideoSection(ctx) {
+const renderVideoSection = ctx => {
     const { cls, stepIndex, currentCourse, videoId, videoUrl, videoDuration, quizPassed, hasQuiz } = ctx;
     
     // Quiz passed - video locked
@@ -195,12 +173,9 @@ function renderVideoSection(ctx) {
     }
     
     return '';
-}
+};
 
-/**
- * Render document content section (placeholder for async load)
- */
-function renderDocumentSection(cls) {
+const renderDocumentSection = cls => {
     const documentMedia = getDocumentMedia(cls);
     if (!documentMedia) {
         return cls.description 
@@ -214,12 +189,9 @@ function renderDocumentSection(cls) {
             <p>Chargement du contenu...</p>
         </div>
     `;
-}
+};
 
-/**
- * Render video/content section (combines video + document)
- */
-function renderVideoContent(ctx) {
+const renderVideoContent = ctx => {
     const { cls } = ctx;
     
     // Render video from media array (if present)
@@ -234,13 +206,9 @@ function renderVideoContent(ctx) {
     }
     
     return videoHtml || documentHtml || '<p>Aucun contenu disponible pour cette étape.</p>';
-}
+};
 
-/**
- * Load document content async after render
- * Supports both GitHub URLs (legacy) and cloud content refs (BYOC)
- */
-async function loadDocumentContent(cls) {
+const loadDocumentContent = async cls => {
     const documentMedia = getDocumentMedia(cls);
     if (!documentMedia) return;
 
@@ -275,13 +243,9 @@ async function loadDocumentContent(cls) {
             </div>
         `;
     }
-}
+};
 
-/**
- * Render quiz section
- * Supports both legacy tally_form_id and new tally_form_ids (multi-lang object) entropy-legacy-marker-ok: documented technical debt
- */
-function renderQuizSection(ctx) {
+const renderQuizSection = ctx => {
     const { cls, quizMedia, videoCompleted, quizPassed } = ctx;
     
     if (!quizMedia) return '';
@@ -338,12 +302,9 @@ function renderQuizSection(ctx) {
             <div id="quiz-container-${cls.id}" class="quiz-container" style="display: none;"></div>
         </div>
     `;
-}
+};
 
-/**
- * Render requirements checklist
- */
-function renderRequirements(ctx) {
+const renderRequirements = ctx => {
     const { cls, hasQuiz, videoCompleted, quizPassed, stepCompleted, videoId, videoUrl, quizMedia } = ctx;
     
     if (stepCompleted) return '';
@@ -372,12 +333,12 @@ function renderRequirements(ctx) {
             </ul>
         </div>
     `;
-}
+};
 
 /**
  * Render current step (main orchestrator)
  */
-export function renderCurrentStep() {
+export const renderCurrentStep = () => {
     const ctx = getStepContext();
     if (!ctx) return;
     
@@ -433,12 +394,12 @@ export function renderCurrentStep() {
     if (documentMedia) {
         loadDocumentContent(cls);
     }
-}
+};
 
 /**
  * Update UI elements without resetting the video iframe.
  */
-export function updateUIWithoutVideoReset() {
+export const updateUIWithoutVideoReset = () => {
     const ctx = getStepContext();
     if (!ctx) return;
     
@@ -468,4 +429,4 @@ export function updateUIWithoutVideoReset() {
         const isLastStep = stepIndex === course.classes.length - 1;
         nextBtn.title = isLastStep ? 'Terminer le module' : 'Étape suivante';
     }
-}
+};

@@ -20,21 +20,21 @@ export interface Success<S> {
   readonly value: S;
 }
 
-export function fail<F>(error: F): Failure<F> {
+export const fail = <F>(error: F): Failure<F> => {
   return { ok: false, error };
-}
+};
 
-export function succeed<S>(value: S): Success<S> {
+export const succeed = <S>(value: S): Success<S> => {
   return { ok: true, value };
-}
+};
 
 /**
  * Unwrap a Result, throwing if it's a Failure.
  * Use sparingly — prefer pattern matching with ok/error.
  */
-export function unwrap<F, S>(result: Result<F, S>): S {
+export const unwrap = <F, S>(result: Result<F, S>): S => {
   if (!result.ok) {
     throw new Error(`Unwrap called on Failure: ${JSON.stringify(result.error)}`);
   }
   return result.value;
-}
+};

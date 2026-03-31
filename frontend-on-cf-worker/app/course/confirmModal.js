@@ -19,7 +19,7 @@
  * @param {Function} options.onConfirm - Callback on confirm
  * @param {Function} options.onCancel - Callback on cancel
  */
-export function showConfirmModal(options) {
+export const showConfirmModal = options => {
     const {
         title = 'Confirmer',
         message = 'Êtes-vous sûr de vouloir continuer ?',
@@ -93,7 +93,7 @@ export function showConfirmModal(options) {
     modal._escHandler = escHandler;
     
     return modal;
-}
+};
 
 /**
  * Close the confirmation modal
@@ -118,7 +118,7 @@ export function closeConfirmModal() {
  * @param {Function} options.onConfirm - Callback on confirm
  * @param {Function} options.onCancel - Callback on cancel
  */
-export function showContentStepConfirmation(options) {
+export const showContentStepConfirmation = options => {
     const { stepName = 'cette étape', onConfirm, onCancel } = options;
     
     return showConfirmModal({
@@ -134,7 +134,7 @@ export function showContentStepConfirmation(options) {
         onConfirm,
         onCancel
     });
-}
+};
 
 /**
  * Show quiz warning confirmation
@@ -144,7 +144,7 @@ export function showContentStepConfirmation(options) {
  * @param {Function} options.onConfirm - Callback on confirm
  * @param {Function} options.onCancel - Callback on cancel
  */
-export function showQuizWarningConfirmation(options) {
+export const showQuizWarningConfirmation = options => {
     const { quizName = 'ce quiz', onConfirm, onCancel } = options;
     
     return showConfirmModal({
@@ -160,7 +160,7 @@ export function showQuizWarningConfirmation(options) {
         onConfirm,
         onCancel
     });
-}
+};
 
 /**
  * Show abandon course confirmation
@@ -169,7 +169,7 @@ export function showQuizWarningConfirmation(options) {
  * @param {Function} options.onConfirm - Callback on confirm
  * @param {Function} options.onCancel - Callback on cancel
  */
-export function showAbandonConfirmation(options) {
+export const showAbandonConfirmation = options => {
     const { courseName = 'ce cours', onConfirm, onCancel } = options;
     
     return showConfirmModal({
@@ -184,7 +184,7 @@ export function showAbandonConfirmation(options) {
         onConfirm,
         onCancel
     });
-}
+};
 
 // Add modal styles
 const modalStyles = `

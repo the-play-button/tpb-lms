@@ -1,5 +1,4 @@
-#!/usr/bin/env node
-// entropy-console-leak-ok: CLI script uses console for operator output
+#!/usr/bin/env node// entropy-console-leak-ok: CLI script uses console for operator output
 /**
  * Setup Vault Connections for LMS Credentials
  *
@@ -38,7 +37,7 @@ const CONNECTIONS = [
   }
 ];
 
-async function getAuthHeaders() {
+const getAuthHeaders = async () => {
   const clientId = process.env.VAULT_CLIENT_ID;
   const clientSecret = process.env.VAULT_CLIENT_SECRET;
 
@@ -54,9 +53,9 @@ async function getAuthHeaders() {
     'CF-Access-Client-Secret': clientSecret,
     'Content-Type': 'application/json'
   };
-}
+};
 
-async function request(method, path, body = null) {
+const request = async (method, path, body = null) => {
   const headers = await getAuthHeaders();
   const options = { method, headers };
 
@@ -74,9 +73,9 @@ async function request(method, path, body = null) {
   }
 
   return { status: resp.status, data };
-}
+};
 
-async function createConnection(conn) {
+const createConnection = async conn => {
   console.log(`  🔧 Creating connection: ${conn.id}`); // entropy-console-leak-ok: CLI script
 
   const { status, data } = await request('POST', '/vault/connections', {
@@ -95,9 +94,9 @@ async function createConnection(conn) {
     console.log(`     ❌ Failed: ${status} ${JSON.stringify(data)}`); // entropy-console-leak-ok: CLI script
     return false;
   }
-}
+};
 
-async function main() {
+const main = async () => {
   console.log('🚀 Setting up vault connections for LMS credentials...'); // entropy-console-leak-ok: CLI script
   console.log(`   Target: ${VAULT_API_URL}`); // entropy-console-leak-ok: CLI script
   console.log(''); // entropy-console-leak-ok: CLI script
@@ -131,7 +130,7 @@ async function main() {
   console.log('     -H "Content-Type: application/json" \\'); // entropy-console-leak-ok: CLI script
   console.log('     -d \'{"name": "CLIENT_ID", "value": "your-value"}\' \\'); // entropy-console-leak-ok: CLI script
   console.log('     https://tpb-vault-infra.../vault/connections/conn_lms_service/secrets'); // entropy-console-leak-ok: CLI script
-}
+};
 
 main().catch(err => {
   console.error('❌ Error:', err.message); // entropy-console-leak-ok: CLI script

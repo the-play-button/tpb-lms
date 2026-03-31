@@ -4,7 +4,7 @@
 
 import { gatherDebugInfo } from './gatherDebugInfo.js';
 
-export async function copyDebugInfoToClipboard() {
+export const copyDebugInfoToClipboard = async () => {
     const info = gatherDebugInfo();
     const json = JSON.stringify(info, null, 2);
 
@@ -29,4 +29,4 @@ export async function copyDebugInfoToClipboard() {
             return { success: false, error: e.message, data: info };
         }
     }
-}
+};

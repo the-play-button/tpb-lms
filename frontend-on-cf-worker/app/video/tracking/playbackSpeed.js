@@ -9,7 +9,7 @@ import { trackingState, SPEEDS, log } from './_shared.js';
  * Cycle through playback speeds (GAP-101)
  * 0.5x -> 0.75x -> 1x -> 1.25x -> 1.5x -> 1.75x -> 2x -> 0.5x...
  */
-export function cyclePlaybackSpeed() {
+export const cyclePlaybackSpeed = () => {
     if (!trackingState.streamPlayer) {
         log.warn('video', 'No active player to change speed');
         return;
@@ -35,13 +35,13 @@ export function cyclePlaybackSpeed() {
     } catch (error) {
         log.error('video', 'Failed to change playback speed', { error: error.message });
     }
-}
+};
 
 /**
  * Set specific playback speed
  * @param {number} speed - Playback speed (0.5, 0.75, 1, 1.25, 1.5, 1.75, 2)
  */
-export function setPlaybackSpeed(speed) {
+export const setPlaybackSpeed = speed => {
     if (!trackingState.streamPlayer) {
         log.warn('video', 'No active player to set speed');
         return;
@@ -63,20 +63,20 @@ export function setPlaybackSpeed(speed) {
     if (speedDisplay) {
         speedDisplay.textContent = `${speed}x`;
     }
-}
+};
 
 /**
  * Get current playback speed
  * @returns {number} Current speed
  */
-export function getCurrentSpeed() {
+export const getCurrentSpeed = () => {
     return SPEEDS[trackingState.currentSpeedIndex];
-}
+};
 
 /**
  * Get available playback speeds
  * @returns {number[]} Array of available speeds
  */
-export function getAvailableSpeeds() {
+export const getAvailableSpeeds = () => {
     return [...SPEEDS];
-}
+};

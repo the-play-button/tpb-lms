@@ -13,7 +13,7 @@ import { getGlossaryMap } from '../handlers/glossary/index.js';
  * @param {string} text - Text to analyze
  * @returns {string} Language code ('fr', 'en', or 'unknown')
  */
-export function detectLanguage(text) {
+export const detectLanguage = text => {
     if (!text || text.length < 10) return 'unknown';
     
     // Common French words/patterns
@@ -29,15 +29,9 @@ export function detectLanguage(text) {
     if (englishMatches > frenchMatches && englishMatches > 3) return 'en';
     
     return 'unknown';
-}
+};
 
-/**
- * Pre-process text: Replace glossary terms with placeholders
- * @param {string} text - Text to process
- * @param {Map} glossaryMap - Map of source_term -> target_term
- * @returns {{ text: string, placeholders: Map }} Processed text and placeholder map
- */
-function preProcessGlossary(text, glossaryMap) {
+const preProcessGlossary = (text, glossaryMap) => {
     const placeholders = new Map();
     let processedText = text;
     let placeholderIndex = 0;
@@ -55,15 +49,9 @@ function preProcessGlossary(text, glossaryMap) {
     }
     
     return { text: processedText, placeholders };
-}
+};
 
-/**
- * Post-process text: Replace placeholders with translated terms
- * @param {string} text - Translated text with placeholders
- * @param {Map} placeholders - Map of placeholder -> { original, translation }
- * @returns {string} Final translated text
- */
-function postProcessGlossary(text, placeholders) {
+const postProcessGlossary = (text, placeholders) => {
     let result = text;
     
     for (const [placeholder, { translation }] of placeholders) {
@@ -71,7 +59,7 @@ function postProcessGlossary(text, placeholders) {
     }
     
     return result;
-}
+};
 
 /**
  * Escape special regex characters
@@ -80,15 +68,7 @@ function escapeRegex(string) {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-/**
- * Translate text using AI (Claude API)
- * @param {string} text - Text to translate
- * @param {string} sourceLang - Source language code
- * @param {string} targetLang - Target language code
- * @param {string} apiKey - Claude API key
- * @returns {Promise<string>} Translated text
- */
-async function callTranslationAPI(text, sourceLang, targetLang, apiKey) {
+const callTranslationAPI = async (text, sourceLang, targetLang, apiKey) => {
     const langNames = {
         fr: 'French',
         en: 'English',
@@ -134,7 +114,7 @@ ${text}`
     
     const result = await response.json();
     return result.content[0]?.text || '';
-}
+};
 
 /**
  * Translate content with glossary support
@@ -147,7 +127,7 @@ ${text}`
  * @param {string} options.apiKey - Claude API key
  * @returns {Promise<string>} Translated text
  */
-export async function translate({ text, sourceLang, targetLang, orgId, env, apiKey } = {}) {
+export const translate = async ({ text, sourceLang, targetLang, orgId, env, apiKey } = {}) => {
     if (!text || text.trim().length === 0) return text;
     if (sourceLang === targetLang) return text;
     
@@ -166,7 +146,7 @@ export async function translate({ text, sourceLang, targetLang, orgId, env, apiK
     const finalText = postProcessGlossary(translatedText, placeholders);
     
     return finalText;
-}
+};
 
 /**
  * Batch translate multiple fields
@@ -180,7 +160,7 @@ export async function translate({ text, sourceLang, targetLang, orgId, env, apiK
  * @param {string} options.apiKey - Claude API key
  * @returns {Promise<object>} Object with translated fields
  */
-export async function translateFields({ content, fields, sourceLang, targetLang, orgId, env, apiKey } = {}) {
+export const translateFields = async ({ content, fields, sourceLang, targetLang, orgId, env, apiKey } = {}) => {
     const result = {};
     
     for (const field of fields) {
@@ -198,7 +178,7 @@ export async function translateFields({ content, fields, sourceLang, targetLang,
     }
     
     return result;
-}
+};
 
 /**
  * Translate a course and all its classes
@@ -212,7 +192,7 @@ export async function translateFields({ content, fields, sourceLang, targetLang,
  * @param {string} options.apiKey - Claude API key
  * @returns {Promise<object>} Object with course and class translations
  */
-export async function translateCourse({ course, classes, sourceLang, targetLang, orgId, env, apiKey } = {}) {
+export const translateCourse = async ({ course, classes, sourceLang, targetLang, orgId, env, apiKey } = {}) => {
     const translations = [];
     
     // Translate course fields
@@ -262,4 +242,4 @@ export async function translateCourse({ course, classes, sourceLang, targetLang,
     }
     
     return translations;
-}
+};

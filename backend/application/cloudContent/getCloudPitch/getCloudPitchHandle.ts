@@ -14,10 +14,7 @@ type GetCloudPitchError = 'NOT_FOUND' | 'FORBIDDEN' | string;
  *
  * No separate Filter step for binary pitch files -- no metadata to strip.
  */
-export async function getCloudPitchHandle(
-  request: Request,
-  ctx: HandlerContext
-): Promise<Result<GetCloudPitchError, GetCloudPitchOutput>> {
+export const getCloudPitchHandle = async (request: Request, ctx: HandlerContext): Promise<Result<GetCloudPitchError, GetCloudPitchOutput>> => {
   // 0. Assert
   const assertResult = getCloudPitchAssert(request);
   if (!assertResult.ok) return fail(assertResult.error);
@@ -39,4 +36,4 @@ export async function getCloudPitchHandle(
   if (!executeResult.ok) return fail(executeResult.error);
 
   return { ok: true, value: executeResult.value };
-}
+};

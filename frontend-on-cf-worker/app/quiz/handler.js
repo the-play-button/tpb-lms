@@ -18,14 +18,7 @@ import { refreshUserData } from '../notifications.js';
 // Current quiz info for postMessage handler
 let currentQuizInfo = null;
 
-/**
- * Resolve the appropriate Tally form ID based on current language.
- * Supports both legacy single ID (string) and multi-lang (object) formats. entropy-legacy-marker-ok: documented technical debt
- * 
- * @param {string|object} tallyFormIds - Single ID or { lang: id, ... } object
- * @returns {string|null} - The resolved Tally form ID
- */
-function resolveTallyFormId(tallyFormIds) {
+const resolveTallyFormId = tallyFormIds => {
     if (!tallyFormIds) return null;
     
     // entropy-legacy-marker-ok: documented technical debt
@@ -54,7 +47,7 @@ function resolveTallyFormId(tallyFormIds) {
     }
     
     return null;
-}
+};
 
 /**
  * Show quiz (triggered by button click)
@@ -64,7 +57,7 @@ function resolveTallyFormId(tallyFormIds) {
  * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object entropy-legacy-marker-ok: documented technical debt
  * @param {string} quizName - Quiz name for display
  */
-export function showQuiz(classId, tallyFormIds, quizName) {
+export const showQuiz = (classId, tallyFormIds, quizName) => {
     const tallyFormId = resolveTallyFormId(tallyFormIds);
     
     if (!tallyFormId) {
@@ -110,12 +103,12 @@ En cliquant OK, vous acceptez :
             container.scrollIntoView({ behavior: 'smooth' });
         }
     }
-}
+};
 
 /**
  * Handle Tally form submission via postMessage
  */
-export async function handleTallySubmission(tallyEvent) {
+export const handleTallySubmission = async tallyEvent => {
     log.debug('📋 Quiz Tally submitted!', tallyEvent.payload);
     log.debug('📋 [DEBUG] currentQuizInfo:', currentQuizInfo);
     
@@ -179,7 +172,7 @@ export async function handleTallySubmission(tallyEvent) {
         log.error('❌ [DEBUG] Failed to submit quiz:', error);
         alert('Erreur lors de la soumission du quiz. Veuillez rafraîchir la page.');
     }
-}
+};
 
 /**
  * Show corrections modal for passed quiz (with errors)
@@ -279,7 +272,7 @@ function showQuizPendingState() {
 /**
  * Initialize quiz handler (expose to window)
  */
-export function initQuizHandler() {
+export const initQuizHandler = () => {
     window.showQuiz = showQuiz; // entropy-global-pollution-ok: intentional global for HTML onclick
-}
+};
 

@@ -10,9 +10,7 @@ export type GetCloudContentAssertedInput = z.infer<typeof GetCloudContentAssertS
 /**
  * Assert step: validate presence of required request parameters.
  */
-export function getCloudContentAssert(
-  request: Request
-): Result<string, GetCloudContentAssertedInput> {
+export const getCloudContentAssert = (request: Request): Result<string, GetCloudContentAssertedInput> => {
   const url = new URL(request.url);
   const raw = { ref_id: url.searchParams.get('ref_id') ?? undefined };
 
@@ -22,4 +20,4 @@ export function getCloudContentAssert(
   }
 
   return succeed(parsed.data);
-}
+};

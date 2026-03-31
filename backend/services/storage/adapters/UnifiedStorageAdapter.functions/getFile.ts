@@ -9,11 +9,7 @@ import { mapFile } from './mapFile.js';
  * @param connectionId - Storage connection ID
  * @param fileId - File to retrieve
  */
-export async function getFile(
-  accessToken: string,
-  connectionId: string,
-  fileId: string
-): Promise<StorageFile> {
+export const getFile = async (accessToken: string, connectionId: string, fileId: string): Promise<StorageFile> => {
   const data = await request<Record<string, unknown>>(
     accessToken,
     connectionId,
@@ -22,4 +18,4 @@ export async function getFile(
   );
 
   return mapFile(data);
-}
+};

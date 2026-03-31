@@ -15,7 +15,7 @@ import { log } from '../log.js';
  * @param {string} contentRefId - Content reference ID
  * @param {string} contentName - Display name for the content
  */
-export function showSharingModal(contentRefId, contentName) {
+export const showSharingModal = (contentRefId, contentName) => {
     // Remove existing modal if any
     const existing = document.getElementById('sharing-modal');
     if (existing) existing.remove();
@@ -95,7 +95,7 @@ export function showSharingModal(contentRefId, contentName) {
 
     // Load existing permissions
     loadPermissions(contentRefId);
-}
+};
 
 /**
  * Load and render permissions list

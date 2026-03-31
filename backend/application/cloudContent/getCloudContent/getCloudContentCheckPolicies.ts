@@ -7,9 +7,7 @@ import type { GetCloudContentContext } from './getCloudContentHydrateContext.js'
  * - Owner/admin -> always allowed
  * - Learner -> must be enrolled (has active share)
  */
-export function getCloudContentCheckPolicies(
-  context: GetCloudContentContext
-): Result<'FORBIDDEN', 'allowed'> {
+export const getCloudContentCheckPolicies = (context: GetCloudContentContext): Result<'FORBIDDEN', 'allowed'> => {
   if (context.isOwner) {
     return succeed('allowed' as const);
   }
@@ -19,4 +17,4 @@ export function getCloudContentCheckPolicies(
   }
 
   return fail('FORBIDDEN' as const);
-}
+};

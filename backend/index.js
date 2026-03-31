@@ -54,12 +54,7 @@ import logger from './utils/log.js';
 
 const log = logger('worker');
 
-/**
- * Add CORS headers to a BYOC controller response.
- * BYOC controllers return bare Response objects; this wraps them
- * with the same CORS headers used by legacy jsonResponse().
- */
-function withCors(response, request) {
+const withCors = (response, request) => {
     const newHeaders = new Headers(response.headers);
     for (const [key, value] of Object.entries(getCorsHeaders(request))) {
         newHeaders.set(key, value);
@@ -69,12 +64,9 @@ function withCors(response, request) {
         statusText: response.statusText,
         headers: newHeaders
     });
-}
+};
 
-/**
- * Handle health check endpoint
- */
-async function handleHealthCheck(env, request) {
+const handleHealthCheck = async (env, request) => {
     const dbCheck = await env.DB.prepare('SELECT 1 as ok').first().catch(() => null);
     const isDbUp = dbCheck?.ok === 1;
     return jsonResponse({ 
@@ -83,12 +75,9 @@ async function handleHealthCheck(env, request) {
         timestamp: new Date().toISOString(),
         version: '2.1.0'
     }, 200, request);
-}
+};
 
-/**
- * Handle Tally webhook with signature or secret validation
- */
-async function handleTallyWithAuth(request, url, env) {
+const handleTallyWithAuth = async (request, url, env) => {
     if (env.TALLY_SIGNING_SECRET) {
         const { valid, body, noSignature } = await verifyTallySignature(request, env.TALLY_SIGNING_SECRET); // entropy-naming-convention-ok: destructured from API shape
         
@@ -107,7 +96,7 @@ async function handleTallyWithAuth(request, url, env) {
     const secretValid = env.TALLY_WEBHOOK_SECRET && webhookSecret === env.TALLY_WEBHOOK_SECRET;
     if (!secretValid) return jsonResponse({ error: 'Invalid webhook secret' }, 403, request);
     return await handleTallyWebhook(request, env);
-}
+};
 
 export default {
     async fetch(request, env, ctx) {

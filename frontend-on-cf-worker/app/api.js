@@ -23,11 +23,7 @@ export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api'; 
 // Cached auth token
 let authToken = null;
 
-/**
- * Fetch auth token from frontend Worker
- * The Worker extracts the Cf-Access-Jwt-Assertion header set by CF Access
- */
-async function getAuthToken(forceRefresh = false) {
+const getAuthToken = async (forceRefresh = false) => {
     if (authToken && !forceRefresh) {
         return authToken;
     }
@@ -42,38 +38,29 @@ async function getAuthToken(forceRefresh = false) {
     const data = await response.json();
     authToken = data.token;
     return authToken;
-}
+};
 
-/**
- * Clear cached token (force refresh on next request)
- */
-function clearAuthToken() {
+const clearAuthToken = () => {
     authToken = null;
-}
+};
 
-/**
- * Build headers with JWT token
- */
-async function buildHeaders(additionalHeaders = {}) {
+const buildHeaders = async (additionalHeaders = {}) => {
     const token = await getAuthToken();
     return {
         'Cf-Access-Jwt-Assertion': token,
         'x-session-id': sessionId,
         ...additionalHeaders
     };
-}
+};
 
-/**
- * Check if error is auth-related (should retry with fresh token)
- */
-function isAuthError(status) {
+const isAuthError = status => {
     return status === 401 || status === 403;
-}
+};
 
 /**
  * GET request to API with auto-retry on auth failure
  */
-export async function api(path) {
+export const api = async path => {
     const headers = await buildHeaders();
     
     let response = await fetch(`${API_BASE}${path}`, { headers });
@@ -91,7 +78,7 @@ export async function api(path) {
     }
     
     return response.json();
-}
+};
 
 /**
  * POST request to API with auto-retry on auth failure
@@ -100,7 +87,7 @@ export async function api(path) {
  * @param {object} options - Optional settings
  * @param {string} options.idempotencyKey - Optional idempotency key for deduplication
  */
-export async function apiPost(path, data, options = {}) {
+export const apiPost = async (path, data, options = {}) => {
     const additionalHeaders = { 
         'Content-Type': 'application/json'
     };
@@ -136,13 +123,13 @@ export async function apiPost(path, data, options = {}) {
     }
     
     return response.json();
-}
+};
 
 /**
  * DELETE request to API with auto-retry on auth failure
  * @param {string} path - API path
  */
-export async function apiDelete(path) {
+export const apiDelete = async path => {
     const headers = await buildHeaders();
 
     let response = await fetch(`${API_BASE}${path}`, {
@@ -166,13 +153,13 @@ export async function apiDelete(path) {
     }
 
     return response.json();
-}
+};
 
 /**
  * Generate idempotency key for an event
  * Format: {eventType}-{courseId}-{classId}-{timestamp_seconds}
  */
-export function generateIdempotencyKey(eventType, courseId, classId) {
+export const generateIdempotencyKey = (eventType, courseId, classId) => {
     const timestamp = Math.floor(Date.now() / 1000);
     return `${eventType}-${courseId}-${classId}-${timestamp}`;
-}
+};

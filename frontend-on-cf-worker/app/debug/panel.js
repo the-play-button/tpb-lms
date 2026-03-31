@@ -17,10 +17,7 @@ const showToast = (...args) => window.showToast?.(...args);
 let panelElement = null;
 let isOpen = false;
 
-/**
- * Create the debug panel DOM
- */
-function createPanel() {
+const createPanel = () => {
     const panel = document.createElement('div');
     panel.id = 'debug-panel';
     panel.className = 'debug-panel';
@@ -62,12 +59,9 @@ function createPanel() {
         </div>
     `;
     return panel;
-}
+};
 
-/**
- * Update panel with current state
- */
-function updatePanelState() {
+const updatePanelState = () => {
     if (!panelElement) return;
     
     const currentCourse = getState('currentCourse');
@@ -77,12 +71,9 @@ function updatePanelState() {
     if (infoEl) {
         infoEl.innerHTML = `Cours actuel: <strong>${courseData?.title || currentCourse || '—'}</strong>`;
     }
-}
+};
 
-/**
- * Handle reset current course
- */
-async function handleResetCurrent() {
+const handleResetCurrent = async () => {
     const currentCourse = getState('currentCourse');
     if (!currentCourse) {
         showToast('Aucun cours sélectionné', 'error');
@@ -100,12 +91,9 @@ async function handleResetCurrent() {
     } catch (error) {
         showToast(`❌ Erreur: ${error.message}`, 'error');
     }
-}
+};
 
-/**
- * Handle reset all courses
- */
-async function handleResetAll() {
+const handleResetAll = async () => {
     const courses = getState('courses') || [];
     if (courses.length === 0) {
         showToast('Aucun cours trouvé', 'error');
@@ -137,12 +125,9 @@ async function handleResetAll() {
     } catch (error) {
         showToast(`❌ Erreur: ${error.message}`, 'error');
     }
-}
+};
 
-/**
- * Handle goto step
- */
-function handleGotoStep() {
+const handleGotoStep = () => {
     const courseData = getState('courseData');
     if (!courseData?.classes?.length) {
         showToast('Aucun cours chargé', 'error');
@@ -161,12 +146,9 @@ function handleGotoStep() {
     
     closePanel();
     window.navigateToStep?.(stepNum - 1);
-}
+};
 
-/**
- * Setup event listeners
- */
-function setupListeners() {
+const setupListeners = () => {
     if (!panelElement) return;
     
     // Close button
@@ -182,7 +164,7 @@ function setupListeners() {
     
     // Escape key
     document.addEventListener('keydown', handleEscape);
-}
+};
 
 /**
  * Handle escape key
@@ -196,7 +178,7 @@ function handleEscape(e) {
 /**
  * Open the debug panel
  */
-export function openPanel() {
+export const openPanel = () => {
     if (isOpen) return;
     
     if (!panelElement) {
@@ -213,7 +195,7 @@ export function openPanel() {
     });
     
     isOpen = true;
-}
+};
 
 /**
  * Close the debug panel
@@ -230,10 +212,10 @@ export function closePanel() {
 /**
  * Toggle the panel
  */
-export function togglePanel() {
+export const togglePanel = () => {
     if (isOpen) {
         closePanel();
     } else {
         openPanel();
     }
-}
+};

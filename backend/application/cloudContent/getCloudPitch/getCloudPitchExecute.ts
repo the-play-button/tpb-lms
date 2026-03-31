@@ -17,10 +17,7 @@ export interface GetCloudPitchOutput {
  *
  * .pitch files are ZIP-based binaries.
  */
-export async function getCloudPitchExecute(
-  context: GetCloudPitchContext,
-  ctx: HandlerContext
-): Promise<Result<string, GetCloudPitchOutput>> {
+export const getCloudPitchExecute = async (context: GetCloudPitchContext, ctx: HandlerContext): Promise<Result<string, GetCloudPitchOutput>> => {
   const { contentRef, isOwner } = context;
   const connectionId = contentRef.connectionId.value;
   const fileId = contentRef.fileId;
@@ -53,4 +50,4 @@ export async function getCloudPitchExecute(
     : `${contentRef.name}.pitch`;
 
   return succeed({ binary, fileName });
-}
+};

@@ -10,9 +10,7 @@ export type GetCloudPitchAssertedInput = z.infer<typeof GetCloudPitchAssertSchem
 /**
  * Assert step: validate presence of required request parameters.
  */
-export function getCloudPitchAssert(
-  request: Request
-): Result<string, GetCloudPitchAssertedInput> {
+export const getCloudPitchAssert = (request: Request): Result<string, GetCloudPitchAssertedInput> => {
   const url = new URL(request.url);
   const raw = { ref_id: url.searchParams.get('ref_id') ?? undefined };
 
@@ -22,4 +20,4 @@ export function getCloudPitchAssert(
   }
 
   return succeed(parsed.data);
-}
+};

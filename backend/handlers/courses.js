@@ -10,19 +10,7 @@
 
 import { jsonResponse } from '../cors.js';
 
-// ============================================
-// Translation helpers
-// ============================================
-
-/**
- * Load translations for a content item from D1
- * @param {object} env - Cloudflare env with DB binding
- * @param {string} contentType - 'course' or 'class'
- * @param {string} contentId - Content ID
- * @param {string} lang - Target language code
- * @returns {Promise<object>} Map of field -> translated value
- */
-async function loadTranslations(env, contentType, contentId, lang) {
+const loadTranslations = async (env, contentType, contentId, lang) => {
     const result = await env.DB.prepare(`
         SELECT field, value FROM translations 
         WHERE content_type = ? AND content_id = ? AND lang = ?
@@ -33,15 +21,9 @@ async function loadTranslations(env, contentType, contentId, lang) {
         map[row.field] = row.value;
     }
     return map;
-}
+};
 
-/**
- * Apply translations to an object
- * @param {object} obj - Object to translate
- * @param {object} translations - Map of field -> value
- * @returns {object} Object with translated fields
- */
-function applyTranslations(obj, translations) {
+const applyTranslations = (obj, translations) => {
     if (!translations || Object.keys(translations).length === 0) {
         return obj;
     }
@@ -57,16 +39,9 @@ function applyTranslations(obj, translations) {
         }
     }
     return result;
-}
+};
 
-// ============================================
-// Helper functions
-// ============================================
-
-/**
- * Enrich a single media item with progress
- */
-function enrichMedia(media, videoCompleted, quizPassed, cls) {
+const enrichMedia = (media, videoCompleted, quizPassed, cls) => {
     if (media.type === 'VIDEO') {
         const coveragePct = cls.video_duration_sec 
             ? Math.round((cls.video_max_position_sec / cls.video_duration_sec) * 100) : 0;
@@ -76,12 +51,9 @@ function enrichMedia(media, videoCompleted, quizPassed, cls) {
         return { ...media, passed: quizPassed };
     }
     return media;
-}
+};
 
-/**
- * Enrich a single class with progress data
- */
-function enrichClass(cls, currentStep) {
+const enrichClass = (cls, currentStep) => {
     const media = cls.media_json ? JSON.parse(cls.media_json) : [];
     const raw = cls.raw_json ? JSON.parse(cls.raw_json) : {};
     const hasQuiz = media.some(m => m.type === 'QUIZ');
@@ -106,12 +78,9 @@ function enrichClass(cls, currentStep) {
         step_completed: stepCompleted,
         can_access: orderIndex <= currentStep + 1
     };
-}
+};
 
-/**
- * Process classes and determine current step
- */
-function processClasses(classes) {
+const processClasses = classes => {
     let currentStep = 0;
     const enrichedClasses = classes.map(cls => {
         // Use sys_order_index (unified.to conformity)
@@ -129,7 +98,7 @@ function processClasses(classes) {
         ...cls,
         can_access: cls.order_index <= currentStep + 1
     }));
-}
+};
 
 // ============================================
 // Main handlers
@@ -139,7 +108,7 @@ function processClasses(classes) {
  * GET /api/courses
  * Supports ?lang= parameter for translations
  */
-export async function listCourses(request, env, userContext) {
+export const listCourses = async (request, env, userContext) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
     const url = new URL(request.url);
     const lang = url.searchParams.get('lang');
@@ -180,13 +149,13 @@ export async function listCourses(request, env, userContext) {
     );
     
     return jsonResponse({ courses: enrichedCourses }, 200, request);
-}
+};
 
 /**
  * GET /api/courses/:id
  * Supports ?lang= parameter for translations
  */
-export async function getCourse(request, env, userContext, courseId) {
+export const getCourse = async (request, env, userContext, courseId) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
     const url = new URL(request.url);
     const lang = url.searchParams.get('lang');
@@ -246,4 +215,4 @@ export async function getCourse(request, env, userContext, courseId) {
             can_access_step: Math.min(currentStep + 1, enrichedClasses.length)
         }
     }, 200, request);
-}
+};

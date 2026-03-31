@@ -11,18 +11,18 @@ import { jsonResponse, extractFieldsFromPayload, calculateScore, processQuizSubm
 /**
  * Handle Tally webhook with body already read
  */
-export async function handleTallyWebhookWithBody(bodyText, env, request) {
+export const handleTallyWebhookWithBody = async (bodyText, env, request) => {
     const payload = JSON.parse(bodyText);
     return await processTallyPayload(payload, env, request);
-}
+};
 
 /**
  * Handle Tally webhook from request (direct JSON parsing)
  */
-export async function handleTallyWebhook(request, env) {
+export const handleTallyWebhook = async (request, env) => {
     const payload = await request.json();
     return await processTallyPayload(payload, env, request);
-}
+};
 
 /**
  * Process Tally webhook payload

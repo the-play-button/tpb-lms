@@ -23,10 +23,7 @@ type ListPermissionsError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 /**
  * Execute step: fetch contentRef, fetch active shares, apply FLS, return.
  */
-export async function listPermissionsExecute(
-  input: ListPermissionsAssertedInput,
-  ctx: HandlerContext
-): Promise<Result<ListPermissionsError, ListPermissionsOutput>> {
+export const listPermissionsExecute = async (input: ListPermissionsAssertedInput, ctx: HandlerContext): Promise<Result<ListPermissionsError, ListPermissionsOutput>> => {
   const refId = ContentRefId.reconstitute(input.ref_id);
   const contentRef = await ctx.contentRefsRepository.findById(refId);
   if (!contentRef) {
@@ -59,4 +56,4 @@ export async function listPermissionsExecute(
     owner_email: contentRef.ownerEmail.value,
     permissions: filteredPermissions,
   });
-}
+};

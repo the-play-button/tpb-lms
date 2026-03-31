@@ -15,7 +15,7 @@ import { renderModuleEndScreen } from './endScreen.js';
 /**
  * Navigate to a specific step (GAP-203)
  */
-export function navigateToStep(stepIndex) {
+export const navigateToStep = stepIndex => {
     const courseId = getState('currentCourse');
     const signals = getState('signals');
     const courseData = getState('courseData');
@@ -41,12 +41,12 @@ export function navigateToStep(stepIndex) {
     
     renderCurrentStep();
     window.scrollTo(0, 0);
-}
+};
 
 /**
  * Go to next step
  */
-export async function nextStep() {
+export const nextStep = async () => {
     const signals = getState('signals');
     const stepIndex = getState('currentStepIndex');
     const stepSignal = signals?.steps?.[stepIndex];
@@ -94,19 +94,19 @@ export async function nextStep() {
         await refreshSignals();
         renderModuleEndScreen();
     }
-}
+};
 
 /**
  * Go to previous step (disabled for linear progression)
  */
-export function prevStep() {
+export const prevStep = () => {
     alert("⚠️ Progression linéaire : impossible de revenir en arrière.");
-}
+};
 
 /**
  * Restart module (reset all progress)
  */
-export async function restartModule() {
+export const restartModule = async () => {
     const confirmed = confirm(
         "⚠️ RECOMMENCER LE MODULE\n\n" +
         "Toute votre progression sera effacée.\n" +
@@ -124,12 +124,9 @@ export async function restartModule() {
             alert(`Erreur: ${error.message}`);
         }
     }
-}
+};
 
-/**
- * Handle browser back/forward buttons (GAP-203)
- */
-async function handlePopState(event) {
+const handlePopState = async event => {
     if (event.state?.stepIndex !== undefined) {
         const courseId = event.state.courseId || getState('currentCourse');
         const stepIndex = event.state.stepIndex;
@@ -145,12 +142,12 @@ async function handlePopState(event) {
             loadCourse(courseId, stepIndex);
         }
     }
-}
+};
 
 /**
  * Expose navigation functions globally
  */
-export function initNavigation() {
+export const initNavigation = () => {
     window.nextStep = nextStep; // entropy-global-pollution-ok: intentional global for HTML onclick
     window.prevStep = prevStep; // entropy-global-pollution-ok: intentional global for HTML onclick
     window.restartModule = restartModule; // entropy-global-pollution-ok: intentional global for HTML onclick
@@ -159,5 +156,5 @@ export function initNavigation() {
     
     // Handle browser back/forward (GAP-203)
     window.addEventListener('popstate', handlePopState);
-}
+};
 

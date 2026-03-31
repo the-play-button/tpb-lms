@@ -10,7 +10,7 @@ import { resolvePath } from './_shared.js';
  * @param {string} baseUrl - Base URL for resolving relative paths
  * @returns {string} - Markdown with resolved URLs
  */
-export function resolveRelativeUrls(markdown, baseUrl) {
+export const resolveRelativeUrls = (markdown, baseUrl) => {
     // Parse base URL to get directory
     const baseDir = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
 
@@ -34,4 +34,4 @@ export function resolveRelativeUrls(markdown, baseUrl) {
     );
 
     return markdown;
-}
+};

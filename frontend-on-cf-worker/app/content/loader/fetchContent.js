@@ -13,7 +13,7 @@ import { contentCache, CACHE_TTL_MS, isGitHubUrl, buildProxyUrl, isCloudRef, fet
  * @param {string} url - Raw URL to fetch (e.g., https://raw.githubusercontent.com/...)
  * @returns {Promise<string>} - Content as string
  */
-export async function fetchContent(url) {
+export const fetchContent = async url => {
     if (!url) {
         throw new Error('URL is required');
     }
@@ -57,7 +57,7 @@ export async function fetchContent(url) {
         log.error('Content fetch error:', error);
         throw error;
     }
-}
+};
 
 /**
  * Fetch content from a cloud content reference (BYOC)
@@ -65,7 +65,7 @@ export async function fetchContent(url) {
  * @param {string} lang - Optional language code
  * @returns {Promise<string>} - Content as string
  */
-export async function fetchCloudContent(contentRefId, lang) {
+export const fetchCloudContent = async (contentRefId, lang) => {
     if (!contentRefId) {
         throw new Error('Content ref ID is required');
     }
@@ -92,4 +92,4 @@ export async function fetchCloudContent(contentRefId, lang) {
         log.error('Cloud content fetch error:', error);
         throw error;
     }
-}
+};

@@ -5,13 +5,13 @@ import { pamFetch } from './pamFetch.js';
 /**
  * List files in a folder via PAM delegated access
  */
-export async function listFiles(
+export const listFiles = async (
   bastionUrl: string,
   getToken: () => string,
   connectionId: string,
   parentId: string,
   guestEmail: string
-): Promise<StorageFile[]> {
+): Promise<StorageFile[]> => {
   const response = await pamFetch(bastionUrl, getToken, 'storage', 'folder', 'list', {
     connectionId,
     entityId: parentId,
@@ -25,4 +25,4 @@ export async function listFiles(
 
   const data = await response.json() as { items: StorageFile[] };
   return data.items || [];
-}
+};

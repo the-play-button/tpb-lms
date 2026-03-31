@@ -255,7 +255,7 @@ const SECRET_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
  * @param {string} path - Secret path
  * @returns {Promise<string|null>}
  */
-export async function getCachedSecret(vault, path) {
+export const getCachedSecret = async (vault, path) => {
   const cached = secretCache.get(path);
   if (cached && cached.expiry > Date.now()) {
     return cached.value;
@@ -264,4 +264,4 @@ export async function getCachedSecret(vault, path) {
   const value = await vault.getSecret(path);
   secretCache.set(path, { value, expiry: Date.now() + SECRET_CACHE_TTL });
   return value;
-}
+};

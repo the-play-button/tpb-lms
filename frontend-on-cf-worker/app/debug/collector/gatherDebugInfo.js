@@ -4,7 +4,7 @@
 
 import { storage, getDeviceInfo, getAppState } from './_shared.js';
 
-export function gatherDebugInfo() {
+export const gatherDebugInfo = () => {
     return {
         timestamp: new Date().toISOString(),
         version: '1.0.0',
@@ -16,4 +16,4 @@ export function gatherDebugInfo() {
         network_errors: [...storage.networkErrors],
         sentry: window.Sentry ? 'enabled' : 'not loaded'
     };
-}
+};

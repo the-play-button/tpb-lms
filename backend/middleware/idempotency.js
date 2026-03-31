@@ -19,10 +19,7 @@ const CACHE_TTL = 60000;
 const CLEANUP_INTERVAL = 30000;
 let lastCleanup = Date.now();
 
-/**
- * Clean up expired cache entries
- */
-function cleanup() {
+const cleanup = () => {
     const now = Date.now();
     if (now - lastCleanup < CLEANUP_INTERVAL) return;
     
@@ -34,14 +31,14 @@ function cleanup() {
             cache.delete(key);
         }
     }
-}
+};
 
 /**
  * Check if request has already been processed
  * @param {Request} request - The incoming request
  * @returns {Response|null} - Cached response if found, null otherwise
  */
-export function checkIdempotency(request) {
+export const checkIdempotency = request => {
     // Run cleanup periodically
     cleanup();
     
@@ -74,7 +71,7 @@ export function checkIdempotency(request) {
     }
     
     return null; // First request, continue processing
-}
+};
 
 /**
  * Cache response for future idempotency checks
@@ -82,7 +79,7 @@ export function checkIdempotency(request) {
  * @param {Response} response - The response to cache
  * @returns {Response} - The response with idempotency header
  */
-export async function cacheIdempotencyResponse(request, response) {
+export const cacheIdempotencyResponse = async (request, response) => {
     const idempotencyKey = request.headers.get('X-Idempotency-Key');
     
     if (!idempotencyKey) return response;
@@ -103,15 +100,15 @@ export async function cacheIdempotencyResponse(request, response) {
     newResponse.headers.set('X-Idempotency-Key', idempotencyKey);
     
     return newResponse;
-}
+};
 
 /**
  * Generate idempotency key for an event
  * (Helper for client-side reference)
  * Format: {eventType}-{courseId}-{classId}-{timestamp_seconds}
  */
-export function generateIdempotencyKey(eventType, courseId, classId) {
+export const generateIdempotencyKey = (eventType, courseId, classId) => {
     const timestamp = Math.floor(Date.now() / 1000);
     return `${eventType}-${courseId}-${classId}-${timestamp}`;
-}
+};
 

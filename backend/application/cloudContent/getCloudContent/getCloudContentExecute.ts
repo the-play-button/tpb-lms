@@ -16,10 +16,7 @@ export interface GetCloudContentOutput {
  * - Owner/admin: direct access via storageService
  * - Learner: delegated access via pamClient
  */
-export async function getCloudContentExecute(
-  context: GetCloudContentContext,
-  ctx: HandlerContext
-): Promise<Result<string, GetCloudContentOutput>> {
+export const getCloudContentExecute = async (context: GetCloudContentContext, ctx: HandlerContext): Promise<Result<string, GetCloudContentOutput>> => {
   const { contentRef, isOwner } = context;
   const connectionId = contentRef.connectionId.value;
   const fileId = contentRef.fileId;
@@ -54,4 +51,4 @@ export async function getCloudContentExecute(
     contentType,
     lang: contentRef.lang,
   });
-}
+};

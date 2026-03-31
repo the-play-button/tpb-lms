@@ -6,7 +6,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 
-export async function getTranslations(request, env, ctx) {
+export const getTranslations = async (request, env, ctx) => {
     const url = new URL(request.url);
     const pathParts = url.pathname.split('/');
     const contentType = pathParts[2];
@@ -46,4 +46,4 @@ export async function getTranslations(request, env, ctx) {
         console.error('Error fetching translations:', error);
         return errorResponse('Failed to fetch translations', 500);
     }
-}
+};

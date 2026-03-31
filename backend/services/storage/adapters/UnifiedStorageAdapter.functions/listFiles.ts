@@ -9,11 +9,7 @@ import { mapFile } from './mapFile.js';
  * @param connectionId - Storage connection ID
  * @param parentId - Parent folder ID (omit for root)
  */
-export async function listFiles(
-  accessToken: string,
-  connectionId: string,
-  parentId?: string
-): Promise<StorageFile[]> {
+export const listFiles = async (accessToken: string, connectionId: string, parentId?: string): Promise<StorageFile[]> => {
   const params = new URLSearchParams();
   if (parentId) params.set('parent_id', parentId);
 
@@ -28,4 +24,4 @@ export async function listFiles(
   );
 
   return (Array.isArray(data) ? data : []).map(mapFile);
-}
+};

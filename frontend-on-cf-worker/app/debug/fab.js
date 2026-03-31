@@ -23,7 +23,7 @@ let clickTimer = null;
 /**
  * Create and mount the debug FAB
  */
-export function initDebugFab() {
+export const initDebugFab = () => {
     if (fabElement) {
         log.debug('[Debug] FAB already initialized');
         return;
@@ -50,7 +50,7 @@ export function initDebugFab() {
     document.body.appendChild(fabElement);
     
     log.debug('[Debug] FAB initialized');
-}
+};
 
 /**
  * Handle FAB click - single click copies info, double click opens panel
@@ -117,11 +117,11 @@ async function handleSingleClick() {
 /**
  * Remove the FAB (for cleanup)
  */
-export function destroyDebugFab() {
+export const destroyDebugFab = () => {
     if (fabElement) {
         fabElement.removeEventListener('click', handleFabClick);
         fabElement.remove();
         fabElement = null;
     }
-}
+};
 

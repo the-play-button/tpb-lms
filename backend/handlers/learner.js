@@ -9,7 +9,7 @@
 import { jsonResponse } from '../cors.js';
 import { getCurrentStreak } from '../helpers/xp/index.js';
 
-export async function getLearnerProgress(request, env, userContext) {
+export const getLearnerProgress = async (request, env, userContext) => {
     const userId = userContext.contact.id;
 
     // Parallel fetch all data
@@ -59,4 +59,4 @@ export async function getLearnerProgress(request, env, userContext) {
         recentVideos: videos.results || [],
         recentQuizzes: quizzes.results || []
     }, 200, request);
-}
+};

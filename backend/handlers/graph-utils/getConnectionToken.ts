@@ -6,10 +6,7 @@
 
 import { ValidationError, NotFoundError, ServiceUnavailableError } from '../../types/errors.js';
 
-export async function getConnectionToken(
-  getSecret: (path: string) => Promise<string | null>,
-  connectionId: string
-): Promise<{ accessToken: string; provider: string }> {
+export const getConnectionToken = async (getSecret: (path: string) => Promise<string | null>, connectionId: string): Promise<{ accessToken: string; provider: string }> => {
   const unifiedToken = await getSecret('integrations/unifiedto_api_token');
   if (!unifiedToken) {
     throw new ValidationError('Unified.to API token not configured', { apiToken: 'missing' });
@@ -42,4 +39,4 @@ export async function getConnectionToken(
     accessToken: conn.auth.access_token,
     provider: conn.integration_type.toLowerCase(),
   };
-}
+};

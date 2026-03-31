@@ -2,7 +2,7 @@
  * Get or create contact in crm_contact (Unified.to aligned)
  */
 
-export async function getOrCreateContact(email, env) {
+export const getOrCreateContact = async (email, env) => {
     // Try to find existing contact
     let contact = await env.DB.prepare(`
         SELECT * FROM crm_contact
@@ -30,4 +30,4 @@ export async function getOrCreateContact(email, env) {
         created_at: now,
         updated_at: now
     };
-}
+};

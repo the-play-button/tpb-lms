@@ -11,7 +11,7 @@ import { buildCloudPitchUrl } from '../content/loader/_shared.js';
  * Render "shared with me" view
  * @param {HTMLElement} container - Target container
  */
-export async function renderSharedWithMe(container) {
+export const renderSharedWithMe = async container => {
     if (!container) return;
 
     container.innerHTML = `
@@ -66,4 +66,4 @@ export async function renderSharedWithMe(container) {
             </div>
         `;
     }
-}
+};

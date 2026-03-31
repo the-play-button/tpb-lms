@@ -14,10 +14,7 @@ export interface RevokeShareContext {
 /**
  * HydrateContext step: load the share and its parent contentRef.
  */
-export async function revokeShareHydrateContext(
-  rawShareId: string,
-  ctx: HandlerContext
-): Promise<Result<'NOT_FOUND', RevokeShareContext>> {
+export const revokeShareHydrateContext = async (rawShareId: string, ctx: HandlerContext): Promise<Result<'NOT_FOUND', RevokeShareContext>> => {
   const shareId = ShareId.reconstitute(rawShareId);
 
   const share = await ctx.sharesRepository.findById(shareId);
@@ -38,4 +35,4 @@ export async function revokeShareHydrateContext(
   const isOwner = contentRef.ownerEmail.value === ctx.userEmail;
 
   return succeed({ share, contentRef, isOwner });
-}
+};

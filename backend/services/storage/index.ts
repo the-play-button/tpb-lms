@@ -21,6 +21,6 @@ import { UnifiedStorageAdapter, type UnifiedStorageAdapterConfig } from './adapt
  *
  * @param config - Configuration with token provider
  */
-export function createStorageService(config: UnifiedStorageAdapterConfig): StoragePort {
+export const createStorageService = (config: UnifiedStorageAdapterConfig): StoragePort => {
   return new UnifiedStorageAdapter(config);
-}
+};

@@ -8,7 +8,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 
-export async function importGlossaryTerms(request, env, ctx) {
+export const importGlossaryTerms = async (request, env, ctx) => {
     const url = new URL(request.url);
     const pathParts = url.pathname.split('/');
     const orgId = pathParts[2];
@@ -60,4 +60,4 @@ export async function importGlossaryTerms(request, env, ctx) {
         imported: successCount,
         errors: errorCount
     });
-}
+};

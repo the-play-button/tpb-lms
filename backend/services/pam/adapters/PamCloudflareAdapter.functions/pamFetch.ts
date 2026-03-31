@@ -10,14 +10,14 @@
  * @param operation - PAM operation (e.g. 'verify', 'read', 'list')
  * @param body - Request payload
  */
-export async function pamFetch(
+export const pamFetch = async (
   bastionUrl: string,
   getToken: () => string,
   domain: string,
   entity: string,
   operation: string,
   body: unknown
-): Promise<Response> {
+): Promise<Response> => {
   const token = getToken();
   return fetch(`${bastionUrl}/pam/delegated/${domain}/${entity}/${operation}`, {
     method: 'POST',
@@ -27,4 +27,4 @@ export async function pamFetch(
     },
     body: JSON.stringify(body),
   });
-}
+};

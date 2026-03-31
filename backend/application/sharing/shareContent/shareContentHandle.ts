@@ -13,11 +13,7 @@ type ShareContentError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 /**
  * Handle orchestrator: Assert -> ValidateInput -> HydrateContext -> CheckPolicies -> Execute -> Filter
  */
-export async function shareContentHandle(
-  request: Request,
-  ctx: HandlerContext,
-  refId: string
-): Promise<Result<ShareContentError, Partial<ShareContentOutput>>> {
+export const shareContentHandle = async (request: Request, ctx: HandlerContext, refId: string): Promise<Result<ShareContentError, Partial<ShareContentOutput>>> => {
   // 0. Assert
   const assertResult = shareContentAssert(refId);
   if (!assertResult.ok) return fail(assertResult.error);
@@ -46,4 +42,4 @@ export async function shareContentHandle(
   );
 
   return { ok: true, value: filtered };
-}
+};

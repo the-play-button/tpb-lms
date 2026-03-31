@@ -16,7 +16,7 @@ import { verifyAPIKey } from './verifyAPIKey.js';
 import { getOrCreateContact } from './getOrCreateContact.js';
 import { resolveRole } from './resolveRole.js';
 
-export async function authenticateRequest(request, env) {
+export const authenticateRequest = async (request, env) => {
     const authConfig = getAuthConfig(env);
 
     // Try JWT first (browser users + CF Service Tokens)
@@ -127,4 +127,4 @@ export async function authenticateRequest(request, env) {
             hint: 'Use JWT for browser access, API Key for programmatic access.'
         }, 401, request)
     };
-}
+};

@@ -2,7 +2,7 @@
  * Get user's current streak (days of consecutive activity)
  */
 
-export async function getCurrentStreak(db, userId) {
+export const getCurrentStreak = async (db, userId) => {
     // Get all activity dates
     const activities = await db.prepare(`
         SELECT DISTINCT date(created_at) as activity_date
@@ -42,4 +42,4 @@ export async function getCurrentStreak(db, userId) {
     }
 
     return streak;
-}
+};

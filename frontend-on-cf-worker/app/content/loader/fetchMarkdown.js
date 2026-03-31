@@ -16,7 +16,7 @@ import { resolveRelativeUrls } from './resolveRelativeUrls.js';
  * @param {boolean} options.useI18n - Use i18n fallback (default: true)
  * @returns {Promise<string>} - Markdown content with resolved URLs
  */
-export async function fetchMarkdown(url, options = {}) {
+export const fetchMarkdown = async (url, options = {}) => {
     const {
         resolveImages = true,
         stripYamlFrontmatter = true,
@@ -51,4 +51,4 @@ export async function fetchMarkdown(url, options = {}) {
     }
 
     return markdown;
-}
+};

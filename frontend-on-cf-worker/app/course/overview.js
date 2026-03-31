@@ -19,7 +19,7 @@ import { loadCourse } from './loader.js';
  * @param {Object} course - Course data
  * @param {Object} enrollmentStatus - Enrollment status
  */
-export async function renderCourseOverview(course, enrollmentStatus = null) {
+export const renderCourseOverview = async (course, enrollmentStatus = null) => {
     const viewer = document.getElementById('somViewer');
     if (!viewer) return;
     
@@ -120,7 +120,7 @@ export async function renderCourseOverview(course, enrollmentStatus = null) {
             </div>
         `;
     }
-}
+};
 
 /**
  * Render appropriate enrollment button
@@ -207,7 +207,7 @@ function setupOverviewHandlers(courseId) {
  * Show course overview for a course
  * @param {string} courseId - Course ID
  */
-export async function showCourseOverview(courseId) {
+export const showCourseOverview = async courseId => {
     try {
         // Fetch course and enrollment status in parallel
         const [course, enrollmentStatus] = await Promise.all([
@@ -228,4 +228,4 @@ export async function showCourseOverview(courseId) {
             `;
         }
     }
-}
+};

@@ -7,13 +7,11 @@ import { sharedWithMeExecute, type SharedWithMeEntry } from './sharedWithMeExecu
 /**
  * Handle orchestrator: Assert -> Execute
  */
-export async function sharedWithMeHandle(
-  ctx: HandlerContext
-): Promise<Result<string, SharedWithMeEntry[]>> {
+export const sharedWithMeHandle = async (ctx: HandlerContext): Promise<Result<string, SharedWithMeEntry[]>> => {
   // 0. Assert
   const assertResult = sharedWithMeAssert(ctx.userEmail);
   if (!assertResult.ok) return fail(assertResult.error);
 
   // 1. Execute
   return sharedWithMeExecute(assertResult.value, ctx);
-}
+};

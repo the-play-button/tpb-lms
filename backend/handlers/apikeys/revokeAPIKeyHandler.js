@@ -6,7 +6,7 @@
 
 import { jsonResponse } from '../../cors.js';
 
-export async function revokeAPIKeyHandler(request, env, auth, keyId) {
+export const revokeAPIKeyHandler = async (request, env, auth, keyId) => {
     try {
         const userId = auth.contact?.id;
 
@@ -32,4 +32,4 @@ export async function revokeAPIKeyHandler(request, env, auth, keyId) {
         console.error('Revoke API key error:', error);
         return jsonResponse({ error: 'Failed to revoke API key' }, 500, request);
     }
-}
+};

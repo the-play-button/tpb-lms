@@ -21,7 +21,7 @@ export { log };
 /**
  * Get auth token from frontend Worker (same pattern as api.js)
  */
-export async function getAuthToken() {
+export const getAuthToken = async () => {
     if (authToken) return authToken;
 
     const response = await fetch('/__auth/token');
@@ -30,38 +30,38 @@ export async function getAuthToken() {
     const data = await response.json();
     authToken = data.token;
     return authToken;
-}
+};
 
 /**
  * Check if URL is a GitHub URL (needs proxy for private repos)
  */
-export function isGitHubUrl(url) {
+export const isGitHubUrl = url => {
     return url.includes('github.com') || url.includes('raw.githubusercontent.com');
-}
+};
 
 /**
  * Build proxy URL for GitHub content
  */
-export function buildProxyUrl(originalUrl) {
+export const buildProxyUrl = originalUrl => {
     const encodedUrl = encodeURIComponent(originalUrl);
     return `${API_BASE}/content/github?url=${encodedUrl}`;
-}
+};
 
 /**
  * Strip YAML frontmatter from markdown content
  */
-export function stripFrontmatter(markdown) {
+export const stripFrontmatter = markdown => {
     const match = markdown.match(/^---\n[\s\S]*?\n---\n?/);
     if (match) {
         return markdown.slice(match[0].length);
     }
     return markdown;
-}
+};
 
 /**
  * Clean up markdown content for LMS display
  */
-export function cleanMarkdownForLms(markdown) {
+export const cleanMarkdownForLms = markdown => {
     let cleaned = markdown;
 
     // Remove "## Video" section with cloudflare URL (video rendered separately)
@@ -84,12 +84,12 @@ export function cleanMarkdownForLms(markdown) {
     cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
 
     return cleaned.trim();
-}
+};
 
 /**
  * Build localized URL for i18n content.
  */
-export function buildLocalizedUrl(originalUrl, lang) {
+export const buildLocalizedUrl = (originalUrl, lang) => {
     if (!originalUrl.includes('/STEPS/') && !originalUrl.includes('/outputs/SOM_')) {
         return originalUrl;
     }
@@ -104,12 +104,12 @@ export function buildLocalizedUrl(originalUrl, lang) {
     }
 
     return originalUrl;
-}
+};
 
 /**
  * Fetch content directly (no i18n fallback).
  */
-export async function fetchContentDirect(url) {
+export const fetchContentDirect = async url => {
     const fetchUrl = isGitHubUrl(url) ? buildProxyUrl(url) : url;
 
     const headers = {
@@ -128,13 +128,13 @@ export async function fetchContentDirect(url) {
     }
 
     return await response.text();
-}
+};
 
 /**
  * Try to fetch content with i18n fallback.
  * Order: current lang -> en -> original URL
  */
-export async function fetchContentWithI18nFallback(url) {
+export const fetchContentWithI18nFallback = async url => {
     const currentLang = window.i18n?.getLanguage?.() || 'fr';
 
     // Try current language first
@@ -160,7 +160,7 @@ export async function fetchContentWithI18nFallback(url) {
     // Fallback to original URL (source content)
     const content = await fetchContentDirect(url);
     return { content, lang: 'source', url };
-}
+};
 
 // ============================================
 // BYOC Cloud Content Helpers
@@ -169,30 +169,30 @@ export async function fetchContentWithI18nFallback(url) {
 /**
  * Check if media references cloud content (BYOC)
  */
-export function isCloudRef(media) {
+export const isCloudRef = media => {
     return media?.source === 'cloud' && media?.content_ref_id;
-}
+};
 
 /**
  * Build API URL for cloud content
  */
-export function buildCloudContentUrl(contentRefId, lang) {
+export const buildCloudContentUrl = (contentRefId, lang) => {
     let url = `${API_BASE}/content/cloud?ref_id=${contentRefId}`;
     if (lang) url += `&lang=${lang}`;
     return url;
-}
+};
 
 /**
  * Build API URL for cloud pitch file
  */
-export function buildCloudPitchUrl(contentRefId) {
+export const buildCloudPitchUrl = contentRefId => {
     return `${API_BASE}/content/cloud/pitch?ref_id=${contentRefId}`;
-}
+};
 
 /**
  * Fetch cloud content directly (no i18n fallback).
  */
-export async function fetchCloudContentDirect(contentRefId, lang) {
+export const fetchCloudContentDirect = async (contentRefId, lang) => {
     const fetchUrl = buildCloudContentUrl(contentRefId, lang);
 
     const token = await getAuthToken();
@@ -208,13 +208,13 @@ export async function fetchCloudContentDirect(contentRefId, lang) {
     }
 
     return await response.text();
-}
+};
 
 /**
  * Fetch cloud content with i18n fallback.
  * Order: current lang -> en -> source
  */
-export async function fetchCloudContentWithI18nFallback(contentRefId) {
+export const fetchCloudContentWithI18nFallback = async contentRefId => {
     const currentLang = window.i18n?.getLanguage?.() || 'fr';
 
     // Try current language first
@@ -238,12 +238,12 @@ export async function fetchCloudContentWithI18nFallback(contentRefId) {
     // Fallback to source (no lang param)
     const content = await fetchCloudContentDirect(contentRefId);
     return { content, lang: 'source' };
-}
+};
 
 /**
  * Resolve a relative path against a base URL
  */
-export function resolvePath(baseDir, path) {
+export const resolvePath = (baseDir, path) => {
     // Remove leading ./
     if (path.startsWith('./')) {
         path = path.substring(2);
@@ -268,4 +268,4 @@ export function resolvePath(baseDir, path) {
     }
 
     return '/' + parts.join('/');
-}
+};

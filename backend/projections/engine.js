@@ -30,7 +30,7 @@ const PROJECTIONS = [
  * @param {Object} event - { id, type, user_id, course_id, class_id, payload_json }
  * @returns {Object} - { video_completed, quiz_passed }
  */
-export async function applyProjections(db, event) {
+export const applyProjections = async (db, event) => {
     let result = {};
     
     for (const projection of PROJECTIONS) {
@@ -61,7 +61,7 @@ export async function applyProjections(db, event) {
     }
     
     return result;
-}
+};
 
 /**
  * Get current state from v_user_progress
@@ -115,9 +115,9 @@ async function upsertState(db, key, courseId, state) {
 /**
  * Get progress for a user/class
  */
-export async function getProgress(db, userId, classId) {
+export const getProgress = async (db, userId, classId) => {
     return await db.prepare(`
         SELECT * FROM v_user_progress 
         WHERE user_id = ? AND class_id = ?
     `).bind(userId, classId).first();
-}
+};

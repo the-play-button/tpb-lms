@@ -14,9 +14,7 @@ export interface Enrollment {
 /**
  * A learner must be actively enrolled in the class to access its content.
  */
-export function enrolledLearnerPolicy(
-  enrollment: Enrollment | null,
-): Result<string, 'allowed'> {
+export const enrolledLearnerPolicy = (enrollment: Enrollment | null): Result<string, 'allowed'> => {
   if (!enrollment) {
     return fail('Learner is not enrolled');
   }
@@ -24,17 +22,14 @@ export function enrolledLearnerPolicy(
     return fail('Learner enrollment is not active');
   }
   return succeed('allowed' as const);
-}
+};
 
 /**
  * The owner of a content ref always has access.
  */
-export function ownerAccessPolicy(
-  contentRef: DraftContentRef | SharedContentRef,
-  userEmail: Email,
-): Result<string, 'allowed'> {
+export const ownerAccessPolicy = (contentRef: DraftContentRef | SharedContentRef, userEmail: Email): Result<string, 'allowed'> => {
   if (!contentRef.ownerEmail.equals(userEmail)) {
     return fail('User is not the owner of this content');
   }
   return succeed('allowed' as const);
-}
+};

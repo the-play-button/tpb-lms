@@ -2,7 +2,7 @@
  * Record a quiz event in crm_event
  */
 
-export async function recordQuizEvent(db, userId, quizId, courseId, classId, score, maxScore, passed, answers) {
+export const recordQuizEvent = async (db, userId, quizId, courseId, classId, score, maxScore, passed, answers) => {
     const now = new Date().toISOString();
     const id = `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -27,4 +27,4 @@ export async function recordQuizEvent(db, userId, quizId, courseId, classId, sco
     ).run();
 
     return id;
-}
+};

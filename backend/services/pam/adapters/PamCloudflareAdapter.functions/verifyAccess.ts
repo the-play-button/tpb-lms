@@ -7,13 +7,13 @@ import { pamFetch } from './pamFetch.js';
  * Returns { allowed: false } on HTTP errors rather than throwing,
  * since access denial is a normal control flow outcome.
  */
-export async function verifyAccess(
+export const verifyAccess = async (
   bastionUrl: string,
   getToken: () => string,
   connectionId: string,
   fileId: string,
   guestEmail: string
-): Promise<PamVerifyResult> {
+): Promise<PamVerifyResult> => {
   const response = await pamFetch(bastionUrl, getToken, 'storage', 'file', 'verify', {
     connectionId,
     entityId: fileId,
@@ -25,4 +25,4 @@ export async function verifyAccess(
   }
 
   return await response.json() as { success?: boolean; allowed: boolean; owner?: { email: string } };
-}
+};

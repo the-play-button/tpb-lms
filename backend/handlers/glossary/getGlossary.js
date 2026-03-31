@@ -6,7 +6,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 
-export async function getGlossary(request, env, ctx) {
+export const getGlossary = async (request, env, ctx) => {
     const url = new URL(request.url);
     const pathParts = url.pathname.split('/');
     const orgId = pathParts[2];
@@ -48,4 +48,4 @@ export async function getGlossary(request, env, ctx) {
         console.error('Error fetching glossary:', error);
         return errorResponse('Failed to fetch glossary', 500);
     }
-}
+};

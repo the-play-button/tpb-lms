@@ -5,7 +5,7 @@
 
 import { awardBadge } from './_shared.js';
 
-export async function checkCourseCompletionBadges(db, userId, courseId) {
+export const checkCourseCompletionBadges = async (db, userId, courseId) => {
     const badges = [];
 
     // Award "course_complete" badge for completing any course
@@ -27,4 +27,4 @@ export async function checkCourseCompletionBadges(db, userId, courseId) {
     }
 
     return badges;
-}
+};

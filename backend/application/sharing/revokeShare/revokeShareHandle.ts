@@ -12,10 +12,7 @@ type RevokeShareError = 'NOT_FOUND' | 'FORBIDDEN' | string;
  * Handle orchestrator: Assert -> HydrateContext -> CheckPolicies -> Execute
  * shareId comes from the URL path param (no body parsing needed for DELETE).
  */
-export async function revokeShareHandle(
-  shareId: string,
-  ctx: HandlerContext
-): Promise<Result<RevokeShareError, RevokeShareOutput>> {
+export const revokeShareHandle = async (shareId: string, ctx: HandlerContext): Promise<Result<RevokeShareError, RevokeShareOutput>> => {
   // 0. Assert
   const assertResult = revokeShareAssert(shareId);
   if (!assertResult.ok) return fail(assertResult.error);
@@ -33,4 +30,4 @@ export async function revokeShareHandle(
   if (!executeResult.ok) return fail(executeResult.error);
 
   return { ok: true, value: executeResult.value };
-}
+};

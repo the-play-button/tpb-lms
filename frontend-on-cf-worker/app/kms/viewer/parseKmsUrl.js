@@ -7,7 +7,7 @@
  * @param {string} url - URL like /kms/pa06-references/ref-som-template
  * @returns {{spaceId: string, pageId: string} | null}
  */
-export function parseKmsUrl(url) {
+export const parseKmsUrl = url => {
     const match = url.match(/^\/kms\/([^/]+)\/([^/]+)$/);
     if (match) {
         return { spaceId: match[1], pageId: match[2] };
@@ -20,4 +20,4 @@ export function parseKmsUrl(url) {
     }
 
     return null;
-}
+};

@@ -9,7 +9,7 @@ import { getState } from '../state.js';
 /**
  * Render module end screen
  */
-export function renderModuleEndScreen() {
+export const renderModuleEndScreen = () => {
     const signals = getState('signals');
     const course = getState('courseData');
     const viewer = document.getElementById('somViewer');
@@ -52,5 +52,5 @@ export function renderModuleEndScreen() {
             </div>
         </div>
     `;
-}
+};
 

@@ -20,19 +20,19 @@ export { jsonResponse, recordQuizEvent, checkQuizBadges, checkStreakBadges, appl
 /**
  * Get pass threshold from quiz class media_json
  */
-export function getPassThreshold(quizClass) {
+export const getPassThreshold = quizClass => {
     if (!quizClass?.media_json) {
         return 80;
     }
     const media = JSON.parse(quizClass.media_json);
     const quizMedia = media.find(m => m.type === 'QUIZ' || m.type === 'WEB');
     return quizMedia?.pass_threshold || 80;
-}
+};
 
 /**
  * Build list of wrong answers for corrections modal
  */
-export function buildWrongAnswersList(answers, correctAnswers) {
+export const buildWrongAnswersList = (answers, correctAnswers) => {
     const wrong = [];
     if (!Array.isArray(answers)) return null;
 
@@ -50,12 +50,12 @@ export function buildWrongAnswersList(answers, correctAnswers) {
         }
     }
     return wrong.length > 0 ? wrong : null;
-}
+};
 
 /**
  * Extract user/course/answers from Tally fields
  */
-export function extractFieldsFromPayload(fields) {
+export const extractFieldsFromPayload = fields => {
     let userId = null;
     let courseId = null;
     const answers = {};
@@ -74,12 +74,12 @@ export function extractFieldsFromPayload(fields) {
         }
     }
     return { userId, courseId, answers };
-}
+};
 
 /**
  * Calculate quiz score from answers and config
  */
-export function calculateScore(answers, quizClass) {
+export const calculateScore = (answers, quizClass) => {
     if (!quizClass) {
         throw new Error('calculateScore: quizClass is null — quiz lookup failed');
     }
@@ -120,15 +120,15 @@ export function calculateScore(answers, quizClass) {
     }
 
     return { score, maxScore };
-}
+};
 
 /**
  * Store quiz event in lms_event and run projections
  */
-export async function storeQuizEvent(
+export const storeQuizEvent = async (
     env,
     { userId, quizId, courseId, classId, score, maxScore, percentage, passed } = {}
-) {
+) => {
     const eventId = generateEventId();
     const now = new Date().toISOString();
     const payload = { quiz_id: quizId, score, max_score: maxScore, percentage, passed };
@@ -147,21 +147,21 @@ export async function storeQuizEvent(
 
     log.info('Projection applied for quiz');
     return eventId;
-}
+};
 
 /**
  * Handle badges for passed quiz
  */
-export async function handleQuizBadges(db, userId, isPerfect) {
+export const handleQuizBadges = async (db, userId, isPerfect) => {
     let badge = await checkQuizBadges(db, userId, isPerfect);
     if (!badge) badge = await checkStreakBadges(db, userId);
     return badge;
-}
+};
 
 /**
  * Process quiz submission (main logic)
  */
-export async function processQuizSubmission(data, env, request, quizClass = null) {
+export const processQuizSubmission = async (data, env, request, quizClass = null) => {
     const { userId, quizId, courseId, classId, score, maxScore, answers } = data;
 
     if (!userId || !quizId || score === undefined || !maxScore) {
@@ -238,4 +238,4 @@ export async function processQuizSubmission(data, env, request, quizClass = null
         wrongAnswers,
         signalsGenerated: true
     }, 200, request);
-}
+};

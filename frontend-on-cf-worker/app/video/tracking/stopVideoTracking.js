@@ -4,7 +4,7 @@
 
 import { trackingState, log } from './_shared.js';
 
-export function stopVideoTracking() {
+export const stopVideoTracking = () => {
     if (trackingState.streamPlayer) {
         log.debug('Stopping video tracking');
         trackingState.streamPlayer = null;
@@ -16,4 +16,4 @@ export function stopVideoTracking() {
         clearInterval(trackingState.videoTrackingInterval);
         trackingState.videoTrackingInterval = null;
     }
-}
+};

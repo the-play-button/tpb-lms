@@ -9,10 +9,7 @@ import type { ShareContentContext } from './shareContentHydrateContext.js';
  * - Only the content owner can share
  * - Maximum shares limit
  */
-export function shareContentCheckPolicies(
-  context: ShareContentContext,
-  userEmail: string
-): Result<string, 'allowed'> {
+export const shareContentCheckPolicies = (context: ShareContentContext, userEmail: string): Result<string, 'allowed'> => {
   const emailResult = Email.create(userEmail);
   if (!emailResult.ok) return fail(emailResult.error);
 
@@ -23,4 +20,4 @@ export function shareContentCheckPolicies(
   if (!maxCheck.ok) return fail(maxCheck.error);
 
   return succeed('allowed' as const);
-}
+};

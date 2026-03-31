@@ -23,15 +23,12 @@ import { log } from './log.js';
 // Singleton vault client
 let vaultClient = null;
 
-/**
- * Get or create VaultClient singleton
- */
-function getVaultClient(env) {
+const getVaultClient = env => {
   if (!vaultClient && env.BASTION_URL && env.VAULT_TOKEN) {
     vaultClient = new VaultClient(env.BASTION_URL, env);
   }
   return vaultClient;
-}
+};
 
 /**
  * Get a secret value with vault fallback to env.
@@ -41,7 +38,7 @@ function getVaultClient(env) {
  * @param {string} envKey - Legacy env key (e.g., "TALLY_WEBHOOK_SECRET") entropy-legacy-marker-ok: documented technical debt
  * @returns {Promise<string|null>} - Secret value
  */
-export async function getSecret(env, vaultPath, envKey) {
+export const getSecret = async (env, vaultPath, envKey) => {
   // Try vault first
   const vault = getVaultClient(env);
   if (vault) {
@@ -57,7 +54,7 @@ export async function getSecret(env, vaultPath, envKey) {
   
   // Fall back to env
   return env[envKey] || null;
-}
+};
 
 /**
  * Secret path mappings (vault path -> env key)
@@ -76,7 +73,7 @@ export const SECRET_MAPPINGS = {
  * @param {object} env - Worker env
  * @returns {Promise<object>} - Map of env keys to values
  */
-export async function prefetchSecrets(env) {
+export const prefetchSecrets = async env => {
   const secrets = {};
   
   for (const [vaultPath, envKey] of Object.entries(SECRET_MAPPINGS)) {
@@ -84,6 +81,6 @@ export async function prefetchSecrets(env) {
   }
   
   return secrets;
-}
+};
 
 

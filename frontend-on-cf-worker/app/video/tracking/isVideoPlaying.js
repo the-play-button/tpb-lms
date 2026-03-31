@@ -4,6 +4,6 @@
 
 import { trackingState } from './_shared.js';
 
-export function isVideoPlaying() {
+export const isVideoPlaying = () => {
     return trackingState.isPlaying;
-}
+};

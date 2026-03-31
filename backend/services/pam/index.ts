@@ -20,6 +20,6 @@ import { PamCloudflareAdapter } from './adapters/PamCloudflareAdapter.js';
  *
  * @param config - Configuration with fetcher and token provider
  */
-export function createPamClient(config: PamConfig): PamPort {
+export const createPamClient = (config: PamConfig): PamPort => {
   return new PamCloudflareAdapter(config);
-}
+};

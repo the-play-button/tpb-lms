@@ -10,7 +10,7 @@ import { RESUME_THRESHOLD } from './_shared.js';
  * @param {string} classId - The class ID to get position for
  * @returns {number|null} - Position in seconds, or null if none
  */
-export function getResumePosition(classId) {
+export const getResumePosition = classId => {
     const signals = getState('signals');
     const videoPositions = signals?.video_positions || {};
     const positionData = videoPositions[classId];
@@ -19,4 +19,4 @@ export function getResumePosition(classId) {
         return positionData.position;
     }
     return null;
-}
+};

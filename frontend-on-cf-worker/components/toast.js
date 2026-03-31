@@ -12,13 +12,12 @@
 
 (function() {
     'use strict';
-    
     // Create toast container on load
     let container = null;
     const MAX_VISIBLE_TOASTS = 2;
     const toastQueue = [];
-    
-    function ensureContainer() {
+
+    const ensureContainer = () => {
         if (!container) {
             container = document.createElement('div');
             container.id = 'toast-container';
@@ -26,15 +25,9 @@
             document.body.appendChild(container);
         }
         return container;
-    }
-    
-    /**
-     * Show a toast notification
-     * @param {string} message - The message to display
-     * @param {string} type - Toast type: 'success', 'achievement', 'points', 'info', 'error'
-     * @param {number} duration - Duration in ms (default: 3000)
-     */
-    function showToast(message, type = 'info', duration = 3000) {
+    };
+
+    const showToast = (message, type = 'info', duration = 3000) => {
         const container = ensureContainer();
         
         // Limiter les toasts visibles
@@ -86,17 +79,16 @@
         }, duration);
         
         return toast;
-    }
-    
+    };
+
     function processQueue() {
         if (toastQueue.length > 0) {
             const next = toastQueue.shift();
             showToast(next.message, next.type, next.duration);
         }
     }
-    
+
     // Expose globally
     window.showToast = showToast; // entropy-global-pollution-ok: intentional global for HTML onclick
-    
 })();
 

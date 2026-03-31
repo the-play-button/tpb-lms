@@ -10,7 +10,7 @@ import { stopVideoTracking } from './stopVideoTracking.js';
  * @param {number} stepIndex - The step index
  * @param {number} resumePosition - Optional position to resume from (GAP-102)
  */
-export function setupVideoTracking(stepIndex, resumePosition = null) {
+export const setupVideoTracking = (stepIndex, resumePosition = null) => {
     // Stop any existing tracking
     stopVideoTracking();
 
@@ -100,4 +100,4 @@ export function setupVideoTracking(stepIndex, resumePosition = null) {
     } catch (error) {
         log.error('Failed to initialize Stream SDK:', error);
     }
-}
+};

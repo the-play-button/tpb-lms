@@ -13,7 +13,7 @@ import { getState } from '../state.js';
  * @param {Object} options - Render options
  * @param {boolean} options.showSections - Group steps by section (default: true)
  */
-export function renderStepsSidebar(options = {}) {
+export const renderStepsSidebar = (options = {}) => {
     const { showSections = true } = options;
     
     const course = getState('courseData');
@@ -80,7 +80,7 @@ export function renderStepsSidebar(options = {}) {
     html += `</nav>`;
     
     sidebar.innerHTML = html;
-}
+};
 
 /**
  * Group steps by section
@@ -136,7 +136,7 @@ function getStepTooltip(status) {
 /**
  * Update sidebar to reflect current step
  */
-export function updateSidebarCurrentStep() {
+export const updateSidebarCurrentStep = () => {
     const currentStepIndex = getState('currentStepIndex');
     
     // Remove current class from all items
@@ -153,13 +153,13 @@ export function updateSidebarCurrentStep() {
         currentItem.classList.add('current');
         currentItem.querySelector('.step-status').textContent = '▶';
     }
-}
+};
 
 /**
  * Mark a step as completed in the sidebar
  * @param {number} stepIndex - Step index to mark complete
  */
-export function markStepComplete(stepIndex) {
+export const markStepComplete = stepIndex => {
     const stepItem = document.querySelector(`.step-item[data-step="${stepIndex}"]`);
     if (stepItem) {
         stepItem.classList.remove('current', 'pending');
@@ -180,22 +180,22 @@ export function markStepComplete(stepIndex) {
             progressText.textContent = `${completedCount}/${course.classes.length}`;
         }
     }
-}
+};
 
 /**
  * Toggle sidebar visibility (for mobile)
  */
-export function toggleSidebar() {
+export const toggleSidebar = () => {
     const sidebar = document.getElementById('stepsSidebar');
     if (sidebar) {
         sidebar.classList.toggle('collapsed');
     }
-}
+};
 
 /**
  * Create sidebar container if it doesn't exist
  */
-export function ensureSidebarContainer() {
+export const ensureSidebarContainer = () => {
     if (document.getElementById('stepsSidebar')) return;
     
     const container = document.createElement('aside');
@@ -207,4 +207,4 @@ export function ensureSidebarContainer() {
     if (main && main.parentNode) {
         main.parentNode.insertBefore(container, main);
     }
-}
+};

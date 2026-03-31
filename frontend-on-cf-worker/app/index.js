@@ -48,10 +48,7 @@ import { initAdminDashboard } from './admin/dashboard.js';
 // KMS
 import { initKmsLinks } from './kms/viewer/index.js';
 
-/**
- * Initialize application
- */
-async function init() {
+const init = async () => {
     // Initialize debug collector FIRST (before any API calls)
     initDebugCollector();
     initDebugFab();
@@ -141,7 +138,7 @@ async function init() {
         log.error('Failed to initialize:', error);
         showError(error.message);
     }
-}
+};
 
 /**
  * Initialize language selector in header
@@ -158,11 +155,7 @@ function initLangSelectorInHeader() {
     initLangSelector();
 }
 
-/**
- * Initialize mobile bottom tab bar navigation
- * Uses dedicated mobile views (not sidebar) for cleaner separation
- */
-function initMobileTabs() {
+const initMobileTabs = () => {
     const mobileTabs = document.getElementById('mobileTabs');
     const content = document.querySelector('.lms-content');
     const parcoursView = document.getElementById('mobileParcoursView');
@@ -210,7 +203,7 @@ function initMobileTabs() {
                 break;
         }
     });
-}
+};
 
 /**
  * Populate mobile course list from state

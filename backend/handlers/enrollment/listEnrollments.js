@@ -6,7 +6,7 @@
 
 import { jsonResponse, MAX_ACTIVE_ENROLLMENTS, getUserId } from './_shared.js';
 
-export async function listEnrollments(request, env, userContext) {
+export const listEnrollments = async (request, env, userContext) => {
     const userId = getUserId(userContext);
 
     if (!userId) {
@@ -65,4 +65,4 @@ export async function listEnrollments(request, env, userContext) {
             can_enroll: activeCount < MAX_ACTIVE_ENROLLMENTS,
         }
     }, 200, request);
-}
+};

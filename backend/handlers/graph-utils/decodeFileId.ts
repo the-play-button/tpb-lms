@@ -4,7 +4,7 @@
 
 import { ValidationError } from '../../types/errors.js';
 
-export function decodeFileId(fileId: string): { driveId: string; itemId: string } {
+export const decodeFileId = (fileId: string): { driveId: string; itemId: string } => {
   try {
     const decoded = atob(fileId);
     const parsed = JSON.parse(decoded);
@@ -20,4 +20,4 @@ export function decodeFileId(fileId: string): { driveId: string; itemId: string 
     }
     throw new ValidationError(`Cannot decode fileId: ${fileId}`, { fileId: 'invalid format' });
   }
-}
+};

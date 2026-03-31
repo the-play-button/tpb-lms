@@ -15,7 +15,7 @@ const CF_ACCESS_LOGOUT_URL = 'https://theplaybutton.cloudflareaccess.com/cdn-cgi
  * @param {Object} user - User object with email
  * @param {Object} profile - User profile with role info
  */
-export function initUserMenu(user, profile) {
+export const initUserMenu = (user, profile) => {
     const container = document.getElementById('userMenu');
     if (!container) {
         log.warn('User menu container not found');
@@ -43,7 +43,7 @@ export function initUserMenu(user, profile) {
             </button>
         </div>
     `;
-}
+};
 
 /**
  * Get display text for role

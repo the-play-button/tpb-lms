@@ -7,7 +7,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 
-export async function upsertTranslation(request, env, ctx) {
+export const upsertTranslation = async (request, env, ctx) => {
     const url = new URL(request.url);
     const pathParts = url.pathname.split('/');
     const contentType = pathParts[2];
@@ -57,4 +57,4 @@ export async function upsertTranslation(request, env, ctx) {
         console.error('Error upserting translation:', error);
         return errorResponse('Failed to save translation', 500);
     }
-}
+};

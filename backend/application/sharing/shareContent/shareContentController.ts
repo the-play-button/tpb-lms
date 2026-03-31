@@ -1,11 +1,7 @@
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { shareContentHandle } from './shareContentHandle.js';
 
-export async function shareContentController(
-  request: Request,
-  ctx: HandlerContext,
-  refId: string
-): Promise<Response> {
+export const shareContentController = async (request: Request, ctx: HandlerContext, refId: string): Promise<Response> => {
   try {
     const result = await shareContentHandle(request, ctx, refId);
     if (!result.ok) {
@@ -28,4 +24,4 @@ export async function shareContentController(
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
+};

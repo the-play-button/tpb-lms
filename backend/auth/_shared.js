@@ -17,7 +17,7 @@ export let oidcJwksCacheTime = 0;
 /**
  * Fetch and cache JWKS from Cloudflare Access
  */
-export async function getJWKS(teamDomain) {
+export const getJWKS = async teamDomain => {
     const now = Date.now();
 
     if (jwksCache && (now - jwksCacheTime) < JWKS_CACHE_TTL) {
@@ -35,12 +35,12 @@ export async function getJWKS(teamDomain) {
     jwksCacheTime = now;
 
     return jwksCache;
-}
+};
 
 /**
  * Fetch and cache JWKS from an OIDC provider (Logto)
  */
-export async function getOidcJWKS(issuer, jwksUri) {
+export const getOidcJWKS = async (issuer, jwksUri) => {
     const now = Date.now();
     if (oidcJwksCache && (now - oidcJwksCacheTime) < JWKS_CACHE_TTL) {
         return oidcJwksCache;
@@ -55,12 +55,12 @@ export async function getOidcJWKS(issuer, jwksUri) {
     oidcJwksCache = await response.json();
     oidcJwksCacheTime = now;
     return oidcJwksCache;
-}
+};
 
 /**
  * Decode base64url to Uint8Array
  */
-export function base64urlDecode(str) {
+export const base64urlDecode = str => {
     str = str.replace(/-/g, '+').replace(/_/g, '/');
     while (str.length % 4) str += '=';
     const binary = atob(str);
@@ -69,12 +69,12 @@ export function base64urlDecode(str) {
         bytes[i] = binary.charCodeAt(i);
     }
     return bytes;
-}
+};
 
 /**
  * Import RSA public key from JWK
  */
-export async function importPublicKey(jwk) {
+export const importPublicKey = async jwk => {
     return await crypto.subtle.importKey(
         'jwk',
         { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: 'RS256', use: 'sig' },
@@ -82,15 +82,15 @@ export async function importPublicKey(jwk) {
         false,
         ['verify']
     );
-}
+};
 
 /**
  * Compute SHA256 hash of a string
  */
-export async function sha256(str) {
+export const sha256 = async str => {
     const encoder = new TextEncoder();
     const data = encoder.encode(str);
     const hashBuffer = await crypto.subtle.digest('SHA-256', data);
     const hashArray = Array.from(new Uint8Array(hashBuffer));
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-}
+};

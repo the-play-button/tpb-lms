@@ -9,11 +9,11 @@ import type { GetCloudContentContext } from './getCloudContentHydrateContext.js'
  * applies to metadata only. We ensure no connection details leak
  * through the response object.
  */
-export function getCloudContentFilter(
+export const getCloudContentFilter = (
   output: GetCloudContentOutput,
   context: GetCloudContentContext,
   viewerEmail: string
-): GetCloudContentOutput {
+): GetCloudContentOutput => {
   // Content itself is always returned; FLS strips metadata fields
   const filtered = filterFields(
     output as unknown as Record<string, unknown>,
@@ -25,4 +25,4 @@ export function getCloudContentFilter(
     contentType: output.contentType,
     lang: (filtered as Record<string, unknown>).lang as string | undefined,
   };
-}
+};

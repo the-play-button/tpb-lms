@@ -33,7 +33,7 @@ export interface StoragePermission {
   is_public: boolean;
 }
 
-export function mapGraphPermission(perm: GraphPermission): StoragePermission {
+export const mapGraphPermission = (perm: GraphPermission): StoragePermission => {
   const email =
     perm.grantedToV2?.user?.email ||
     perm.grantedTo?.user?.email ||
@@ -70,4 +70,4 @@ export function mapGraphPermission(perm: GraphPermission): StoragePermission {
     type,
     is_public: perm.link?.scope === 'anonymous',
   };
-}
+};

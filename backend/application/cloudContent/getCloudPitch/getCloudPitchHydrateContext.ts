@@ -16,10 +16,7 @@ export interface GetCloudPitchContext {
  *
  * See getCloudContentHydrateContext for i18n fallback notes.
  */
-export async function getCloudPitchHydrateContext(
-  input: GetCloudPitchInput,
-  ctx: HandlerContext
-): Promise<Result<'NOT_FOUND', GetCloudPitchContext>> {
+export const getCloudPitchHydrateContext = async (input: GetCloudPitchInput, ctx: HandlerContext): Promise<Result<'NOT_FOUND', GetCloudPitchContext>> => {
   const refId = ContentRefId.reconstitute(input.ref_id);
 
   // TODO: i18n fallback - same strategy as getCloudContent
@@ -40,4 +37,4 @@ export async function getCloudPitchHydrateContext(
   }
 
   return succeed({ contentRef, isOwner, isEnrolled });
-}
+};

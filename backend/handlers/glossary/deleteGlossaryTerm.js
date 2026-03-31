@@ -6,7 +6,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 
-export async function deleteGlossaryTerm(request, env, ctx) {
+export const deleteGlossaryTerm = async (request, env, ctx) => {
     const url = new URL(request.url);
     const pathParts = url.pathname.split('/');
     const orgId = pathParts[2];
@@ -30,4 +30,4 @@ export async function deleteGlossaryTerm(request, env, ctx) {
         console.error('Error deleting glossary term:', error);
         return errorResponse('Failed to delete glossary term', 500);
     }
-}
+};

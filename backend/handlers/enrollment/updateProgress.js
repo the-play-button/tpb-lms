@@ -6,7 +6,7 @@
 
 import { jsonResponse, getUserId } from './_shared.js';
 
-export async function updateProgress(request, env, userContext, enrollmentId) {
+export const updateProgress = async (request, env, userContext, enrollmentId) => {
     const userId = getUserId(userContext);
 
     if (!userId) {
@@ -57,4 +57,4 @@ export async function updateProgress(request, env, userContext, enrollmentId) {
     `).bind(...params).run();
 
     return jsonResponse({ message: 'Progress updated' }, 200, request);
-}
+};

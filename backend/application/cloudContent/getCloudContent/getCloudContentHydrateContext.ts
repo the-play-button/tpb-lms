@@ -18,10 +18,7 @@ export interface GetCloudContentContext {
  * then fall back to the base ref via findById. The repository only has findById;
  * language routing is the caller's responsibility (planned for a future layer).
  */
-export async function getCloudContentHydrateContext(
-  input: GetCloudContentInput,
-  ctx: HandlerContext
-): Promise<Result<'NOT_FOUND', GetCloudContentContext>> {
+export const getCloudContentHydrateContext = async (input: GetCloudContentInput, ctx: HandlerContext): Promise<Result<'NOT_FOUND', GetCloudContentContext>> => {
   const refId = ContentRefId.reconstitute(input.ref_id);
 
   // TODO: i18n fallback - for now, always use findById.
@@ -45,4 +42,4 @@ export async function getCloudContentHydrateContext(
   }
 
   return succeed({ contentRef, isOwner, isEnrolled });
-}
+};

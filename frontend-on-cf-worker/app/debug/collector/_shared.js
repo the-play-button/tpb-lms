@@ -24,7 +24,7 @@ export { log };
 /**
  * Store an error
  */
-export function storeError(error) {
+export const storeError = error => {
     storage.errors.unshift({
         message: error.message || String(error),
         stack: error.stack || null,
@@ -38,12 +38,12 @@ export function storeError(error) {
     if (storage.errors.length > MAX_ERRORS) {
         storage.errors.pop();
     }
-}
+};
 
 /**
  * Store a breadcrumb
  */
-export function storeBreadcrumb(breadcrumb) {
+export const storeBreadcrumb = breadcrumb => {
     storage.breadcrumbs.unshift({
         type: breadcrumb.type,
         data: breadcrumb.data,
@@ -53,12 +53,12 @@ export function storeBreadcrumb(breadcrumb) {
     if (storage.breadcrumbs.length > MAX_BREADCRUMBS) {
         storage.breadcrumbs.pop();
     }
-}
+};
 
 /**
  * Store a network error with full context
  */
-export function storeNetworkError(error) {
+export const storeNetworkError = error => {
     storage.networkErrors.unshift({
         url: error.url,
         method: error.method || 'GET',
@@ -73,12 +73,12 @@ export function storeNetworkError(error) {
     if (storage.networkErrors.length > MAX_NETWORK_ERRORS) {
         storage.networkErrors.pop();
     }
-}
+};
 
 /**
  * Describe a DOM element for breadcrumbs
  */
-export function describeElement(el) {
+export const describeElement = el => {
     if (!el) return 'unknown';
 
     const tag = el.tagName?.toLowerCase() || 'element';
@@ -90,12 +90,12 @@ export function describeElement(el) {
     const textPreview = text ? ` "${text}${text.length >= 30 ? '...' : ''}"` : '';
 
     return `${tag}${id}${classes}${textPreview}`;
-}
+};
 
 /**
  * Get device fingerprint
  */
-export function getDeviceInfo() {
+export const getDeviceInfo = () => {
     const nav = navigator;
     const screen = window.screen;
 
@@ -115,12 +115,12 @@ export function getDeviceInfo() {
         memory: nav.deviceMemory || null,
         cores: nav.hardwareConcurrency || null
     };
-}
+};
 
 /**
  * Get current app state
  */
-export function getAppState() {
+export const getAppState = () => {
     let appState = {
         url: window.location.href,
         pathname: window.location.pathname,
@@ -138,4 +138,4 @@ export function getAppState() {
     if (step) appState.step = parseInt(step, 10);
 
     return appState;
-}
+};

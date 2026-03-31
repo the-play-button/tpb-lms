@@ -8,7 +8,7 @@ import { formatNumber } from '../utils.js';
 
 let previousXP = null;
 
-export function updateUserStats() {
+export const updateUserStats = () => {
     const profile = getState('profile') || {};
     const courses = getState('courses') || [];
     
@@ -41,7 +41,7 @@ export function updateUserStats() {
         ).length;
         coursesEl.textContent = completedCourses;
     }
-}
+};
 
 function showFloatingXP(amount, anchorEl) {
     const rect = anchorEl.getBoundingClientRect();
@@ -55,7 +55,7 @@ function showFloatingXP(amount, anchorEl) {
     setTimeout(() => float.remove(), 1500);
 }
 
-export function initUserStats() {
+export const initUserStats = () => {
     subscribe('profile', updateUserStats);
     subscribe('courses', updateUserStats);
-}
+};

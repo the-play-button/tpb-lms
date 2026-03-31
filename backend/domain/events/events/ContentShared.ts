@@ -4,13 +4,13 @@ import { createEvent } from '../DomainEvent.js';
 /**
  * Emitted when a content ref is shared with another user.
  */
-export function contentShared(
+export const contentShared = (
   contentRefId: string,
   shareId: string,
   sharedByEmail: string,
   sharedWithEmail: string,
-  role: string,
-): DomainEvent {
+  role: string
+): DomainEvent => {
   return createEvent('content.shared', {
     contentRefId,
     shareId,
@@ -18,4 +18,4 @@ export function contentShared(
     sharedWithEmail,
     role,
   });
-}
+};

@@ -1,11 +1,7 @@
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { listPermissionsHandle } from './listPermissionsHandle.js';
 
-export async function listPermissionsController(
-  request: Request,
-  ctx: HandlerContext,
-  refId: string
-): Promise<Response> {
+export const listPermissionsController = async (request: Request, ctx: HandlerContext, refId: string): Promise<Response> => {
   try {
     const result = await listPermissionsHandle(refId, ctx);
     if (!result.ok) {
@@ -25,4 +21,4 @@ export async function listPermissionsController(
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
+};

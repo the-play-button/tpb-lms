@@ -10,9 +10,9 @@
  * Generate unique event ID
  * Format: evt_{timestamp}_{random}
  */
-export function generateEventId() {
+export const generateEventId = () => {
     return `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
+};
 
 /**
  * Store event in lms_event table
@@ -26,7 +26,7 @@ export function generateEventId() {
  * @param {Object} params.payload - Event payload
  * @returns {Promise<string>} - Generated event ID
  */
-export async function storeEvent(db, { type, userId, courseId, classId, payload } = {}) {
+export const storeEvent = async (db, { type, userId, courseId, classId, payload } = {}) => {
     const eventId = generateEventId();
     const now = new Date().toISOString();
     
@@ -36,5 +36,5 @@ export async function storeEvent(db, { type, userId, courseId, classId, payload 
     `).bind(eventId, type, userId, courseId, classId, now, JSON.stringify(payload)).run();
     
     return eventId;
-}
+};
 

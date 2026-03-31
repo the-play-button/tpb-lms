@@ -5,13 +5,11 @@ import type { ConnectionInfo } from '../../../services/types/ConnectionInfo.js';
 /**
  * Execute step: fetch the user's default storage connection.
  */
-export async function getDefaultConnectionExecute(
-  ctx: HandlerContext
-): Promise<Result<string, ConnectionInfo>> {
+export const getDefaultConnectionExecute = async (ctx: HandlerContext): Promise<Result<string, ConnectionInfo>> => {
   try {
     const connection = await ctx.connectionResolver.getDefaultConnection();
     return succeed(connection);
   } catch (error) {
     return fail((error as Error).message);
   }
-}
+};

@@ -4,7 +4,7 @@
 
 import { sha256 } from './_shared.js';
 
-export async function verifyAPIKey(apiKey, env) {
+export const verifyAPIKey = async (apiKey, env) => {
     if (!apiKey) {
         return { valid: false, error: 'No API key provided' };
     }
@@ -50,4 +50,4 @@ export async function verifyAPIKey(apiKey, env) {
         console.error('API Key verification error:', error);
         return { valid: false, error: error.message };
     }
-}
+};

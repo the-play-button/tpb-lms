@@ -1,12 +1,7 @@
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { revokeShareHandle } from './revokeShareHandle.js';
 
-export async function revokeShareController(
-  request: Request,
-  ctx: HandlerContext,
-  _refId: string,
-  shareId: string
-): Promise<Response> {
+export const revokeShareController = async (request: Request, ctx: HandlerContext, _refId: string, shareId: string): Promise<Response> => {
   try {
     const result = await revokeShareHandle(shareId, ctx);
     if (!result.ok) {
@@ -26,4 +21,4 @@ export async function revokeShareController(
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
+};

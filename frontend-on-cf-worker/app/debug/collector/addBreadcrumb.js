@@ -4,6 +4,6 @@
 
 import { storeBreadcrumb } from './_shared.js';
 
-export function addBreadcrumb(type, data) {
+export const addBreadcrumb = (type, data) => {
     storeBreadcrumb({ type, data });
-}
+};

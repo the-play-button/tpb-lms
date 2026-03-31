@@ -17,10 +17,7 @@ export interface SharedWithMeEntry {
 /**
  * Execute step: fetch all content shared with the current user and apply FLS.
  */
-export async function sharedWithMeExecute(
-  input: SharedWithMeAssertedInput,
-  ctx: HandlerContext
-): Promise<Result<string, SharedWithMeEntry[]>> {
+export const sharedWithMeExecute = async (input: SharedWithMeAssertedInput, ctx: HandlerContext): Promise<Result<string, SharedWithMeEntry[]>> => {
   try {
     const emailResult = Email.create(input.userEmail);
     if (!emailResult.ok) return fail(emailResult.error);
@@ -51,4 +48,4 @@ export async function sharedWithMeExecute(
   } catch (error) {
     return fail((error as Error).message);
   }
-}
+};

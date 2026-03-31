@@ -1,5 +1,4 @@
-#!/usr/bin/env node
-// entropy-console-leak-ok: CLI script uses console for operator output
+#!/usr/bin/env node// entropy-console-leak-ok: CLI script uses console for operator output
 /**
  * Setup LMS IAM in vault-api
  *
@@ -44,7 +43,7 @@ const LMS_GROUPS = [
   }
 ];
 
-async function getAuthHeaders() {
+const getAuthHeaders = async () => {
   const clientId = process.env.VAULT_CLIENT_ID;
   const clientSecret = process.env.VAULT_CLIENT_SECRET;
 
@@ -64,9 +63,9 @@ async function getAuthHeaders() {
     'CF-Access-Client-Secret': clientSecret,
     'Content-Type': 'application/json'
   };
-}
+};
 
-async function request(method, path, body = null) {
+const request = async (method, path, body = null) => {
   const headers = await getAuthHeaders();
   const options = { method, headers };
 
@@ -78,9 +77,9 @@ async function request(method, path, body = null) {
   const data = await resp.json();
 
   return { status: resp.status, data };
-}
+};
 
-async function createRole(role) {
+const createRole = async role => {
   console.log(`  🔧 Creating role: ${role.name}`); // entropy-console-leak-ok: CLI script
 
   const { status, data } = await request('POST', '/iam/roles', {
@@ -101,9 +100,9 @@ async function createRole(role) {
     console.log(`     ❌ Failed: ${status} ${JSON.stringify(data)}`); // entropy-console-leak-ok: CLI script
     return null;
   }
-}
+};
 
-async function createGroup(group, roleIds) {
+const createGroup = async (group, roleIds) => {
   console.log(`  🔧 Creating group: ${group.name}`); // entropy-console-leak-ok: CLI script
 
   const { status, data } = await request('POST', '/iam/groups', {
@@ -152,9 +151,9 @@ async function createGroup(group, roleIds) {
   }
 
   return groupId;
-}
+};
 
-async function main() {
+const main = async () => {
   console.log('🚀 Setting up LMS IAM in vault-api...'); // entropy-console-leak-ok: CLI script
   console.log(`   Target: ${VAULT_API_URL}`); // entropy-console-leak-ok: CLI script
   console.log(''); // entropy-console-leak-ok: CLI script
@@ -190,7 +189,7 @@ async function main() {
   console.log('   1. Add users to groups via vault-api'); // entropy-console-leak-ok: CLI script
   console.log('   2. Or run provision_test_accounts.py for test users'); // entropy-console-leak-ok: CLI script
   console.log('   3. Users will have roles resolved via vault-api'); // entropy-console-leak-ok: CLI script
-}
+};
 
 main().catch(err => {
   console.error('❌ Error:', err.message); // entropy-console-leak-ok: CLI script

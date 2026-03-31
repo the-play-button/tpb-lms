@@ -5,7 +5,7 @@
 /**
  * Award a badge to a user
  */
-export async function awardBadge(db, userId, badgeId, courseId = null, classId = null) {
+export const awardBadge = async (db, userId, badgeId, courseId = null, classId = null) => {
     const now = new Date().toISOString();
     const id = `award_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
@@ -49,4 +49,4 @@ export async function awardBadge(db, userId, badgeId, courseId = null, classId =
         points_reward: badge.points_reward,
         rarity: badge.rarity
     };
-}
+};

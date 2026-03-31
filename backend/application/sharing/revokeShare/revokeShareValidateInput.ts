@@ -11,9 +11,7 @@ export type RevokeShareInput = z.infer<typeof RevokeShareInputSchema>;
 /**
  * ValidateInput step: parse and validate revoke request.
  */
-export async function revokeShareValidateInput(
-  request: Request
-): Promise<Result<string, RevokeShareInput>> {
+export const revokeShareValidateInput = async (request: Request): Promise<Result<string, RevokeShareInput>> => {
   let body: unknown;
   try {
     body = await request.json();
@@ -28,4 +26,4 @@ export async function revokeShareValidateInput(
   }
 
   return succeed(parsed.data);
-}
+};

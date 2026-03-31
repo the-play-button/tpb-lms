@@ -28,7 +28,7 @@ const BADGES = {
  * @param {string} options.size - Size class (small, medium, large)
  * @returns {string} HTML string for the badge
  */
-export function renderMasteryBadge(level, options = {}) {
+export const renderMasteryBadge = (level, options = {}) => {
   const badge = BADGES[level] || BADGES.none;
   const showLabel = options.showLabel || false;
   const size = options.size || 'medium';
@@ -44,35 +44,35 @@ export function renderMasteryBadge(level, options = {}) {
       ${showLabel ? `<span class="mastery-label">${badge.label}</span>` : ''}
     </span>
   `;
-}
+};
 
 /**
  * Get mastery level from progress percentage
  * @param {number} progressPercent - Progress percentage (0-100)
  * @returns {string} Mastery level
  */
-export function getMasteryLevel(progressPercent) {
+export const getMasteryLevel = progressPercent => {
   if (progressPercent >= 100) return 'master';
   if (progressPercent >= 75) return 'gold';
   if (progressPercent >= 50) return 'silver';
   if (progressPercent >= 25) return 'bronze';
   return 'none';
-}
+};
 
 /**
  * Get badge info for a specific level
  * @param {string} level - Mastery level
  * @returns {object} Badge configuration
  */
-export function getBadgeInfo(level) {
+export const getBadgeInfo = level => {
   return BADGES[level] || BADGES.none;
-}
+};
 
 /**
  * Inject mastery badge styles into the document
  * Call this once when loading the page
  */
-export function injectMasteryStyles() {
+export const injectMasteryStyles = () => {
   if (document.getElementById('mastery-badge-styles')) return;
   
   const style = document.createElement('style');
@@ -142,7 +142,7 @@ export function injectMasteryStyles() {
   `;
   
   document.head.appendChild(style);
-}
+};
 
 /**
  * Render mastery progress bar with badge
@@ -150,7 +150,7 @@ export function injectMasteryStyles() {
  * @param {object} options - Optional configuration
  * @returns {string} HTML string for progress bar with badge
  */
-export function renderMasteryProgress(progressPercent, options = {}) {
+export const renderMasteryProgress = (progressPercent, options = {}) => {
   const level = getMasteryLevel(progressPercent);
   const badge = renderMasteryBadge(level, { size: 'small' });
   
@@ -167,5 +167,5 @@ export function renderMasteryProgress(progressPercent, options = {}) {
       </div>
     </div>
   `;
-}
+};
 

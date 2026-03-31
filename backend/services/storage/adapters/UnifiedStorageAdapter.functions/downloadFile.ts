@@ -12,11 +12,7 @@ const UNIFIED_API = 'https://api.unified.to';
  * @param connectionId - Storage connection ID
  * @param fileId - File to download
  */
-export async function downloadFile(
-  accessToken: string,
-  connectionId: string,
-  fileId: string
-): Promise<{ content: ArrayBuffer; mimeType: string }> {
+export const downloadFile = async (accessToken: string, connectionId: string, fileId: string): Promise<{ content: ArrayBuffer; mimeType: string }> => {
   const response = await fetch(
     `${UNIFIED_API}/storage/v1/connection/${connectionId}/file/${fileId}/download`,
     {
@@ -34,4 +30,4 @@ export async function downloadFile(
   const mimeType = response.headers.get('content-type') ?? 'application/octet-stream';
 
   return { content, mimeType };
-}
+};

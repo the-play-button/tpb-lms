@@ -24,6 +24,6 @@ import { ConnectionResolverAdapter } from './adapters/ConnectionResolverAdapter.
  *
  * @param config - Configuration with connection providers
  */
-export function createConnectionResolver(config: ConnectionResolverConfig): ConnectionResolverPort {
+export const createConnectionResolver = (config: ConnectionResolverConfig): ConnectionResolverPort => {
   return new ConnectionResolverAdapter(config);
-}
+};

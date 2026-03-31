@@ -10,13 +10,11 @@ export type ListPermissionsAssertedInput = z.infer<typeof ListPermissionsAssertS
 /**
  * Assert step: validate presence of required path parameters.
  */
-export function listPermissionsAssert(
-  rawRefId: string
-): Result<string, ListPermissionsAssertedInput> {
+export const listPermissionsAssert = (rawRefId: string): Result<string, ListPermissionsAssertedInput> => {
   const parsed = ListPermissionsAssertSchema.safeParse({ ref_id: rawRefId });
   if (!parsed.success) {
     return fail(parsed.error.issues.map((i) => i.message).join('; '));
   }
 
   return succeed(parsed.data);
-}
+};

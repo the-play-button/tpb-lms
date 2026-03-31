@@ -8,23 +8,19 @@
 import { api } from '../api.js';
 import { getState } from '../state.js';
 
-/**
- * Load admin stats from API
- * Returns null if user doesn't have admin access
- */
-async function loadAdminStats() {
+const loadAdminStats = async () => {
     try {
         return await api('/admin/stats');
     } catch (err) {
         console.error('Admin stats error:', err);
         return null;
     }
-}
+};
 
 /**
  * Render admin dashboard HTML
  */
-export async function renderAdminDashboard(container) {
+export const renderAdminDashboard = async container => {
     const stats = await loadAdminStats();
     
     if (!stats || !stats.success) {
@@ -121,7 +117,7 @@ export async function renderAdminDashboard(container) {
             </footer>
         </div>
     `;
-}
+};
 
 /**
  * Get emoji icon for activity type
@@ -160,7 +156,7 @@ function formatRelativeTime(timestamp) {
  * Initialize admin dashboard
  * Called when user navigates to /admin
  */
-export async function initAdminDashboard() {
+export const initAdminDashboard = async () => {
     const container = document.getElementById('somViewer');
     if (!container) return;
     
@@ -175,5 +171,5 @@ export async function initAdminDashboard() {
     `;
     
     await renderAdminDashboard(container);
-}
+};
 

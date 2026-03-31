@@ -14,11 +14,7 @@ export interface ShareContentContext {
 /**
  * HydrateContext step: load contentRef and existing shares.
  */
-export async function shareContentHydrateContext(
-  input: ShareContentInput,
-  ctx: HandlerContext,
-  rawRefId: string
-): Promise<Result<'NOT_FOUND', ShareContentContext>> {
+export const shareContentHydrateContext = async (input: ShareContentInput, ctx: HandlerContext, rawRefId: string): Promise<Result<'NOT_FOUND', ShareContentContext>> => {
   const refId = ContentRefId.reconstitute(rawRefId);
 
   const contentRef = await ctx.contentRefsRepository.findById(refId);
@@ -29,4 +25,4 @@ export async function shareContentHydrateContext(
   const existingShares = await ctx.sharesRepository.findActiveByContentRef(contentRef.id);
 
   return succeed({ contentRef, existingShares });
-}
+};

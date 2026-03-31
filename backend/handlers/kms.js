@@ -21,7 +21,7 @@ const log = logger('kms');
  * List all KMS spaces
  * GET /api/kms/spaces
  */
-export async function listSpaces(request, env, userContext) {
+export const listSpaces = async (request, env, userContext) => {
     try {
         const result = await env.DB.prepare(`
             SELECT id, name, description, parent_space_id, is_active, created_at, updated_at
@@ -38,13 +38,13 @@ export async function listSpaces(request, env, userContext) {
         log.error('Error listing spaces', { error });
         return jsonResponse({ error: 'Failed to list spaces' }, 500, request);
     }
-}
+};
 
 /**
  * Get a single space with its pages
  * GET /api/kms/spaces/:id
  */
-export async function getSpace(request, env, userContext, spaceId) {
+export const getSpace = async (request, env, userContext, spaceId) => {
     try {
         // Get space
         const space = await env.DB.prepare(`
@@ -85,13 +85,13 @@ export async function getSpace(request, env, userContext, spaceId) {
         log.error('Error getting space', { error, spaceId });
         return jsonResponse({ error: 'Failed to get space' }, 500, request);
     }
-}
+};
 
 /**
  * Get a single page with full content
  * GET /api/kms/pages/:id
  */
-export async function getPage(request, env, userContext, pageId) {
+export const getPage = async (request, env, userContext, pageId) => {
     try {
         const page = await env.DB.prepare(`
             SELECT p.id, p.title, p.type, p.space_id, p.metadata_json, p.raw_json, 
@@ -130,4 +130,4 @@ export async function getPage(request, env, userContext, pageId) {
         log.error('Error getting page', { error, pageId });
         return jsonResponse({ error: 'Failed to get page' }, 500, request);
     }
-}
+};

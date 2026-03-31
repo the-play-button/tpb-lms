@@ -5,7 +5,7 @@
 
 import { getAuthConfig } from '../../config/auth.js';
 
-export async function handleLogin(request, env) {
+export const handleLogin = async (request, env) => {
     const authConfig = getAuthConfig(env);
 
     if (!authConfig.useLogto) {
@@ -24,4 +24,4 @@ export async function handleLogin(request, env) {
     loginUrl.searchParams.set('state', state);
 
     return Response.redirect(loginUrl.toString(), 302);
-}
+};

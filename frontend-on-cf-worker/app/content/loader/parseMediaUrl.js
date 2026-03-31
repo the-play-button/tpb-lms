@@ -7,7 +7,7 @@
  * @param {Object} media - Media object from lms_class
  * @returns {Object} - { type, url, canFetch }
  */
-export function parseMediaUrl(media) {
+export const parseMediaUrl = media => {
     if (!media || !media.url) {
         return { type: null, url: null, canFetch: false };
     }
@@ -36,4 +36,4 @@ export function parseMediaUrl(media) {
     }
 
     return { type, url, canFetch: false, source: 'unknown' };
-}
+};

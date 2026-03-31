@@ -7,7 +7,7 @@
  * Render a KMS page in a modal
  * @param {Object} page - Page data from API
  */
-export function renderKmsModal(page) {
+export const renderKmsModal = page => {
     // Remove existing modal if any
     const existingModal = document.getElementById('kms-modal');
     if (existingModal) {
@@ -55,7 +55,7 @@ export function renderKmsModal(page) {
         }
     };
     document.addEventListener('keydown', handleEscape);
-}
+};
 
 /**
  * Close the KMS modal

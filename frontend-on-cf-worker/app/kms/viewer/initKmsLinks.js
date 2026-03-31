@@ -5,7 +5,7 @@
 
 import { handleKmsLinkClick } from './handleKmsLinkClick.js';
 
-export function initKmsLinks() {
+export const initKmsLinks = () => {
     // Use event delegation on the document
     document.addEventListener('click', (event) => {
         const link = event.target.closest('a[href^="/kms/"]');
@@ -13,4 +13,4 @@ export function initKmsLinks() {
             handleKmsLinkClick(event);
         }
     });
-}
+};

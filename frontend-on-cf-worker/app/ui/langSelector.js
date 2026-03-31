@@ -11,7 +11,7 @@ import { getLanguage, setLanguage, getSupportedLanguages } from '../../i18n/inde
  * Render language selector dropdown
  * @returns {string} HTML string
  */
-export function renderLangSelector() {
+export const renderLangSelector = () => {
     const currentLang = getLanguage();
     const languages = getSupportedLanguages();
     const current = languages.find(l => l.code === currentLang) || languages[0];
@@ -35,12 +35,12 @@ export function renderLangSelector() {
             </div>
         </div>
     `;
-}
+};
 
 /**
  * Initialize language selector event handlers
  */
-export function initLangSelector() {
+export const initLangSelector = () => {
     const selector = document.getElementById('langSelector');
     if (!selector) return;
     
@@ -81,4 +81,4 @@ export function initLangSelector() {
             dropdown?.classList.remove('open');
         }
     });
-}
+};

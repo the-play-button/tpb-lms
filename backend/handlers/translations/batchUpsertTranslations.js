@@ -7,7 +7,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 
-export async function batchUpsertTranslations(request, env, ctx) {
+export const batchUpsertTranslations = async (request, env, ctx) => {
     let body;
     try {
         body = await request.json();
@@ -52,4 +52,4 @@ export async function batchUpsertTranslations(request, env, ctx) {
         inserted: successCount,
         errors: errorCount
     });
-}
+};

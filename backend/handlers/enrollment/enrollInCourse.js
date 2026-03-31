@@ -6,7 +6,7 @@
 
 import { jsonResponse, MAX_ACTIVE_ENROLLMENTS, generateId, getUserId } from './_shared.js';
 
-export async function enrollInCourse(request, env, userContext, courseId) {
+export const enrollInCourse = async (request, env, userContext, courseId) => {
     const userId = getUserId(userContext);
 
     if (!userId) {
@@ -96,4 +96,4 @@ export async function enrollInCourse(request, env, userContext, courseId) {
         active_enrollments: activeCount.count + 1,
         max_active: MAX_ACTIVE_ENROLLMENTS,
     }, 201, request);
-}
+};

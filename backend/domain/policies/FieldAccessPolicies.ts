@@ -33,10 +33,7 @@ export interface FullContentRef extends FilteredContentRef {
  * Filters ContentRef fields based on whether the viewer is the owner.
  * Owners see all fields; other viewers see a restricted subset.
  */
-export function filterContentRefFields(
-  contentRef: DraftContentRef | SharedContentRef,
-  viewerEmail: Email,
-): FilteredContentRef | FullContentRef {
+export const filterContentRefFields = (contentRef: DraftContentRef | SharedContentRef, viewerEmail: Email): FilteredContentRef | FullContentRef => {
   const isOwner = contentRef.ownerEmail.equals(viewerEmail);
 
   const base: FilteredContentRef = {
@@ -62,4 +59,4 @@ export function filterContentRefFields(
     createdAt: contentRef.createdAt,
     updatedAt: contentRef.updatedAt,
   };
-}
+};

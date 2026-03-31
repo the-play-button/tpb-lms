@@ -7,7 +7,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 
-export async function addGlossaryTerm(request, env, ctx) {
+export const addGlossaryTerm = async (request, env, ctx) => {
     const url = new URL(request.url);
     const pathParts = url.pathname.split('/');
     const orgId = pathParts[2];
@@ -53,4 +53,4 @@ export async function addGlossaryTerm(request, env, ctx) {
         console.error('Error adding glossary term:', error);
         return errorResponse('Failed to add glossary term', 500);
     }
-}
+};

@@ -1,10 +1,7 @@
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { listConnectionsHandle } from './listConnectionsHandle.js';
 
-export async function listConnectionsController(
-  _request: Request,
-  ctx: HandlerContext
-): Promise<Response> {
+export const listConnectionsController = async (_request: Request, ctx: HandlerContext): Promise<Response> => {
   try {
     const result = await listConnectionsHandle(ctx);
     if (!result.ok) {
@@ -23,4 +20,4 @@ export async function listConnectionsController(
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
+};

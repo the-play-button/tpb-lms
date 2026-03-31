@@ -11,7 +11,7 @@ import { getState, setState } from './state.js';
 import { iconMap } from './ui/badges.js';
 import { log } from './log.js';
 
-function createBadgeParticles(container) {
+const createBadgeParticles = container => {
     const particlesDiv = document.createElement('div');
     particlesDiv.className = 'badge-particles';
     
@@ -28,7 +28,7 @@ function createBadgeParticles(container) {
     container.appendChild(particlesDiv);
     // entropy-prohibited-timer-ok: cleanup after CSS animation
     setTimeout(() => particlesDiv.remove(), 1500);
-}
+};
 
 /**
  * Show badge modal (unified for earned events and mobile tap)
@@ -36,7 +36,7 @@ function createBadgeParticles(container) {
  * @param {Object} options - Display options
  * @param {boolean} options.isEarned - Whether badge is earned (default: true for backward compat)
  */
-export function showBadgeModal(badge, options = {}) {
+export const showBadgeModal = (badge, options = {}) => {
     const { isEarned = true } = options;
     
     const modal = document.getElementById('badgeModal');
@@ -91,19 +91,19 @@ export function showBadgeModal(badge, options = {}) {
     if (isEarned) {
         createBadgeParticles(contentEl);
     }
-}
+};
 
 /**
  * Close badge modal
  */
-export function closeBadgeModal() {
+export const closeBadgeModal = () => {
     document.getElementById('badgeModal')?.classList.remove('active');
-}
+};
 
 /**
  * Show error message
  */
-export function showError(message) {
+export const showError = message => {
     const viewer = document.getElementById('somViewer');
     if (viewer) {
         const escaped = String(message).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -116,13 +116,13 @@ export function showError(message) {
             </div>
         `;
     }
-}
+};
 
 /**
  * Refresh user data from API and update state
  * This triggers automatic UI updates via state subscriptions
  */
-export async function refreshUserData() {
+export const refreshUserData = async () => {
     try {
         const session = await api('/auth/session');
         
@@ -145,12 +145,12 @@ export async function refreshUserData() {
     } catch (error) {
         log.warn('Failed to refresh user data:', error.message);
     }
-}
+};
 
 /**
  * Initialize notifications (expose to window)
  */
-export function initNotifications() {
+export const initNotifications = () => {
     window.closeBadgeModal = closeBadgeModal; // entropy-global-pollution-ok: intentional global for HTML onclick
-}
+};
 

@@ -17,7 +17,7 @@ const log = logger('admin');
  * 
  * @returns Global LMS statistics from v_admin_overview
  */
-export async function getAdminStats(request, env, userContext) {
+export const getAdminStats = async (request, env, userContext) => {
   // Guard: Only admin role
   const guardResult = requireRole('admin')(userContext);
   if (guardResult) {
@@ -62,5 +62,5 @@ export async function getAdminStats(request, env, userContext) {
       details: error.message
     }, 500, request);
   }
-}
+};
 

@@ -31,7 +31,7 @@ export { log };
 /**
  * Send video event to API
  */
-export async function sendVideoEvent(eventType, videoId, position, duration, courseId, classId) {
+export const sendVideoEvent = async (eventType, videoId, position, duration, courseId, classId) => {
     const progress = duration > 0 ? Math.floor((position / duration) * 100) : 0;
     log.debug(`${eventType}: ${position}s / ${duration}s (${progress}%)`);
 
@@ -67,19 +67,19 @@ export async function sendVideoEvent(eventType, videoId, position, duration, cou
     } catch (error) {
         log.warn(`Failed to send ${eventType}:`, error.message);
     }
-}
+};
 
 /**
  * Send video ping (alias for backward compatibility)
  */
-export async function sendVideoPing(videoId, position, duration, courseId, classId) {
+export const sendVideoPing = async (videoId, position, duration, courseId, classId) => {
     return sendVideoEvent('VIDEO_PING', videoId, position, duration, courseId, classId);
-}
+};
 
 /**
  * Setup native HTML5 video tracking (for external URLs)
  */
-export function setupNativeVideoTracking(videoElement, videoDuration, courseId, classId, resumePosition) {
+export const setupNativeVideoTracking = (videoElement, videoDuration, courseId, classId, resumePosition) => {
     trackingState.lastPingPosition = -10;
     trackingState.isPlaying = false;
     trackingState.videoCompletedHandled = false;
@@ -130,4 +130,4 @@ export function setupNativeVideoTracking(videoElement, videoDuration, courseId, 
     }, 10000);
 
     log.info('video', 'Native video tracking setup complete');
-}
+};

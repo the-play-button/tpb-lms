@@ -10,7 +10,7 @@ import { renderKmsModal } from './renderKmsModal.js';
  * Handle click on KMS link
  * @param {Event} event - Click event
  */
-export async function handleKmsLinkClick(event) {
+export const handleKmsLinkClick = async event => {
     const link = event.target.closest('a[href^="/kms/"]');
     if (!link) return;
 
@@ -40,4 +40,4 @@ export async function handleKmsLinkClick(event) {
     } finally {
         link.classList.remove('kms-loading');
     }
-}
+};

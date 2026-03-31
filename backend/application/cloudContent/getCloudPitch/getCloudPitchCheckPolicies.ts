@@ -7,9 +7,7 @@ import type { GetCloudPitchContext } from './getCloudPitchHydrateContext.js';
  * - Owner/admin -> always allowed
  * - Learner -> must be enrolled (has active share)
  */
-export function getCloudPitchCheckPolicies(
-  context: GetCloudPitchContext
-): Result<'FORBIDDEN', 'allowed'> {
+export const getCloudPitchCheckPolicies = (context: GetCloudPitchContext): Result<'FORBIDDEN', 'allowed'> => {
   if (context.isOwner) {
     return succeed('allowed' as const);
   }
@@ -19,4 +17,4 @@ export function getCloudPitchCheckPolicies(
   }
 
   return fail('FORBIDDEN' as const);
-}
+};

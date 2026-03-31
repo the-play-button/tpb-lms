@@ -12,7 +12,7 @@ import { jsonResponse } from '../cors.js';
  * 
  * Returns all badge definitions with user's earned status.
  */
-export async function listBadges(request, env, userContext) {
+export const listBadges = async (request, env, userContext) => {
     // Get all active badge definitions
     const badges = await env.DB.prepare(`
         SELECT id, name, description, icon_url, type, category, rarity, points_reward, criteria_json
@@ -53,4 +53,4 @@ export async function listBadges(request, env, userContext) {
         earnedCount: earned.results?.length || 0,
         totalCount: badges.results?.length || 0
     }, 200, request);
-}
+};

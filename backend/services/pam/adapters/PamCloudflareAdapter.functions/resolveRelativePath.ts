@@ -10,14 +10,14 @@ const FOLDER_MIME_TYPE = 'application/vnd.folder';
  * Walks each path segment by listing folder contents and matching by name.
  * Uses PAM delegated access so owner tokens are never exposed.
  */
-export async function resolveRelativePath(
+export const resolveRelativePath = async (
   bastionUrl: string,
   getToken: () => string,
   connectionId: string,
   baseFolderId: string,
   relativePath: string,
   guestEmail: string
-): Promise<StorageFile> {
+): Promise<StorageFile> => {
   const segments = relativePath.split('/').filter(s => s.length > 0);
 
   if (segments.length === 0) {
@@ -48,4 +48,4 @@ export async function resolveRelativePath(
   }
 
   throw new ServiceUnavailableError('Path resolution', 'Failed');
-}
+};

@@ -12,6 +12,6 @@ export interface DomainEvent {
   readonly payload: Record<string, unknown>;
 }
 
-export function createEvent(type: string, payload: Record<string, unknown>): DomainEvent {
+export const createEvent = (type: string, payload: Record<string, unknown>): DomainEvent => {
   return { type, occurredAt: new Date(), payload };
-}
+};

@@ -8,13 +8,11 @@ import { listConnectionsExecute } from './listConnectionsExecute.js';
 /**
  * Handle orchestrator: Assert -> Execute
  */
-export async function listConnectionsHandle(
-  ctx: HandlerContext
-): Promise<Result<string, ConnectionInfo[]>> {
+export const listConnectionsHandle = async (ctx: HandlerContext): Promise<Result<string, ConnectionInfo[]>> => {
   // 0. Assert
   const assertResult = listConnectionsAssert();
   if (!assertResult.ok) return fail(assertResult.error);
 
   // 1. Execute
   return listConnectionsExecute(ctx);
-}
+};

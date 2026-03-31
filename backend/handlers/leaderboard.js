@@ -11,14 +11,7 @@
 
 import { jsonResponse } from '../cors.js';
 
-// ============================================
-// Helper functions
-// ============================================
-
-/**
- * Get user info from crm_contact or hris_employee
- */
-async function getUserInfo(db, userId) {
+const getUserInfo = async (db, userId) => {
     let user = await db.prepare(`
         SELECT id, name, json_extract(emails_json, '$[0].email') as email
         FROM crm_contact WHERE id = ?
@@ -32,12 +25,9 @@ async function getUserInfo(db, userId) {
     }
     
     return user ? { id: user.id, name: user.name, email: user.email } : { id: userId };
-}
+};
 
-/**
- * Get current user rank if not in top N
- */
-async function getCurrentUserRank(db, userId) {
+const getCurrentUserRank = async (db, userId) => {
     const userStats = await db.prepare(`
         SELECT user_id, total_points FROM v_leaderboard WHERE user_id = ?
     `).bind(userId).first();
@@ -49,45 +39,36 @@ async function getCurrentUserRank(db, userId) {
     `).bind(userStats.total_points).first();
     
     return { rank: rankResult?.rank, points: userStats.total_points };
-}
+};
 
-/**
- * Calculate XP from stats
- */
-function calculateXP(stats) {
+const calculateXP = stats => {
     return ((stats?.video_completed_count || 0) * 50) + 
            ((stats?.quiz_passed_count || 0) * 100) + 
            ((stats?.course_completed_count || 0) * 200);
-}
+};
 
-/**
- * Build stats object from raw data
- */
-function buildStatsObject(stats) {
+const buildStatsObject = stats => {
     return {
         video_completed_count: stats?.video_completed_count || 0,
         quiz_passed_count: stats?.quiz_passed_count || 0,
         step_completed_count: stats?.step_completed_count || 0,
         course_completed_count: stats?.course_completed_count || 0
     };
-}
+};
 
-/**
- * Build activity object from raw data
- */
-function buildActivityObject(activity) {
+const buildActivityObject = activity => {
     return {
         last_event_at: activity?.last_event_at || null,
         events_24h: activity?.events_24h || 0,
         total_events: activity?.total_events || 0
     };
-}
+};
 
 // ============================================
 // Main handlers
 // ============================================
 
-export async function getLeaderboard(request, env, userContext) {
+export const getLeaderboard = async (request, env, userContext) => {
     const url = new URL(request.url);
     const limit = parseInt(url.searchParams.get('limit') || '10');
     const userId = userContext.contact?.id || userContext.employee?.id;
@@ -127,9 +108,9 @@ export async function getLeaderboard(request, env, userContext) {
         leaderboard,
         currentUser: { id: userId, rank: currentUserRank || null, total_points: currentUserPoints || 0 }
     }, 200, request);
-}
+};
 
-export async function getUserStats(request, env, userContext) {
+export const getUserStats = async (request, env, userContext) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
     
     if (!userId) {
@@ -154,4 +135,4 @@ export async function getUserStats(request, env, userContext) {
         badges: badges.results || [],
         xp: { total: calculateXP(stats) }
     }, 200, request);
-}
+};

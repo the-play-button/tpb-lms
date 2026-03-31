@@ -6,7 +6,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 
-export async function getTranslationsForReview(request, env, ctx) {
+export const getTranslationsForReview = async (request, env, ctx) => {
     const url = new URL(request.url);
     const source = url.searchParams.get('source') || 'ai';
     const limit = parseInt(url.searchParams.get('limit') || '50', 10);
@@ -28,4 +28,4 @@ export async function getTranslationsForReview(request, env, ctx) {
         console.error('Error fetching translations for review:', error);
         return errorResponse('Failed to fetch translations', 500);
     }
-}
+};

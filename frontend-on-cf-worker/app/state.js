@@ -37,14 +37,14 @@ export const sessionId = `session_${Date.now()}_${Math.random().toString(36).sub
 /**
  * Get current state value
  */
-export function getState(key) {
+export const getState = key => {
     return key ? state[key] : state;
-}
+};
 
 /**
  * Set state value and notify subscribers
  */
-export function setState(key, value) {
+export const setState = (key, value) => {
     const oldValue = state[key];
     state[key] = value;
     
@@ -69,7 +69,7 @@ export function setState(key, value) {
             }
         });
     }
-}
+};
 
 /**
  * Subscribe to state changes
@@ -77,7 +77,7 @@ export function setState(key, value) {
  * @param {function} callback - Called when state changes
  * @returns {function} Unsubscribe function
  */
-export function subscribe(key, callback) {
+export const subscribe = (key, callback) => {
     if (!subscribers.has(key)) {
         subscribers.set(key, []);
     }
@@ -91,7 +91,7 @@ export function subscribe(key, callback) {
             callbacks.splice(index, 1);
         }
     };
-}
+};
 
 export default state;
 

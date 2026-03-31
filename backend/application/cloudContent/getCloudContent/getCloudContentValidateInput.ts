@@ -12,9 +12,7 @@ export type GetCloudContentInput = z.infer<typeof GetCloudContentInputSchema>;
 /**
  * ValidateInput step: parse and validate query parameters.
  */
-export function getCloudContentValidateInput(
-  request: Request
-): Result<string, GetCloudContentInput> {
+export const getCloudContentValidateInput = (request: Request): Result<string, GetCloudContentInput> => {
   const url = new URL(request.url);
   const raw = {
     ref_id: url.searchParams.get('ref_id') ?? undefined,
@@ -28,4 +26,4 @@ export function getCloudContentValidateInput(
   }
 
   return succeed(parsed.data);
-}
+};

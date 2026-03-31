@@ -3,7 +3,7 @@
  * Helper function used by courses handler
  */
 
-export function applyTranslations(content, translations, lang) {
+export const applyTranslations = (content, translations, lang) => {
     if (!translations || !translations[lang]) return content;
 
     const langTranslations = translations[lang];
@@ -16,4 +16,4 @@ export function applyTranslations(content, translations, lang) {
     }
 
     return result;
-}
+};

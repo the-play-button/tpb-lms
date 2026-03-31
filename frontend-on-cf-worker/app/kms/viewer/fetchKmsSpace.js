@@ -9,7 +9,7 @@ import { api } from '../../api.js';
  * @param {string} spaceId - Space ID
  * @returns {Promise<Object>} Space data with pages
  */
-export async function fetchKmsSpace(spaceId) {
+export const fetchKmsSpace = async spaceId => {
     const result = await api(`/kms/spaces/${spaceId}`);
     return result.space;
-}
+};

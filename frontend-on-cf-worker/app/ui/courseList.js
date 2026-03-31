@@ -5,7 +5,7 @@
 import { getState, subscribe } from '../state.js';
 import { renderMasteryBadge, getMasteryLevel, injectMasteryStyles } from './masteryBadge.js';
 
-export function renderCourseList() {
+export const renderCourseList = () => {
     const list = document.getElementById('somList');
     if (!list) return;
     
@@ -37,9 +37,9 @@ export function renderCourseList() {
             </li>
         `;
     }).join('');
-}
+};
 
-export function initCourseList() {
+export const initCourseList = () => {
     subscribe('courses', renderCourseList);
     subscribe('currentCourse', renderCourseList);
-}
+};

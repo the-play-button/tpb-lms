@@ -12,9 +12,7 @@ export type GetCloudPitchInput = z.infer<typeof GetCloudPitchInputSchema>;
 /**
  * ValidateInput step: parse and validate query parameters for pitch download.
  */
-export function getCloudPitchValidateInput(
-  request: Request
-): Result<string, GetCloudPitchInput> {
+export const getCloudPitchValidateInput = (request: Request): Result<string, GetCloudPitchInput> => {
   const url = new URL(request.url);
   const raw = {
     ref_id: url.searchParams.get('ref_id') ?? undefined,
@@ -28,4 +26,4 @@ export function getCloudPitchValidateInput(
   }
 
   return succeed(parsed.data);
-}
+};

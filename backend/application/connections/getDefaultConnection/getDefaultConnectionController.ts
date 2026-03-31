@@ -1,10 +1,7 @@
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { getDefaultConnectionHandle } from './getDefaultConnectionHandle.js';
 
-export async function getDefaultConnectionController(
-  _request: Request,
-  ctx: HandlerContext
-): Promise<Response> {
+export const getDefaultConnectionController = async (_request: Request, ctx: HandlerContext): Promise<Response> => {
   try {
     const result = await getDefaultConnectionHandle(ctx);
     if (!result.ok) {
@@ -23,4 +20,4 @@ export async function getDefaultConnectionController(
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
+};

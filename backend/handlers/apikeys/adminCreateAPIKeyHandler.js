@@ -8,7 +8,7 @@
 import { jsonResponse } from '../../cors.js';
 import { generateAPIKey, getOrCreateContact } from '../../auth/index.js';
 
-export async function adminCreateAPIKeyHandler(request, env, userContext) {
+export const adminCreateAPIKeyHandler = async (request, env, userContext) => {
     try {
         if (userContext.user?.role !== 'admin') {
             return jsonResponse({ error: 'Forbidden: Admin role required' }, 403, request);
@@ -56,4 +56,4 @@ export async function adminCreateAPIKeyHandler(request, env, userContext) {
         console.error('Admin create API key error:', error);
         return jsonResponse({ error: 'Failed to create API key' }, 500, request);
     }
-}
+};

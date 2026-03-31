@@ -10,7 +10,7 @@
 
 import { VaultClient } from '../lib/vaultClient.js';
 
-export async function resolveRole(email, env) {
+export const resolveRole = async (email, env) => {
     // Try vault-api first (SSOT for IAM)
     if (env.BASTION_URL && env.VAULT_TOKEN) {
         try {
@@ -52,4 +52,4 @@ export async function resolveRole(email, env) {
 
     // Default: student (external user)
     return 'student';
-}
+};

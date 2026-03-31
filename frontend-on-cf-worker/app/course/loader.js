@@ -19,7 +19,7 @@ import { getLanguage } from '../../i18n/index.js';
  * @param {string} courseId - The course ID to load
  * @param {number} initialStepIndex - Optional step index to navigate to (GAP-203)
  */
-export async function loadCourse(courseId, initialStepIndex = null) {
+export const loadCourse = async (courseId, initialStepIndex = null) => {
     try {
         setState('currentCourse', courseId);
         
@@ -84,7 +84,7 @@ export async function loadCourse(courseId, initialStepIndex = null) {
         viewer.innerHTML = '';
         viewer.appendChild(errorDiv);
     }
-}
+};
 
 /**
  * Update URL with current course and step (GAP-203)
@@ -101,7 +101,7 @@ export function updateURL(courseId, stepIndex) {
 /**
  * Refresh signals from API
  */
-export async function refreshSignals() {
+export const refreshSignals = async () => {
     const currentCourse = getState('currentCourse');
     if (!currentCourse) return null;
     
@@ -113,5 +113,5 @@ export async function refreshSignals() {
         log.warn('Failed to refresh signals:', error.message);
         return null;
     }
-}
+};
 

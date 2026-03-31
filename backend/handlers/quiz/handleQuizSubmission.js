@@ -7,7 +7,7 @@
 
 import { calculateScore, processQuizSubmission, log } from './_shared.js';
 
-export async function handleQuizSubmission(request, env, userContext) {
+export const handleQuizSubmission = async (request, env, userContext) => {
     const body = await request.json();
     body.userId = userContext.contact.id;
 
@@ -23,4 +23,4 @@ export async function handleQuizSubmission(request, env, userContext) {
     body.courseId = body.courseId || quizClass?.course_id;
 
     return await processQuizSubmission(body, env, request, quizClass);
-}
+};

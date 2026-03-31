@@ -5,7 +5,7 @@
 import { getAuthConfig } from '../config/auth.js';
 import { base64urlDecode, importPublicKey, getOidcJWKS } from './_shared.js';
 
-export async function verifyOidcJWT(token, env) {
+export const verifyOidcJWT = async (token, env) => {
     if (!token) {
         return { valid: false, error: 'No token provided' };
     }
@@ -77,4 +77,4 @@ export async function verifyOidcJWT(token, env) {
         console.error('OIDC JWT verification error:', error);
         return { valid: false, error: error.message };
     }
-}
+};

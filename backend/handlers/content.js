@@ -19,20 +19,7 @@ const GITHUB_API_BASE = 'https://api.github.com'; // entropy-hardcoded-url-ok: e
 let cachedToken = null;
 let tokenExpiry = 0;
 
-/**
- * Get GitHub token from vault via native Bearer token
- * 
- * The LMS uses a native Bearer token (iampam_xxx) to authenticate 
- * to TPB Bastion and fetch the GitHub PAT.
- * 
- * Token path in vault: infra/github_pat_tpb_repos
- * 
- * Required env vars:
- * - BASTION_URL: Bastion API endpoint (https://tpb-vault-infra.matthieu-marielouise.workers.dev)
- * - VAULT_TOKEN: Native Bearer token (iampam_xxx)
- */
-// #region agent debug wrapper
-async function getGitHubTokenWithDebug(env) {
+const getGitHubTokenWithDebug = async env => {
     const debug = {
         cached: false,
         hasBastionUrl: !!env.BASTION_URL,
@@ -88,23 +75,14 @@ async function getGitHubTokenWithDebug(env) {
     }
     
     return { token: null, debug };
-}
-// #endregion
+};
 
-async function getGitHubToken(env) {
+const getGitHubToken = async env => {
     const result = await getGitHubTokenWithDebug(env);
     return result.token;
-}
+};
 
-/**
- * Inject i18n language into GitHub path.
- * Transforms: outputs/SOM_xxx/STEPS/STEP01.md -> outputs/SOM_xxx/i18n/{lang}/STEPS/STEP01.md
- * 
- * @param {string} path - Original file path
- * @param {string} lang - Target language code
- * @returns {string} - Localized path
- */
-function injectI18nIntoPath(path, lang) {
+const injectI18nIntoPath = (path, lang) => {
     if (!lang) return path;
     
     // For paths with /STEPS/ - insert i18n before STEPS
@@ -119,16 +97,9 @@ function injectI18nIntoPath(path, lang) {
     }
     
     return path;
-}
+};
 
-/**
- * Parse GitHub URL to extract owner, repo, branch, and path
- * Supports formats:
- * - https://raw.githubusercontent.com/owner/repo/branch/path
- * - https://github.com/owner/repo/blob/branch/path
- * - owner/repo/path (assumes main branch)
- */
-function parseGitHubUrl(url) {
+const parseGitHubUrl = url => {
     // Raw URL format
     const rawMatch = url.match(/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)/);
     if (rawMatch) {
@@ -163,7 +134,7 @@ function parseGitHubUrl(url) {
     }
     
     return null;
-}
+};
 
 /**
  * GET /api/content/github
@@ -175,7 +146,7 @@ function parseGitHubUrl(url) {
  * - lang: Optional language code to inject i18n path (e.g., ?lang=en)
  */
 // entropy-long-function-ok: sequential URL parsing and fetch logic
-export async function getGitHubContent(request, env, userContext) {
+export const getGitHubContent = async (request, env, userContext) => {
     const url = new URL(request.url);
     
     let owner, repo, branch, path;
@@ -308,13 +279,13 @@ export async function getGitHubContent(request, env, userContext) {
             message: error.message
         }, 500, request);
     }
-}
+};
 
 /**
  * GET /api/content/github/tree
  * List files in a GitHub directory
  */
-export async function listGitHubDirectory(request, env, userContext) {
+export const listGitHubDirectory = async (request, env, userContext) => {
     const url = new URL(request.url);
     const owner = url.searchParams.get('owner');
     const repo = url.searchParams.get('repo');
@@ -369,4 +340,4 @@ export async function listGitHubDirectory(request, env, userContext) {
     } catch (error) {
         return jsonResponse({ error: error.message }, 500, request);
     }
-}
+};

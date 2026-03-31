@@ -23,12 +23,9 @@ interface UserContext {
   learner?: unknown;
 }
 
-/**
- * Extract JWT from request headers
- */
-function extractJwt(request: Request): string {
+const extractJwt = (request: Request): string => {
   return request.headers.get('Cf-Access-Jwt-Assertion') || '';
-}
+};
 
 /**
  * Create the BYOC HandlerContext from env + userContext
@@ -36,11 +33,7 @@ function extractJwt(request: Request): string {
  * This is the JS/TS bridge: the router (index.js) calls this for every
  * BYOC route, then passes the result to the TS controller.
  */
-export async function createByocContext(
-  request: Request,
-  env: Env,
-  userContext: UserContext
-): Promise<HandlerContext> {
+export const createByocContext = async (request: Request, env: Env, userContext: UserContext): Promise<HandlerContext> => {
   const jwt = extractJwt(request);
   const userEmail = userContext.user.email;
 
@@ -92,4 +85,4 @@ export async function createByocContext(
     teamDomain: env.ACCESS_TEAM_DOMAIN,
     db: env.DB,
   };
-}
+};

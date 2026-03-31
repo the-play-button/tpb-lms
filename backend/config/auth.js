@@ -11,7 +11,7 @@
  * Build auth config from worker env
  * @param {object} env - Cloudflare Worker env
  */
-export function getAuthConfig(env) {
+export const getAuthConfig = env => {
   return {
     useLogto: env.USE_LOGTO === 'true',
 
@@ -26,4 +26,4 @@ export function getAuthConfig(env) {
       jwksUri: env.LOGTO_JWKS_URI || null,
     },
   };
-}
+};

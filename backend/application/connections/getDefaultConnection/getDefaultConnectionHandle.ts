@@ -8,13 +8,11 @@ import { getDefaultConnectionExecute } from './getDefaultConnectionExecute.js';
 /**
  * Handle orchestrator: Assert -> Execute
  */
-export async function getDefaultConnectionHandle(
-  ctx: HandlerContext
-): Promise<Result<string, ConnectionInfo>> {
+export const getDefaultConnectionHandle = async (ctx: HandlerContext): Promise<Result<string, ConnectionInfo>> => {
   // 0. Assert
   const assertResult = getDefaultConnectionAssert();
   if (!assertResult.ok) return fail(assertResult.error);
 
   // 1. Execute
   return getDefaultConnectionExecute(ctx);
-}
+};

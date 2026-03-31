@@ -6,7 +6,7 @@ import type { StorageFile } from '../../../types/StorageFile.js';
  * Normalizes the raw API response into our canonical StorageFile shape.
  * Handles missing fields gracefully with sensible defaults.
  */
-export function mapFile(data: Record<string, unknown>): StorageFile {
+export const mapFile = (data: Record<string, unknown>): StorageFile => {
   const isFolder = Boolean(data.type === 'folder' || data.is_folder);
 
   return {
@@ -22,4 +22,4 @@ export function mapFile(data: Record<string, unknown>): StorageFile {
     downloadUrl: data.download_url != null ? String(data.download_url) : undefined,
     webUrl: data.web_url != null ? String(data.web_url) : undefined,
   };
-}
+};

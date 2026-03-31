@@ -29,10 +29,7 @@ const requestCounts = new Map();
 const CLEANUP_INTERVAL = 60000; // 1 minute
 let lastCleanup = Date.now();
 
-/**
- * Clean up expired timestamps
- */
-function cleanup() {
+const cleanup = () => {
     const now = Date.now();
     if (now - lastCleanup < CLEANUP_INTERVAL) return;
     
@@ -47,22 +44,19 @@ function cleanup() {
             requestCounts.set(key, valid);
         }
     }
-}
+};
 
-/**
- * Get rate limit for a specific endpoint
- */
-function getLimit(method, path) {
+const getLimit = (method, path) => {
     const key = `${method}:${path}`;
     return LIMITS[key] || LIMITS.default;
-}
+};
 
 /**
  * Check rate limit for request
  * @param {Request} request - The incoming request
  * @returns {Response|null} - 429 response if rate limited, null otherwise
  */
-export function checkRateLimit(request) {
+export const checkRateLimit = request => {
     // Run cleanup periodically
     cleanup();
     
@@ -118,12 +112,12 @@ export function checkRateLimit(request) {
     requestCounts.set(key, recentTimestamps);
     
     return null; // Continue processing
-}
+};
 
 /**
  * Add rate limit headers to response
  */
-export function addRateLimitHeaders(response, request) {
+export const addRateLimitHeaders = (response, request) => {
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
@@ -143,5 +137,5 @@ export function addRateLimitHeaders(response, request) {
     newResponse.headers.set('X-RateLimit-Remaining', String(Math.max(0, limit.requests - recentCount)));
     
     return newResponse;
-}
+};
 

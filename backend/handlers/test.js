@@ -19,25 +19,15 @@ const CLASS_IDS = [
     'step06-marche-francais'
 ];
 
-/**
- * Resolve contact_id from email
- */
-async function resolveContactId(db, email) {
+const resolveContactId = async (db, email) => {
     if (!email) return null;
     const result = await db.prepare(
         "SELECT id FROM crm_contact WHERE emails_json LIKE ?"
     ).bind(`%${email}%`).first();
     return result?.id || null;
-}
+};
 
-/**
- * Apply a fixture for a user
- * @param {D1Database} db
- * @param {string} cfUserId - CF Access user_id (sub) - used for cleanup only
- * @param {string} fixture - Fixture name
- * @param {string} email - User email (REQUIRED to resolve contact_id)
- */
-async function applyFixture(db, cfUserId, fixture, email = null) {
+const applyFixture = async (db, cfUserId, fixture, email = null) => {
     // Resolve the contact_id (this is what the API actually uses)
     const contactId = await resolveContactId(db, email);
     
@@ -71,7 +61,7 @@ async function applyFixture(db, cfUserId, fixture, email = null) {
         default:
             throw new Error(`Unknown fixture: ${fixture}`);
     }
-}
+};
 
 /**
  * Clean all progress for a user
@@ -188,7 +178,7 @@ async function completeSteps(db, userId, count) {
  * Note: email is optional but HIGHLY RECOMMENDED for clean_slate to work properly.
  * The system uses both CF Access user_id AND contact_id (resolved from email).
  */
-export async function handleTestSeed(request, env) {
+export const handleTestSeed = async (request, env) => {
     // Verify secret
     const secret = request.headers.get('X-Test-Secret');
     if (!secret || secret !== env.TEST_SECRET) {
@@ -237,5 +227,5 @@ export async function handleTestSeed(request, env) {
             detail: e.message 
         }, 500, request);
     }
-}
+};
 

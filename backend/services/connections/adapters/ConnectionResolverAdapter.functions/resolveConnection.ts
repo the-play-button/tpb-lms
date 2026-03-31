@@ -10,10 +10,7 @@ import { findWorkingConnection } from './findWorkingConnection.js';
  * 2. Provider + folderId  -> findWorkingConnection (multi-tenant routing)
  * 3. Fallback             -> getDefaultConnection (admin TPB)
  */
-export async function resolveConnection(
-  config: ConnectionResolverConfig,
-  params: ResolveConnectionOptions,
-): Promise<ConnectionInfo> {
+export const resolveConnection = async (config: ConnectionResolverConfig, params: ResolveConnectionOptions): Promise<ConnectionInfo> => {
   // If explicit connectionId provided, use it
   if (params.connectionId) {
     return { id: params.connectionId, integrationType: '', category: 'storage' };
@@ -26,4 +23,4 @@ export async function resolveConnection(
 
   // Fallback to default connection (admin TPB)
   return config.getDefaultConnection();
-}
+};

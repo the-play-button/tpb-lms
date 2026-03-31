@@ -12,9 +12,7 @@ export type ShareContentInput = z.infer<typeof ShareContentInputSchema>;
 /**
  * ValidateInput step: parse and validate share request body.
  */
-export async function shareContentValidateInput(
-  request: Request
-): Promise<Result<string, ShareContentInput>> {
+export const shareContentValidateInput = async (request: Request): Promise<Result<string, ShareContentInput>> => {
   let body: unknown;
   try {
     body = await request.json();
@@ -29,4 +27,4 @@ export async function shareContentValidateInput(
   }
 
   return succeed(parsed.data);
-}
+};

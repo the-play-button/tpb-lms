@@ -12,15 +12,15 @@ export const MAX_ACTIVE_ENROLLMENTS = 3;
 /**
  * Generate a unique ID for enrollment
  */
-export function generateId() {
+export const generateId = () => {
     return `enr_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-}
+};
 
 /**
  * Extract userId from userContext
  */
-export function getUserId(userContext) {
+export const getUserId = userContext => {
     return userContext.contact?.id || userContext.employee?.id;
-}
+};
 
 export { jsonResponse };

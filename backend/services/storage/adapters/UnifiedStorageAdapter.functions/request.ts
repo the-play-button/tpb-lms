@@ -17,14 +17,14 @@ const UNIFIED_API = 'https://api.unified.to';
  * @param body - Optional request body
  * @param signal - Optional abort signal
  */
-export async function request<T>(
+export const request = async <T>(
   accessToken: string,
   connectionId: string,
   method: string,
   path: string,
   body?: unknown,
   signal?: AbortSignal
-): Promise<T> {
+): Promise<T> => {
   const response = await fetch(`${UNIFIED_API}${path}`, {
     method,
     headers: {
@@ -41,4 +41,4 @@ export async function request<T>(
   }
 
   return response.json();
-}
+};

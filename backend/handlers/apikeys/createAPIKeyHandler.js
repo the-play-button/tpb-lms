@@ -8,7 +8,7 @@
 import { jsonResponse } from '../../cors.js';
 import { generateAPIKey, getOrCreateContact } from '../../auth/index.js';
 
-export async function createAPIKeyHandler(request, env, auth) {
+export const createAPIKeyHandler = async (request, env, auth) => {
     try {
         const body = await request.json();
 
@@ -46,4 +46,4 @@ export async function createAPIKeyHandler(request, env, auth) {
         console.error('Create API key error:', error);
         return jsonResponse({ error: 'Failed to create API key' }, 500, request);
     }
-}
+};

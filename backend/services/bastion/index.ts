@@ -20,9 +20,9 @@ import { BastionCloudflareAdapter } from './adapters/BastionCloudflareAdapter.js
  *
  * @param config - Configuration with fetcher
  */
-export function createBastionClient(config: BastionConfig): BastionPort {
+export const createBastionClient = (config: BastionConfig): BastionPort => {
   return new BastionCloudflareAdapter(config);
-}
+};
 
 // Backward compatibility - export class as BastionClient alias
 export { BastionCloudflareAdapter as BastionClient } from './adapters/BastionCloudflareAdapter.js';

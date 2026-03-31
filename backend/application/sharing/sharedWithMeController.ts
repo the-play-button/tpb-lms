@@ -1,10 +1,7 @@
 import type { HandlerContext } from '../../types/HandlerContext.js';
 import { sharedWithMeHandle } from './sharedWithMeHandle.js';
 
-export async function sharedWithMeController(
-  _request: Request,
-  ctx: HandlerContext
-): Promise<Response> {
+export const sharedWithMeController = async (_request: Request, ctx: HandlerContext): Promise<Response> => {
   try {
     const result = await sharedWithMeHandle(ctx);
     if (!result.ok) {
@@ -23,4 +20,4 @@ export async function sharedWithMeController(
       headers: { 'Content-Type': 'application/json' }
     });
   }
-}
+};

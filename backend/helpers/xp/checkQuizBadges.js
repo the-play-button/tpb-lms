@@ -4,7 +4,7 @@
 
 import { awardBadge } from './_shared.js';
 
-export async function checkQuizBadges(db, userId, isPerfect) {
+export const checkQuizBadges = async (db, userId, isPerfect) => {
     // Count passed quizzes
     const result = await db.prepare(`
         SELECT COUNT(*) as count
@@ -32,4 +32,4 @@ export async function checkQuizBadges(db, userId, isPerfect) {
     }
 
     return null;
-}
+};

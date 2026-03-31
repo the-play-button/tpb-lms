@@ -13,10 +13,7 @@ type GetCloudContentError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 /**
  * Handle orchestrator: Assert -> ValidateInput -> HydrateContext -> CheckPolicies -> Execute -> Filter
  */
-export async function getCloudContentHandle(
-  request: Request,
-  ctx: HandlerContext
-): Promise<Result<GetCloudContentError, GetCloudContentOutput>> {
+export const getCloudContentHandle = async (request: Request, ctx: HandlerContext): Promise<Result<GetCloudContentError, GetCloudContentOutput>> => {
   // 0. Assert
   const assertResult = getCloudContentAssert(request);
   if (!assertResult.ok) return fail(assertResult.error);
@@ -45,4 +42,4 @@ export async function getCloudContentHandle(
   );
 
   return { ok: true, value: filtered };
-}
+};

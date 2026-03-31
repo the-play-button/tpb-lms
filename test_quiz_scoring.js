@@ -40,7 +40,7 @@ const incorrectSubmission = {
     ]
 };
 
-async function testQuizScoring() {
+const testQuizScoring = async () => {
     const API_BASE = "https://lms-api.matthieu-marielouise.workers.dev";
     
     
@@ -79,7 +79,7 @@ async function testQuizScoring() {
     } catch (error) {
         console.error("❌ Erreur:", error.message);
     }
-}
+};
 
 // Exécuter le test
 testQuizScoring();

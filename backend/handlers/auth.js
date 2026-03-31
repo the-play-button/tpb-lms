@@ -10,14 +10,7 @@ import { jsonResponse } from '../cors.js';
 import { verifyAccessJWT, getOrCreateContact } from '../auth/index.js';
 import { getCurrentStreak } from '../helpers/xp/index.js';
 
-// ============================================
-// Helper functions
-// ============================================
-
-/**
- * Validate JWT and return error response if invalid
- */
-async function validateJWT(jwt, env, request) {
+const validateJWT = async (jwt, env, request) => {
     if (!jwt) {
         return { error: jsonResponse({ 
             error: 'Not authenticated',
@@ -35,12 +28,9 @@ async function validateJWT(jwt, env, request) {
     }
     
     return { result };
-}
+};
 
-/**
- * Fetch all user data in parallel
- */
-async function fetchUserData(db, contactId) {
+const fetchUserData = async (db, contactId) => {
     const [stats, badges, recentActivity, currentStreak] = await Promise.all([
         db.prepare(`SELECT * FROM v_leaderboard WHERE user_id = ?`).bind(contactId).first(),
         db.prepare(`
@@ -64,12 +54,9 @@ async function fetchUserData(db, contactId) {
     ]);
     
     return { stats, badges: badges.results || [], recentActivity: recentActivity.results || [], currentStreak };
-}
+};
 
-/**
- * Build session response
- */
-function buildSessionResponse(jwtResult, contact, userData) {
+const buildSessionResponse = (jwtResult, contact, userData) => {
     const totalPoints = userData.stats?.total_points || 0;
     
     return {
@@ -91,7 +78,7 @@ function buildSessionResponse(jwtResult, contact, userData) {
         badges: userData.badges,
         recentActivity: userData.recentActivity
     };
-}
+};
 
 // ============================================
 // Main handler
@@ -100,7 +87,7 @@ function buildSessionResponse(jwtResult, contact, userData) {
 /**
  * GET /api/auth/session
  */
-export async function getSession(request, env) {
+export const getSession = async (request, env) => {
     const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
     
     // Validate JWT
@@ -115,4 +102,4 @@ export async function getSession(request, env) {
     
     // Build and return response
     return jsonResponse(buildSessionResponse(validation.result, contact, userData), 200, request);
-}
+};

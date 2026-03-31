@@ -2,7 +2,7 @@ import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
 import { NotFoundError, ServiceUnavailableError } from '../../../../types/errors.js';
 import { bastionFetch } from './bastionFetch.js';
 
-export async function getDefaultStorageConnection(bastionUrl: string, jwt: string): Promise<ConnectionInfo> {
+export const getDefaultStorageConnection = async (bastionUrl: string, jwt: string): Promise<ConnectionInfo> => {
   const response = await bastionFetch(bastionUrl, '/core/connections/me/default?category=storage', jwt);
 
   if (!response.ok) {
@@ -15,4 +15,4 @@ export async function getDefaultStorageConnection(bastionUrl: string, jwt: strin
 
   const data = (await response.json()) as { connection: ConnectionInfo };
   return data.connection;
-}
+};

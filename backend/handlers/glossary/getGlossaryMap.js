@@ -4,7 +4,7 @@
  * Internal helper function
  */
 
-export async function getGlossaryMap(env, orgId, sourceLang, targetLang) {
+export const getGlossaryMap = async (env, orgId, sourceLang, targetLang) => {
     try {
         const result = await env.DB.prepare(`
             SELECT source_term, target_term
@@ -21,4 +21,4 @@ export async function getGlossaryMap(env, orgId, sourceLang, targetLang) {
         console.error('Error building glossary map:', error);
         return new Map();
     }
-}
+};

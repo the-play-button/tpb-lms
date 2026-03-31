@@ -6,7 +6,7 @@
 
 import { jsonResponse } from '../../cors.js';
 
-export async function listAPIKeysHandler(request, env, auth) {
+export const listAPIKeysHandler = async (request, env, auth) => {
     try {
         const userId = auth.contact?.id;
 
@@ -38,4 +38,4 @@ export async function listAPIKeysHandler(request, env, auth) {
         console.error('List API keys error:', error);
         return jsonResponse({ error: 'Failed to list API keys' }, 500, request);
     }
-}
+};

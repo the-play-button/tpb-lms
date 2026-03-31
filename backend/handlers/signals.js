@@ -11,14 +11,7 @@
 import { jsonResponse } from '../cors.js';
 import { checkCourseCompletionBadges, recordCourseCompletion } from '../helpers/xp/index.js';
 
-// ============================================
-// Helper functions
-// ============================================
-
-/**
- * Parse step data from raw DB row
- */
-function parseStep(row, currentStep) {
+const parseStep = (row, currentStep) => {
     const media = JSON.parse(row.media_json || '[]');
     const hasQuiz = media.some(m => m.type === 'QUIZ');
     const hasVideo = media.some(m => m.type === 'VIDEO');
@@ -37,28 +30,22 @@ function parseStep(row, currentStep) {
         step_completed: stepCompleted,
         can_access: row.sys_order_index <= currentStep + 1
     };
-}
+};
 
-/**
- * Check for corrupted state (quiz passed but next step locked)
- */
-function hasCorruptedState(steps) {
+const hasCorruptedState = steps => {
     return steps.some((s, i) => {
         if (!s.quiz_passed) return false;
         const nextStep = steps[i + 1];
         return nextStep && !nextStep.can_access;
     });
-}
+};
 
-/**
- * Reset progress for a user/course
- */
-async function resetProgress(db, userId, courseId) {
+const resetProgress = async (db, userId, courseId) => {
     await db.prepare('DELETE FROM v_user_progress WHERE user_id = ? AND course_id = ?')
         .bind(userId, courseId).run();
     await db.prepare('DELETE FROM lms_event WHERE user_id = ? AND course_id = ?')
         .bind(userId, courseId).run();
-}
+};
 
 // ============================================
 // Main handlers
@@ -67,7 +54,7 @@ async function resetProgress(db, userId, courseId) {
 /**
  * GET /api/signals/:courseId
  */
-export async function getCourseSignalsHandler(request, env, userContext, courseId) {
+export const getCourseSignalsHandler = async (request, env, userContext, courseId) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
     
@@ -148,12 +135,12 @@ export async function getCourseSignalsHandler(request, env, userContext, courseI
         // Badges earned on completion
         badges_earned: badgesEarned
     }, 200, request);
-}
+};
 
 /**
  * GET /api/signals/:courseId/:classId
  */
-export async function getStepSignals(request, env, userContext, courseId, classId) {
+export const getStepSignals = async (request, env, userContext, courseId, classId) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
     
@@ -188,16 +175,16 @@ export async function getStepSignals(request, env, userContext, courseId, classI
                 ? Math.round((progress.video_max_position_sec / progress.video_duration_sec) * 100) : 0
         }
     }, 200, request);
-}
+};
 
 /**
  * POST /api/signals/:courseId/reset
  */
-export async function resetCourseSignals(request, env, userContext, courseId) {
+export const resetCourseSignals = async (request, env, userContext, courseId) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
     
     await resetProgress(env.DB, userId, courseId);
     
     return jsonResponse({ success: true, message: 'Progress reset' }, 200, request);
-}
+};

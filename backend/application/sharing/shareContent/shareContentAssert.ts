@@ -10,13 +10,11 @@ export type ShareContentAssertedInput = z.infer<typeof ShareContentAssertSchema>
 /**
  * Assert step: validate presence of required path parameters.
  */
-export function shareContentAssert(
-  refId: string
-): Result<string, ShareContentAssertedInput> {
+export const shareContentAssert = (refId: string): Result<string, ShareContentAssertedInput> => {
   const parsed = ShareContentAssertSchema.safeParse({ ref_id: refId });
   if (!parsed.success) {
     return fail(parsed.error.issues.map((i) => i.message).join('; '));
   }
 
   return succeed(parsed.data);
-}
+};

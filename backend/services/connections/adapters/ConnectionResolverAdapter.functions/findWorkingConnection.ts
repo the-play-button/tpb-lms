@@ -7,11 +7,7 @@ import { testAccess } from './testAccess.js';
  * Find a working connection for the given provider and folder.
  * Tries each connection until one has folder access (multi-tenant support).
  */
-export async function findWorkingConnection(
-  config: ConnectionResolverConfig,
-  provider: string,
-  folderId: string,
-): Promise<ConnectionInfo> {
+export const findWorkingConnection = async (config: ConnectionResolverConfig, provider: string, folderId: string): Promise<ConnectionInfo> => {
   const connections = await config.getConnectionsByProvider(provider);
 
   if (connections.length === 0) {
@@ -37,4 +33,4 @@ export async function findWorkingConnection(
     `${provider} connection with folder access`,
     `Tried ${connections.length} connection(s)`,
   );
-}
+};

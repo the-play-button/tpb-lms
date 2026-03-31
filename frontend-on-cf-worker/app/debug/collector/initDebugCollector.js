@@ -6,7 +6,7 @@
 
 import { storage, storeError, storeBreadcrumb, storeNetworkError, describeElement, log } from './_shared.js';
 
-export function initDebugCollector() {
+export const initDebugCollector = () => {
     if (storage.initialized) {
         log.debug('[Debug] Collector already initialized');
         return;
@@ -182,4 +182,4 @@ export function initDebugCollector() {
 
     storage.initialized = true;
     log.debug('[Debug] Collector initialized');
-}
+};

@@ -11,14 +11,14 @@ import { log } from './log.js';
 /**
  * Load leaderboard from API
  */
-export async function loadLeaderboard() {
+export const loadLeaderboard = async () => {
     try {
         const data = await api('/leaderboard?limit=10');
         renderLeaderboard(data.leaderboard || [], data.currentUser);
     } catch (error) {
         log.warn('Failed to load leaderboard:', error.message);
     }
-}
+};
 
 /**
  * Render leaderboard entries
