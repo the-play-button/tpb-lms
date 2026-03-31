@@ -90,7 +90,7 @@ export const getCourseSignalsHandler = async (request, env, userContext, courseI
     });
     
     // Second pass: update can_access with final currentStep
-    steps.forEach(step => { step.can_access = step.order_index <= currentStep + 1; });
+    for (const step of steps) { step.can_access = step.order_index <= currentStep + 1; }
     
     // Check for corrupted state
     if (hasCorruptedState(steps)) {
