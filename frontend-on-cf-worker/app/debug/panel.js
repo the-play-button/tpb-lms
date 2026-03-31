@@ -165,7 +165,7 @@ const setupListeners = () => {
 /**
  * Handle escape key
  */
-function handleEscape(e) {
+const handleEscape = (e) => {
     if (e.key === 'Escape' && isOpen) {
         closePanel();
     }
@@ -195,7 +195,7 @@ export const openPanel = () => {
 /**
  * Close the debug panel
  */
-export function closePanel() {
+export const closePanel = () => {
     if (!isOpen || !panelElement) return;
     
     panelElement.classList.remove('debug-panel--open');

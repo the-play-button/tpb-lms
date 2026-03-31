@@ -161,7 +161,7 @@ export const handleTallySubmission = async tallyEvent => {
  * Show corrections modal for passed quiz (with errors)
  * Only shown when user passed but didn't get 100%
  */
-function showCorrectionsModal(wrongAnswers, score, maxScore) {
+const showCorrectionsModal = (wrongAnswers, score, maxScore) => {
     const modal = document.createElement('div');
     modal.className = 'quiz-modal-overlay';
     modal.innerHTML = `
@@ -196,7 +196,7 @@ function showCorrectionsModal(wrongAnswers, score, maxScore) {
  * Show failure modal when quiz not passed
  * User must rewatch video before retrying
  */
-function showFailureModal(score, maxScore, percentage) {
+const showFailureModal = (score, maxScore, percentage) => {
     const modal = document.createElement('div');
     modal.className = 'quiz-modal-overlay';
     modal.innerHTML = `
@@ -223,7 +223,7 @@ function showFailureModal(score, maxScore, percentage) {
 /**
  * Show pending state in quiz UI while processing
  */
-function showQuizPendingState() {
+const showQuizPendingState = () => {
     const quizSection = document.querySelector('.step-quiz');
     if (!quizSection) return;
     

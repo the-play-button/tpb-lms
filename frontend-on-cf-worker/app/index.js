@@ -133,7 +133,7 @@ const init = async () => {
 /**
  * Initialize language selector in header
  */
-function initLangSelectorInHeader() {
+const initLangSelectorInHeader = () => {
     const userMenu = document.getElementById('userMenu');
     if (!userMenu) return;
     
@@ -190,7 +190,7 @@ const initMobileTabs = () => {
 /**
  * Populate mobile course list from state
  */
-function populateMobileCourseList() {
+const populateMobileCourseList = () => {
     const container = document.getElementById('mobileCourseList');
     if (!container) return;
     
@@ -236,7 +236,7 @@ function populateMobileCourseList() {
  * Populate mobile badges grid from state
  * Tap on badge opens detail modal
  */
-function populateMobileBadgesGrid() {
+const populateMobileBadgesGrid = () => {
     const container = document.getElementById('mobileBadgesGrid');
     if (!container) return;
     
@@ -278,7 +278,7 @@ function populateMobileBadgesGrid() {
 /**
  * Switch mobile view back to content tab
  */
-function switchToContentTab() {
+const switchToContentTab = () => {
     const mobileTabs = document.getElementById('mobileTabs');
     const content = document.querySelector('.lms-content');
     const parcoursView = document.getElementById('mobileParcoursView');
@@ -295,7 +295,7 @@ function switchToContentTab() {
 /**
  * Setup DOM event listeners
  */
-function setupEventListeners() {
+const setupEventListeners = () => {
     initMobileTabs();
     
     document.getElementById('somList')?.addEventListener('click', (e) => {

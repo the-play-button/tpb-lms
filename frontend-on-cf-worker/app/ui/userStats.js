@@ -42,7 +42,7 @@ export const updateUserStats = () => {
     }
 };
 
-function showFloatingXP(amount, anchorEl) {
+const showFloatingXP = (amount, anchorEl) => {
     const rect = anchorEl.getBoundingClientRect();
     const float = document.createElement('div');
     float.className = 'xp-float';

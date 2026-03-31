@@ -23,7 +23,7 @@ export const loadLeaderboard = async () => {
 /**
  * Render leaderboard entries
  */
-function renderLeaderboard(entries, currentUser) {
+const renderLeaderboard = (entries, currentUser) => {
     const list = document.getElementById('leaderboardList');
     if (!list) return;
     

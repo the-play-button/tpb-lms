@@ -61,7 +61,7 @@ const postProcessGlossary = (text, placeholders) => {
 /**
  * Escape special regex characters
  */
-function escapeRegex(string) {
+const escapeRegex = (string) => {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 

@@ -52,7 +52,7 @@ export const initDebugFab = () => {
 /**
  * Handle FAB click - single click copies info, double click opens panel
  */
-function handleFabClick() {
+const handleFabClick = () => {
     clickCount++;
     
     if (clickCount === 1) {
@@ -71,7 +71,7 @@ function handleFabClick() {
 /**
  * Handle single click - copy debug info
  */
-async function handleSingleClick() {
+const handleSingleClick = async () => {
     fabElement.classList.add('debug-fab--loading');
     
     try {

@@ -78,7 +78,7 @@ export const loadCourse = async (courseId, initialStepIndex = null) => {
 /**
  * Update URL with current course and step (GAP-203)
  */
-export function updateURL(courseId, stepIndex) {
+export const updateURL = (courseId, stepIndex) => {
     const params = new URLSearchParams(window.location.search);
     params.set('som', courseId);
     params.set('step', stepIndex + 1); // 1-based pour l'URL

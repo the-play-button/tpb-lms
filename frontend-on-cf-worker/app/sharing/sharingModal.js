@@ -95,7 +95,7 @@ export const showSharingModal = (contentRefId, contentName) => {
 /**
  * Load and render permissions list
  */
-async function loadPermissions(contentRefId) {
+const loadPermissions = async (contentRefId) => {
     const container = document.getElementById('permissions-list');
     if (!container) return;
 

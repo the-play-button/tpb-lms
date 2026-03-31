@@ -119,7 +119,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
 /**
  * Render appropriate enrollment button
  */
-function renderEnrollmentButton(course, isEnrolled, canEnroll, enrollmentStatus) {
+const renderEnrollmentButton = (course, isEnrolled, canEnroll, enrollmentStatus) => {
     if (isEnrolled) {
         const { enrollment: { progress_percent: progress = 0 } = {} } = enrollmentStatus ?? {};
         return `
@@ -150,7 +150,7 @@ function renderEnrollmentButton(course, isEnrolled, canEnroll, enrollmentStatus)
 /**
  * Setup click handlers for overview buttons
  */
-function setupOverviewHandlers(courseId) {
+const setupOverviewHandlers = (courseId) => {
     document.querySelector('[data-action="enroll"]')?.addEventListener('click', async (e) => {
         const btn = e.target;
         btn.disabled = true;

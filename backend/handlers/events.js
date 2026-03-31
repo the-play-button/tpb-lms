@@ -87,7 +87,7 @@ export const handleEvent = async (request, env, userContext) => {
 /**
  * Check if class has a quiz
  */
-async function checkHasQuiz(db, classId) {
+const checkHasQuiz = async (db, classId) => {
     const cls = await db.prepare(`
         SELECT media_json FROM lms_class WHERE id = ?
     `).bind(classId).first();

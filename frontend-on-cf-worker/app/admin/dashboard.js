@@ -122,7 +122,7 @@ export const renderAdminDashboard = async container => {
 /**
  * Get emoji icon for activity type
  */
-function getActivityIcon(type) {
+const getActivityIcon = (type) => {
     const icons = {
         'VIDEO_PING': '📺',
         'VIDEO_COMPLETE': '✅',
@@ -137,7 +137,7 @@ function getActivityIcon(type) {
 /**
  * Format timestamp to relative time
  */
-function formatRelativeTime(timestamp) {
+const formatRelativeTime = (timestamp) => {
     if (!timestamp) return '';
     
     const now = new Date();

@@ -85,7 +85,7 @@ export const renderStepsSidebar = (options = {}) => {
  * @param {Array} classes - Course classes
  * @returns {Object} - Steps grouped by section name
  */
-function groupBySection(classes) {
+const groupBySection = (classes) => {
     const groups = {};
     
     for (const cls of classes) {
@@ -106,7 +106,7 @@ function groupBySection(classes) {
  * @param {string} stepType - Step type
  * @returns {string} - Icon emoji
  */
-function getStepTypeIcon(stepType) {
+const getStepTypeIcon = (stepType) => {
     switch (stepType) {
         case 'VIDEO': return '🎬';
         case 'QUIZ': return '📝';
@@ -121,7 +121,7 @@ function getStepTypeIcon(stepType) {
  * @param {string} status - Status class
  * @returns {string} - Tooltip text
  */
-function getStepTooltip(status) {
+const getStepTooltip = (status) => {
     switch (status) {
         case 'current': return 'Étape en cours';
         case 'completed': return 'Étape terminée';

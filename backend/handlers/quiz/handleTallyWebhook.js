@@ -27,7 +27,7 @@ export const handleTallyWebhook = async (request, env) => {
 /**
  * Process Tally webhook payload
  */
-async function processTallyPayload(payload, env, request) {
+const processTallyPayload = async (payload, env, request) => {
     if (payload.eventType !== 'FORM_RESPONSE') {
         return jsonResponse({ ignored: true, reason: 'Not a form response' }, 200, request);
     }

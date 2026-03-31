@@ -1,7 +1,7 @@
 {
   "version": 2,
   "updated": "2026-03-31",
-  "total": 281,
+  "total": 248,
   "by_check": {
     "audit_trail": 2,
     "catch_return_default": 11,
@@ -21,7 +21,6 @@
     "inconsistent_constant": 1,
     "innerHTML_modal_or_error": 1,
     "js_destructuring_defaults": 37,
-    "js_function_declaration": 33,
     "magic_timeout": 10,
     "missing_required_page": 2,
     "missing_testid": 34,

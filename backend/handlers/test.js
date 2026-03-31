@@ -62,7 +62,7 @@ const applyFixture = async (db, cfUserId, fixture, email = null) => {
  * Clean all progress for a user
  * Cleans by both CF Access user_id AND contact_id (resolved from email)
  */
-async function cleanSlate(db, userId, email = null) {
+const cleanSlate = async (db, userId, email = null) => {
     await db.batch([
         db.prepare('DELETE FROM v_user_progress WHERE user_id = ?').bind(userId),
         db.prepare('DELETE FROM lms_event WHERE user_id = ?').bind(userId),
@@ -91,7 +91,7 @@ async function cleanSlate(db, userId, email = null) {
 /**
  * Complete N steps for a user
  */
-async function completeSteps(db, userId, count) {
+const completeSteps = async (db, userId, count) => {
     const courseId = 'pw05-2';
     const now = new Date().toISOString();
     

@@ -47,7 +47,7 @@ export const initUserMenu = (user, profile) => {
 /**
  * Get display text for role
  */
-function getRoleDisplay(role) {
+const getRoleDisplay = (role) => {
     const roles = {
         'admin': 'Admin',
         'instructor': 'Instructeur',
@@ -59,7 +59,7 @@ function getRoleDisplay(role) {
 /**
  * Truncate long email addresses
  */
-function truncateEmail(email) {
+const truncateEmail = (email) => {
     if (!email) return '';
     if (email.length <= 25) return email;
     

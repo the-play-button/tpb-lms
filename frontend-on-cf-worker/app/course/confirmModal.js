@@ -93,7 +93,7 @@ export const showConfirmModal = options => {
 /**
  * Close the confirmation modal
  */
-export function closeConfirmModal() {
+export const closeConfirmModal = () => {
     const modal = document.getElementById('confirmModal');
     if (modal) {
         if (modal._escHandler) {

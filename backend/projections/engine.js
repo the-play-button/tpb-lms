@@ -64,7 +64,7 @@ export const applyProjections = async (db, event) => {
 /**
  * Get current state from v_user_progress
  */
-async function getState(db, key) {
+const getState = async (db, key) => {
     return await db.prepare(`
         SELECT * FROM v_user_progress 
         WHERE user_id = ? AND class_id = ?
@@ -74,7 +74,7 @@ async function getState(db, key) {
 /**
  * Upsert state into v_user_progress
  */
-async function upsertState(db, key, courseId, state) {
+const upsertState = async (db, key, courseId, state) => {
     const now = new Date().toISOString();
     
     await db.prepare(`
