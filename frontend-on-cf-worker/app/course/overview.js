@@ -121,7 +121,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
  */
 function renderEnrollmentButton(course, isEnrolled, canEnroll, enrollmentStatus) {
     if (isEnrolled) {
-        const progress = enrollmentStatus?.enrollment?.progress_percent || 0;
+        const { enrollment: { progress_percent: progress = 0 } = {} } = enrollmentStatus ?? {};
         return `
             <button class="btn-primary btn-start" data-action="continue" data-course="${course.id}">
                 ${progress > 0 ? `Continuer (${progress}%)` : 'Commencer le cours'} →

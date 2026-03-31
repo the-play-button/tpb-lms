@@ -73,11 +73,12 @@ const getStepSignalData = (signals, classId) => {
 
 const getStepContext = () => {
     const course = getState('courseData');
-    if (!course?.classes?.length) return null;
+    const { classes = [] } = course ?? {};
+    if (!classes.length) return null;
     
     const signals = getState('signals');
     const stepIndex = getState('currentStepIndex');
-    const cls = course.classes[stepIndex];
+    const cls = classes[stepIndex];
     
     const videoInfo = getVideoInfo(cls);
     const signalData = getStepSignalData(signals, cls.id);

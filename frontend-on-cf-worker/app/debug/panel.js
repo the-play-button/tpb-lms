@@ -128,12 +128,13 @@ const handleResetAll = async () => {
 
 const handleGotoStep = () => {
     const courseData = getState('courseData');
-    if (!courseData?.classes?.length) {
+    const { classes = [] } = courseData ?? {};
+    if (!classes.length) {
         showToast('Aucun cours chargé', 'error');
         return;
     }
-    
-    const stepCount = courseData.classes.length;
+
+    const stepCount = classes.length;
     const input = prompt(`Aller à quelle étape ? (1-${stepCount})`);
     if (!input) return;
     

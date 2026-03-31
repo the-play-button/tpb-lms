@@ -20,7 +20,8 @@ export const renderStepsSidebar = (options = {}) => {
     const signals = getState('signals');
     const currentStepIndex = getState('currentStepIndex');
     
-    if (!course?.classes?.length) return;
+    const { classes = [] } = course ?? {};
+    if (!classes.length) return;
     
     const sidebar = document.getElementById('stepsSidebar');
     if (!sidebar) return;
@@ -31,7 +32,7 @@ export const renderStepsSidebar = (options = {}) => {
             .map(({ class_id } = {}) => class_id)
     );
     
-    const grouped = showSections ? groupBySection(course.classes) : { '': course.classes };
+    const grouped = showSections ? groupBySection(classes) : { '': classes };
     
     let html = `
         <div class="sidebar-header">

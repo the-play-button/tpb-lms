@@ -34,6 +34,7 @@ export interface StoragePermission {
 }
 
 export const mapGraphPermission = (perm: GraphPermission): StoragePermission => {
+  // entropy-optional-chaining-ok: MS Graph API — multi-source fallback chain (V2 → legacy → identities → invitation)
   const email =
     perm.grantedToV2?.user?.email ||
     perm.grantedTo?.user?.email ||
@@ -42,6 +43,7 @@ export const mapGraphPermission = (perm: GraphPermission): StoragePermission => 
     perm.grantedToIdentities?.[0]?.user?.email ||
     perm.invitation?.email;
 
+  // entropy-optional-chaining-ok: MS Graph API — multi-source fallback chain (V2 → legacy → identities → invitation)
   const display_name =
     perm.grantedToV2?.user?.displayName ||
     perm.grantedTo?.user?.displayName ||
@@ -50,6 +52,7 @@ export const mapGraphPermission = (perm: GraphPermission): StoragePermission => 
     perm.grantedToIdentities?.[0]?.user?.displayName ||
     perm.invitation?.invitedBy?.user?.displayName;
 
+  // entropy-optional-chaining-ok: MS Graph API — multi-source fallback chain (V2 → legacy → identities)
   const user_id =
     perm.grantedToV2?.user?.id ||
     perm.grantedTo?.user?.id ||

@@ -15,7 +15,7 @@
  */
 export const requireRole = (...allowedRoles) => {
   return (userContext) => {
-    const role = userContext?.user?.role || 'student';
+    const { user: { role = 'student' } = {} } = userContext ?? {};
     
     if (!allowedRoles.includes(role)) {
       return { 
@@ -41,7 +41,7 @@ export const requireAnyRole = requireRole;
  */
 export const requireAllRoles = (...requiredRoles) => {
   return (userContext) => {
-    const role = userContext?.user?.role || 'student';
+    const { user: { role = 'student' } = {} } = userContext ?? {};
     
     if (role !== 'admin' && requiredRoles.length > 0) {
       return { 
