@@ -24,10 +24,8 @@ export const revokeShareExecute = async (context: RevokeShareContext, ctx: Handl
 
   const revokedShare = revokeResult.value;
 
-  // Persist the revoked share (overwrites the active share)
   await ctx.sharesRepository.save(revokedShare);
 
-  // Emit domain event
   await ctx.domainEvents.publish(
     shareRevoked(
       context.share.id.value,

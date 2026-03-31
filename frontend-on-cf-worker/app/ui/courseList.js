@@ -12,7 +12,6 @@ export const renderCourseList = () => {
     const courses = getState('courses') || [];
     const currentCourse = getState('currentCourse');
     
-    // Inject mastery styles if not already done
     injectMasteryStyles();
     
     list.innerHTML = courses.map(course => {
@@ -20,7 +19,6 @@ export const renderCourseList = () => {
         const statusClass = course.progress?.course_completed ? 'completed' : (hasProgress ? 'in-progress' : '');
         const activeClass = course.id === currentCourse ? 'active' : '';
         
-        // Calculate mastery level from progress
         const progressPercent = course.progress?.progress_percent || 0;
         const masteryLevel = getMasteryLevel(progressPercent);
         const masteryBadge = renderMasteryBadge(masteryLevel, { size: 'small' });

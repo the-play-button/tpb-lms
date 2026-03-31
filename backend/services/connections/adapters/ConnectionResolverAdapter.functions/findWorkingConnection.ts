@@ -17,7 +17,6 @@ export const findWorkingConnection = async (config: ConnectionResolverConfig, pr
     );
   }
 
-  // Try each connection until one works
   const errors: string[] = [];
   for (const conn of connections) {
     try {

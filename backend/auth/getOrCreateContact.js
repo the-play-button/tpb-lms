@@ -3,7 +3,6 @@
  */
 
 export const getOrCreateContact = async (email, env) => {
-    // Try to find existing contact
     let contact = await env.DB.prepare(`
         SELECT * FROM crm_contact
         WHERE id IN (
@@ -14,7 +13,6 @@ export const getOrCreateContact = async (email, env) => {
 
     if (contact) return contact;
 
-    // Create new contact
     const id = `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
     const now = new Date().toISOString();
     const emailsJson = JSON.stringify([{ email, type: 'WORK' }]);

@@ -20,7 +20,6 @@
 import { VaultClient, getCachedSecret } from './vaultClient.js';
 import { log } from './log.js';
 
-// Singleton vault client
 let vaultClient = null;
 
 const getVaultClient = env => {
@@ -39,7 +38,6 @@ const getVaultClient = env => {
  * @returns {Promise<string|null>} - Secret value
  */
 export const getSecret = async (env, vaultPath, envKey) => {
-  // Try vault first
   const vault = getVaultClient(env);
   if (vault) {
     try {
@@ -52,7 +50,6 @@ export const getSecret = async (env, vaultPath, envKey) => {
     }
   }
   
-  // Fall back to env
   return env[envKey] || null;
 };
 

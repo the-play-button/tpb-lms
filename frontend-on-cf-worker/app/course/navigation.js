@@ -22,7 +22,6 @@ export const navigateToStep = stepIndex => {
     
     if (!courseData || !signals) return;
     
-    // Clamp to valid range and respect access limits
     const maxStep = Math.min(
         signals.can_access_step - 1,
         courseData.classes.length - 1
@@ -32,7 +31,6 @@ export const navigateToStep = stepIndex => {
     setState('currentStepIndex', targetStep);
     stopVideoTracking();
     
-    // Update URL with pushState (GAP-203)
     const params = new URLSearchParams(window.location.search);
     params.set('som', courseId);
     params.set('step', targetStep + 1); // 1-based pour l'URL
@@ -53,13 +51,11 @@ export const nextStep = async () => {
     const courseData = getState('courseData');
     const currentClass = courseData?.classes?.[stepIndex];
     
-    // Check if this is a CONTENT step (no video, no quiz in media)
     const media = currentClass?.media || [];
     const hasVideo = media.some(({ type }) => type === 'VIDEO');
     const hasQuiz = media.some(({ type }) => type === 'QUIZ');
     const isContentStep = !hasVideo && !hasQuiz;
     
-    // CONTENT steps can always advance; VIDEO/QUIZ need completion
     if (!isContentStep && !stepSignal?.step_completed) {
         alert("Vous devez compléter cette étape avant de continuer.");
         return;
@@ -72,14 +68,12 @@ export const nextStep = async () => {
         setState('currentStepIndex', newStepIndex);
         stopVideoTracking();
         
-        // Update URL with pushState (GAP-203)
         const params = new URLSearchParams(window.location.search);
         params.set('som', courseId);
         params.set('step', newStepIndex + 1); // 1-based pour l'URL
         const newUrl = `${window.location.pathname}?${params.toString()}`;
         history.pushState({ courseId, stepIndex: newStepIndex }, '', newUrl);
         
-        // Refresh signals
         const newSignals = await refreshSignals();
         
         if (newSignals?.course_completed) {
@@ -90,7 +84,6 @@ export const nextStep = async () => {
         
         window.scrollTo(0, 0);
     } else {
-        // Last step - show end screen
         await refreshSignals();
         renderModuleEndScreen();
     }
@@ -117,7 +110,6 @@ export const restartModule = async () => {
         const currentCourse = getState('currentCourse');
         try {
             await apiPost(`/signals/${currentCourse}/reset`, {});
-            // Reload course
             const { loadCourse } = await import('./loader.js');
             loadCourse(currentCourse);
         } catch (error) {
@@ -131,13 +123,11 @@ const handlePopState = async event => {
         const courseId = event.state.courseId || getState('currentCourse');
         const stepIndex = event.state.stepIndex;
         
-        // If same course, just navigate to step
         if (courseId === getState('currentCourse')) {
             setState('currentStepIndex', stepIndex);
             stopVideoTracking();
             renderCurrentStep();
         } else {
-            // Different course, use dynamic import to avoid circular dependency
             const { loadCourse } = await import('./loader.js');
             loadCourse(courseId, stepIndex);
         }
@@ -154,7 +144,6 @@ export const initNavigation = () => {
     window.navigateToStep = navigateToStep; // entropy-global-pollution-ok: intentional global for HTML onclick
     window.cycleSpeed = cyclePlaybackSpeed; // GAP-101: Playback speed control // entropy-global-pollution-ok: intentional global for HTML onclick // entropy-orphan-global-ok: alias
     
-    // Handle browser back/forward (GAP-203)
     window.addEventListener('popstate', handlePopState);
 };
 

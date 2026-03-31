@@ -13,7 +13,6 @@ export const updateProgress = async (request, env, userContext, enrollmentId) =>
         return jsonResponse({ error: 'User not authenticated' }, 401, request);
     }
 
-    // Verify enrollment belongs to user
     const enrollment = await env.DB.prepare(
         `SELECT id, course_id, status FROM lms_enrollment WHERE id = ? AND user_id = ?`
     ).bind(enrollmentId, userId).first();
@@ -26,7 +25,6 @@ export const updateProgress = async (request, env, userContext, enrollmentId) =>
         return jsonResponse({ error: 'Cannot update progress for non-active enrollment' }, 400, request);
     }
 
-    // Parse request body
     let body;
     try {
         body = await request.json();
@@ -36,7 +34,6 @@ export const updateProgress = async (request, env, userContext, enrollmentId) =>
 
     const { current_class_id, completed_classes_count } = body;
 
-    // Update progress
     const updates = ['last_activity_at = datetime(\'now\')', 'updated_at = datetime(\'now\')'];
     const params = [];
 

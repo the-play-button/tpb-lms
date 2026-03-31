@@ -19,7 +19,6 @@ export const updateUserStats = () => {
     
     const currentXP = profile.total_points || 0;
     
-    // Detecter augmentation XP et declencher animation
     if (previousXP !== null && currentXP > previousXP) {
         const xpStat = document.querySelector('.stat.xp');
         if (xpStat) {

@@ -160,7 +160,6 @@ export const initAdminDashboard = async () => {
     const container = document.getElementById('somViewer');
     if (!container) return;
     
-    // Show loading state
     container.innerHTML = `
         <div class="admin-dashboard">
             <div class="admin-loading">

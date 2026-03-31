@@ -30,7 +30,6 @@ export const shareContentExecute = async (
   const shareIdResult = ShareId.create(crypto.randomUUID());
   if (!shareIdResult.ok) return fail(shareIdResult.error);
 
-  // Map input role to domain role
   const domainRole: ShareRole = input.role === 'WRITE' ? 'editor' : 'viewer';
 
   const shareResult = ActiveShare.create({
@@ -42,10 +41,8 @@ export const shareContentExecute = async (
   });
   if (!shareResult.ok) return fail(shareResult.error);
 
-  // Persist
   await ctx.sharesRepository.save(shareResult.value);
 
-  // Emit domain event
   await ctx.domainEvents.publish(
     contentShared(
       context.contentRef.id.value,

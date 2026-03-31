@@ -9,7 +9,6 @@
 
 import { jsonResponse } from '../cors.js';
 
-// Class IDs for pw05-2 course
 const CLASS_IDS = [
     'step01-valeurs-wge',
     'step02-vie-entreprise', 
@@ -28,22 +27,18 @@ const resolveContactId = async (db, email) => {
 };
 
 const applyFixture = async (db, cfUserId, fixture, email = null) => {
-    // Resolve the contact_id (this is what the API actually uses)
     const contactId = await resolveContactId(db, email);
     
     if (!contactId && fixture !== 'clean_slate') {
         throw new Error(`Cannot resolve contact_id for email: ${email}. User must exist in crm_contact.`);
     }
     
-    // Always clean first (by both cfUserId and contactId)
     await cleanSlate(db, cfUserId, email);
     
-    // Use contactId for inserts (what the API actually queries)
     const insertUserId = contactId || cfUserId;
     
     switch (fixture) {
         case 'clean_slate':
-            // Already done
             break;
             
         case 'step3':
@@ -68,7 +63,6 @@ const applyFixture = async (db, cfUserId, fixture, email = null) => {
  * Cleans by both CF Access user_id AND contact_id (resolved from email)
  */
 async function cleanSlate(db, userId, email = null) {
-    // Clean by CF Access user_id
     await db.batch([
         db.prepare('DELETE FROM v_user_progress WHERE user_id = ?').bind(userId),
         db.prepare('DELETE FROM lms_event WHERE user_id = ?').bind(userId),
@@ -76,9 +70,7 @@ async function cleanSlate(db, userId, email = null) {
         db.prepare('DELETE FROM gamification_award WHERE user_id = ?').bind(userId),
     ]);
     
-    // If email provided, also clean by contact_id
     if (email) {
-        // Find contact_id(s) for this email
         const contacts = await db.prepare(
             "SELECT id FROM crm_contact WHERE emails_json LIKE ?"
         ).bind(`%${email}%`).all();
@@ -108,7 +100,6 @@ async function completeSteps(db, userId, count) {
         const hourOffset = count - i; // Older steps are further back in time
         const timestamp = new Date(Date.now() - hourOffset * 3600000).toISOString();
         
-        // Insert progress
         await db.prepare(`
             INSERT INTO v_user_progress 
             (user_id, class_id, course_id, video_max_position_sec, video_duration_sec, 
@@ -117,7 +108,6 @@ async function completeSteps(db, userId, count) {
             VALUES (?, ?, ?, 300, 300, 1, ?, 1, 1, 1, ?, ?)
         `).bind(userId, classId, courseId, timestamp, timestamp, timestamp).run();
         
-        // Insert events
         const eventId1 = `evt_fixture_${Date.now()}_${i}_v`;
         const eventId2 = `evt_fixture_${Date.now()}_${i}_q`;
         
@@ -136,7 +126,6 @@ async function completeSteps(db, userId, count) {
         ).run();
     }
     
-    // Add badges
     if (count >= 1) {
         await db.prepare(`
             INSERT OR IGNORE INTO gamification_award (id, badge_id, user_id, user_type, awarded_at, created_at)
@@ -179,7 +168,6 @@ async function completeSteps(db, userId, count) {
  * The system uses both CF Access user_id AND contact_id (resolved from email).
  */
 export const handleTestSeed = async (request, env) => {
-    // Verify secret
     const secret = request.headers.get('X-Test-Secret');
     if (!secret || secret !== env.TEST_SECRET) {
         return jsonResponse({ error: 'Forbidden' }, 403, request);

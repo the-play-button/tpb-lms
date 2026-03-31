@@ -29,7 +29,6 @@ export const initDebugFab = () => {
         return;
     }
     
-    // Create FAB element
     fabElement = document.createElement('button');
     fabElement.id = 'debug-fab';
     fabElement.className = 'debug-fab';
@@ -43,10 +42,8 @@ export const initDebugFab = () => {
         </svg>
     `;
     
-    // Click handler
     fabElement.addEventListener('click', handleFabClick);
     
-    // Mount to body
     document.body.appendChild(fabElement);
     
     log.debug('[Debug] FAB initialized');
@@ -59,14 +56,12 @@ function handleFabClick() {
     clickCount++;
     
     if (clickCount === 1) {
-        // Wait to see if it's a double-click
         // entropy-prohibited-timer-ok: debounce for double-click detection
         clickTimer = setTimeout(async () => {
             clickCount = 0;
             await handleSingleClick();
         }, 250);
     } else if (clickCount === 2) {
-        // Double-click: open debug panel
         clearTimeout(clickTimer);
         clickCount = 0;
         togglePanel();
@@ -77,7 +72,6 @@ function handleFabClick() {
  * Handle single click - copy debug info
  */
 async function handleSingleClick() {
-    // Add visual feedback
     fabElement.classList.add('debug-fab--loading');
     
     try {
@@ -92,7 +86,6 @@ async function handleSingleClick() {
             
             showToast('📋 Infos copiées ! Double-clic pour console debug.', 'success');
             
-            // Log for debugging
             log.debug('[Debug] Info copied to clipboard:', result.data);
         } else {
             fabElement.classList.add('debug-fab--error');

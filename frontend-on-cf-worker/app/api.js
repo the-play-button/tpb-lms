@@ -17,10 +17,8 @@
 
 import { sessionId } from './state.js';
 
-// API endpoint
 export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api'; // entropy-hardcoded-url-ok: deployment config URL
 
-// Cached auth token
 let authToken = null;
 
 const getAuthToken = async (forceRefresh = false) => {
@@ -65,7 +63,6 @@ export const api = async path => {
     
     let response = await fetch(`${API_BASE}${path}`, { headers });
     
-    // Retry once with fresh token if auth failed
     if (isAuthError(response.status)) {
         clearAuthToken();
         const freshHeaders = await buildHeaders();
@@ -92,7 +89,6 @@ export const apiPost = async (path, data, options = {}) => {
         'Content-Type': 'application/json'
     };
     
-    // Add idempotency key if provided (GAP-711)
     if (options.idempotencyKey) {
         additionalHeaders['X-Idempotency-Key'] = options.idempotencyKey;
     }
@@ -106,7 +102,6 @@ export const apiPost = async (path, data, options = {}) => {
         body
     });
     
-    // Retry once with fresh token if auth failed
     if (isAuthError(response.status)) {
         clearAuthToken();
         const freshHeaders = await buildHeaders(additionalHeaders);
@@ -137,7 +132,6 @@ export const apiDelete = async path => {
         headers
     });
 
-    // Retry once with fresh token if auth failed
     if (isAuthError(response.status)) {
         clearAuthToken();
         const freshHeaders = await buildHeaders();

@@ -16,7 +16,6 @@ import { log } from '../log.js';
  * @param {string} contentName - Display name for the content
  */
 export const showSharingModal = (contentRefId, contentName) => {
-    // Remove existing modal if any
     const existing = document.getElementById('sharing-modal');
     if (existing) existing.remove();
 
@@ -56,13 +55,11 @@ export const showSharingModal = (contentRefId, contentName) => {
 
     document.body.appendChild(modal);
 
-    // Close handler
     modal.querySelector('[data-action="close"]').addEventListener('click', () => modal.remove());
     modal.addEventListener('click', (e) => {
         if (e.target === modal) modal.remove();
     });
 
-    // Submit handler
     modal.querySelector('#share-submit').addEventListener('click', async () => {
         const email = document.getElementById('share-email').value.trim();
         const role = document.getElementById('share-role').value;
@@ -84,7 +81,6 @@ export const showSharingModal = (contentRefId, contentName) => {
             statusEl.className = 'share-status success';
             document.getElementById('share-email').value = '';
 
-            // Refresh permissions list
             loadPermissions(contentRefId);
         } catch (error) {
             log.error('Share failed:', error);
@@ -93,7 +89,6 @@ export const showSharingModal = (contentRefId, contentName) => {
         }
     });
 
-    // Load existing permissions
     loadPermissions(contentRefId);
 };
 
@@ -125,7 +120,6 @@ async function loadPermissions(contentRefId) {
             </div>
         `).join('');
 
-        // Revoke handlers
         container.querySelectorAll('[data-action="revoke"]').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const refId = e.target.dataset.ref;

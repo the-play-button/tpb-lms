@@ -17,7 +17,6 @@
 
 const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: fallback config URL
 
-// Connections to create
 const CONNECTIONS = [
   {
     id: 'conn_lms_service',

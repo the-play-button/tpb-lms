@@ -9,10 +9,8 @@
 import { API_BASE } from '../../api.js';
 import { log } from '../../log.js';
 
-// Auth token cache (shared with api.js pattern)
 let authToken = null;
 
-// Simple in-memory cache for content
 export const contentCache = new Map();
 export const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
 
@@ -64,23 +62,17 @@ export const stripFrontmatter = markdown => {
 export const cleanMarkdownForLms = markdown => {
     let cleaned = markdown;
 
-    // Remove "## Video" section with cloudflare URL (video rendered separately)
     cleaned = cleaned.replace(/##\s*Vid[eé]o\s*\n+https?:\/\/[^\s]*cloudflarestream\.com[^\s]*/gi, '');
 
-    // Remove standalone cloudflare stream URLs (plain text or links)
     cleaned = cleaned.replace(/https?:\/\/(?:customer-[\w]+\.)?cloudflarestream\.com\/[\w]+\/iframe\s*/g, '');
     cleaned = cleaned.replace(/https?:\/\/iframe\.cloudflarestream\.com\/[\w]+[^\s]*/g, '');
 
-    // Remove navigation links to .md files
     cleaned = cleaned.replace(/\[([^\]]*)\]\([^)]*\.md\)/g, '');
-    // Clean up leftover separators from navigation
     cleaned = cleaned.replace(/\s*\|\s*\|\s*/g, '');
     cleaned = cleaned.replace(/^\s*\|\s*$/gm, '');
 
-    // Remove empty horizontal rules sections
     cleaned = cleaned.replace(/---\s*\n+---/g, '---');
 
-    // Remove multiple consecutive blank lines
     cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
 
     return cleaned.trim();
@@ -137,7 +129,6 @@ export const fetchContentDirect = async url => {
 export const fetchContentWithI18nFallback = async url => {
     const currentLang = window.i18n?.getLanguage?.() || 'fr';
 
-    // Try current language first
     try {
         const localizedUrl = buildLocalizedUrl(url, currentLang);
         const content = await fetchContentDirect(localizedUrl);
@@ -146,7 +137,6 @@ export const fetchContentWithI18nFallback = async url => {
         log.debug(`[content] ${currentLang} not found, trying fallback...`);
     }
 
-    // Fallback to English if not already
     if (currentLang !== 'en') {
         try {
             const enUrl = buildLocalizedUrl(url, 'en');
@@ -157,13 +147,11 @@ export const fetchContentWithI18nFallback = async url => {
         }
     }
 
-    // Fallback to original URL (source content)
     const content = await fetchContentDirect(url);
     return { content, lang: 'source', url };
 };
 
 // ============================================
-// BYOC Cloud Content Helpers
 // ============================================
 
 /**
@@ -217,7 +205,6 @@ export const fetchCloudContentDirect = async (contentRefId, lang) => {
 export const fetchCloudContentWithI18nFallback = async contentRefId => {
     const currentLang = window.i18n?.getLanguage?.() || 'fr';
 
-    // Try current language first
     try {
         const content = await fetchCloudContentDirect(contentRefId, currentLang);
         return { content, lang: currentLang };
@@ -225,7 +212,6 @@ export const fetchCloudContentWithI18nFallback = async contentRefId => {
         log.debug(`[content] cloud ${currentLang} not found, trying fallback...`);
     }
 
-    // Fallback to English
     if (currentLang !== 'en') {
         try {
             const content = await fetchCloudContentDirect(contentRefId, 'en');
@@ -235,7 +221,6 @@ export const fetchCloudContentWithI18nFallback = async contentRefId => {
         }
     }
 
-    // Fallback to source (no lang param)
     const content = await fetchCloudContentDirect(contentRefId);
     return { content, lang: 'source' };
 };
@@ -244,12 +229,10 @@ export const fetchCloudContentWithI18nFallback = async contentRefId => {
  * Resolve a relative path against a base URL
  */
 export const resolvePath = (baseDir, path) => {
-    // Remove leading ./
     if (path.startsWith('./')) {
         path = path.substring(2);
     }
 
-    // Handle ../
     const parts = baseDir.split('/').filter(p => p);
     const pathParts = path.split('/');
 
@@ -261,7 +244,6 @@ export const resolvePath = (baseDir, path) => {
         }
     }
 
-    // Reconstruct URL
     const protocol = baseDir.match(/^(https?:\/\/)/)?.[1] || '';
     if (protocol) {
         return protocol + parts.join('/');

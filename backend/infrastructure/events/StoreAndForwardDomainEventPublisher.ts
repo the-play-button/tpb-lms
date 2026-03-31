@@ -18,12 +18,10 @@ export class StoreAndForwardDomainEventPublisher implements DomainEvents {
   }
 
   async publish(event: DomainEvent): Promise<void> {
-    // Store access events in D1 for audit trail
     if (event.type === 'content.accessed') {
       await this.storeAccessEvent(event);
     }
 
-    // Always log
   }
 
   async publishAll(events: DomainEvent[]): Promise<void> {

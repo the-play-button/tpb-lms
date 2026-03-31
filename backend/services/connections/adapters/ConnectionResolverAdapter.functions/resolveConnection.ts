@@ -11,16 +11,13 @@ import { findWorkingConnection } from './findWorkingConnection.js';
  * 3. Fallback             -> getDefaultConnection (admin TPB)
  */
 export const resolveConnection = async (config: ConnectionResolverConfig, params: ResolveConnectionOptions): Promise<ConnectionInfo> => {
-  // If explicit connectionId provided, use it
   if (params.connectionId) {
     return { id: params.connectionId, integrationType: '', category: 'storage' };
   }
 
-  // If provider specified, use intelligent routing
   if (params.provider && params.folderId) {
     return findWorkingConnection(config, params.provider, params.folderId);
   }
 
-  // Fallback to default connection (admin TPB)
   return config.getDefaultConnection();
 };

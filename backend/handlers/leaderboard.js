@@ -65,7 +65,6 @@ const buildActivityObject = activity => {
 };
 
 // ============================================
-// Main handlers
 // ============================================
 
 export const getLeaderboard = async (request, env, userContext) => {
@@ -73,13 +72,11 @@ export const getLeaderboard = async (request, env, userContext) => {
     const limit = parseInt(url.searchParams.get('limit') || '10');
     const userId = userContext.contact?.id || userContext.employee?.id;
 
-    // Get leaderboard from view
     const results = await env.DB.prepare(`
         SELECT user_id, user_type, total_points, videos_completed, quizzes_completed, badges_earned
         FROM v_leaderboard LIMIT ?
     `).bind(limit).all();
 
-    // Enrich with user info
     const leaderboard = await Promise.all(
         (results.results || []).map(async (entry, index) => ({
             rank: index + 1,
@@ -92,12 +89,10 @@ export const getLeaderboard = async (request, env, userContext) => {
         }))
     );
 
-    // Find current user position
     let currentUserEntry = leaderboard.find(({ user_id }) => user_id === userId);
     let currentUserRank = currentUserEntry?.rank;
     let currentUserPoints = currentUserEntry?.total_points;
     
-    // If not in top N, fetch rank
     if (!currentUserEntry && userId) {
         const userRank = await getCurrentUserRank(env.DB, userId);
         currentUserRank = userRank.rank;
@@ -117,7 +112,6 @@ export const getUserStats = async (request, env, userContext) => {
         return jsonResponse({ error: 'User not authenticated' }, 401, request);
     }
     
-    // Parallel fetch for better performance
     const [stats, activity, badges] = await Promise.all([
         env.DB.prepare(`SELECT * FROM v_signal_summary WHERE user_id = ?`).bind(userId).first(),
         env.DB.prepare(`SELECT * FROM v_user_activity WHERE user_id = ?`).bind(userId).first(),

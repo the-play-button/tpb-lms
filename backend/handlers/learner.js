@@ -12,7 +12,6 @@ import { getCurrentStreak } from '../helpers/xp/index.js';
 export const getLearnerProgress = async (request, env, userContext) => {
     const userId = userContext.contact.id;
 
-    // Parallel fetch all data
     const [stats, leaderboard, badges, videos, quizzes, currentStreak] = await Promise.all([
         env.DB.prepare(`SELECT * FROM v_user_stats WHERE user_id = ?`).bind(userId).first(),
         env.DB.prepare(`SELECT * FROM v_leaderboard WHERE user_id = ?`).bind(userId).first(),

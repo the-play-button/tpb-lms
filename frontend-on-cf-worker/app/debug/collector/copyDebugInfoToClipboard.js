@@ -12,7 +12,6 @@ export const copyDebugInfoToClipboard = async () => {
         await navigator.clipboard.writeText(json);
         return { success: true, data: info };
     } catch (error) {
-        // Fallback for older browsers or permission denied
         const textarea = document.createElement('textarea');
         textarea.value = json;
         textarea.style.position = 'fixed';

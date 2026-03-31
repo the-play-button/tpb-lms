@@ -11,10 +11,8 @@ import { resolvePath } from './_shared.js';
  * @returns {string} - Markdown with resolved URLs
  */
 export const resolveRelativeUrls = (markdown, baseUrl) => {
-    // Parse base URL to get directory
     const baseDir = baseUrl.substring(0, baseUrl.lastIndexOf('/') + 1);
 
-    // Resolve image URLs: ![alt](./image.png) or ![alt](image.png)
     markdown = markdown.replace(
         /!\[([^\]]*)\]\((?!https?:\/\/)([^)]+)\)/g,
         (match, alt, path) => {
@@ -23,12 +21,9 @@ export const resolveRelativeUrls = (markdown, baseUrl) => {
         }
     );
 
-    // Resolve link URLs that are relative markdown files (but not anchors)
     markdown = markdown.replace(
         /\[([^\]]*)\]\((?!https?:\/\/)(?!#)([^)]+\.md)\)/g,
         (match, text, path) => {
-            // Don't resolve .md links - they should be handled by navigation
-            // Just mark them for potential click handling
             return `[${text}](${path})`;
         }
     );

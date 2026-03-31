@@ -43,7 +43,6 @@ export const requireAllRoles = (...requiredRoles) => {
   return (userContext) => {
     const role = userContext?.user?.role || 'student';
     
-    // For simplicity, only admin has all permissions
     if (role !== 'admin' && requiredRoles.length > 0) {
       return { 
         error: 'Forbidden - insufficient permissions',

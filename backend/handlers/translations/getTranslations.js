@@ -24,7 +24,6 @@ export const getTranslations = async (request, env, ctx) => {
             ORDER BY lang, field
         `).bind(contentType, contentId).all();
 
-        // Group by language
         const byLang = {};
         for (const row of result.results) {
             if (!byLang[row.lang]) byLang[row.lang] = {};

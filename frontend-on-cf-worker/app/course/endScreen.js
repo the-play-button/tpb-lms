@@ -16,10 +16,8 @@ export const renderModuleEndScreen = () => {
     
     if (!signals || !course) return;
     
-    // Get badges earned from signals
     const badgesEarned = signals.badges_earned || [];
     
-    // Build badges HTML
     let badgesHtml = '';
     if (badgesEarned.length > 0) {
         badgesHtml = badgesEarned.map(({ name, points_reward }) => `
@@ -31,7 +29,6 @@ export const renderModuleEndScreen = () => {
         `).join('');
     }
     
-    // Calculate total points earned
     const basePoints = 200; // Course completion
     const badgePoints = badgesEarned.reduce((sum, b) => sum + (b.points_reward || 0), 0);
     const totalPoints = basePoints + badgePoints;

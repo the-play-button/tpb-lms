@@ -50,10 +50,8 @@ export const showBadgeModal = (badge, options = {}) => {
     const xpEl = document.getElementById('badgeModalXP');
     const contentEl = modal.querySelector('.modal-content');
     
-    // Get emoji icon from map
     const icon = iconMap[badge.id] || '🏆';
     
-    // Show emoji, hide img (consistent display)
     if (emojiEl) {
         emojiEl.textContent = icon;
         emojiEl.style.display = 'block';
@@ -62,24 +60,20 @@ export const showBadgeModal = (badge, options = {}) => {
         iconEl.style.display = 'none';
     }
     
-    // Title based on earned status
     if (titleEl) {
         titleEl.textContent = isEarned ? 'Badge Débloqué!' : 'Badge Verrouillé';
     }
     
-    // Content: hide details for locked badges (no spoilers!)
     if (isEarned) {
         if (nameEl) nameEl.textContent = badge.name;
         if (descEl) descEl.textContent = badge.description || 'Félicitations !';
         if (xpEl) xpEl.textContent = `+${badge.points_reward || 0} pts`;
     } else {
-        // Locked: mystery content
         if (nameEl) nameEl.textContent = '???';
         if (descEl) descEl.textContent = 'Continue pour débloquer ce badge';
         if (xpEl) xpEl.textContent = '🔒';
     }
     
-    // Style for locked vs earned
     if (contentEl) {
         contentEl.classList.toggle('badge-locked', !isEarned);
         contentEl.classList.toggle('badge-earned', isEarned);
@@ -87,7 +81,6 @@ export const showBadgeModal = (badge, options = {}) => {
     
     modal.classList.add('active');
     
-    // Effet particules si badge gagne
     if (isEarned) {
         createBadgeParticles(contentEl);
     }
@@ -126,14 +119,11 @@ export const refreshUserData = async () => {
     try {
         const session = await api('/auth/session');
         
-        // Update profile (triggers updateUserStats)
         setState('profile', session.profile);
         
-        // Update badges
         const badges = session.badges || [];
         setState('badges', badges);
         
-        // Update earned status in allBadges (triggers updateBadgesGrid)
         const earnedIds = new Set(badges.map(({ id } = {}) => id));
         const allBadges = getState('allBadges') || [];
         const updatedBadges = allBadges.map(badge => ({

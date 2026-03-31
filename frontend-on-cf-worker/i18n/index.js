@@ -24,15 +24,12 @@ import it from './it.json' with { type: 'json' };
 import ja from './ja.json' with { type: 'json' };
 import zh from './zh.json' with { type: 'json' };
 
-// Available translations
 const translations = { fr, en, de, it, ja, zh };
 
-// Supported languages
 const SUPPORTED_LANGUAGES = ['fr', 'en', 'de', 'it', 'ja', 'zh'];
 const DEFAULT_LANGUAGE = 'fr';
 const STORAGE_KEY = 'lms-lang';
 
-// Current language (initialized from storage or browser)
 let currentLang = DEFAULT_LANGUAGE;
 
 /**
@@ -78,7 +75,6 @@ export const setLanguage = lang => {
     currentLang = lang;
     localStorage.setItem(STORAGE_KEY, lang);
     
-    // Dispatch event for components to react
     window.dispatchEvent(new CustomEvent('languagechange', { detail: { lang } }));
     
     return true;
@@ -114,18 +110,15 @@ export const t = (key, params = {}) => {
     const langData = translations[currentLang] || translations[DEFAULT_LANGUAGE];
     let value = getNestedValue(langData, key);
     
-    // Fallback to default language if not found
     if (value === undefined && currentLang !== DEFAULT_LANGUAGE) {
         value = getNestedValue(translations[DEFAULT_LANGUAGE], key);
     }
     
-    // Return key if still not found
     if (value === undefined) {
         log.warn(`[i18n] Missing translation: ${key}`);
         return key;
     }
     
-    // Interpolate parameters
     if (typeof value === 'string' && Object.keys(params).length > 0) {
         Object.entries(params).forEach(([paramKey, paramValue]) => {
             value = value.replace(new RegExp(`\\{${paramKey}\\}`, 'g'), paramValue);
@@ -143,10 +136,8 @@ export const hasTranslation = key => {
     return getNestedValue(langData, key) !== undefined;
 };
 
-// Initialize on module load
 initLanguage();
 
-// Export for global access (optional)
 if (typeof window !== 'undefined') {
     window.i18n = { t, setLanguage, getLanguage, getSupportedLanguages, initLanguage }; // entropy-global-pollution-ok: intentional global for non-module scripts // entropy-orphan-global-ok: inline assignment
 }

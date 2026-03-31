@@ -23,7 +23,6 @@ export const handleKmsLinkClick = async event => {
     }
 
     try {
-        // Show loading state
         link.classList.add('kms-loading');
 
         const page = await fetchKmsPage(parsed.pageId);
@@ -31,7 +30,6 @@ export const handleKmsLinkClick = async event => {
 
     } catch (error) {
         console.error('Failed to load KMS page:', error);
-        // Show error notification
         if (window.showNotification) {
             window.showNotification('Impossible de charger la ressource', 'error');
         } else {

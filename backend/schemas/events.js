@@ -8,7 +8,6 @@
 
 import { z } from 'zod';
 
-// VIDEO_PLAY / VIDEO_PAUSE - minimal payload
 export const videoPlaySchema = z.object({
   type: z.enum(['VIDEO_PLAY', 'VIDEO_PAUSE']),
   course_id: z.string().min(1),
@@ -18,7 +17,6 @@ export const videoPlaySchema = z.object({
   }).optional().default({})
 });
 
-// VIDEO_PING - requires position and duration
 export const videoPingSchema = z.object({
   type: z.literal('VIDEO_PING'),
   course_id: z.string().min(1),
@@ -30,7 +28,6 @@ export const videoPingSchema = z.object({
   })
 });
 
-// QUIZ_SUBMIT - requires score
 export const quizSubmitSchema = z.object({
   type: z.literal('QUIZ_SUBMIT'),
   course_id: z.string().min(1),
@@ -42,7 +39,6 @@ export const quizSubmitSchema = z.object({
   })
 });
 
-// Map type -> schema
 const schemas = {
   VIDEO_PLAY: videoPlaySchema,
   VIDEO_PAUSE: videoPlaySchema,

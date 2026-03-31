@@ -12,10 +12,8 @@
 import { jsonResponse } from '../cors.js';
 import { log } from '../lib/log.js';
 
-// GitHub API base URL
 const GITHUB_API_BASE = 'https://api.github.com'; // entropy-hardcoded-url-ok: external API endpoint
 
-// Cache for GitHub token (avoid repeated vault calls)
 let cachedToken = null;
 let tokenExpiry = 0;
 
@@ -29,7 +27,6 @@ const getGitHubTokenWithDebug = async env => {
         vaultError: null
     };
 
-    // Check cache first
     if (cachedToken && Date.now() < tokenExpiry) {
         debug.cached = true;
         return { token: cachedToken, debug };
@@ -66,7 +63,6 @@ const getGitHubTokenWithDebug = async env => {
     }
     
     // entropy-legacy-marker-ok: documented technical debt
-    // Legacy fallback
     if (env.GITHUB_PAT_TPB_REPOS) {
         cachedToken = env.GITHUB_PAT_TPB_REPOS;
         tokenExpiry = Date.now() + 5 * 60 * 1000;
@@ -85,12 +81,10 @@ const getGitHubToken = async env => {
 const injectI18nIntoPath = (path, lang) => {
     if (!lang) return path;
     
-    // For paths with /STEPS/ - insert i18n before STEPS
     if (path.includes('/STEPS/')) {
         return path.replace('/STEPS/', `/i18n/${lang}/STEPS/`);
     }
     
-    // For main SOM file - insert i18n before the filename
     const match = path.match(/^(.+\/SOM_[^/]+\/)(.+)$/);
     if (match) {
         return `${match[1]}i18n/${lang}/${match[2]}`;
@@ -100,7 +94,6 @@ const injectI18nIntoPath = (path, lang) => {
 };
 
 const parseGitHubUrl = url => {
-    // Raw URL format
     const rawMatch = url.match(/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)/);
     if (rawMatch) {
         return {
@@ -111,7 +104,6 @@ const parseGitHubUrl = url => {
         };
     }
     
-    // Blob URL format
     const blobMatch = url.match(/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/);
     if (blobMatch) {
         return {
@@ -122,7 +114,6 @@ const parseGitHubUrl = url => {
         };
     }
     
-    // Simple format: owner/repo/path (assumes main branch)
     const simpleMatch = url.match(/^([^/]+)\/([^/]+)\/(.+)$/);
     if (simpleMatch) {
         return {
@@ -151,7 +142,6 @@ export const getGitHubContent = async (request, env, userContext) => {
     
     let owner, repo, branch, path;
     
-    // Parse URL parameter
     const urlParam = url.searchParams.get('url');
     const langParam = url.searchParams.get('lang');
     // #region agent log H3
@@ -167,7 +157,6 @@ export const getGitHubContent = async (request, env, userContext) => {
         }
         ({ owner, repo, branch, path } = parsed);
     } else {
-        // Use individual params
         owner = url.searchParams.get('owner');
         repo = url.searchParams.get('repo');
         branch = url.searchParams.get('branch') || 'main';
@@ -182,20 +171,17 @@ export const getGitHubContent = async (request, env, userContext) => {
         }, 400, request);
     }
     
-    // Inject i18n into path if lang parameter is provided
     if (langParam) {
         path = injectI18nIntoPath(path, langParam);
         log.debug('[DEBUG] i18n path:', path);
     }
     
-    // Get GitHub token
     const tokenResult = await getGitHubTokenWithDebug(env);
     const token = tokenResult.token;
     // #region agent log H1
     log.debug('[DEBUG H1] token fetched:', token ? `yes (${token.substring(0,8)}...)` : 'NO TOKEN');
     // #endregion
     
-    // Build API URL
     const apiUrl = `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
     // #region agent log H3
     log.debug('[DEBUG H3] apiUrl:', apiUrl);
@@ -259,7 +245,6 @@ export const getGitHubContent = async (request, env, userContext) => {
         
         const content = await response.text();
         
-        // Return raw content with appropriate headers
         return new Response(content, {
             status: 200,
             headers: {
@@ -320,7 +305,6 @@ export const listGitHubDirectory = async (request, env, userContext) => {
         
         const items = await response.json();
         
-        // Simplify response
         const files = items.map(({ name, path, type, size, download_url }) => ({
             name: name,
             path: path,

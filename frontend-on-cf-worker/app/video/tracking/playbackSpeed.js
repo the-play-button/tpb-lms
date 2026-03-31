@@ -22,12 +22,10 @@ export const cyclePlaybackSpeed = () => {
         trackingState.streamPlayer.playbackRate = newSpeed;
         log.info('video', 'Playback speed changed', { speed: newSpeed });
 
-        // Show toast notification
         if (typeof showToast === 'function') {
             showToast(`Vitesse: ${newSpeed}x`, 'info');
         }
 
-        // Update button display if exists
         const speedDisplay = document.getElementById('speed-display');
         if (speedDisplay) {
             speedDisplay.textContent = `${newSpeed}x`;
@@ -58,7 +56,6 @@ export const setPlaybackSpeed = speed => {
 
     log.info('video', 'Playback speed set', { speed });
 
-    // Update button display if exists
     const speedDisplay = document.getElementById('speed-display');
     if (speedDisplay) {
         speedDisplay.textContent = `${speed}x`;

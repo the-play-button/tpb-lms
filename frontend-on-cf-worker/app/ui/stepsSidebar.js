@@ -25,14 +25,12 @@ export const renderStepsSidebar = (options = {}) => {
     const sidebar = document.getElementById('stepsSidebar');
     if (!sidebar) return;
     
-    // Get completed steps from signals
     const completedSteps = new Set(
         (signals?.steps || [])
             .filter(({ step_completed } = {}) => step_completed)
             .map(({ class_id } = {}) => class_id)
     );
     
-    // Group steps by section if enabled
     const grouped = showSections ? groupBySection(course.classes) : { '': course.classes };
     
     let html = `
@@ -62,7 +60,6 @@ export const renderStepsSidebar = (options = {}) => {
             const statusClass = isCurrent ? 'current' : isCompleted ? 'completed' : isLocked ? 'locked' : 'pending';
             const statusIcon = isCurrent ? '▶' : isCompleted ? '✓' : isLocked ? '🔒' : '○';
             
-            // Get step type from raw data
             const raw = step.raw_json ? JSON.parse(step.raw_json) : {};
             const stepType = raw.tpb_step_type || step.step_type || 'CONTENT';
             const typeIcon = getStepTypeIcon(stepType);
@@ -139,14 +136,12 @@ function getStepTooltip(status) {
 export const updateSidebarCurrentStep = () => {
     const currentStepIndex = getState('currentStepIndex');
     
-    // Remove current class from all items
     document.querySelectorAll('.step-item.current').forEach(el => {
         el.classList.remove('current');
         el.classList.add('pending');
         el.querySelector('.step-status').textContent = '○';
     });
     
-    // Add current class to current step
     const currentItem = document.querySelector(`.step-item[data-step="${currentStepIndex}"]`);
     if (currentItem) {
         currentItem.classList.remove('pending', 'locked');
@@ -167,7 +162,6 @@ export const markStepComplete = stepIndex => {
         stepItem.querySelector('.step-status').textContent = '✓';
     }
     
-    // Update progress bar
     const course = getState('courseData');
     if (course?.classes) {
         const completedCount = document.querySelectorAll('.step-item.completed').length + 1; // +1 for current
@@ -202,7 +196,6 @@ export const ensureSidebarContainer = () => {
     container.id = 'stepsSidebar';
     container.className = 'steps-sidebar';
     
-    // Insert before main content
     const main = document.querySelector('.main-content') || document.getElementById('somViewer');
     if (main && main.parentNode) {
         main.parentNode.insertBefore(container, main);

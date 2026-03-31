@@ -9,7 +9,6 @@ export const verifyAPIKey = async (apiKey, env) => {
         return { valid: false, error: 'No API key provided' };
     }
 
-    // Validate format (must start with tpb_)
     if (!apiKey.startsWith('tpb_')) {
         return { valid: false, error: 'Invalid API key format' };
     }
@@ -27,12 +26,10 @@ export const verifyAPIKey = async (apiKey, env) => {
             return { valid: false, error: 'Invalid API key' };
         }
 
-        // Check expiration
         if (record.expires_at && new Date(record.expires_at) < new Date()) {
             return { valid: false, error: 'API key expired' };
         }
 
-        // Update last_used_at (fire and forget)
         env.DB.prepare(`
             UPDATE api_key SET last_used_at = ? WHERE id = ?
         `).bind(new Date().toISOString(), record.id).run();

@@ -7,7 +7,6 @@
 
 import { getState, subscribe } from '../state.js';
 
-// Exported for use in mobile views (index.js)
 export const iconMap = {
     'first_video': '🎬',
     'video_5': '📺',
@@ -50,7 +49,6 @@ export const updateBadgesGrid = () => {
         const points = badge.points_reward || 50;
         const isEarned = badge.earned;
         
-        // Locked badges: just icon, grayed out, no tooltip
         if (!isEarned) {
             return `
                 <div class="badge-item ${rarityClass} locked" data-badge-id="${badge.id}">
@@ -59,7 +57,6 @@ export const updateBadgesGrid = () => {
             `;
         }
         
-        // Earned badges: icon + tooltip
         return `
             <div class="badge-item ${rarityClass}" data-badge-id="${badge.id}">
                 ${icon}

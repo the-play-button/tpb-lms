@@ -30,7 +30,6 @@ export const getCloudPitchExecute = async (context: GetCloudPitchContext, ctx: H
     if (!ctx.pamClient) {
       return fail('PAM service is not available');
     }
-    // For binary files via PAM, we get content as base64 string and decode
     const pamResult = await ctx.pamClient.getContent(connectionId, fileId, ctx.userEmail);
     const binaryString = atob(pamResult.content);
     const bytes = new Uint8Array(binaryString.length);
@@ -40,7 +39,6 @@ export const getCloudPitchExecute = async (context: GetCloudPitchContext, ctx: H
     binary = bytes.buffer as ArrayBuffer;
   }
 
-  // Emit domain event
   await ctx.domainEvents.publish(
     contentAccessed(contentRef.id.value, ctx.userEmail)
   );

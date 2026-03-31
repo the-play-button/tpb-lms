@@ -13,7 +13,6 @@ export const abandonCourse = async (request, env, userContext, courseId) => {
         return jsonResponse({ error: 'User not authenticated' }, 401, request);
     }
 
-    // Find active enrollment
     const enrollment = await env.DB.prepare(
         `SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ? AND status = 'active'`
     ).bind(userId, courseId).first();
@@ -22,7 +21,6 @@ export const abandonCourse = async (request, env, userContext, courseId) => {
         return jsonResponse({ error: 'No active enrollment found for this course' }, 404, request);
     }
 
-    // Mark as abandoned
     await env.DB.prepare(`
         UPDATE lms_enrollment
         SET status = 'abandoned',
@@ -31,7 +29,6 @@ export const abandonCourse = async (request, env, userContext, courseId) => {
         WHERE id = ?
     `).bind(enrollment.id).run();
 
-    // Get updated active count
     const activeCount = await env.DB.prepare(
         `SELECT COUNT(*) as count FROM lms_enrollment WHERE user_id = ? AND status = 'active'`
     ).bind(userId).first();

@@ -13,7 +13,6 @@ export default {
     async fetch(request, env) {
         const url = new URL(request.url);
         
-        // Auth token endpoint - expose JWT to frontend JS
         if (url.pathname === '/__auth/token') {
             const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
             
@@ -35,13 +34,9 @@ export default {
             });
         }
         
-        // Serve static assets
-        // For SPA routing: serve index.html for paths that don't match files
         const response = await env.ASSETS.fetch(request);
         
-        // If asset not found (404) and it's a navigation request, serve index.html
         if (response.status === 404 && !url.pathname.includes('.')) {
-            // Rewrite to index.html for SPA routing
             const indexRequest = new Request(new URL('/index.html', request.url), request);
             return env.ASSETS.fetch(indexRequest);
         }

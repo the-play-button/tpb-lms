@@ -15,8 +15,6 @@
 
 const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: fallback config URL
 
-// LMS IAM Structure
-// Roles use tpblms_ prefix (matches app namespace in vault-api)
 const LMS_ROLES = [
   {
     name: 'tpblms_admin',
@@ -26,10 +24,8 @@ const LMS_ROLES = [
     name: 'tpblms_instructor',
     description: 'LMS Instructor - Can manage courses and view student progress'
   }
-  // Note: No tpblms_student role - absence of role = student (default)
 ];
 
-// Groups organize users and link to roles
 const LMS_GROUPS = [
   {
     name: 'tpblms_admins',
@@ -92,7 +88,6 @@ const createRole = async role => {
     return data.role?.id;
   } else if (status === 409) {
     console.log(`     ⚠️  Already exists`); // entropy-console-leak-ok: CLI script
-    // Get existing role ID
     const { data: rolesData } = await request('GET', '/iam/roles');
     const existing = rolesData.roles?.find(({ name }) => name === role.name);
     return existing?.id;
@@ -117,7 +112,6 @@ const createGroup = async (group, roleIds) => {
     groupId = data.group?.id;
   } else if (status === 409) {
     console.log(`     ⚠️  Already exists`); // entropy-console-leak-ok: CLI script
-    // Get existing group ID
     const { data: groupsData } = await request('GET', '/iam/groups');
     const existing = groupsData.groups?.find(({ name }) => name === group.name);
     groupId = existing?.id;
@@ -126,7 +120,6 @@ const createGroup = async (group, roleIds) => {
     return null;
   }
 
-  // Assign roles to group
   if (groupId && group.roles) {
     for (const roleName of group.roles) {
       const roleId = roleIds[roleName];
@@ -178,7 +171,6 @@ const main = async () => {
   }
   console.log(''); // entropy-console-leak-ok: CLI script
 
-  // Summary
   console.log('✨ LMS IAM setup complete!'); // entropy-console-leak-ok: CLI script
   console.log(''); // entropy-console-leak-ok: CLI script
   console.log('📊 Created:'); // entropy-console-leak-ok: CLI script

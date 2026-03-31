@@ -18,7 +18,6 @@ const log = logger('admin');
  * @returns Global LMS statistics from v_admin_overview
  */
 export const getAdminStats = async (request, env, userContext) => {
-  // Guard: Only admin role
   const guardResult = requireRole('admin')(userContext);
   if (guardResult) {
     return jsonResponse({
@@ -29,7 +28,6 @@ export const getAdminStats = async (request, env, userContext) => {
   }
   
   try {
-    // Query v_admin_overview view
     const stats = await env.DB.prepare(`
       SELECT * FROM v_admin_overview
     `).first();

@@ -19,13 +19,11 @@ export const verifyAccessJWT = async (token, env) => {
         const header = JSON.parse(new TextDecoder().decode(base64urlDecode(headerB64)));
         const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(payloadB64)));
 
-        // Check expiration
         const now = Math.floor(Date.now() / 1000);
         if (payload.exp && payload.exp < now) {
             return { valid: false, error: 'Token expired' };
         }
 
-        // Get JWKS and verify signature
         const teamDomain = env.ACCESS_TEAM_DOMAIN || 'theplaybutton';
         const jwks = await getJWKS(teamDomain);
         const key = jwks.keys.find(({ kid }) => kid === header.kid);

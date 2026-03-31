@@ -22,18 +22,15 @@ export const verifyOidcJWT = async (token, env) => {
         const header = JSON.parse(new TextDecoder().decode(base64urlDecode(headerB64)));
         const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(payloadB64)));
 
-        // Check expiration
         const now = Math.floor(Date.now() / 1000);
         if (payload.exp && payload.exp < now) {
             return { valid: false, error: 'Token expired' };
         }
 
-        // Validate issuer
         if (payload.iss !== authConfig.logto.issuer) {
             return { valid: false, error: `Invalid issuer: ${payload.iss}` };
         }
 
-        // Validate audience if configured
         if (authConfig.logto.appId && payload.aud) {
             const audiences = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
             if (!audiences.includes(authConfig.logto.appId)) {
@@ -41,7 +38,6 @@ export const verifyOidcJWT = async (token, env) => {
             }
         }
 
-        // Verify signature against JWKS
         if (header.kid) {
             const jwks = await getOidcJWKS(authConfig.logto.issuer, authConfig.logto.jwksUri);
             const key = jwks.keys.find(({ kid }) => kid === header.kid);

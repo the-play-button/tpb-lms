@@ -34,7 +34,6 @@ export const handleEvent = async (request, env, userContext) => {
         return jsonResponse({ error: 'Invalid JSON body' }, 400, request);
     }
     
-    // Validate with Zod schema (GAP-710, GAP-1210)
     const validation = validateEvent(body);
     if (!validation.success) {
         return jsonResponse({ error: validation.error }, 400, request);
@@ -125,7 +124,6 @@ export const handleBatchEvents = async (request, env, userContext) => {
     const results = [];
     
     for (const evt of events) {
-        // Validate with Zod schema
         const validation = validateEvent(evt);
         if (!validation.success) {
             results.push({ success: false, error: validation.error });
@@ -143,7 +141,6 @@ export const handleBatchEvents = async (request, env, userContext) => {
                 VALUES (?, ?, ?, ?, ?, ?, ?)
             `).bind(eventId, type, userId, course_id, class_id, now, JSON.stringify(payload)).run();
             
-            // Apply projection
             await applyProjections(env.DB, {
                 id: eventId,
                 type,

@@ -15,7 +15,6 @@
  *   setState('allBadges', newBadges);
  */
 
-// Application state
 const state = {
     user: null,
     profile: null,
@@ -28,10 +27,8 @@ const state = {
     signals: null
 };
 
-// Subscribers map: key -> [callback1, callback2, ...]
 const subscribers = new Map();
 
-// Session ID for API calls
 export const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
 /**
@@ -48,7 +45,6 @@ export const setState = (key, value) => {
     const oldValue = state[key];
     state[key] = value;
     
-    // Notify subscribers for this key
     if (subscribers.has(key)) {
         subscribers.get(key).forEach(callback => {
             try {
@@ -59,7 +55,6 @@ export const setState = (key, value) => {
         });
     }
     
-    // Also notify '*' subscribers (global listeners)
     if (subscribers.has('*')) {
         subscribers.get('*').forEach(callback => {
             try {
@@ -83,7 +78,6 @@ export const subscribe = (key, callback) => {
     }
     subscribers.get(key).push(callback);
     
-    // Return unsubscribe function
     return () => {
         const callbacks = subscribers.get(key);
         const index = callbacks.indexOf(callback);

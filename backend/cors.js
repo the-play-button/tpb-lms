@@ -11,7 +11,6 @@ export const ALLOWED_ORIGINS = [
     'http://127.0.0.1:8080'
 ];
 
-// Security headers (GAP-1406)
 const SECURITY_HEADERS = {
     'X-Content-Type-Options': 'nosniff',
     'X-Frame-Options': 'DENY',

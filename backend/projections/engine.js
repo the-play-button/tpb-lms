@@ -16,7 +16,6 @@ import { logger } from '../utils/log.js';
 
 const log = logger('projections');
 
-// Registry of all projections
 const PROJECTIONS = [
     VIDEO_PROGRESS_PROJECTION,
     QUIZ_RESULT_PROJECTION
@@ -46,7 +45,6 @@ export const applyProjections = async (db, event) => {
             const next = projection.reduce(current || {}, { ...event, payload }); // entropy-naming-convention-ok: next state value
             await upsertState(db, key, event.course_id, next);
             
-            // Collect result
             if (projection.name === 'video_progress') {
                 result.video_completed = next.video_completed === 1;
             }

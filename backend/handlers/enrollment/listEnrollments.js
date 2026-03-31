@@ -53,7 +53,6 @@ export const listEnrollments = async (request, env, userContext) => {
         last_activity_at: last_activity_at,
     }));
 
-    // Count by status for summary
     const activeCount = enrollments.filter(({ status }) => status === 'active').length; // entropy-naming-convention-ok: scalar count value
 
     return jsonResponse({

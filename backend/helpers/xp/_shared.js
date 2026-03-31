@@ -9,27 +9,23 @@ export const awardBadge = async (db, userId, badgeId, courseId = null, classId =
     const now = new Date().toISOString();
     const id = `award_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 
-    // Check if already awarded
     const existing = await db.prepare(`
         SELECT 1 FROM gamification_award WHERE badge_id = ? AND user_id = ?
     `).bind(badgeId, userId).first();
 
     if (existing) return null;
 
-    // Get badge info
     const badge = await db.prepare(`
         SELECT * FROM gamification_badge WHERE id = ? AND is_active = 1
     `).bind(badgeId).first();
 
     if (!badge) return null;
 
-    // Award the badge
     await db.prepare(`
         INSERT INTO gamification_award (id, badge_id, user_id, user_type, course_id, class_id, awarded_at, created_at)
         VALUES (?, ?, ?, 'contact', ?, ?, ?, ?)
     `).bind(id, badgeId, userId, courseId, classId, now, now).run();
 
-    // Also record as event
     await db.prepare(`
         INSERT INTO crm_event (id, type, user_id, raw_json, created_at, updated_at)
         VALUES (?, 'BADGE_EARNED', ?, ?, ?, ?)

@@ -30,7 +30,6 @@ export const showConfirmModal = options => {
         type = 'warning' // 'warning', 'info', 'danger'
     } = options;
     
-    // Remove any existing modal
     closeConfirmModal();
     
     const iconMap = {
@@ -61,16 +60,13 @@ export const showConfirmModal = options => {
     
     document.body.appendChild(modal);
     
-    // Prevent body scroll
     document.body.style.overflow = 'hidden';
     
-    // Focus confirm button
     // entropy-prohibited-timer-ok: delay for UX focus after render
     setTimeout(() => {
         modal.querySelector('.modal-confirm')?.focus();
     }, 100);
     
-    // Setup handlers
     modal.addEventListener('click', (e) => {
         const action = e.target.dataset?.action;
         if (action === 'confirm') {
@@ -82,7 +78,6 @@ export const showConfirmModal = options => {
         }
     });
     
-    // ESC key to cancel
     const escHandler = (e) => {
         if (e.key === 'Escape') {
             closeConfirmModal();
@@ -101,7 +96,6 @@ export const showConfirmModal = options => {
 export function closeConfirmModal() {
     const modal = document.getElementById('confirmModal');
     if (modal) {
-        // Remove ESC handler
         if (modal._escHandler) {
             document.removeEventListener('keydown', modal._escHandler);
         }
@@ -186,7 +180,6 @@ export const showAbandonConfirmation = options => {
     });
 };
 
-// Add modal styles
 const modalStyles = `
 .confirm-modal {
     position: fixed;
@@ -296,7 +289,6 @@ const modalStyles = `
 }
 `;
 
-// Inject styles if not already present
 if (!document.getElementById('confirmModalStyles')) {
     const styleEl = document.createElement('style');
     styleEl.id = 'confirmModalStyles';

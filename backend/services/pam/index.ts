@@ -6,10 +6,8 @@
  * const result = await pam.verifyAccess(connectionId, fileId, guestEmail);
  */
 
-// Port types
 export type { PamPort, PamConfig, PamVerifyResult } from './PamPort.js';
 
-// Adapters
 export { PamCloudflareAdapter } from './adapters/PamCloudflareAdapter.js';
 
 import type { PamPort, PamConfig } from './PamPort.js';

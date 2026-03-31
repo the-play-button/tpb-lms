@@ -16,10 +16,8 @@ import { getGlossaryMap } from '../handlers/glossary/index.js';
 export const detectLanguage = text => {
     if (!text || text.length < 10) return 'unknown';
     
-    // Common French words/patterns
     const frenchPatterns = /\b(le|la|les|de|du|des|un|une|et|est|sont|pour|dans|avec|sur|vous|nous|cette|ce|votre|notre|qui|que|par)\b/gi;
     
-    // Common English words/patterns
     const englishPatterns = /\b(the|a|an|and|is|are|for|in|with|on|you|we|this|your|our|who|that|by|to|of)\b/gi;
     
     const frenchMatches = (text.match(frenchPatterns) || []).length;
@@ -37,7 +35,6 @@ const preProcessGlossary = (text, glossaryMap) => {
     let placeholderIndex = 0;
     
     for (const [sourceTerm, targetTerm] of glossaryMap) {
-        // Case-insensitive replacement with word boundaries
         const regex = new RegExp(`\\b${escapeRegex(sourceTerm)}\\b`, 'gi');
         
         processedText = processedText.replace(regex, (match) => {
@@ -195,7 +192,6 @@ export const translateFields = async ({ content, fields, sourceLang, targetLang,
 export const translateCourse = async ({ course, classes, sourceLang, targetLang, orgId, env, apiKey } = {}) => {
     const translations = [];
     
-    // Translate course fields
     const courseTranslation = await translateFields({
         content: course,
         fields: ['name', 'description'],
@@ -217,7 +213,6 @@ export const translateCourse = async ({ course, classes, sourceLang, targetLang,
         });
     }
     
-    // Translate class fields
     for (const cls of classes) {
         const classTranslation = await translateFields({
             content: cls,

@@ -6,10 +6,8 @@
  * const content = await storage.getFileContent(connectionId, fileId);
  */
 
-// Port types
 export type { StoragePort } from './StoragePort.js';
 
-// Adapters
 export { UnifiedStorageAdapter } from './adapters/UnifiedStorageAdapter.js';
 export type { UnifiedStorageAdapterConfig } from './adapters/UnifiedStorageAdapter.js';
 

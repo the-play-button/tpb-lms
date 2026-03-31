@@ -21,7 +21,6 @@ export const getEnrollmentStatus = async (request, env, userContext, courseId) =
     ).bind(userId, courseId).first();
 
     if (!enrollment) {
-        // Check if user can enroll
         const activeCount = await env.DB.prepare(
             `SELECT COUNT(*) as count FROM lms_enrollment WHERE user_id = ? AND status = 'active'`
         ).bind(userId).first();

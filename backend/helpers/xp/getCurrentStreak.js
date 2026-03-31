@@ -3,7 +3,6 @@
  */
 
 export const getCurrentStreak = async (db, userId) => {
-    // Get all activity dates
     const activities = await db.prepare(`
         SELECT DISTINCT date(created_at) as activity_date
         FROM crm_event
@@ -20,7 +19,6 @@ export const getCurrentStreak = async (db, userId) => {
     const today = new Date().toISOString().split('T')[0];
     const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-    // If no activity today or yesterday, streak is broken
     if (dates[0] !== today && dates[0] !== yesterday) {
         return 0;
     }

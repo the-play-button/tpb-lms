@@ -13,7 +13,6 @@ export const parseKmsUrl = url => {
         return { spaceId: match[1], pageId: match[2] };
     }
 
-    // Also try just /kms/:pageId
     const simpleMatch = url.match(/^\/kms\/([^/]+)$/);
     if (simpleMatch) {
         return { spaceId: null, pageId: simpleMatch[1] };

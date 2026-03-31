@@ -5,7 +5,6 @@
 import { awardBadge } from './_shared.js';
 
 export const checkQuizBadges = async (db, userId, isPerfect) => {
-    // Count passed quizzes
     const result = await db.prepare(`
         SELECT COUNT(*) as count
         FROM crm_event

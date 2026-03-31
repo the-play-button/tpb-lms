@@ -14,7 +14,6 @@ export const getCloudContentFilter = (
   context: GetCloudContentContext,
   viewerEmail: string
 ): GetCloudContentOutput => {
-  // Content itself is always returned; FLS strips metadata fields
   const filtered = filterFields(
     output as unknown as Record<string, unknown>,
     viewerEmail,

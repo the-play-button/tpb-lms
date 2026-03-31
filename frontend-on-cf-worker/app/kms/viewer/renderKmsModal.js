@@ -8,13 +8,11 @@
  * @param {Object} page - Page data from API
  */
 export const renderKmsModal = page => {
-    // Remove existing modal if any
     const existingModal = document.getElementById('kms-modal');
     if (existingModal) {
         existingModal.remove();
     }
 
-    // Create modal
     const modal = document.createElement('div');
     modal.id = 'kms-modal';
     modal.className = 'kms-modal';
@@ -42,12 +40,10 @@ export const renderKmsModal = page => {
 
     document.body.appendChild(modal);
 
-    // Add animation class after a tick
     requestAnimationFrame(() => {
         modal.classList.add('kms-modal-visible');
     });
 
-    // Close on Escape key
     const handleEscape = (e) => {
         if (e.key === 'Escape') {
             window.closeKmsModal();

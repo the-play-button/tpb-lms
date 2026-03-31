@@ -6,14 +6,12 @@
  * const conn = await resolver.resolveConnection({ provider: 'onedrive', folderId });
  */
 
-// Port types
 export type {
   ConnectionResolverPort,
   ConnectionResolverConfig,
   ResolveConnectionOptions,
 } from './ConnectionResolverPort.js';
 
-// Adapters
 export { ConnectionResolverAdapter } from './adapters/ConnectionResolverAdapter.js';
 
 import type { ConnectionResolverPort, ConnectionResolverConfig } from './ConnectionResolverPort.js';

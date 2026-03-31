@@ -90,7 +90,6 @@ const getStepContext = () => {
         videoUrl: videoInfo.videoUrl,
         videoDuration: videoInfo.duration,
         // entropy-legacy-marker-ok: documented technical debt
-        // Quiz can be type 'QUIZ' (legacy) or 'WEB' (unified.to conformity) with tally_form_id
         quizMedia: getMediaByType(cls, 'QUIZ', 'tally_form_id') || getMediaByType(cls, 'WEB', 'tally_form_id'),
         ...signalData
     };
@@ -99,7 +98,6 @@ const getStepContext = () => {
 const renderVideoSection = ctx => {
     const { cls, stepIndex, currentCourse, videoId, videoUrl, videoDuration, quizPassed, hasQuiz } = ctx;
     
-    // Quiz passed - video locked
     if (quizPassed && hasQuiz) {
         return `
             <div class="video-locked">
@@ -109,12 +107,10 @@ const renderVideoSection = ctx => {
         `;
     }
     
-    // No video in media array
     if (!videoId && !videoUrl) {
         return '';
     }
     
-    // Speed control button
     const speedControl = `
         <div class="video-controls" style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem; gap: 0.5rem;">
             <button class="speed-btn" onclick="window.cycleSpeed()" 
@@ -125,7 +121,6 @@ const renderVideoSection = ctx => {
         </div>
     `;
     
-    // Cloudflare Stream video
     if (videoId) {
         const currentLang = window.i18n?.getLanguage?.() || 'fr';
         const streamParams = new URLSearchParams({
@@ -148,7 +143,6 @@ const renderVideoSection = ctx => {
         `;
     }
     
-    // External video URL (Descript, YouTube, Vimeo, etc.)
     if (videoUrl) {
         const subtitles = getSubtitleTracks(cls);
         const currentLang = window.i18n?.getLanguage?.() || 'fr';
@@ -194,13 +188,10 @@ const renderDocumentSection = cls => {
 const renderVideoContent = ctx => {
     const { cls } = ctx;
     
-    // Render video from media array (if present)
     const videoHtml = renderVideoSection(ctx);
     
-    // Render document content placeholder (if present)
     const documentHtml = renderDocumentSection(cls);
     
-    // Combine: video first, then document content
     if (videoHtml && documentHtml) {
         return videoHtml + '<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">' + documentHtml;
     }
@@ -219,12 +210,10 @@ const loadDocumentContent = async cls => {
         let markdown;
 
         if (isCloudRef(documentMedia)) {
-            // BYOC: fetch from cloud via API
             const raw = await fetchCloudContent(documentMedia.content_ref_id);
             markdown = stripFrontmatter(raw);
             markdown = cleanMarkdownForLms(markdown);
         } else {
-            // Legacy: fetch from GitHub
             markdown = await fetchMarkdown(documentMedia.url);
         }
 
@@ -253,8 +242,6 @@ const renderQuizSection = ctx => {
     const quizName = quizMedia.name || 'Quiz de validation';
     
     // entropy-legacy-marker-ok: documented technical debt
-    // Support both legacy (single string) and new (object by lang) formats
-    // Pass the entire tally_form_ids object to showQuiz for language resolution
     const formIds = quizMedia.tally_form_ids || quizMedia.tally_form_id;
     const formIdsJson = typeof formIds === 'object'
         ? JSON.stringify(formIds).replace(/"/g, '&quot;')
@@ -309,7 +296,6 @@ const renderRequirements = ctx => {
     
     if (stepCompleted) return '';
     
-    // Check if this is a CONTENT step (no video, no quiz) - no requirements to show
     const hasVideo = !!(videoId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
     const hasQuizContent = !!quizMedia;
     if (!hasVideo && !hasQuizContent) {
@@ -345,12 +331,10 @@ export const renderCurrentStep = () => {
     const { cls, stepIndex, totalSteps, stepCompleted, videoId, videoUrl, quizMedia } = ctx;
     const isLastStep = stepIndex === totalSteps - 1;
     
-    // Check if this is a CONTENT step (no video, no quiz)
     const hasVideo = !!(videoId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
     const hasQuiz = !!quizMedia;
     const isContentStep = !hasVideo && !hasQuiz;
     
-    // CONTENT steps can always proceed; VIDEO/QUIZ need stepCompleted
     const canProceed = isContentStep || stepCompleted;
     
     const viewer = document.getElementById('somViewer');
@@ -385,11 +369,9 @@ export const renderCurrentStep = () => {
         </div>
     `;
     
-    // GAP-102: Get resume position for this class and setup video tracking
     const resumePosition = getResumePosition(cls.id);
     setupVideoTracking(stepIndex, resumePosition);
     
-    // Load document content async if present
     const documentMedia = getDocumentMedia(cls);
     if (documentMedia) {
         loadDocumentContent(cls);

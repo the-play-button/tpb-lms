@@ -28,7 +28,6 @@ export const fetchMarkdown = async (url, options = {}) => {
     let actualUrl = url;
 
     if (useI18n) {
-        // Use i18n fallback: try current lang -> en -> source
         const result = await fetchContentWithI18nFallback(url);
         markdown = result.content;
         actualUrl = result.url;
@@ -36,12 +35,10 @@ export const fetchMarkdown = async (url, options = {}) => {
         markdown = await fetchContent(url);
     }
 
-    // Strip YAML frontmatter (common in SOM markdown files)
     if (stripYamlFrontmatter) {
         markdown = stripFrontmatter(markdown);
     }
 
-    // Clean up for LMS display (remove video URLs, dead links, etc.)
     if (cleanForLms) {
         markdown = cleanMarkdownForLms(markdown);
     }

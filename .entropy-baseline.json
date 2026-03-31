@@ -1,7 +1,7 @@
 {
   "version": 2,
   "updated": "2026-03-31",
-  "total": 1429,
+  "total": 881,
   "by_check": {
     "audit_trail": 2,
     "catch_return_default": 11,
@@ -15,7 +15,6 @@
     "ddd_shared_secret_auth": 1,
     "destructuring_rename": 1,
     "duplicate_code_handlers": 1,
-    "explanatory_comments": 555,
     "god_file": 1,
     "handle_orchestration": 9,
     "http_error_silent_fallback": 1,
@@ -30,7 +29,7 @@
     "optional_chaining": 196,
     "positional_args_excess": 76,
     "project_structure": 2,
-    "single_use_variables": 357,
+    "single_use_variables": 364,
     "then_catch_finally": 9,
     "ts_dot_notation": 45,
     "unused_export": 1,

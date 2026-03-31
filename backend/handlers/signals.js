@@ -17,7 +17,6 @@ const parseStep = (row, currentStep) => {
     const hasVideo = media.some(({ type }) => type === 'VIDEO');
     const videoCompleted = row.video_completed === 1;
     const quizPassed = row.quiz_passed === 1;
-    // Quiz → quiz passed | Video → video completed | Content → allow advance (frontend handles)
     const stepCompleted = hasQuiz ? quizPassed : (hasVideo ? videoCompleted : false);
     
     return {
@@ -48,7 +47,6 @@ const resetProgress = async (db, userId, courseId) => {
 };
 
 // ============================================
-// Main handlers
 // ============================================
 
 /**
@@ -68,7 +66,6 @@ export const getCourseSignalsHandler = async (request, env, userContext, courseI
         WHERE c.course_id = ? ORDER BY c.sys_order_index
     `).bind(userId, courseId).all();
     
-    // First pass: parse steps and track currentStep + video positions
     let currentStep = 0;
     const videoPositions = {}; // GAP-102: Map class_id -> position data
     
@@ -76,7 +73,6 @@ export const getCourseSignalsHandler = async (request, env, userContext, courseI
         const step = parseStep(row, currentStep);
         if (step.step_completed) currentStep = Math.max(currentStep, row.sys_order_index);
         
-        // GAP-102: Track video positions for resume
         if (row.video_max_position_sec > 0) {
             const duration = row.video_duration_sec || 1;
             videoPositions[row.class_id] = {
@@ -89,10 +85,8 @@ export const getCourseSignalsHandler = async (request, env, userContext, courseI
         return step;
     });
     
-    // Second pass: update can_access with final currentStep
     for (const step of steps) { step.can_access = step.order_index <= currentStep + 1; }
     
-    // Check for corrupted state
     if (hasCorruptedState(steps)) {
         await resetProgress(env.DB, userId, courseId);
         return jsonResponse({
@@ -102,13 +96,11 @@ export const getCourseSignalsHandler = async (request, env, userContext, courseI
         }, 409, request);
     }
     
-    // Calculate course progress (GAP-601)
     const completedSteps = steps.filter(({ step_completed } = {}) => step_completed).length;
     const totalSteps = steps.length;
     const progressPercent = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0;
     const courseCompleted = steps.every(({ step_completed } = {}) => step_completed) && steps.length > 0;
     
-    // Award badges when course is completed for the first time
     let badgesEarned = [];
     if (courseCompleted) {
         const isNew = await recordCourseCompletion(env.DB, userId, courseId);
@@ -124,15 +116,12 @@ export const getCourseSignalsHandler = async (request, env, userContext, courseI
         can_access_step: Math.min(currentStep + 1, steps.length),
         total_steps: steps.length,
         course_completed: courseCompleted,
-        // GAP-601: Course progress
         course_progress: {
             completed: completedSteps,
             total: totalSteps,
             percent: progressPercent
         },
-        // GAP-102: Video positions for resume
         video_positions: videoPositions,
-        // Badges earned on completion
         badges_earned: badgesEarned
     }, 200, request);
 };

@@ -24,10 +24,8 @@ export const getCloudContentExecute = async (context: GetCloudContentContext, ct
   let content: string;
 
   if (isOwner) {
-    // Direct access via owner's connection
     content = await ctx.storageService.getFileContent(connectionId, fileId);
   } else {
-    // Delegated access via PAM
     if (!ctx.pamClient) {
       return fail('PAM service is not available');
     }
@@ -35,7 +33,6 @@ export const getCloudContentExecute = async (context: GetCloudContentContext, ct
     content = pamResult.content;
   }
 
-  // Emit domain event
   await ctx.domainEvents.publish(
     contentAccessed(contentRef.id.value, ctx.userEmail)
   );

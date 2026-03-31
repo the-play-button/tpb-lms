@@ -6,7 +6,6 @@
 
 import { jsonResponse } from '../../cors.js';
 
-// Maximum number of active enrollments per user
 export const MAX_ACTIVE_ENROLLMENTS = 3;
 
 /**

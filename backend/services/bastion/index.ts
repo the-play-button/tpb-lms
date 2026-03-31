@@ -6,10 +6,8 @@
  * const secret = await bastion.getSecret(jwt, 'integrations/api_key');
  */
 
-// Port types
 export type { BastionPort, BastionConfig } from './BastionPort.js';
 
-// Adapters
 export { BastionCloudflareAdapter } from './adapters/BastionCloudflareAdapter.js';
 
 import type { BastionPort, BastionConfig } from './BastionPort.js';
@@ -24,5 +22,4 @@ export const createBastionClient = (config: BastionConfig): BastionPort => {
   return new BastionCloudflareAdapter(config);
 };
 
-// Backward compatibility - export class as BastionClient alias
 export { BastionCloudflareAdapter as BastionClient } from './adapters/BastionCloudflareAdapter.js';

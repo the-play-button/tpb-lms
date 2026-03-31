@@ -174,7 +174,6 @@ export const initDebugCollector = () => {
         });
     });
 
-    // Initial breadcrumb
     storeBreadcrumb({
         type: 'init',
         data: `Page loaded: ${window.location.pathname}${window.location.search}`

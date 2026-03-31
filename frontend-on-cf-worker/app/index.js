@@ -15,7 +15,6 @@ import { setState, getState } from './state.js';
 import { api } from './api.js';
 import { log } from './log.js';
 
-// UI Components
 import { updateUserStats, initUserStats } from './ui/userStats.js';
 import { updateBadgesGrid, initBadges, iconMap } from './ui/badges.js';
 import { renderCourseList, initCourseList } from './ui/courseList.js';
@@ -25,31 +24,24 @@ import { renderLangSelector, initLangSelector } from './ui/langSelector.js';
 // i18n
 import { initLanguage, t, getLanguage } from '../i18n/index.js';
 
-// Course
 import { loadCourse } from './course/loader.js';
 import { initNavigation } from './course/navigation.js';
 import { renderCurrentStep } from './course/renderer.js';
 
-// Video & Quiz
 import { stopVideoTracking, pauseVideo, isVideoPlaying } from './video/tracking/index.js';
 import { initQuizHandler, handleTallySubmission } from './quiz/handler.js';
 
-// Other
 import { loadLeaderboard } from './leaderboard.js';
 import { showBadgeModal, showError, refreshUserData, initNotifications } from './notifications.js';
 
-// Debug
 import { initDebugCollector, setUserContext } from './debug/collector/index.js';
 import { initDebugFab } from './debug/fab.js';
 
-// Admin
 import { initAdminDashboard } from './admin/dashboard.js';
 
-// KMS
 import { initKmsLinks } from './kms/viewer/index.js';
 
 const init = async () => {
-    // Initialize debug collector FIRST (before any API calls)
     initDebugCollector();
     initDebugFab();
     
@@ -62,7 +54,6 @@ const init = async () => {
         
         log.info('🔐 Session loaded:', session.user.email);
         
-        // Sentry: Set user context for error tracking
         if (window.Sentry) {
             window.Sentry.setUser({
                 id: session.profile?.contact_id || session.user.id,
@@ -70,7 +61,6 @@ const init = async () => {
             });
         }
         
-        // Debug collector: Set user context
         setUserContext({
             email: session.user.email,
             id: session.user.id,
@@ -147,7 +137,6 @@ function initLangSelectorInHeader() {
     const userMenu = document.getElementById('userMenu');
     if (!userMenu) return;
     
-    // Insert lang selector before user menu
     const langContainer = document.createElement('div');
     langContainer.innerHTML = renderLangSelector();
     userMenu.parentElement.insertBefore(langContainer.firstElementChild, userMenu);
@@ -163,7 +152,6 @@ const initMobileTabs = () => {
     
     if (!mobileTabs) return;
     
-    // Populate mobile views with current data
     populateMobileCourseList();
     populateMobileBadgesGrid();
     
@@ -173,30 +161,24 @@ const initMobileTabs = () => {
         
         const target = tab.dataset.tab;
         
-        // Update active tab
         mobileTabs.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
         
-        // Hide all views first
         content?.classList.remove('mobile-hidden');
         parcoursView?.classList.remove('visible');
         badgesView?.classList.remove('visible');
         
-        // Show target view
         switch (target) {
             case 'content':
-                // Default: show course content
                 break;
                 
             case 'parcours':
-                // Show course list overlay, hide content
                 content?.classList.add('mobile-hidden');
                 parcoursView?.classList.add('visible');
                 populateMobileCourseList(); // Refresh data
                 break;
                 
             case 'badges':
-                // Show badges overlay, hide content
                 content?.classList.add('mobile-hidden');
                 badgesView?.classList.add('visible');
                 populateMobileBadgesGrid(); // Refresh data
@@ -216,7 +198,6 @@ function populateMobileCourseList() {
     const currentCourse = getState('currentCourse');
     
     container.innerHTML = courses.map(course => {
-        // Progress status (matches courseList.js logic)
         const isCompleted = course.progress?.course_completed;
         const stepsCompleted = course.progress?.steps_completed || 0;
         const isCurrentCourse = course.id === currentCourse;
@@ -240,14 +221,12 @@ function populateMobileCourseList() {
         `;
     }).join('');
     
-    // Add click handlers
     container.querySelectorAll('.course-item').forEach(item => { // entropy-event-listeners-ok: one-time setup after render
         item.addEventListener('click', () => {
             const courseId = item.dataset.courseId;
             loadCourse(courseId);
             history.pushState({}, '', `?som=${courseId}`);
             
-            // Switch back to content tab
             switchToContentTab();
         });
     });
@@ -277,7 +256,6 @@ function populateMobileBadgesGrid() {
         `;
     }).join('');
     
-    // Add tap hint
     const hintEl = document.querySelector('.mobile-badges-view .badge-hint');
     if (!hintEl) {
         const hint = document.createElement('p');
@@ -286,7 +264,6 @@ function populateMobileBadgesGrid() {
         container.parentElement?.appendChild(hint);
     }
     
-    // Add click handlers for each badge (uses unified showBadgeModal from notifications.js)
     container.querySelectorAll('.badge-item').forEach(item => { // entropy-event-listeners-ok: one-time setup after render
         item.addEventListener('click', () => {
             const index = parseInt(item.dataset.badgeIndex, 10);
@@ -307,12 +284,10 @@ function switchToContentTab() {
     const parcoursView = document.getElementById('mobileParcoursView');
     const badgesView = document.getElementById('mobileBadgesView');
     
-    // Hide overlays
     parcoursView?.classList.remove('visible');
     badgesView?.classList.remove('visible');
     content?.classList.remove('mobile-hidden');
     
-    // Update tab state
     mobileTabs?.querySelectorAll('.mobile-tab').forEach(t => t.classList.remove('active'));
     mobileTabs?.querySelector('[data-tab="content"]')?.classList.add('active');
 }
@@ -321,10 +296,8 @@ function switchToContentTab() {
  * Setup DOM event listeners
  */
 function setupEventListeners() {
-    // Initialize mobile tabs
     initMobileTabs();
     
-    // Course navigation in sidebar
     document.getElementById('somList')?.addEventListener('click', (e) => {
         const link = e.target.closest('a[data-som-id]');
         if (link) {
@@ -335,7 +308,6 @@ function setupEventListeners() {
         }
     });
     
-    // Leaderboard tabs
     document.querySelector('.leaderboard-tabs')?.addEventListener('click', (e) => {
         if (e.target.matches('.tab')) {
             document.querySelectorAll('.leaderboard-tabs .tab').forEach(t => t.classList.remove('active'));
@@ -344,42 +316,34 @@ function setupEventListeners() {
         }
     });
     
-    // XP earned event
     window.addEventListener('lms:xp-earned', (e) => {
         showToast(`+${e.detail.xp} XP`, 'points');
         refreshUserData();
     });
     
-    // Badge earned event
     window.addEventListener('lms:badge-earned', (e) => {
         showToast(`Badge débloqué : ${e.detail.name}`, 'achievement');
         showBadgeModal(e.detail);
         refreshUserData();
     });
     
-    // Cleanup on page unload
     window.addEventListener('beforeunload', () => {
         stopVideoTracking();
     });
     
-    // Reload courses when language changes (preserve current step position)
     window.addEventListener('languagechange', async (e) => {
         log.debug('🌐 Language changed to:', e.detail.lang);
         try {
-            // Preserve current step before reloading
             const currentStepIndex = getState('currentStepIndex');
             
-            // Reload courses list with new language
             const { courses } = await api(`/courses?lang=${e.detail.lang}`);
             setState('courses', courses);
             
-            // Reload current course if one is active
             const currentCourse = getState('currentCourse');
             if (currentCourse) {
                 const course = await api(`/courses/${currentCourse}?lang=${e.detail.lang}`);
                 setState('courseData', course);
                 
-                // Restore step position (don't reset to beginning)
                 setState('currentStepIndex', currentStepIndex);
                 renderCurrentStep();
             }
@@ -388,16 +352,13 @@ function setupEventListeners() {
         }
     });
     
-    // Listen for Tally form submission via postMessage
     window.addEventListener('message', async (event) => {
-        // Only process Tally messages (ignore Cloudflare Stream/iFrameResizer noise)
         if (!event.origin.includes('tally.so')) {
             return;
         }
         
         log.debug('📨 [TALLY] postMessage:', event.data);
         
-        // Tally sends { event: 'Tally.FormSubmitted', payload: {...} }
         let tallyEvent;
         try {
             tallyEvent = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
@@ -410,7 +371,6 @@ function setupEventListeners() {
         }
     });
     
-    // Pause video when user switches tab/window
     document.addEventListener('visibilitychange', () => {
         if (document.hidden) {
             pauseVideo();
@@ -418,6 +378,5 @@ function setupEventListeners() {
     });
 }
 
-// Initialize on DOM ready
 document.addEventListener('DOMContentLoaded', init);
 

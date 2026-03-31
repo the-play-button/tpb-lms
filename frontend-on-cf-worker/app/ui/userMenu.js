@@ -7,7 +7,6 @@
 
 import { log } from '../log.js';
 
-// CF Access logout URL for TPB team
 const CF_ACCESS_LOGOUT_URL = 'https://theplaybutton.cloudflareaccess.com/cdn-cgi/access/logout'; // entropy-hardcoded-url-ok: CF Access logout endpoint
 
 /**

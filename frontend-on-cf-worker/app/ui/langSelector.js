@@ -47,13 +47,11 @@ export const initLangSelector = () => {
     const btn = document.getElementById('langBtn');
     const dropdown = document.getElementById('langDropdown');
     
-    // Toggle dropdown
     btn?.addEventListener('click', (e) => {
         e.stopPropagation();
         dropdown?.classList.toggle('open');
     });
     
-    // Handle language selection
     dropdown?.addEventListener('click', (e) => {
         const option = e.target.closest('.lang-option');
         if (!option) return;
@@ -61,21 +59,18 @@ export const initLangSelector = () => {
         const lang = option.dataset.lang;
         if (lang && lang !== getLanguage()) {
             setLanguage(lang);
-            // Reload page to apply translations
             window.location.reload();
         }
         
         dropdown.classList.remove('open');
     });
     
-    // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
         if (!selector.contains(e.target)) {
             dropdown?.classList.remove('open');
         }
     });
     
-    // Close on escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             dropdown?.classList.remove('open');

@@ -13,7 +13,6 @@ export const completeCourse = async (request, env, userContext, courseId) => {
         return jsonResponse({ error: 'User not authenticated' }, 401, request);
     }
 
-    // Find active enrollment
     const enrollment = await env.DB.prepare(
         `SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ?`
     ).bind(userId, courseId).first();
@@ -26,7 +25,6 @@ export const completeCourse = async (request, env, userContext, courseId) => {
         return jsonResponse({ message: 'Course already completed' }, 200, request);
     }
 
-    // Mark as completed
     await env.DB.prepare(`
         UPDATE lms_enrollment
         SET status = 'completed',

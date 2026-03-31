@@ -9,13 +9,10 @@
 
 import { getCorsHeaders } from '../cors.js';
 
-// In-memory cache: Map<idempotencyKey, { response, timestamp }>
 const cache = new Map();
 
-// Cache TTL in milliseconds (60 seconds)
 const CACHE_TTL = 60000;
 
-// Cleanup interval
 const CLEANUP_INTERVAL = 30000;
 let lastCleanup = Date.now();
 
@@ -39,20 +36,16 @@ const cleanup = () => {
  * @returns {Response|null} - Cached response if found, null otherwise
  */
 export const checkIdempotency = request => {
-    // Run cleanup periodically
     cleanup();
     
     const idempotencyKey = request.headers.get('X-Idempotency-Key');
     
-    // No key = no idempotency check
     if (!idempotencyKey) return null;
     
     const cached = cache.get(idempotencyKey);
     
     if (cached) {
-        // Check if still valid
         if (Date.now() - cached.timestamp < CACHE_TTL) {
-            // Return cached response with CORS + indicator headers
             const corsHeaders = getCorsHeaders(request);
             const response = new Response(cached.body, {
                 status: cached.status,
@@ -65,7 +58,6 @@ export const checkIdempotency = request => {
             });
             return response;
         } else {
-            // Expired, remove from cache
             cache.delete(idempotencyKey);
         }
     }
@@ -84,18 +76,15 @@ export const cacheIdempotencyResponse = async (request, response) => {
     
     if (!idempotencyKey) return response;
     
-    // Clone response to read body
     const cloned = response.clone();
     const body = await cloned.text();
     
-    // Store in cache
     cache.set(idempotencyKey, {
         status: response.status,
         body,
         timestamp: Date.now()
     });
     
-    // Add header to response
     const newResponse = new Response(response.body, response);
     newResponse.headers.set('X-Idempotency-Key', idempotencyKey);
     

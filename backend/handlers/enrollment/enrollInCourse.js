@@ -13,7 +13,6 @@ export const enrollInCourse = async (request, env, userContext, courseId) => {
         return jsonResponse({ error: 'User not authenticated' }, 401, request);
     }
 
-    // Check if course exists
     const course = await env.DB.prepare(
         `SELECT id, name, is_active FROM lms_course WHERE id = ?`
     ).bind(courseId).first();
@@ -22,7 +21,6 @@ export const enrollInCourse = async (request, env, userContext, courseId) => {
         return jsonResponse({ error: 'Course not found or inactive' }, 404, request);
     }
 
-    // Check if already enrolled
     const existing = await env.DB.prepare(
         `SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ?`
     ).bind(userId, courseId).first();
@@ -32,8 +30,6 @@ export const enrollInCourse = async (request, env, userContext, courseId) => {
             return jsonResponse({ error: 'Already enrolled in this course' }, 409, request);
         }
 
-        // Re-enroll (previously completed or abandoned)
-        // Check active limit first
         const activeCount = await env.DB.prepare(
             `SELECT COUNT(*) as count FROM lms_enrollment WHERE user_id = ? AND status = 'active'`
         ).bind(userId).first();
@@ -46,7 +42,6 @@ export const enrollInCourse = async (request, env, userContext, courseId) => {
             }, 403, request);
         }
 
-        // Reactivate enrollment
         await env.DB.prepare(`
             UPDATE lms_enrollment
             SET status = 'active',
@@ -66,7 +61,6 @@ export const enrollInCourse = async (request, env, userContext, courseId) => {
         }, 200, request);
     }
 
-    // Check active enrollment limit
     const activeCount = await env.DB.prepare(
         `SELECT COUNT(*) as count FROM lms_enrollment WHERE user_id = ? AND status = 'active'`
     ).bind(userId).first();
@@ -80,7 +74,6 @@ export const enrollInCourse = async (request, env, userContext, courseId) => {
         }, 403, request);
     }
 
-    // Create new enrollment
     const enrollmentId = generateId();
 
     await env.DB.prepare(`

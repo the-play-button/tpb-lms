@@ -15,33 +15,27 @@ import { renderCurrentStep } from '../course/renderer.js';
 import { loadLeaderboard } from '../leaderboard.js';
 import { refreshUserData } from '../notifications.js';
 
-// Current quiz info for postMessage handler
 let currentQuizInfo = null;
 
 const resolveTallyFormId = tallyFormIds => {
     if (!tallyFormIds) return null;
     
     // entropy-legacy-marker-ok: documented technical debt
-    // Legacy single string format
     if (typeof tallyFormIds === 'string') {
         return tallyFormIds;
     }
     
-    // Multi-lang object format: { fr: "xxx", en: "yyy", ... }
     if (typeof tallyFormIds === 'object') {
         const lang = window.i18n?.getLanguage?.() || 'fr';
         
-        // Try current language
         if (tallyFormIds[lang]) {
             return tallyFormIds[lang];
         }
         
-        // Fallback to English
         if (tallyFormIds['en']) {
             return tallyFormIds['en'];
         }
         
-        // Fallback to first available
         const firstId = Object.values(tallyFormIds)[0];
         return firstId || null;
     }
@@ -76,7 +70,6 @@ En cliquant OK, vous acceptez :
     );
     
     if (confirmed) {
-        // Store quiz info for postMessage handler
         currentQuizInfo = {
             classId,
             tallyFormId,
@@ -117,33 +110,27 @@ export const handleTallySubmission = async tallyEvent => {
         return;
     }
     
-    // Show pending state in quiz UI
     showQuizPendingState();
     
     const payload = {
         quizId: currentQuizInfo.tallyFormId,
         courseId: currentQuizInfo.courseId,
         classId: currentQuizInfo.classId,
-        // Score calculé côté serveur pour sécurité
         answers: tallyEvent.payload?.fields || []
     };
     
     try {
-        // Call our API directly
         log.debug('📤 [DEBUG] Calling /api/quiz with payload:', payload);
         const result = await apiPost('/quiz', payload);
         
         log.debug('📥 [DEBUG] Quiz API response:', result);
         
         if (result.passed) {
-            // REUSSITE: Afficher corrections si pas 100%
             log.debug('✅ Quiz passed!');
             
             if (result.wrongAnswers && result.wrongAnswers.length > 0) {
-                // Afficher le modal avec les corrections
                 showCorrectionsModal(result.wrongAnswers, result.score, result.maxScore);
             } else {
-                // Score parfait - simple toast
                 showToast(`Quiz parfait ! ${result.score}/${result.maxScore} 🎉`, 'success');
             }
             
@@ -154,17 +141,13 @@ export const handleTallySubmission = async tallyEvent => {
                 showToast(`Badge débloqué : ${result.badgeEarned.name}`, 'achievement');
             }
             
-            // Refresh points in sidebar
             loadLeaderboard();
-            // Refresh user data for badges
             refreshUserData();
         } else {
-            // ECHEC: Afficher modal d'échec (video_completed a été reset côté backend)
             log.debug('❌ Quiz failed - must rewatch video');
             showFailureModal(result.score, result.maxScore, result.percentage);
         }
         
-        // Refresh signals and update UI (important pour reverrouiller le quiz si échec)
         await refreshSignals();
         renderCurrentStep();
         

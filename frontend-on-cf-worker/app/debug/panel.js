@@ -117,7 +117,6 @@ const handleResetAll = async () => {
         showToast(`✅ ${resetCount} parcours réinitialisés`, 'success');
         closePanel();
         
-        // Reload current course
         const currentCourse = getState('currentCourse');
         if (currentCourse) {
             loadCourse(currentCourse);
@@ -151,18 +150,14 @@ const handleGotoStep = () => {
 const setupListeners = () => {
     if (!panelElement) return;
     
-    // Close button
     panelElement.querySelector('.debug-panel__close')?.addEventListener('click', closePanel);
     
-    // Backdrop click
     panelElement.querySelector('.debug-panel__backdrop')?.addEventListener('click', closePanel);
     
-    // Reset buttons
     panelElement.querySelector('#debug-reset-current')?.addEventListener('click', handleResetCurrent);
     panelElement.querySelector('#debug-reset-all')?.addEventListener('click', handleResetAll);
     panelElement.querySelector('#debug-goto-step')?.addEventListener('click', handleGotoStep);
     
-    // Escape key
     document.addEventListener('keydown', handleEscape);
 };
 
@@ -189,7 +184,6 @@ export const openPanel = () => {
     
     updatePanelState();
     
-    // Trigger animation
     requestAnimationFrame(() => {
         panelElement.classList.add('debug-panel--open');
     });

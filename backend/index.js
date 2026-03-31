@@ -100,7 +100,6 @@ const handleTallyWithAuth = async (request, url, env) => {
 
 export default {
     async fetch(request, env, ctx) {
-        // CORS preflight - respond with 204 and all CORS headers
         if (request.method === 'OPTIONS') {
             return new Response(null, { 
                 status: 204,
@@ -111,23 +110,19 @@ export default {
         const url = new URL(request.url);
         const path = url.pathname;
         
-        // Add trace ID for request correlation (GAP-1106)
         const { traceId } = addTraceId(request);
         
-        // Rate limiting check (GAP-1415)
         const rateLimited = checkRateLimit(request);
         if (rateLimited) return rateLimited;
 
         try {
             // ============================================
-            // PUBLIC ENDPOINTS (no auth required)
             // ============================================
             
             if (path === '/api/health') {
                 return await handleHealthCheck(env, request);
             }
 
-            // Logto OAuth routes (public, only active when USE_LOGTO=true)
             if (path === '/auth/login' && request.method === 'GET') {
                 return await handleLogin(request, env);
             }
@@ -138,12 +133,10 @@ export default {
                 return await handleLogout(request, env);
             }
             
-            // Tally webhook - uses extracted auth logic
             if (path === '/api/tally-webhook' && request.method === 'POST') {
                 return await handleTallyWithAuth(request, url, env);
             }
             
-            // GitHub content proxy - public for now (DEBUG - token auth issue)
             // TODO: Re-enable auth after fixing vault token scopes
             if (path === '/api/content/github' && request.method === 'GET') {
                 return await getGitHubContent(request, env, null);
@@ -154,7 +147,6 @@ export default {
             }
             
             // ============================================
-            // TEST ENDPOINTS (secret protected, no JWT)
             // ============================================
             
             if (path === '/api/test/seed' && request.method === 'POST') {
@@ -162,10 +154,8 @@ export default {
             }
             
             // ============================================
-            // PROTECTED ENDPOINTS (JWT auth required)
             // ============================================
             
-            // Authenticate via Cloudflare Access JWT
             const auth = await authenticateRequest(request, env);
             if (auth.error) return auth.error;
             
@@ -173,19 +163,16 @@ export default {
                 user: auth.user, 
                 contact: auth.contact,
                 employee: auth.employee,
-                // Backward compatibility
                 learner: auth.contact || auth.employee
             };
             
             // ------------------------------------------
-            // AUTH - Session endpoint
             // ------------------------------------------
             if (path === '/api/auth/session' && request.method === 'GET') {
                 return await getSession(request, env);
             }
             
             // ------------------------------------------
-            // API KEYS - Management endpoints
             // ------------------------------------------
             if (path === '/api/auth/api-keys' && request.method === 'POST') {
                 return await createAPIKeyHandler(request, env, auth);
@@ -195,29 +182,24 @@ export default {
                 return await listAPIKeysHandler(request, env, auth);
             }
             
-            // DELETE /api/auth/api-keys/:id
             const apiKeyMatch = path.match(/^\/api\/auth\/api-keys\/([^/]+)$/);
             if (apiKeyMatch && request.method === 'DELETE') {
                 return await revokeAPIKeyHandler(request, env, auth, apiKeyMatch[1]);
             }
             
             // ------------------------------------------
-            // ADMIN - Statistics and management
             // ------------------------------------------
             if (path === '/api/admin/stats' && request.method === 'GET') {
                 return await getAdminStats(request, env, userContext);
             }
             
-            // Admin API Key creation for other users
             if (path === '/api/admin/api-keys' && request.method === 'POST') {
                 return await adminCreateAPIKeyHandler(request, env, userContext);
             }
             
             // ------------------------------------------
-            // EVENTS - Raw fact ingestion
             // ------------------------------------------
             if (path === '/api/events' && request.method === 'POST') {
-                // Check idempotency first (GAP-711)
                 const cachedResponse = checkIdempotency(request);
                 if (cachedResponse) return cachedResponse;
                 
@@ -230,97 +212,81 @@ export default {
             }
             
             // ------------------------------------------
-            // SIGNALS - Derived state queries
             // ------------------------------------------
-            // GET /api/signals/:courseId/:classId
             const stepSignalsMatch = path.match(/^\/api\/signals\/([^/]+)\/([^/]+)$/);
             if (stepSignalsMatch && request.method === 'GET') {
                 return await getStepSignals(request, env, userContext, stepSignalsMatch[1], stepSignalsMatch[2]);
             }
             
-            // GET /api/signals/:courseId
             const courseSignalsMatch = path.match(/^\/api\/signals\/([^/]+)$/);
             if (courseSignalsMatch && request.method === 'GET') {
                 return await getCourseSignalsHandler(request, env, userContext, courseSignalsMatch[1]);
             }
             
-            // POST /api/signals/:courseId/reset
             const resetSignalsMatch = path.match(/^\/api\/signals\/([^/]+)\/reset$/);
             if (resetSignalsMatch && request.method === 'POST') {
                 return await resetCourseSignals(request, env, userContext, resetSignalsMatch[1]);
             }
             
             // ------------------------------------------
-            // ENROLLMENTS
             // ------------------------------------------
             if (path === '/api/enrollments' && request.method === 'GET') {
                 return await listEnrollments(request, env, userContext);
             }
             
-            // PATCH /api/enrollments/:id/progress
             const enrollmentProgressMatch = path.match(/^\/api\/enrollments\/([^/]+)\/progress$/);
             if (enrollmentProgressMatch && request.method === 'PATCH') {
                 return await updateProgress(request, env, userContext, enrollmentProgressMatch[1]);
             }
             
             // ------------------------------------------
-            // COURSES (formerly SOMs)
             // ------------------------------------------
             if ((path === '/api/courses' || path === '/api/soms') && request.method === 'GET') {
                 return await listCourses(request, env, userContext);
             }
             
-            // Match /api/courses/:id or /api/soms/:id
             const courseMatch = path.match(/^\/api\/(courses|soms)\/([^/]+)$/);
             if (courseMatch && request.method === 'GET') {
                 return await getCourse(request, env, userContext, courseMatch[2]);
             }
             
-            // POST /api/courses/:id/enroll
             const enrollMatch = path.match(/^\/api\/courses\/([^/]+)\/enroll$/);
             if (enrollMatch && request.method === 'POST') {
                 return await enrollInCourse(request, env, userContext, enrollMatch[1]);
             }
             
-            // POST /api/courses/:id/abandon
             const abandonMatch = path.match(/^\/api\/courses\/([^/]+)\/abandon$/);
             if (abandonMatch && request.method === 'POST') {
                 return await abandonCourse(request, env, userContext, abandonMatch[1]);
             }
             
-            // POST /api/courses/:id/complete
             const completeMatch = path.match(/^\/api\/courses\/([^/]+)\/complete$/);
             if (completeMatch && request.method === 'POST') {
                 return await completeCourse(request, env, userContext, completeMatch[1]);
             }
             
-            // GET /api/courses/:id/enrollment
             const enrollmentStatusMatch = path.match(/^\/api\/courses\/([^/]+)\/enrollment$/);
             if (enrollmentStatusMatch && request.method === 'GET') {
                 return await getEnrollmentStatus(request, env, userContext, enrollmentStatusMatch[1]);
             }
             
             // ------------------------------------------
-            // KMS - Knowledge Management System
             // ------------------------------------------
             if (path === '/api/kms/spaces' && request.method === 'GET') {
                 return await listSpaces(request, env, userContext);
             }
             
-            // GET /api/kms/spaces/:id
             const kmsSpaceMatch = path.match(/^\/api\/kms\/spaces\/([^/]+)$/);
             if (kmsSpaceMatch && request.method === 'GET') {
                 return await getSpace(request, env, userContext, kmsSpaceMatch[1]);
             }
             
-            // GET /api/kms/pages/:id
             const kmsPageMatch = path.match(/^\/api\/kms\/pages\/([^/]+)$/);
             if (kmsPageMatch && request.method === 'GET') {
                 return await getPage(request, env, userContext, kmsPageMatch[1]);
             }
             
             // ------------------------------------------
-            // BYOC - Cloud Content (BYOC migration)
             // ------------------------------------------
             if (path === '/api/content/cloud' && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
@@ -333,7 +299,6 @@ export default {
             }
 
             // ------------------------------------------
-            // BYOC - Connections
             // ------------------------------------------
             if (path === '/api/connections' && request.method === 'GET') {
                 const ctx = await createByocContext(request, env, userContext);
@@ -346,7 +311,6 @@ export default {
             }
 
             // ------------------------------------------
-            // BYOC - Sharing
             // ------------------------------------------
             const shareMatch = path.match(/^\/api\/content\/([^/]+)\/share$/);
             if (shareMatch && request.method === 'POST') {
@@ -377,70 +341,57 @@ export default {
             }
 
             // ------------------------------------------
-            // CONTENT - GitHub content proxy (legacy)
             // (Moved to PUBLIC section - see above)
             // ------------------------------------------
             
             // ------------------------------------------
-            // TRANSLATIONS - Multi-language support
             // ------------------------------------------
-            // GET /api/translations/review - Get translations needing review
             if (path === '/api/translations/review' && request.method === 'GET') {
                 return await getTranslationsForReview(request, env, userContext);
             }
             
-            // POST /api/translations/batch - Batch upsert (for AI engine)
             if (path === '/api/translations/batch' && request.method === 'POST') {
                 return await batchUpsertTranslations(request, env, userContext);
             }
             
-            // GET /api/translations/:type/:id - Get translations for content
             const translationsGetMatch = path.match(/^\/api\/translations\/([^/]+)\/([^/]+)$/);
             if (translationsGetMatch && request.method === 'GET') {
                 return await getTranslations(request, env, userContext);
             }
             
-            // PUT /api/translations/:type/:id/:lang - Upsert translation
             const translationsPutMatch = path.match(/^\/api\/translations\/([^/]+)\/([^/]+)\/([^/]+)$/);
             if (translationsPutMatch && request.method === 'PUT') {
                 return await upsertTranslation(request, env, userContext);
             }
             
             // ------------------------------------------
-            // GLOSSARY - Business terminology
             // ------------------------------------------
-            // POST /api/glossary/:orgId/import - Batch import terms
             const glossaryImportMatch = path.match(/^\/api\/glossary\/([^/]+)\/import$/);
             if (glossaryImportMatch && request.method === 'POST') {
                 return await importGlossaryTerms(request, env, userContext);
             }
             
-            // GET /api/glossary/:orgId - Get glossary for org
             const glossaryGetMatch = path.match(/^\/api\/glossary\/([^/]+)$/);
             if (glossaryGetMatch && request.method === 'GET') {
                 return await getGlossary(request, env, userContext);
             }
             
-            // POST /api/glossary/:orgId - Add term
             if (glossaryGetMatch && request.method === 'POST') {
                 return await addGlossaryTerm(request, env, userContext);
             }
             
-            // DELETE /api/glossary/:orgId/:termId - Delete term
             const glossaryDeleteMatch = path.match(/^\/api\/glossary\/([^/]+)\/([^/]+)$/);
             if (glossaryDeleteMatch && request.method === 'DELETE') {
                 return await deleteGlossaryTerm(request, env, userContext);
             }
             
             // ------------------------------------------
-            // BADGES
             // ------------------------------------------
             if (path === '/api/badges' && request.method === 'GET') {
                 return await listBadges(request, env, userContext);
             }
             
             // ------------------------------------------
-            // LEARNER / PROFILE / STATS
             // ------------------------------------------
             if ((path === '/api/learner' || path === '/api/profile') && request.method === 'GET') {
                 return await getLearnerProgress(request, env, userContext);
@@ -451,14 +402,12 @@ export default {
             }
             
             // ------------------------------------------
-            // LEADERBOARD
             // ------------------------------------------
             if (path === '/api/leaderboard' && request.method === 'GET') {
                 return await getLeaderboard(request, env, userContext);
             }
             
             // ------------------------------------------
-            // QUIZ ENDPOINT
             // ------------------------------------------
             if (path === '/api/quiz' && request.method === 'POST') {
                 return await handleQuizSubmission(request, env, userContext);

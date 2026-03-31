@@ -10,7 +10,6 @@ import { refreshSignals } from '../../course/loader.js';
 import { updateUIWithoutVideoReset } from '../../course/renderer.js';
 import { log } from '../../log.js';
 
-// Video tracking state (module-level singletons)
 export const trackingState = {
     streamPlayer: null,
     lastPingPosition: -10,
@@ -20,10 +19,8 @@ export const trackingState = {
     currentSpeedIndex: 2 // Default 1x
 };
 
-// Resume position threshold (skip if < 5 seconds)
 export const RESUME_THRESHOLD = 5;
 
-// Playback speed control (GAP-101)
 export const SPEEDS = [0.5, 0.75, 1, 1.25, 1.5, 1.75, 2];
 
 export { log };
@@ -36,7 +33,6 @@ export const sendVideoEvent = async (eventType, videoId, position, duration, cou
     log.debug(`${eventType}: ${position}s / ${duration}s (${progress}%)`);
 
     try {
-        // Generate idempotency key for deduplication (GAP-711)
         const idempotencyKey = generateIdempotencyKey(eventType, courseId, classId);
 
         const result = await apiPost('/events', {
@@ -53,7 +49,6 @@ export const sendVideoEvent = async (eventType, videoId, position, duration, cou
 
         log.debug(`${eventType} sent:`, result);
 
-        // If video completed, update UI to unlock quiz
         if (result.video_completed && !trackingState.videoCompletedHandled) {
             trackingState.videoCompletedHandled = true;
             log.debug('Video completed! Updating UI to unlock quiz...');
@@ -84,13 +79,11 @@ export const setupNativeVideoTracking = (videoElement, videoDuration, courseId, 
     trackingState.isPlaying = false;
     trackingState.videoCompletedHandled = false;
 
-    // Resume position
     if (resumePosition && resumePosition >= RESUME_THRESHOLD) {
         videoElement.currentTime = resumePosition;
         trackingState.lastPingPosition = Math.floor(resumePosition / 10) * 10 - 10;
     }
 
-    // Play event
     videoElement.addEventListener('play', async () => {
         log.debug('Video started playing (native)');
         trackingState.isPlaying = true;
@@ -98,13 +91,11 @@ export const setupNativeVideoTracking = (videoElement, videoDuration, courseId, 
         await sendVideoEvent('VIDEO_PLAY', 'external', currentTime, videoDuration, courseId, classId);
     });
 
-    // Pause event
     videoElement.addEventListener('pause', () => {
         log.debug('Video paused (native)');
         trackingState.isPlaying = false;
     });
 
-    // Ended event
     videoElement.addEventListener('ended', async () => {
         if (trackingState.videoCompletedHandled) return;
         log.debug('Video ended (native)');
@@ -115,7 +106,6 @@ export const setupNativeVideoTracking = (videoElement, videoDuration, courseId, 
         updateUIWithoutVideoReset();
     });
 
-    // Periodic ping while playing
     // entropy-prohibited-timer-ok: periodic video progress ping
     trackingState.videoTrackingInterval = setInterval(async () => {
         if (!trackingState.isPlaying) return;

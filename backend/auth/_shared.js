@@ -5,12 +5,10 @@
 
 import { getAuthConfig } from '../config/auth.js';
 
-// Cache for JWKS keys
 export let jwksCache = null;
 export let jwksCacheTime = 0;
 export const JWKS_CACHE_TTL = 3600000; // 1 hour
 
-// JWKS cache for OIDC providers
 export let oidcJwksCache = null;
 export let oidcJwksCacheTime = 0;
 

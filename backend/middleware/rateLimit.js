@@ -13,7 +13,6 @@
 
 import { getCorsHeaders } from '../cors.js';
 
-// Rate limits per endpoint
 const LIMITS = {
     'POST:/api/events': { requests: 60, window: 60 },     // 60 req/min
     'POST:/api/events/batch': { requests: 30, window: 60 }, // 30 req/min
@@ -22,10 +21,8 @@ const LIMITS = {
     'default': { requests: 100, window: 60 }               // 100 req/min default
 };
 
-// In-memory store: Map<ip, Array<timestamp>>
 const requestCounts = new Map();
 
-// Cleanup old entries periodically (prevent memory leak)
 const CLEANUP_INTERVAL = 60000; // 1 minute
 let lastCleanup = Date.now();
 
@@ -57,19 +54,16 @@ const getLimit = (method, path) => {
  * @returns {Response|null} - 429 response if rate limited, null otherwise
  */
 export const checkRateLimit = request => {
-    // Run cleanup periodically
     cleanup();
     
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;
     
-    // Skip rate limiting for GET requests (read-only)
     if (method === 'GET' || method === 'OPTIONS') {
         return null;
     }
     
-    // Get client IP (Cloudflare provides this header)
     const ip = request.headers.get('CF-Connecting-IP') || 
                request.headers.get('X-Forwarded-For')?.split(',')[0] || 
                'unknown';
@@ -78,14 +72,11 @@ export const checkRateLimit = request => {
     const now = Date.now();
     const windowStart = now - (limit.window * 1000);
     
-    // Get or create timestamp array for this IP
     const key = `${ip}:${method}:${path}`;
     const timestamps = requestCounts.get(key) || [];
     
-    // Filter to only timestamps within the window
     const recentTimestamps = timestamps.filter(t => t > windowStart);
     
-    // Check if over limit
     if (recentTimestamps.length >= limit.requests) {
         const oldestInWindow = Math.min(...recentTimestamps);
         const retryAfter = Math.ceil((oldestInWindow + (limit.window * 1000) - now) / 1000);
@@ -107,7 +98,6 @@ export const checkRateLimit = request => {
         });
     }
     
-    // Add current timestamp
     recentTimestamps.push(now);
     requestCounts.set(key, recentTimestamps);
     
@@ -131,7 +121,6 @@ export const addRateLimitHeaders = (response, request) => {
     const windowStart = Date.now() - (limit.window * 1000);
     const recentCount = timestamps.filter(t => t > windowStart).length; // entropy-naming-convention-ok: scalar count value
     
-    // Clone response to add headers
     const newResponse = new Response(response.body, response);
     newResponse.headers.set('X-RateLimit-Limit', String(limit.requests));
     newResponse.headers.set('X-RateLimit-Remaining', String(Math.max(0, limit.requests - recentCount)));

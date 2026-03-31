@@ -81,7 +81,6 @@ const buildSessionResponse = (jwtResult, contact, userData) => {
 };
 
 // ============================================
-// Main handler
 // ============================================
 
 /**
@@ -90,16 +89,12 @@ const buildSessionResponse = (jwtResult, contact, userData) => {
 export const getSession = async (request, env) => {
     const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
     
-    // Validate JWT
     const validation = await validateJWT(jwt, env, request);
     if (validation.error) return validation.error;
     
-    // Get or create contact
     const contact = await getOrCreateContact(validation.result.email, env);
     
-    // Fetch all user data in parallel
     const userData = await fetchUserData(env.DB, contact.id);
     
-    // Build and return response
     return jsonResponse(buildSessionResponse(validation.result, contact, userData), 200, request);
 };

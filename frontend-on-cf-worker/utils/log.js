@@ -42,7 +42,6 @@ export const log = {
     }
 };
 
-// Global access for non-module scripts
 window.LMSLog = log; // entropy-global-pollution-ok: intentional global for non-module scripts // entropy-orphan-global-ok: inline assignment
 
 export default log;

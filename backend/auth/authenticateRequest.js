@@ -19,15 +19,12 @@ import { resolveRole } from './resolveRole.js';
 export const authenticateRequest = async (request, env) => {
     const authConfig = getAuthConfig(env);
 
-    // Try JWT first (browser users + CF Service Tokens)
     let jwtToken = request.headers.get('Cf-Access-Jwt-Assertion');
     let jwtSource = 'cf-access';
 
-    // If no CF Access JWT but Logto is enabled, check Authorization: Bearer for OIDC tokens
     const authHeader = request.headers.get('Authorization');
     if (!jwtToken && authConfig.useLogto && authHeader?.startsWith('Bearer ')) {
         const bearerToken = authHeader.slice(7); // entropy-naming-convention-ok: single token extracted from header
-        // OIDC JWTs contain dots, API keys start with tpb_
         if (!bearerToken.startsWith('tpb_') && bearerToken.includes('.')) {
             jwtToken = bearerToken;
             jwtSource = 'bearer-oidc';
@@ -35,7 +32,6 @@ export const authenticateRequest = async (request, env) => {
     }
 
     if (jwtToken) {
-        // Detect token type by peeking at issuer
         let jwtResult;
         try {
             const peekPayload = JSON.parse(new TextDecoder().decode(base64urlDecode(jwtToken.split('.')[1])));
@@ -47,7 +43,6 @@ export const authenticateRequest = async (request, env) => {
                 jwtResult = await verifyAccessJWT(jwtToken, env);
             }
         } catch {
-            // Fallback: try CF Access validation
             jwtResult = await verifyAccessJWT(jwtToken, env);
         }
 
@@ -67,7 +62,6 @@ export const authenticateRequest = async (request, env) => {
             };
         }
 
-        // JWT was provided but invalid
         return {
             error: jsonResponse({
                 error: `Authentication failed: ${jwtResult.error}`,
@@ -76,7 +70,6 @@ export const authenticateRequest = async (request, env) => {
         };
     }
 
-    // Try API Key (scripts, integrations)
     if (authHeader && authHeader.startsWith('Bearer ')) {
         const apiKey = authHeader.slice(7); // entropy-naming-convention-ok: single key extracted from header
         const keyResult = await verifyAPIKey(apiKey, env);
@@ -111,7 +104,6 @@ export const authenticateRequest = async (request, env) => {
             };
         }
 
-        // API Key was provided but invalid
         return {
             error: jsonResponse({
                 error: `Authentication failed: ${keyResult.error}`,
@@ -120,7 +112,6 @@ export const authenticateRequest = async (request, env) => {
         };
     }
 
-    // No authentication provided
     return {
         error: jsonResponse({
             error: 'Missing authentication. Provide Cf-Access-Jwt-Assertion or Authorization: Bearer header.',

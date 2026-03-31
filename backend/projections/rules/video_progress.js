@@ -29,10 +29,8 @@ export const VIDEO_PROGRESS_PROJECTION = {
         const position = payload.position_sec || 0;
         const duration = payload.duration_sec || state.video_duration_sec || 0;
         
-        // Track max position reached
         const newMaxPosition = Math.max(state.video_max_position_sec || 0, position);
         
-        // Complete at 90% of duration
         const wasCompleted = state.video_completed === 1;
         const isCompleted = duration > 0 && newMaxPosition >= 0.9 * duration;
         
@@ -41,7 +39,6 @@ export const VIDEO_PROGRESS_PROJECTION = {
             video_max_position_sec: newMaxPosition,
             video_duration_sec: duration,
             video_completed: isCompleted ? 1 : 0,
-            // Only set completed_at on first completion
             video_completed_at: isCompleted && !wasCompleted 
                 ? new Date().toISOString() 
                 : state.video_completed_at

@@ -13,7 +13,6 @@ export const decodeFileId = (fileId: string): { driveId: string; itemId: string 
       itemId: parsed.i_id || parsed.itemId,
     };
   } catch {
-    // Try format "driveId:itemId"
     const parts = fileId.split(':');
     if (parts.length === 2) {
       return { driveId: parts[0], itemId: parts[1] };

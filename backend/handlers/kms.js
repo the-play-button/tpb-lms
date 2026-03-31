@@ -46,7 +46,6 @@ export const listSpaces = async (request, env, userContext) => {
  */
 export const getSpace = async (request, env, userContext, spaceId) => {
     try {
-        // Get space
         const space = await env.DB.prepare(`
             SELECT id, name, description, parent_space_id, is_active, created_at, updated_at
             FROM kms_space
@@ -57,7 +56,6 @@ export const getSpace = async (request, env, userContext, spaceId) => {
             return jsonResponse({ error: 'Space not found' }, 404, request);
         }
         
-        // Get pages in this space
         const pagesResult = await env.DB.prepare(`
             SELECT id, title, type, metadata_json, created_at, updated_at
             FROM kms_page
@@ -106,7 +104,6 @@ export const getPage = async (request, env, userContext, pageId) => {
             return jsonResponse({ error: 'Page not found' }, 404, request);
         }
         
-        // Parse JSON fields
         const metadata = page.metadata_json ? JSON.parse(page.metadata_json) : {};
         const rawData = page.raw_json ? JSON.parse(page.raw_json) : {};
         

@@ -2,7 +2,6 @@
  * Test du nouveau système de scoring des quiz
  */
 
-// Simulation d'une soumission Tally avec les bonnes réponses
 const correctSubmission = {
     quizId: "2EBGVb", // STEP01_quiz
     courseId: "pw05-2",
@@ -21,7 +20,6 @@ const correctSubmission = {
     ]
 };
 
-// Simulation d'une soumission avec des réponses incorrectes
 const incorrectSubmission = {
     quizId: "2EBGVb",
     courseId: "pw05-2", 
@@ -44,7 +42,6 @@ const testQuizScoring = async () => {
     const API_BASE = "https://lms-api.matthieu-marielouise.workers.dev";
     
     
-    // Test avec bonnes réponses
     
     try {
         const response = await fetch(`${API_BASE}/api/quiz`, {
@@ -62,7 +59,6 @@ const testQuizScoring = async () => {
         console.error("❌ Erreur:", error.message);
     }
     
-    // Test avec mauvaises réponses
     
     try {
         const response = await fetch(`${API_BASE}/api/quiz`, {
@@ -81,5 +77,4 @@ const testQuizScoring = async () => {
     }
 };
 
-// Exécuter le test
 testQuizScoring();

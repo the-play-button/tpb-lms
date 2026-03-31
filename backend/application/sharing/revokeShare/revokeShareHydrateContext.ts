@@ -22,7 +22,6 @@ export const revokeShareHydrateContext = async (rawShareId: string, ctx: Handler
     return fail('NOT_FOUND' as const);
   }
 
-  // Only active shares can be revoked
   if (share.kind !== 'active') {
     return fail('NOT_FOUND' as const);
   }

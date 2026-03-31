@@ -22,7 +22,6 @@ export const getCloudContentHydrateContext = async (input: GetCloudContentInput,
   const refId = ContentRefId.reconstitute(input.ref_id);
 
   // TODO: i18n fallback - for now, always use findById.
-  // When translations are stored as separate ContentRefs linked via sourceRefId,
   // add lookup logic here: try translated ref first, fall back to source.
   const contentRef = await ctx.contentRefsRepository.findById(refId);
 
@@ -32,7 +31,6 @@ export const getCloudContentHydrateContext = async (input: GetCloudContentInput,
 
   const isOwner = contentRef.ownerEmail.value === ctx.userEmail;
 
-  // Check enrollment: if not owner, look for an active share
   let isEnrolled = false;
   if (!isOwner) {
     const shares = await ctx.sharesRepository.findActiveByContentRef(contentRef.id);

@@ -15,22 +15,18 @@ export const parseMediaUrl = media => {
     const url = media.url;
     const type = media.type || 'UNKNOWN';
 
-    // GitHub raw URLs - can fetch directly
     if (url.includes('raw.githubusercontent.com')) {
         return { type: 'GITHUB_RAW', url, canFetch: true, source: 'github' };
     }
 
-    // Cloudflare Stream
     if (url.includes('cloudflarestream.com')) {
         return { type: 'VIDEO', url, canFetch: false, source: 'cloudflare' };
     }
 
-    // Tally forms
     if (url.includes('tally.so')) {
         return { type: 'QUIZ', url, canFetch: false, source: 'tally' };
     }
 
-    // Generic document URL
     if (type === 'DOCUMENT') {
         return { type: 'DOCUMENT', url, canFetch: true, source: 'external' };
     }

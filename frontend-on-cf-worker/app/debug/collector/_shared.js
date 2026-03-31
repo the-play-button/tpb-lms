@@ -5,12 +5,10 @@
 
 import { log } from '../../log.js';
 
-// Storage limits
 export const MAX_ERRORS = 10;
 export const MAX_BREADCRUMBS = 50;
 export const MAX_NETWORK_ERRORS = 10;
 
-// Internal storage
 export const storage = {
     errors: [],
     breadcrumbs: [],

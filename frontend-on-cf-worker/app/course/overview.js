@@ -23,7 +23,6 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
     const viewer = document.getElementById('somViewer');
     if (!viewer) return;
     
-    // Show loading state
     viewer.innerHTML = `
         <div class="course-overview loading">
             <div class="loading-spinner"></div>
@@ -32,12 +31,10 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
     `;
     
     try {
-        // Get intro URL or cloud ref from course raw data
         const raw = course.raw ? JSON.parse(course.raw) : {};
         const introUrl = raw.tpb_intro_url;
         const introRefId = raw.tpb_intro_ref_id;
 
-        // Fetch intro content: cloud ref (BYOC) > GitHub URL (legacy) > description
         let introContent = '';
         if (introRefId) {
             try {
@@ -60,11 +57,9 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
             introContent = `<p>${course.description || 'Aucune description disponible.'}</p>`;
         }
         
-        // Get enrollment info
         const isEnrolled = enrollmentStatus?.enrolled && enrollmentStatus.enrollment?.status === 'active';
         const canEnroll = enrollmentStatus?.can_enroll ?? true;
         
-        // Render overview
         viewer.innerHTML = `
             <div class="course-overview">
                 <header class="overview-header">
@@ -107,7 +102,6 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
             </div>
         `;
         
-        // Setup button handlers
         setupOverviewHandlers(course.id);
         
     } catch (error) {
@@ -157,7 +151,6 @@ function renderEnrollmentButton(course, isEnrolled, canEnroll, enrollmentStatus)
  * Setup click handlers for overview buttons
  */
 function setupOverviewHandlers(courseId) {
-    // Enroll button
     document.querySelector('[data-action="enroll"]')?.addEventListener('click', async (e) => {
         const btn = e.target;
         btn.disabled = true;
@@ -165,7 +158,6 @@ function setupOverviewHandlers(courseId) {
         
         try {
             await api(`/courses/${courseId}/enroll`, { method: 'POST' });
-            // Reload course to start
             await loadCourse(courseId);
         } catch (error) {
             log.error('Enrollment failed:', error);
@@ -175,12 +167,10 @@ function setupOverviewHandlers(courseId) {
         }
     });
     
-    // Continue button
     document.querySelector('[data-action="continue"]')?.addEventListener('click', async () => {
         await loadCourse(courseId);
     });
     
-    // Abandon button
     document.querySelector('[data-action="abandon"]')?.addEventListener('click', async (e) => {
         if (!confirm('Êtes-vous sûr de vouloir abandonner ce cours ? Votre progression sera conservée.')) {
             return;
@@ -192,7 +182,6 @@ function setupOverviewHandlers(courseId) {
         
         try {
             await api(`/courses/${courseId}/abandon`, { method: 'POST' });
-            // Return to course list
             window.location.href = '/';
         } catch (error) {
             log.error('Abandon failed:', error);
@@ -209,7 +198,6 @@ function setupOverviewHandlers(courseId) {
  */
 export const showCourseOverview = async courseId => {
     try {
-        // Fetch course and enrollment status in parallel
         const [course, enrollmentStatus] = await Promise.all([
             api(`/courses/${courseId}`),
             api(`/courses/${courseId}/enrollment`).catch(() => ({ enrolled: false, can_enroll: true }))

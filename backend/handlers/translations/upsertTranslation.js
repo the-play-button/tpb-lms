@@ -31,7 +31,6 @@ export const upsertTranslation = async (request, env, ctx) => {
         return errorResponse('Missing field or value', 400);
     }
 
-    // Get user from context for reviewed_by
     const userId = ctx.user?.id || 'system';
     const id = `${contentType}:${contentId}:${field}:${lang}`;
 

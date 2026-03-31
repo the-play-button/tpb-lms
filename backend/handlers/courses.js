@@ -30,7 +30,6 @@ const applyTranslations = (obj, translations) => {
     
     const result = { ...obj };
     for (const [field, value] of Object.entries(translations)) {
-        // Handle both 'name' and 'title' (some places use title)
         if (field === 'name' && result.title !== undefined) {
             result.title = value;
         }
@@ -62,7 +61,6 @@ const enrichClass = (cls, currentStep) => {
     const quizPassed = cls.quiz_passed === 1;
     const stepCompleted = videoCompleted && (!hasQuiz || quizPassed);
     
-    // Use sys_order_index (unified.to conformity)
     const orderIndex = cls.sys_order_index ?? 0;
     
     return {
@@ -83,7 +81,6 @@ const enrichClass = (cls, currentStep) => {
 const processClasses = classes => {
     let currentStep = 0;
     const enrichedClasses = classes.map(cls => {
-        // Use sys_order_index (unified.to conformity)
         const orderIndex = cls.sys_order_index ?? 0;
         const enriched = enrichClass(cls, currentStep);
         if (enriched.step_completed) {
@@ -93,7 +90,6 @@ const processClasses = classes => {
         return enriched;
     });
     
-    // Second pass to fix can_access now that currentStep is known
     return enrichedClasses.map(cls => ({
         ...cls,
         can_access: cls.order_index <= currentStep + 1
@@ -101,7 +97,6 @@ const processClasses = classes => {
 };
 
 // ============================================
-// Main handlers
 // ============================================
 
 /**
@@ -138,7 +133,6 @@ export const listCourses = async (request, env, userContext) => {
                 progress: { videos_completed: progress?.videos_completed || 0, quizzes_passed: progress?.quizzes_passed || 0 }
             };
             
-            // Apply translations if lang is specified
             if (lang) {
                 const translations = await loadTranslations(env, 'course', course.id, lang);
                 result = applyTranslations(result, translations);
@@ -168,7 +162,6 @@ export const getCourse = async (request, env, userContext, courseId) => {
         return jsonResponse({ error: 'Course not found' }, 404, request);
     }
     
-    // Use sys_order_index (unified.to conformity)
     const classes = await env.DB.prepare(`
         SELECT c.id, c.name, c.description, c.media_json, 
             c.sys_order_index, c.raw_json,
@@ -182,17 +175,14 @@ export const getCourse = async (request, env, userContext, courseId) => {
     
     let enrichedClasses = processClasses(classes.results || []);
     
-    // Apply translations if lang is specified
     let courseTitle = course.name;
     let courseDescription = course.description;
     
     if (lang) {
-        // Translate course
         const courseTranslations = await loadTranslations(env, 'course', courseId, lang);
         if (courseTranslations.name) courseTitle = courseTranslations.name;
         if (courseTranslations.description) courseDescription = courseTranslations.description;
         
-        // Translate classes
         enrichedClasses = await Promise.all(enrichedClasses.map(async (cls) => {
             const classTranslations = await loadTranslations(env, 'class', cls.id, lang);
             return applyTranslations(cls, classTranslations);
