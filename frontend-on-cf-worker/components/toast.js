@@ -12,6 +12,7 @@
 
 (function() {
     'use strict';
+    const TOAST_EXIT_ANIMATION_MS = 300; // CSS toast slide-out animation duration
     let container = null;
     const MAX_VISIBLE_TOASTS = 2;
     const toastQueue = [];
@@ -66,7 +67,7 @@
             setTimeout(() => {
                 toast.remove();
                 processQueue(); // Process next toast in queue
-            }, 300);
+            }, TOAST_EXIT_ANIMATION_MS);
         }, duration);
         
         return toast;

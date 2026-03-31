@@ -1,3 +1,4 @@
+// entropy-single-export-ok: DDD pipeline step — function + AssertedInput type co-located by convention
 import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 

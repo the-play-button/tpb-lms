@@ -13,6 +13,9 @@ import { copyDebugInfoToClipboard } from './collector/index.js';
 import { togglePanel } from './panel.js';
 import { log } from '../log.js';
 
+const DOUBLE_CLICK_WINDOW_MS = 250;    // Window to detect double-click vs single-click
+const FAB_STATE_RESET_DELAY_MS = 1500; // CSS success/error state animation duration
+
 // showToast is exposed globally by components/toast.js
 const showToast = (...args) => window.showToast?.(...args);
 
@@ -60,7 +63,7 @@ const handleFabClick = () => {
         clickTimer = setTimeout(async () => {
             clickCount = 0;
             await handleSingleClick();
-        }, 250);
+        }, DOUBLE_CLICK_WINDOW_MS);
     } else if (clickCount === 2) {
         clearTimeout(clickTimer);
         clickCount = 0;
@@ -82,7 +85,7 @@ const handleSingleClick = async () => {
         if (result.success) {
             fabElement.classList.add('debug-fab--success');
             // entropy-prohibited-timer-ok: cleanup after CSS animation
-            setTimeout(() => fabElement.classList.remove('debug-fab--success'), 1500);
+            setTimeout(() => fabElement.classList.remove('debug-fab--success'), FAB_STATE_RESET_DELAY_MS);
             
             showToast('📋 Infos copiées ! Double-clic pour console debug.', 'success');
             
@@ -90,7 +93,7 @@ const handleSingleClick = async () => {
         } else {
             fabElement.classList.add('debug-fab--error');
             // entropy-prohibited-timer-ok: cleanup after CSS animation
-            setTimeout(() => fabElement.classList.remove('debug-fab--error'), 1500);
+            setTimeout(() => fabElement.classList.remove('debug-fab--error'), FAB_STATE_RESET_DELAY_MS);
 
             showToast('❌ Impossible de copier. Voir la console.', 'error');
             log.error('[Debug] Failed to copy:', result.error);
@@ -100,7 +103,7 @@ const handleSingleClick = async () => {
         fabElement.classList.remove('debug-fab--loading');
         fabElement.classList.add('debug-fab--error');
         // entropy-prohibited-timer-ok: cleanup after CSS animation
-        setTimeout(() => fabElement.classList.remove('debug-fab--error'), 1500);
+        setTimeout(() => fabElement.classList.remove('debug-fab--error'), FAB_STATE_RESET_DELAY_MS);
 
         showToast('❌ Erreur lors de la copie', 'error');
         log.error('[Debug] Error:', error);

@@ -6,6 +6,9 @@
 import { getState, subscribe } from '../state.js';
 import { formatNumber } from '../utils.js';
 
+const XP_ANIMATION_DURATION_MS = 400;   // CSS XP stat pulse animation
+const FLOAT_ANIMATION_DURATION_MS = 1500; // CSS floating XP number rise animation
+
 let previousXP = null;
 
 export const updateUserStats = () => {
@@ -25,7 +28,7 @@ export const updateUserStats = () => {
             xpStat.classList.add('animating');
             showFloatingXP(currentXP - previousXP, xpStat);
             // entropy-prohibited-timer-ok: cleanup after CSS animation
-            setTimeout(() => xpStat.classList.remove('animating'), 400);
+            setTimeout(() => xpStat.classList.remove('animating'), XP_ANIMATION_DURATION_MS);
         }
     }
     previousXP = currentXP;
@@ -51,7 +54,7 @@ const showFloatingXP = (amount, anchorEl) => {
     float.style.top = `${rect.top}px`;
     document.body.appendChild(float);
     // entropy-prohibited-timer-ok: cleanup after CSS animation
-    setTimeout(() => float.remove(), 1500);
+    setTimeout(() => float.remove(), FLOAT_ANIMATION_DURATION_MS);
 }
 
 export const initUserStats = () => {

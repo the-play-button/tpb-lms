@@ -1,4 +1,5 @@
 // entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-single-export-ok: 3 tightly-coupled idempotency helpers — same concern, same file
 /**
  * Idempotency Middleware
  * 

@@ -1,3 +1,4 @@
+// entropy-single-export-ok: DDD pipeline step — function + entry type co-located by convention
 import { fail, succeed, type Result } from '../../domain/core/Result.js';
 import type { HandlerContext } from '../../types/HandlerContext.js';
 import { Email } from '../../domain/value-objects/index.js';

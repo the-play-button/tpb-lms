@@ -2,6 +2,9 @@
 // entropy-unused-export-ok: showQuizWarningConfirmation and showAbandonConfirmation available for future use
 // entropy-legacy-marker-ok: debt — no legacy markers found, ACK retained for header completeness
 // entropy-prohibited-timer-ok: timer use is intentional
+
+const MODAL_FOCUS_DELAY_MS = 100; // Allow DOM paint before focusing confirm button
+
 /**
  * Confirmation Modal
  * 
@@ -65,7 +68,7 @@ export const showConfirmModal = options => {
     // entropy-prohibited-timer-ok: delay for UX focus after render
     setTimeout(() => {
         modal.querySelector('.modal-confirm')?.focus();
-    }, 100);
+    }, MODAL_FOCUS_DELAY_MS);
     
     modal.addEventListener('click', (e) => {
         const action = e.target.dataset?.action;

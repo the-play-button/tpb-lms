@@ -1,7 +1,7 @@
 {
   "version": 2,
   "updated": "2026-03-31",
-  "total": 114,
+  "total": 94,
   "by_check": {
     "audit_trail": 2,
     "ddd_barrel_zero_logic": 4,
@@ -19,10 +19,8 @@
     "http_error_silent_fallback": 1,
     "inconsistent_constant": 1,
     "innerHTML_modal_or_error": 1,
-    "magic_timeout": 10,
     "missing_required_page": 2,
     "missing_testid": 34,
-    "multiple_exports": 10,
     "optional_chaining": 4,
     "project_structure": 2,
     "unused_export": 1,

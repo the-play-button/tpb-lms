@@ -3,6 +3,8 @@
  * Render a KMS page in a modal
  */
 
+const MODAL_EXIT_ANIMATION_MS = 200; // CSS modal fade-out animation duration
+
 /**
  * Render a KMS page in a modal
  * @param {Object} page - Page data from API
@@ -61,6 +63,6 @@ window.closeKmsModal = function() { // entropy-global-pollution-ok: intentional 
     if (modal) {
         modal.classList.remove('kms-modal-visible');
         // entropy-prohibited-timer-ok: delay for CSS exit animation
-        setTimeout(() => modal.remove(), 200);
+        setTimeout(() => modal.remove(), MODAL_EXIT_ANIMATION_MS);
     }
 };

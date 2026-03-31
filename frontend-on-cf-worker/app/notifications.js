@@ -11,6 +11,8 @@ import { getState, setState } from './state.js';
 import { iconMap } from './ui/badges.js';
 import { log } from './log.js';
 
+const PARTICLE_ANIMATION_DURATION_MS = 1500; // CSS badge particle dispersion animation
+
 const createBadgeParticles = container => {
     const particlesDiv = document.createElement('div');
     particlesDiv.className = 'badge-particles';
@@ -27,7 +29,7 @@ const createBadgeParticles = container => {
     
     container.appendChild(particlesDiv);
     // entropy-prohibited-timer-ok: cleanup after CSS animation
-    setTimeout(() => particlesDiv.remove(), 1500);
+    setTimeout(() => particlesDiv.remove(), PARTICLE_ANIMATION_DURATION_MS);
 };
 
 /**
