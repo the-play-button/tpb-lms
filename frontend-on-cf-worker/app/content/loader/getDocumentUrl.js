@@ -9,6 +9,6 @@
  */
 export const getDocumentUrl = cls => {
     const media = cls.media || [];
-    const docMedia = media.find(({ type }) => type === 'DOCUMENT');
+    const docMedia = media.find(({ type } = {}) => type === 'DOCUMENT');
     return docMedia?.url || null;
 };

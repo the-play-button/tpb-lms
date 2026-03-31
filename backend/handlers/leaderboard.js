@@ -89,7 +89,7 @@ export const getLeaderboard = async (request, env, userContext) => {
         }))
     );
 
-    let currentUserEntry = leaderboard.find(({ user_id }) => user_id === userId);
+    let currentUserEntry = leaderboard.find(({ user_id } = {}) => user_id === userId);
     let currentUserRank = currentUserEntry?.rank;
     let currentUserPoints = currentUserEntry?.total_points;
     

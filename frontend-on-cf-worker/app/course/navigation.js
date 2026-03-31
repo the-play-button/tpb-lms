@@ -52,8 +52,8 @@ export const nextStep = async () => {
     const currentClass = courseData?.classes?.[stepIndex];
     
     const media = currentClass?.media || [];
-    const hasVideo = media.some(({ type }) => type === 'VIDEO');
-    const hasQuiz = media.some(({ type }) => type === 'QUIZ');
+    const hasVideo = media.some(({ type } = {}) => type === 'VIDEO');
+    const hasQuiz = media.some(({ type } = {}) => type === 'QUIZ');
     const isContentStep = !hasVideo && !hasQuiz;
     
     if (!isContentStep && !stepSignal?.step_completed) {

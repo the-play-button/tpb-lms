@@ -35,7 +35,7 @@ export const updateUserStats = () => {
     if (levelEl) levelEl.textContent = profile.level || 1;
     
     if (coursesEl) {
-        const completedCourses = courses.filter(({ progress }) => 
+        const completedCourses = courses.filter(({ progress } = {}) => 
             progress && progress.course_completed
         ).length;
         coursesEl.textContent = completedCourses;

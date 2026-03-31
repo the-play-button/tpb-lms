@@ -242,7 +242,7 @@ const populateMobileBadgesGrid = () => {
     
     const allBadges = getState('allBadges') || [];
     const earnedBadges = getState('badges') || [];
-    const earnedIds = new Set(earnedBadges.map(({ badge_id, id }) => badge_id || id));
+    const earnedIds = new Set(earnedBadges.map(({ badge_id, id } = {}) => badge_id || id));
     
     container.innerHTML = allBadges.map((badge, index) => {
         const isEarned = earnedIds.has(badge.id);

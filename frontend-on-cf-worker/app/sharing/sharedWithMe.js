@@ -38,7 +38,7 @@ export const renderSharedWithMe = async container => {
             <div class="shared-with-me">
                 <h3>Fichiers partagés avec moi</h3>
                 <div class="shared-list">
-                    ${shares.map(({ name, shared_by, content_type, content_ref_id }) => `
+                    ${shares.map(({ name, shared_by, content_type, content_ref_id } = {}) => `
                         <div class="shared-item">
                             <div class="shared-info">
                                 <span class="shared-name">${name || 'Fichier'}</span>

@@ -172,7 +172,7 @@ const showCorrectionsModal = (wrongAnswers, score, maxScore) => {
             </div>
             <p>Voici les questions que vous avez ratées :</p>
             <ul class="corrections-list">
-                ${wrongAnswers.map(({ question, yourAnswer, correctAnswer }) => `
+                ${wrongAnswers.map(({ question, yourAnswer, correctAnswer } = {}) => `
                     <li class="correction-item">
                         <div class="correction-question">${question}</div>
                         <div class="correction-wrong">

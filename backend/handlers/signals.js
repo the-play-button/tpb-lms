@@ -13,8 +13,8 @@ import { checkCourseCompletionBadges, recordCourseCompletion } from '../helpers/
 
 const parseStep = (row, currentStep) => {
     const media = JSON.parse(row.media_json || '[]');
-    const hasQuiz = media.some(({ type }) => type === 'QUIZ');
-    const hasVideo = media.some(({ type }) => type === 'VIDEO');
+    const hasQuiz = media.some(({ type } = {}) => type === 'QUIZ');
+    const hasVideo = media.some(({ type } = {}) => type === 'VIDEO');
     const videoCompleted = row.video_completed === 1;
     const quizPassed = row.quiz_passed === 1;
     const stepCompleted = hasQuiz ? quizPassed : (hasVideo ? videoCompleted : false);
@@ -143,8 +143,8 @@ export const getStepSignals = async (request, env, userContext, courseId, classI
     if (!cls) return jsonResponse({ error: 'Class not found' }, 404, request);
     
     const media = JSON.parse(cls.media_json || '[]');
-    const hasQuiz = media.some(({ type }) => type === 'QUIZ');
-    const hasVideo = media.some(({ type }) => type === 'VIDEO');
+    const hasQuiz = media.some(({ type } = {}) => type === 'QUIZ');
+    const hasVideo = media.some(({ type } = {}) => type === 'VIDEO');
     const videoCompleted = progress?.video_completed === 1;
     const quizPassed = progress?.quiz_passed === 1;
     const stepCompleted = hasQuiz ? quizPassed : (hasVideo ? videoCompleted : false);

@@ -305,7 +305,7 @@ export const listGitHubDirectory = async (request, env, userContext) => {
         
         const items = await response.json();
         
-        const files = items.map(({ name, path, type, size, download_url }) => ({
+        const files = items.map(({ name, path, type, size, download_url } = {}) => ({
             name: name,
             path: path,
             type: type,  // 'file' or 'dir'

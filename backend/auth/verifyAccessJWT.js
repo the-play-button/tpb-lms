@@ -26,7 +26,7 @@ export const verifyAccessJWT = async (token, env) => {
 
         const teamDomain = env.ACCESS_TEAM_DOMAIN || 'theplaybutton';
         const jwks = await getJWKS(teamDomain);
-        const key = jwks.keys.find(({ kid }) => kid === header.kid);
+        const key = jwks.keys.find(({ kid } = {}) => kid === header.kid);
 
         if (!key) {
             return { valid: false, error: 'Key not found in JWKS' };

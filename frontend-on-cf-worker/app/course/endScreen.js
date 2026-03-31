@@ -20,7 +20,7 @@ export const renderModuleEndScreen = () => {
     
     let badgesHtml = '';
     if (badgesEarned.length > 0) {
-        badgesHtml = badgesEarned.map(({ name, points_reward }) => `
+        badgesHtml = badgesEarned.map(({ name, points_reward } = {}) => `
             <div class="badge-earned">
                 <span class="badge-icon">🎖️</span>
                 <span class="badge-name">${name}</span>

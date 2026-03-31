@@ -21,7 +21,7 @@ import { showContentStepConfirmation } from './confirmModal.js';
 
 const getMediaByType = (cls, type, extraCheck = null) => {
     const media = cls.media || [];
-    return media.find(({ type }) => type === type && (!extraCheck || m[extraCheck]));
+    return media.find(({ type } = {}) => type === type && (!extraCheck || m[extraCheck]));
 };
 
 const getDocumentMedia = cls => {
@@ -31,7 +31,7 @@ const getDocumentMedia = cls => {
 
 const getSubtitleTracks = cls => {
     const media = cls.media || [];
-    const subtitles = media.filter(({ type }) => type === 'SUBTITLE' || type === 'CAPTION');
+    const subtitles = media.filter(({ type } = {}) => type === 'SUBTITLE' || type === 'CAPTION');
     
     const langLabels = {
         fr: 'Français',
@@ -42,7 +42,7 @@ const getSubtitleTracks = cls => {
         pt: 'Português'
     };
     
-    return subtitles.map(({ url, vtt_url, lang, label }) => ({
+    return subtitles.map(({ url, vtt_url, lang, label } = {}) => ({
         url: url || vtt_url,
         lang: lang || 'en',
         label: label || langLabels[lang] || lang
@@ -62,7 +62,7 @@ const getVideoInfo = cls => {
 };
 
 const getStepSignalData = (signals, classId) => {
-    const stepSignal = signals?.steps?.find(({ class_id }) => class_id === classId) || {};
+    const stepSignal = signals?.steps?.find(({ class_id } = {}) => class_id === classId) || {};
     return {
         hasQuiz: stepSignal.has_quiz || false,
         videoCompleted: stepSignal.video_completed || false,
@@ -157,7 +157,7 @@ const renderVideoSection = ctx => {
                     data-video-url="${videoUrl}" data-video-duration="${videoDuration}"
                     data-course-id="${currentCourse}" data-class-id="${cls.id}">
                     <source src="${videoUrl}" type="video/mp4">
-                    ${subtitles.map(({ url, lang, label }) => `
+                    ${subtitles.map(({ url, lang, label } = {}) => `
                         <track kind="subtitles" src="${url}" srclang="${lang}" 
                                label="${label}" ${lang === currentLang ? 'default' : ''}>
                     `).join('')}

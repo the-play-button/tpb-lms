@@ -22,7 +22,7 @@ export const listAPIKeysHandler = async (request, env, auth) => {
         `).bind(userId).all();
 
         return jsonResponse({
-            apiKeys: keys.results.map(({ id, name, key_prefix, scopes, created_at, last_used_at, expires_at, is_active }) => ({
+            apiKeys: keys.results.map(({ id, name, key_prefix, scopes, created_at, last_used_at, expires_at, is_active } = {}) => ({
                 id: id,
                 name: name,
                 prefix: key_prefix,

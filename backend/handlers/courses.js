@@ -55,7 +55,7 @@ const enrichMedia = (media, videoCompleted, quizPassed, cls) => {
 const enrichClass = (cls, currentStep) => {
     const media = cls.media_json ? JSON.parse(cls.media_json) : [];
     const raw = cls.raw_json ? JSON.parse(cls.raw_json) : {};
-    const hasQuiz = media.some(({ type }) => type === 'QUIZ');
+    const hasQuiz = media.some(({ type } = {}) => type === 'QUIZ');
     
     const videoCompleted = cls.video_completed === 1;
     const quizPassed = cls.quiz_passed === 1;

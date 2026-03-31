@@ -32,7 +32,7 @@ const renderLeaderboard = (entries, currentUser) => {
         return;
     }
     
-    list.innerHTML = entries.map(({ user_id, rank, total_points }) => `
+    list.innerHTML = entries.map(({ user_id, rank, total_points } = {}) => `
         <li ${user_id === currentUser?.id ? 'class="current-user"' : ''}>
             <span class="rank">#${rank}</span>
             <span class="leaderboard-name">${entry.user?.email || entry.user?.name || 'Anonyme'}</span>

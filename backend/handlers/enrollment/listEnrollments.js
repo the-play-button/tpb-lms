@@ -35,7 +35,7 @@ export const listEnrollments = async (request, env, userContext) => {
 
     const result = await env.DB.prepare(query).bind(...params).all();
 
-    const enrollments = (result.results || []).map(({ id, course_id, course_name, course_description, status, current_class_id, completed_classes_count, total_classes, started_at, completed_at, abandoned_at, last_activity_at }) => ({
+    const enrollments = (result.results || []).map(({ id, course_id, course_name, course_description, status, current_class_id, completed_classes_count, total_classes, started_at, completed_at, abandoned_at, last_activity_at } = {}) => ({
         id: id,
         course_id: course_id,
         course_name: course_name,
@@ -53,7 +53,7 @@ export const listEnrollments = async (request, env, userContext) => {
         last_activity_at: last_activity_at,
     }));
 
-    const activeCount = enrollments.filter(({ status }) => status === 'active').length; // entropy-naming-convention-ok: scalar count value
+    const activeCount = enrollments.filter(({ status } = {}) => status === 'active').length; // entropy-naming-convention-ok: scalar count value
 
     return jsonResponse({
         enrollments,

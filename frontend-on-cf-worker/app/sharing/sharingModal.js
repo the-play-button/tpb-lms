@@ -108,7 +108,7 @@ const loadPermissions = async (contentRefId) => {
             return;
         }
 
-        container.innerHTML = permissions.map(({ id, shared_with, role }) => `
+        container.innerHTML = permissions.map(({ id, shared_with, role } = {}) => `
             <div class="permission-item" data-share-id="${id}">
                 <div class="permission-info">
                     <span class="permission-email">${shared_with}</span>
