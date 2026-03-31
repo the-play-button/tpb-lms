@@ -22,11 +22,11 @@ export const renderModuleEndScreen = () => {
     // Build badges HTML
     let badgesHtml = '';
     if (badgesEarned.length > 0) {
-        badgesHtml = badgesEarned.map(badge => `
+        badgesHtml = badgesEarned.map(({ name, points_reward }) => `
             <div class="badge-earned">
                 <span class="badge-icon">🎖️</span>
-                <span class="badge-name">${badge.name}</span>
-                <span class="badge-points">+${badge.points_reward} pts</span>
+                <span class="badge-name">${name}</span>
+                <span class="badge-points">+${points_reward} pts</span>
             </div>
         `).join('');
     }

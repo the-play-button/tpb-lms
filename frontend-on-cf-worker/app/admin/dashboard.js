@@ -100,12 +100,12 @@ export const renderAdminDashboard = async container => {
             <section class="admin-section">
                 <h2>📋 Activité récente</h2>
                 <div class="activity-list">
-                    ${data.recent_activity.map(activity => `
+                    ${data.recent_activity.map(({ type, user_email, action, created_at }) => `
                         <div class="activity-item">
-                            <span class="activity-icon">${getActivityIcon(activity.type)}</span>
-                            <span class="activity-user">${activity.user_email || 'Anonyme'}</span>
-                            <span class="activity-action">${activity.action || activity.type}</span>
-                            <span class="activity-time">${formatRelativeTime(activity.created_at)}</span>
+                            <span class="activity-icon">${getActivityIcon(type)}</span>
+                            <span class="activity-user">${user_email || 'Anonyme'}</span>
+                            <span class="activity-action">${action || type}</span>
+                            <span class="activity-time">${formatRelativeTime(created_at)}</span>
                         </div>
                     `).join('')}
                 </div>

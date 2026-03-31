@@ -72,6 +72,6 @@ export const validateEvent = (body) => {
   
   return { 
     success: false, 
-    error: result.error.issues.map(i => `${i.path.join('.')}: ${i.message}`).join(', ')
+    error: result.error.issues.map(({ message }) => `${i.path.join('.')}: ${message}`).join(', ')
   };
 };

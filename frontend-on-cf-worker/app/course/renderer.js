@@ -21,7 +21,7 @@ import { showContentStepConfirmation } from './confirmModal.js';
 
 const getMediaByType = (cls, type, extraCheck = null) => {
     const media = cls.media || [];
-    return media.find(m => m.type === type && (!extraCheck || m[extraCheck]));
+    return media.find(({ type }) => type === type && (!extraCheck || m[extraCheck]));
 };
 
 const getDocumentMedia = cls => {
@@ -31,7 +31,7 @@ const getDocumentMedia = cls => {
 
 const getSubtitleTracks = cls => {
     const media = cls.media || [];
-    const subtitles = media.filter(m => m.type === 'SUBTITLE' || m.type === 'CAPTION');
+    const subtitles = media.filter(({ type }) => type === 'SUBTITLE' || type === 'CAPTION');
     
     const langLabels = {
         fr: 'Français',
@@ -42,10 +42,10 @@ const getSubtitleTracks = cls => {
         pt: 'Português'
     };
     
-    return subtitles.map(sub => ({
-        url: sub.url || sub.vtt_url,
-        lang: sub.lang || 'en',
-        label: sub.label || langLabels[sub.lang] || sub.lang
+    return subtitles.map(({ url, vtt_url, lang, label }) => ({
+        url: url || vtt_url,
+        lang: lang || 'en',
+        label: label || langLabels[lang] || lang
     })).filter(({ url } = {}) => url);
 };
 
@@ -162,9 +162,9 @@ const renderVideoSection = ctx => {
                     data-video-url="${videoUrl}" data-video-duration="${videoDuration}"
                     data-course-id="${currentCourse}" data-class-id="${cls.id}">
                     <source src="${videoUrl}" type="video/mp4">
-                    ${subtitles.map(sub => `
-                        <track kind="subtitles" src="${sub.url}" srclang="${sub.lang}" 
-                               label="${sub.label}" ${sub.lang === currentLang ? 'default' : ''}>
+                    ${subtitles.map(({ url, lang, label }) => `
+                        <track kind="subtitles" src="${url}" srclang="${lang}" 
+                               label="${label}" ${lang === currentLang ? 'default' : ''}>
                     `).join('')}
                     Your browser does not support the video tag.
                 </video>

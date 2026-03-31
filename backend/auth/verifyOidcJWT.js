@@ -44,7 +44,7 @@ export const verifyOidcJWT = async (token, env) => {
         // Verify signature against JWKS
         if (header.kid) {
             const jwks = await getOidcJWKS(authConfig.logto.issuer, authConfig.logto.jwksUri);
-            const key = jwks.keys.find(k => k.kid === header.kid);
+            const key = jwks.keys.find(({ kid }) => kid === header.kid);
 
             if (!key) {
                 return { valid: false, error: 'Key not found in OIDC JWKS' };

@@ -18,7 +18,7 @@ export const resolveRelativePath = async (
   relativePath: string,
   guestEmail: string
 ): Promise<StorageFile> => {
-  const segments = relativePath.split('/').filter(s => s.length > 0);
+  const segments = relativePath.split('/').filter(({ length }) => length > 0);
 
   if (segments.length === 0) {
     throw new ValidationError('Empty path');
@@ -31,7 +31,7 @@ export const resolveRelativePath = async (
     const isLast = i === segments.length - 1;
 
     const files = await listFiles(bastionUrl, getToken, connectionId, currentFolderId, guestEmail);
-    const match = files.find(f => f.name === segment);
+    const match = files.find(({ name }) => name === segment);
 
     if (!match) {
       throw new NotFoundError('Path segment', `${segments.slice(0, i + 1).join('/')} (looking for "${segment}")`);

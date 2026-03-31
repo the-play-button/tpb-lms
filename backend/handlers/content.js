@@ -321,12 +321,12 @@ export const listGitHubDirectory = async (request, env, userContext) => {
         const items = await response.json();
         
         // Simplify response
-        const files = items.map(item => ({
-            name: item.name,
-            path: item.path,
-            type: item.type,  // 'file' or 'dir'
-            size: item.size,
-            download_url: item.download_url
+        const files = items.map(({ name, path, type, size, download_url }) => ({
+            name: name,
+            path: path,
+            type: type,  // 'file' or 'dir'
+            size: size,
+            download_url: download_url
         }));
         
         return jsonResponse({ 

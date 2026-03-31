@@ -32,11 +32,11 @@ function renderLeaderboard(entries, currentUser) {
         return;
     }
     
-    list.innerHTML = entries.map(entry => `
-        <li ${entry.user_id === currentUser?.id ? 'class="current-user"' : ''}>
-            <span class="rank">#${entry.rank}</span>
+    list.innerHTML = entries.map(({ user_id, rank, total_points }) => `
+        <li ${user_id === currentUser?.id ? 'class="current-user"' : ''}>
+            <span class="rank">#${rank}</span>
             <span class="leaderboard-name">${entry.user?.email || entry.user?.name || 'Anonyme'}</span>
-            <span class="leaderboard-xp">${formatNumber(entry.total_points)} pts</span>
+            <span class="leaderboard-xp">${formatNumber(total_points)} pts</span>
         </li>
     `).join('');
 }

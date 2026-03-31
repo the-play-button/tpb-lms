@@ -65,13 +65,13 @@ export const getSpace = async (request, env, userContext, spaceId) => {
             ORDER BY title
         `).bind(spaceId).all();
         
-        const pages = (pagesResult.results || []).map(page => ({
-            id: page.id,
-            title: page.title,
-            type: page.type,
-            metadata: page.metadata_json ? JSON.parse(page.metadata_json) : {},
-            created_at: page.created_at,
-            updated_at: page.updated_at
+        const pages = (pagesResult.results || []).map(({ id, title, type, metadata_json, created_at, updated_at }) => ({
+            id: id,
+            title: title,
+            type: type,
+            metadata: metadata_json ? JSON.parse(metadata_json) : {},
+            created_at: created_at,
+            updated_at: updated_at
         }));
         
         return jsonResponse({

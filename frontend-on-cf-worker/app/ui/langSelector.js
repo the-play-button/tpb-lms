@@ -14,7 +14,7 @@ import { getLanguage, setLanguage, getSupportedLanguages } from '../../i18n/inde
 export const renderLangSelector = () => {
     const currentLang = getLanguage();
     const languages = getSupportedLanguages();
-    const current = languages.find(l => l.code === currentLang) || languages[0];
+    const current = languages.find(({ code }) => code === currentLang) || languages[0];
     
     return `
         <div class="lang-selector" id="langSelector">
@@ -24,12 +24,12 @@ export const renderLangSelector = () => {
                 <span class="lang-arrow">▼</span>
             </button>
             <div class="lang-dropdown" id="langDropdown">
-                ${languages.map(lang => `
-                    <button class="lang-option ${lang.code === currentLang ? 'active' : ''}" 
-                            data-lang="${lang.code}">
-                        <span class="lang-flag">${lang.flag}</span>
-                        <span class="lang-label">${lang.label}</span>
-                        ${lang.code === currentLang ? '<span class="lang-check">✓</span>' : ''}
+                ${languages.map(({ code, flag, label }) => `
+                    <button class="lang-option ${code === currentLang ? 'active' : ''}" 
+                            data-lang="${code}">
+                        <span class="lang-flag">${flag}</span>
+                        <span class="lang-label">${label}</span>
+                        ${code === currentLang ? '<span class="lang-check">✓</span>' : ''}
                     </button>
                 `).join('')}
             </div>

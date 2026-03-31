@@ -113,13 +113,13 @@ async function loadPermissions(contentRefId) {
             return;
         }
 
-        container.innerHTML = permissions.map(perm => `
-            <div class="permission-item" data-share-id="${perm.id}">
+        container.innerHTML = permissions.map(({ id, shared_with, role }) => `
+            <div class="permission-item" data-share-id="${id}">
                 <div class="permission-info">
-                    <span class="permission-email">${perm.shared_with}</span>
-                    <span class="permission-role">${perm.role === 'WRITE' ? 'Modification' : 'Lecture'}</span>
+                    <span class="permission-email">${shared_with}</span>
+                    <span class="permission-role">${role === 'WRITE' ? 'Modification' : 'Lecture'}</span>
                 </div>
-                <button class="btn-danger-sm" data-action="revoke" data-ref="${contentRefId}" data-share="${perm.id}">
+                <button class="btn-danger-sm" data-action="revoke" data-ref="${contentRefId}" data-share="${id}">
                     Révoquer
                 </button>
             </div>

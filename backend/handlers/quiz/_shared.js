@@ -25,7 +25,7 @@ export const getPassThreshold = quizClass => {
         return 80;
     }
     const media = JSON.parse(quizClass.media_json);
-    const quizMedia = media.find(m => m.type === 'QUIZ' || m.type === 'WEB');
+    const quizMedia = media.find(({ type }) => type === 'QUIZ' || type === 'WEB');
     return quizMedia?.pass_threshold || 80;
 };
 

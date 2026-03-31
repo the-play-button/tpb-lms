@@ -38,16 +38,16 @@ export const renderSharedWithMe = async container => {
             <div class="shared-with-me">
                 <h3>Fichiers partagés avec moi</h3>
                 <div class="shared-list">
-                    ${shares.map(share => `
+                    ${shares.map(({ name, shared_by, content_type, content_ref_id }) => `
                         <div class="shared-item">
                             <div class="shared-info">
-                                <span class="shared-name">${share.name || 'Fichier'}</span>
-                                <span class="shared-by">par ${share.shared_by}</span>
-                                <span class="shared-type">${share.content_type || 'fichier'}</span>
+                                <span class="shared-name">${name || 'Fichier'}</span>
+                                <span class="shared-by">par ${shared_by}</span>
+                                <span class="shared-type">${content_type || 'fichier'}</span>
                             </div>
                             <div class="shared-actions">
-                                ${share.content_type === 'pitch' ? `
-                                    <a href="${buildCloudPitchUrl(share.content_ref_id)}"
+                                ${content_type === 'pitch' ? `
+                                    <a href="${buildCloudPitchUrl(content_ref_id)}"
                                        class="btn-primary-sm" download>
                                         Télécharger .pitch
                                     </a>

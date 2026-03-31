@@ -142,15 +142,15 @@ export class ContentRefsDatabaseRepository implements ContentRefsRepository {
       .bind(contentRefId)
       .all<ShareRow>();
 
-    return results.map((shareRow) =>
+    return results.map(({ id, content_ref_id, shared_by, shared_with, shared_at }) =>
       ActiveShare.reconstitute({
-        id: ShareId.reconstitute(shareRow.id),
-        contentRefId: ContentRefId.reconstitute(shareRow.content_ref_id),
-        sharedByEmail: Email.reconstitute(shareRow.shared_by),
-        sharedWithEmail: Email.reconstitute(shareRow.shared_with),
+        id: ShareId.reconstitute(id),
+        contentRefId: ContentRefId.reconstitute(content_ref_id),
+        sharedByEmail: Email.reconstitute(shared_by),
+        sharedWithEmail: Email.reconstitute(shared_with),
         role: shareRow.role.toLowerCase() as ShareRole,
-        createdAt: new Date(shareRow.shared_at),
-        updatedAt: new Date(shareRow.shared_at),
+        createdAt: new Date(shared_at),
+        updatedAt: new Date(shared_at),
       }),
     );
   }

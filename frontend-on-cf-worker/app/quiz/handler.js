@@ -189,14 +189,14 @@ function showCorrectionsModal(wrongAnswers, score, maxScore) {
             </div>
             <p>Voici les questions que vous avez ratées :</p>
             <ul class="corrections-list">
-                ${wrongAnswers.map(w => `
+                ${wrongAnswers.map(({ question, yourAnswer, correctAnswer }) => `
                     <li class="correction-item">
-                        <div class="correction-question">${w.question}</div>
+                        <div class="correction-question">${question}</div>
                         <div class="correction-wrong">
-                            <span class="label">Votre réponse :</span> ${w.yourAnswer}
+                            <span class="label">Votre réponse :</span> ${yourAnswer}
                         </div>
                         <div class="correction-correct">
-                            <span class="label">Bonne réponse :</span> ${w.correctAnswer}
+                            <span class="label">Bonne réponse :</span> ${correctAnswer}
                         </div>
                     </li>
                 `).join('')}

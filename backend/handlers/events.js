@@ -96,7 +96,7 @@ async function checkHasQuiz(db, classId) {
     if (!cls?.media_json) return false;
     
     const media = JSON.parse(cls.media_json);
-    return media.some(m => m.type === 'QUIZ');
+    return media.some(({ type }) => type === 'QUIZ');
 }
 
 /**

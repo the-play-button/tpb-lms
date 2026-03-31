@@ -36,10 +36,10 @@ export const listPermissionsExecute = async (input: ListPermissionsAssertedInput
   }
 
   const shares = await ctx.sharesRepository.findActiveByContentRef(contentRef.id);
-  const permissions: PermissionEntry[] = shares.map((s) => ({
+  const permissions: PermissionEntry[] = shares.map(({ role }) => ({
     id: s.id.value,
     shared_with: s.sharedWithEmail.value,
-    role: s.role === 'editor' ? 'WRITE' : 'READ',
+    role: role === 'editor' ? 'WRITE' : 'READ',
     created_at: s.createdAt.toISOString(),
   }));
 

@@ -54,7 +54,7 @@ export const renderStepsSidebar = (options = {}) => {
         }
         
         for (const step of steps) {
-            const index = course.classes.findIndex(c => c.id === step.id);
+            const index = course.classes.findIndex(({ id }) => id === step.id);
             const isCompleted = completedSteps.has(step.id);
             const isCurrent = index === currentStepIndex;
             const isLocked = index > currentStepIndex + 1;

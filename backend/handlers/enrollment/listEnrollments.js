@@ -35,26 +35,26 @@ export const listEnrollments = async (request, env, userContext) => {
 
     const result = await env.DB.prepare(query).bind(...params).all();
 
-    const enrollments = (result.results || []).map(e => ({
-        id: e.id,
-        course_id: e.course_id,
-        course_name: e.course_name,
-        course_description: e.course_description,
-        status: e.status,
-        current_class_id: e.current_class_id,
-        completed_classes_count: e.completed_classes_count || 0,
-        total_classes: e.total_classes || 0,
-        progress_percent: e.total_classes > 0
-            ? Math.round((e.completed_classes_count / e.total_classes) * 100)
+    const enrollments = (result.results || []).map(({ id, course_id, course_name, course_description, status, current_class_id, completed_classes_count, total_classes, started_at, completed_at, abandoned_at, last_activity_at }) => ({
+        id: id,
+        course_id: course_id,
+        course_name: course_name,
+        course_description: course_description,
+        status: status,
+        current_class_id: current_class_id,
+        completed_classes_count: completed_classes_count || 0,
+        total_classes: total_classes || 0,
+        progress_percent: total_classes > 0
+            ? Math.round((completed_classes_count / total_classes) * 100)
             : 0,
-        started_at: e.started_at,
-        completed_at: e.completed_at,
-        abandoned_at: e.abandoned_at,
-        last_activity_at: e.last_activity_at,
+        started_at: started_at,
+        completed_at: completed_at,
+        abandoned_at: abandoned_at,
+        last_activity_at: last_activity_at,
     }));
 
     // Count by status for summary
-    const activeCount = enrollments.filter(e => e.status === 'active').length; // entropy-naming-convention-ok: scalar count value
+    const activeCount = enrollments.filter(({ status }) => status === 'active').length; // entropy-naming-convention-ok: scalar count value
 
     return jsonResponse({
         enrollments,

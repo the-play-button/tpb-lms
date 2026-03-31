@@ -55,8 +55,8 @@ export const nextStep = async () => {
     
     // Check if this is a CONTENT step (no video, no quiz in media)
     const media = currentClass?.media || [];
-    const hasVideo = media.some(m => m.type === 'VIDEO');
-    const hasQuiz = media.some(m => m.type === 'QUIZ');
+    const hasVideo = media.some(({ type }) => type === 'VIDEO');
+    const hasQuiz = media.some(({ type }) => type === 'QUIZ');
     const isContentStep = !hasVideo && !hasQuiz;
     
     // CONTENT steps can always advance; VIDEO/QUIZ need completion
