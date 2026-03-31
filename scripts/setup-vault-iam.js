@@ -94,7 +94,7 @@ const createRole = async role => {
     console.log(`     ⚠️  Already exists`); // entropy-console-leak-ok: CLI script
     // Get existing role ID
     const { data: rolesData } = await request('GET', '/iam/roles');
-    const existing = rolesData.roles?.find(r => r.name === role.name);
+    const existing = rolesData.roles?.find(({ name }) => name === role.name);
     return existing?.id;
   } else {
     console.log(`     ❌ Failed: ${status} ${JSON.stringify(data)}`); // entropy-console-leak-ok: CLI script
@@ -119,7 +119,7 @@ const createGroup = async (group, roleIds) => {
     console.log(`     ⚠️  Already exists`); // entropy-console-leak-ok: CLI script
     // Get existing group ID
     const { data: groupsData } = await request('GET', '/iam/groups');
-    const existing = groupsData.groups?.find(g => g.name === group.name);
+    const existing = groupsData.groups?.find(({ name }) => name === group.name);
     groupId = existing?.id;
   } else {
     console.log(`     ❌ Failed: ${status} ${JSON.stringify(data)}`); // entropy-console-leak-ok: CLI script

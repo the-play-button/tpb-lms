@@ -4,7 +4,7 @@
   "total": 1431,
   "by_check": {
     "audit_trail": 2,
-    "callback_destructuring": 5,
+    "callback_destructuring": 2,
     "catch_return_default": 11,
     "ddd_barrel_zero_logic": 4,
     "ddd_direct_cf_access_parsing": 8,
@@ -22,7 +22,7 @@
     "http_error_silent_fallback": 1,
     "inconsistent_constant": 1,
     "innerHTML_modal_or_error": 1,
-    "js_destructuring_defaults": 34,
+    "js_destructuring_defaults": 37,
     "js_function_declaration": 33,
     "magic_timeout": 10,
     "missing_required_page": 2,

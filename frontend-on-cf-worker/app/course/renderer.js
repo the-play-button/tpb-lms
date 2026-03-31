@@ -62,7 +62,7 @@ const getVideoInfo = cls => {
 };
 
 const getStepSignalData = (signals, classId) => {
-    const stepSignal = signals?.steps?.find(s => s.class_id === classId) || {};
+    const stepSignal = signals?.steps?.find(({ class_id }) => class_id === classId) || {};
     return {
         hasQuiz: stepSignal.has_quiz || false,
         videoCompleted: stepSignal.video_completed || false,
