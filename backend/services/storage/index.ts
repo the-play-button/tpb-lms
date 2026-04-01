@@ -8,17 +8,7 @@
 
 export type { StoragePort } from './StoragePort.js';
 
-export { UnifiedStorageAdapter } from './adapters/UnifiedStorageAdapter.js';
-export type { UnifiedStorageAdapterConfig } from './adapters/UnifiedStorageAdapter.js';
+export { UnifiedToStorageAdapter } from './adapters/UnifiedToStorageAdapter.js';
+export type { UnifiedToStorageAdapterConfig } from './adapters/UnifiedToStorageAdapter.js';
 
-import type { StoragePort } from './StoragePort.js';
-import { UnifiedStorageAdapter, type UnifiedStorageAdapterConfig } from './adapters/UnifiedStorageAdapter.js';
-
-/**
- * Factory to create Storage service
- *
- * @param config - Configuration with token provider
- */
-export const createStorageService = (config: UnifiedStorageAdapterConfig): StoragePort => {
-  return new UnifiedStorageAdapter(config);
-};
+export { createStorageService } from './createStorageService.js';

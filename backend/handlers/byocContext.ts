@@ -10,7 +10,7 @@
 import type { HandlerContext } from '../types/HandlerContext.js';
 import type { Env } from '../types/Env.js';
 import { BastionCloudflareAdapter } from '../services/bastion/adapters/BastionCloudflareAdapter.js';
-import { UnifiedStorageAdapter } from '../services/storage/adapters/UnifiedStorageAdapter.js';
+import { UnifiedToStorageAdapter } from '../services/storage/adapters/UnifiedToStorageAdapter.js';
 import { PamCloudflareAdapter } from '../services/pam/adapters/PamCloudflareAdapter.js';
 import { ConnectionResolverAdapter } from '../services/connections/adapters/ConnectionResolverAdapter.js';
 import { ContentRefsDatabaseRepository } from '../infrastructure/repositories/ContentRefsDatabaseRepository.js';
@@ -42,7 +42,7 @@ export const createByocContext = async (request: Request, env: Env, userContext:
   // --- Ports ---
   const bastionClient = new BastionCloudflareAdapter({ bastionUrl: env.BASTION_URL });
 
-  const storageService = new UnifiedStorageAdapter({
+  const storageService = new UnifiedToStorageAdapter({
     getApiToken: async () => {
       const token = await bastionClient.getSecret(jwt, 'integrations/unifiedto_api_token');
       if (!token) throw new Error('Unified.to API token not found in vault');

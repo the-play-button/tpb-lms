@@ -1,7 +1,7 @@
 // entropy-multiple-exports-ok: cohesive module exports
-// entropy-class-method-length-ok: UnifiedStorageAdapter — lazy token resolution + listFiles/getFileContent/getFileBinary all coupled by shared accessToken and Unified.to API
+// entropy-class-method-length-ok: UnifiedToStorageAdapter — lazy token resolution + listFiles/getFileContent/getFileBinary all coupled by shared accessToken and Unified.to API
 /**
- * Unified Storage Adapter - Production implementation via Unified.to
+ * Unified.to storage adapter — production implementation via Unified.to API
  *
  * Provides direct storage access using the Unified.to API.
  * Used by content owners/admins who have their own connection credentials.
@@ -9,19 +9,19 @@
 
 import type { StoragePort } from '../StoragePort.js';
 import type { StorageFile } from '../../types/StorageFile.js';
-import { request } from './UnifiedStorageAdapter.functions/request.js';
-import { downloadFile } from './UnifiedStorageAdapter.functions/downloadFile.js';
-import { listFiles as listFilesRaw } from './UnifiedStorageAdapter.functions/listFiles.js';
+import { request } from './UnifiedToStorageAdapter.functions/request.js';
+import { downloadFile } from './UnifiedToStorageAdapter.functions/downloadFile.js';
+import { listFiles as listFilesRaw } from './UnifiedToStorageAdapter.functions/listFiles.js';
 
-export interface UnifiedStorageAdapterConfig {
+export interface UnifiedToStorageAdapterConfig {
   getApiToken: () => Promise<string>;
 }
 
-export class UnifiedStorageAdapter implements StoragePort {
-  private config: UnifiedStorageAdapterConfig;
+export class UnifiedToStorageAdapter implements StoragePort {
+  private config: UnifiedToStorageAdapterConfig;
   private accessToken: string | null = null;
 
-  constructor(config: UnifiedStorageAdapterConfig) {
+  constructor(config: UnifiedToStorageAdapterConfig) {
     this.config = config;
   }
 

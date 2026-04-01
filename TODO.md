@@ -113,6 +113,78 @@ Priorité : Ollama local (gratuit) → OpenAI API (fallback payant).
 
 Ne pas forcer un seul backend. La détection auto est la bonne approche.
 
+## Sécurité
+
+- [ ] **Migrer `LOGTO_APP_SECRET` vers le vault (bastion tpb-iampam)** {tags:security+entropy+vault}
+  > **Pourquoi** : `LOGTO_APP_SECRET` a été retiré de `ALLOWED_ENV_VARS` dans l'entropy check
+  > `wrangler_secret_whitelist` (tpb-sdk, avril 2026). C'est le OAuth2 `client_secret` de l'app
+  > Logto LMS, utilisé dans `/auth/callback` pour échanger le code OIDC contre un id_token.
+  >
+  > **Fichier à modifier** : `backend/handlers/auth-logto/handleCallback.js` ligne ~43.
+  >
+  > **Code actuel (anti-pattern)** :
+  > ```javascript
+  > client_secret: env.LOGTO_APP_SECRET || '',
+  > ```
+  > Le `|| ''` masque silencieusement l'absence du secret (Logto renvoie un 401 opaque).
+  >
+  > **Code cible** — utiliser `VaultClient` + `getCachedSecret` (déjà présents dans `backend/lib/vaultClient.js`) :
+  > ```javascript
+  > import { VaultClient, getCachedSecret } from '../lib/vaultClient.js';
+  >
+  > // Dans handleCallback :
+  > const vault = new VaultClient(env.BASTION_URL, env);
+  > const logtoSecret = await getCachedSecret(vault, 'apps/lms/logto_app_secret');
+  > if (!logtoSecret) throw new Error('Vault: apps/lms/logto_app_secret not found — check org alignment between VAULT_TOKEN and secret storage org');
+  >
+  > // Dans le URLSearchParams:
+  > client_secret: logtoSecret,
+  > ```
+  >
+  > **Pourquoi `getCachedSecret`** : `vaultClient.js` exporte un `getCachedSecret(vault, path)`
+  > avec un cache module-level de 5 minutes (Map + TTL). Pattern déjà utilisé par
+  > `secrets.js` pour `tally_webhook_secret` etc. Réutiliser ce mécanisme, ne pas en créer un nouveau.
+  >
+  > **Comment l'auth bastion fonctionne** : `new VaultClient(baseUrl, env)` utilise
+  > `env.VAULT_TOKEN` (iampam_xxx) comme Bearer token. Le bastion hash le token, lookup dans
+  > `iam_service_token` (table D1), et résout l'org depuis `iam_service_token.organization_id`.
+  > Le vault filtre ensuite `sys_secret` par `path + organization_id`.
+  > Si le token est dans la mauvaise org → 404 `NO_SECRET_FOR_ORG`.
+  > Le VAULT_TOKEN doit être un M2M token (`application_id IS NOT NULL` dans `iam_service_token`,
+  > `subject_email` = `app-xxx@system`), pas un PAT.
+  >
+  > **Pré-requis : stocker le secret dans le vault** (one-time) :
+  >
+  > 1. Récupérer la valeur depuis le dashboard Logto (Settings > Application > LMS > App Secret).
+  >
+  > 2. Stocker :
+  >    ```bash
+  >    curl -X POST https://tpb-vault-infra.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
+  >      -H "Authorization: Bearer $VAULT_TOKEN" \
+  >      -H "Content-Type: application/json" \
+  >      -d '{"value": "<valeur>", "type": "api_credential", "description": "Logto OIDC client_secret for tpb-lms"}'
+  >    ```
+  >    Réponse attendue : `{ "success": true, "path": "apps/lms/logto_app_secret", ... }`.
+  >    Si 403 : le token n'a pas les scopes d'écriture vault. Vérifier `iam_service_token.scopes`.
+  >
+  > 3. Vérifier :
+  >    ```bash
+  >    curl https://tpb-vault-infra.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
+  >      -H "Authorization: Bearer $VAULT_TOKEN"
+  >    ```
+  >    Réponse : `{ "data": { "value": "xxx", "metadata": { "organization_id": "..." } } }`.
+  >
+  > **Cleanup après deploy réussi** :
+  > ```bash
+  > wrangler secret delete LOGTO_APP_SECRET
+  > ```
+  > Supprimer la ligne commentée dans `wrangler.toml` (ligne ~27).
+  >
+  > **Note org** : si le `VAULT_TOKEN` du LMS et le token utilisé pour le POST sont dans
+  > des orgs différentes, le GET renverra 404 (`NO_SECRET_FOR_ORG`). Vérifier avec :
+  > `SELECT organization_id FROM iam_service_token WHERE token_prefix LIKE 'iampam_xxxx%'`
+  > (les 4 premiers chars après `iampam_` suffisent à identifier la row).
+
 ## CRUD+List Endpoint Granularity (entropy: `ddd_endpoint_granularity`)
 
 4 violations detectees. Plan detaille : `plans/2026-03_crud-list-endpoint-refactor/01-rename-endpoints.plan.md`
