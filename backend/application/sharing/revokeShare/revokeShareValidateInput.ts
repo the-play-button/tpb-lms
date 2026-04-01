@@ -6,23 +6,15 @@ const RevokeShareInputSchema = z.object({
   share_id: z.string().min(1, 'share_id is required'),
 });
 
-export type RevokeShareInput = z.infer<typeof RevokeShareInputSchema>;
+export type RevokeShareValidatedInput = z.infer<typeof RevokeShareInputSchema>;
 
 /**
- * ValidateInput step: parse and validate revoke request.
+ * ValidateInput step: validate share_id path parameter.
  */
-export const revokeShareValidateInput = async (request: Request): Promise<Result<string, RevokeShareInput>> => {
-  let body: unknown;
-  try {
-    body = await request.json();
-  } catch {
-    return fail('Invalid JSON body');
-  }
-
-  const parsed = RevokeShareInputSchema.safeParse(body);
+export const revokeShareValidateInput = (shareId: string): Result<string, RevokeShareValidatedInput> => {
+  const parsed = RevokeShareInputSchema.safeParse({ share_id: shareId });
   if (!parsed.success) {
-    const msg = parsed.error.issues.map((i) => i.message).join('; ');
-    return fail(msg);
+    return fail(parsed.error.issues.map((i) => i.message).join('; '));
   }
 
   return succeed(parsed.data);

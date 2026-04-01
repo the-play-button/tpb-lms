@@ -1,9 +1,6 @@
 // entropy-multiple-exports-ok: cohesive module exports
-import { fail, succeed, type Result } from '../../../domain/core/Result.js';
-import type { HandlerContext } from '../../../types/HandlerContext.js';
-import { ContentRefId } from '../../../domain/value-objects/index.js';
-import { filterFields } from '../../filters/FieldSecurityFilter.js';
-import type { ListPermissionsAssertedInput } from './listPermissionsAssert.js';
+import { succeed, type Result } from '../../../domain/core/Result.js';
+import type { ListPermissionsContext } from './listPermissionsHydrateContext.js';
 
 export interface PermissionEntry {
   id: string;
@@ -18,42 +15,20 @@ export interface ListPermissionsOutput {
   permissions: PermissionEntry[];
 }
 
-type ListPermissionsError = 'NOT_FOUND' | 'FORBIDDEN' | string;
-
 /**
- * Execute step: fetch contentRef, fetch active shares, apply FLS, return.
+ * Execute step: map active shares to permission entries.
  */
-export const listPermissionsExecute = async (input: ListPermissionsAssertedInput, ctx: HandlerContext): Promise<Result<ListPermissionsError, ListPermissionsOutput>> => {
-  const refId = ContentRefId.reconstitute(input.ref_id);
-  const contentRef = await ctx.contentRefsRepository.findById(refId);
-  if (!contentRef) {
-    return fail('NOT_FOUND' as const);
-  }
-
-  const isOwner = contentRef.ownerEmail.value === ctx.userEmail;
-  if (!isOwner) {
-    return fail('FORBIDDEN' as const);
-  }
-
-  const shares = await ctx.sharesRepository.findActiveByContentRef(contentRef.id);
-  const permissions: PermissionEntry[] = shares.map(({ role }) => ({
+export const listPermissionsExecute = (context: ListPermissionsContext): Result<string, ListPermissionsOutput> => {
+  const permissions: PermissionEntry[] = context.shares.map((s) => ({
     id: s.id.value,
     shared_with: s.sharedWithEmail.value,
-    role: role === 'editor' ? 'WRITE' : 'READ',
+    role: s.role === 'editor' ? 'WRITE' : 'READ',
     created_at: s.createdAt.toISOString(),
   }));
 
-  const filteredPermissions = permissions.map((p) =>
-    filterFields(
-      p as unknown as Record<string, unknown>,
-      ctx.userEmail,
-      contentRef.ownerEmail.value
-    )
-  ) as unknown as PermissionEntry[];
-
   return succeed({
-    content_ref_id: contentRef.id.value,
-    owner_email: contentRef.ownerEmail.value,
-    permissions: filteredPermissions,
+    content_ref_id: context.contentRef.id.value,
+    owner_email: context.contentRef.ownerEmail.value,
+    permissions,
   });
 };

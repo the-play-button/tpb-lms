@@ -2,17 +2,43 @@ import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import type { ConnectionInfo } from '../../../services/types/ConnectionInfo.js';
-import { getDefaultConnectionAssert } from './getDefaultConnectionAssert.js';
+import { getDefaultConnectionValidateInput } from './getDefaultConnectionValidateInput.js';
+import { getDefaultConnectionHydrateContext } from './getDefaultConnectionHydrateContext.js';
+import { getDefaultConnectionValidateContext } from './getDefaultConnectionValidateContext.js';
+import { getDefaultConnectionCheckPolicies } from './getDefaultConnectionCheckPolicies.js';
 import { getDefaultConnectionExecute } from './getDefaultConnectionExecute.js';
+import { getDefaultConnectionFilter } from './getDefaultConnectionFilter.js';
+import { getDefaultConnectionTrack } from './getDefaultConnectionTrack.js';
 
 /**
- * Handle orchestrator: Assert -> Execute
+ * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track
  */
 export const getDefaultConnectionHandle = async (ctx: HandlerContext): Promise<Result<string, ConnectionInfo>> => {
-  // 0. Assert
-  const assertResult = getDefaultConnectionAssert();
-  if (!assertResult.ok) return fail(assertResult.error);
+  // 1. ValidateInput
+  const inputResult = getDefaultConnectionValidateInput();
+  if (!inputResult.ok) return fail(inputResult.error);
 
-  // 1. Execute
-  return getDefaultConnectionExecute(ctx);
+  // 2. HydrateContext
+  const hydrateResult = getDefaultConnectionHydrateContext();
+  if (!hydrateResult.ok) return fail(hydrateResult.error);
+
+  // 3. ValidateContext
+  const validateContextResult = getDefaultConnectionValidateContext();
+  if (!validateContextResult.ok) return fail(validateContextResult.error);
+
+  // 4. CheckPolicies
+  const policyResult = getDefaultConnectionCheckPolicies();
+  if (!policyResult.ok) return fail(policyResult.error);
+
+  // 5. Execute
+  const executeResult = await getDefaultConnectionExecute(ctx);
+  if (!executeResult.ok) return fail(executeResult.error);
+
+  // 6. Filter
+  const filtered = getDefaultConnectionFilter(executeResult.value);
+
+  // 7. Track
+  getDefaultConnectionTrack(ctx);
+
+  return { ok: true, value: filtered };
 };

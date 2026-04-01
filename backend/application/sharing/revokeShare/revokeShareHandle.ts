@@ -1,33 +1,45 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
-import { revokeShareAssert } from './revokeShareAssert.js';
+import { revokeShareValidateInput } from './revokeShareValidateInput.js';
 import { revokeShareHydrateContext } from './revokeShareHydrateContext.js';
+import { revokeShareValidateContext } from './revokeShareValidateContext.js';
 import { revokeShareCheckPolicies } from './revokeShareCheckPolicies.js';
 import { revokeShareExecute, type RevokeShareOutput } from './revokeShareExecute.js';
+import { revokeShareFilter } from './revokeShareFilter.js';
+import { revokeShareTrack } from './revokeShareTrack.js';
 
 type RevokeShareError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 
 /**
- * Handle orchestrator: Assert -> HydrateContext -> CheckPolicies -> Execute
- * shareId comes from the URL path param (no body parsing needed for DELETE).
+ * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track
  */
 export const revokeShareHandle = async (shareId: string, ctx: HandlerContext): Promise<Result<RevokeShareError, RevokeShareOutput>> => {
-  // 0. Assert
-  const assertResult = revokeShareAssert(shareId);
-  if (!assertResult.ok) return fail(assertResult.error);
+  // 1. ValidateInput
+  const inputResult = revokeShareValidateInput(shareId);
+  if (!inputResult.ok) return fail(inputResult.error);
 
-  // 1. HydrateContext
-  const contextResult = await revokeShareHydrateContext(shareId, ctx);
+  // 2. HydrateContext
+  const contextResult = await revokeShareHydrateContext(inputResult.value.share_id, ctx);
   if (!contextResult.ok) return fail(contextResult.error);
 
-  // 2. CheckPolicies
+  // 3. ValidateContext
+  const validateContextResult = revokeShareValidateContext(contextResult.value);
+  if (!validateContextResult.ok) return fail(validateContextResult.error);
+
+  // 4. CheckPolicies
   const policyResult = revokeShareCheckPolicies(contextResult.value);
   if (!policyResult.ok) return fail(policyResult.error);
 
-  // 3. Execute
+  // 5. Execute
   const executeResult = await revokeShareExecute(contextResult.value, ctx);
   if (!executeResult.ok) return fail(executeResult.error);
 
-  return { ok: true, value: executeResult.value };
+  // 6. Filter
+  const filtered = revokeShareFilter(executeResult.value);
+
+  // 7. Track
+  revokeShareTrack(ctx, inputResult.value.share_id);
+
+  return { ok: true, value: filtered };
 };

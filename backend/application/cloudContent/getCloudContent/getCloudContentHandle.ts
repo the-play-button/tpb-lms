@@ -1,23 +1,20 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
-import { getCloudContentAssert } from './getCloudContentAssert.js';
 import { getCloudContentValidateInput } from './getCloudContentValidateInput.js';
 import { getCloudContentHydrateContext } from './getCloudContentHydrateContext.js';
+import { getCloudContentValidateContext } from './getCloudContentValidateContext.js';
 import { getCloudContentCheckPolicies } from './getCloudContentCheckPolicies.js';
 import { getCloudContentExecute, type GetCloudContentOutput } from './getCloudContentExecute.js';
 import { getCloudContentFilter } from './getCloudContentFilter.js';
+import { getCloudContentTrack } from './getCloudContentTrack.js';
 
 type GetCloudContentError = 'NOT_FOUND' | 'FORBIDDEN' | string;
 
 /**
- * Handle orchestrator: Assert -> ValidateInput -> HydrateContext -> CheckPolicies -> Execute -> Filter
+ * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track
  */
 export const getCloudContentHandle = async (request: Request, ctx: HandlerContext): Promise<Result<GetCloudContentError, GetCloudContentOutput>> => {
-  // 0. Assert
-  const assertResult = getCloudContentAssert(request);
-  if (!assertResult.ok) return fail(assertResult.error);
-
   // 1. ValidateInput
   const inputResult = getCloudContentValidateInput(request);
   if (!inputResult.ok) return fail(inputResult.error);
@@ -26,20 +23,27 @@ export const getCloudContentHandle = async (request: Request, ctx: HandlerContex
   const contextResult = await getCloudContentHydrateContext(inputResult.value, ctx);
   if (!contextResult.ok) return fail(contextResult.error);
 
-  // 3. CheckPolicies
+  // 3. ValidateContext
+  const validateContextResult = getCloudContentValidateContext(contextResult.value);
+  if (!validateContextResult.ok) return fail(validateContextResult.error);
+
+  // 4. CheckPolicies
   const policyResult = getCloudContentCheckPolicies(contextResult.value);
   if (!policyResult.ok) return fail(policyResult.error);
 
-  // 4. Execute
+  // 5. Execute
   const executeResult = await getCloudContentExecute(contextResult.value, ctx);
   if (!executeResult.ok) return fail(executeResult.error);
 
-  // 5. Filter
+  // 6. Filter
   const filtered = getCloudContentFilter(
     executeResult.value,
     contextResult.value,
     ctx.userEmail
   );
+
+  // 7. Track
+  getCloudContentTrack(ctx, inputResult.value.ref_id);
 
   return { ok: true, value: filtered };
 };

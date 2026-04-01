@@ -2,17 +2,43 @@ import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import type { ConnectionInfo } from '../../../services/types/ConnectionInfo.js';
-import { listConnectionsAssert } from './listConnectionsAssert.js';
+import { listConnectionsValidateInput } from './listConnectionsValidateInput.js';
+import { listConnectionsHydrateContext } from './listConnectionsHydrateContext.js';
+import { listConnectionsValidateContext } from './listConnectionsValidateContext.js';
+import { listConnectionsCheckPolicies } from './listConnectionsCheckPolicies.js';
 import { listConnectionsExecute } from './listConnectionsExecute.js';
+import { listConnectionsFilter } from './listConnectionsFilter.js';
+import { listConnectionsTrack } from './listConnectionsTrack.js';
 
 /**
- * Handle orchestrator: Assert -> Execute
+ * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track
  */
 export const listConnectionsHandle = async (ctx: HandlerContext): Promise<Result<string, ConnectionInfo[]>> => {
-  // 0. Assert
-  const assertResult = listConnectionsAssert();
-  if (!assertResult.ok) return fail(assertResult.error);
+  // 1. ValidateInput
+  const inputResult = listConnectionsValidateInput();
+  if (!inputResult.ok) return fail(inputResult.error);
 
-  // 1. Execute
-  return listConnectionsExecute(ctx);
+  // 2. HydrateContext
+  const hydrateResult = listConnectionsHydrateContext();
+  if (!hydrateResult.ok) return fail(hydrateResult.error);
+
+  // 3. ValidateContext
+  const validateContextResult = listConnectionsValidateContext();
+  if (!validateContextResult.ok) return fail(validateContextResult.error);
+
+  // 4. CheckPolicies
+  const policyResult = listConnectionsCheckPolicies();
+  if (!policyResult.ok) return fail(policyResult.error);
+
+  // 5. Execute
+  const executeResult = await listConnectionsExecute(ctx);
+  if (!executeResult.ok) return fail(executeResult.error);
+
+  // 6. Filter
+  const filtered = listConnectionsFilter(executeResult.value);
+
+  // 7. Track
+  listConnectionsTrack(ctx);
+
+  return { ok: true, value: filtered };
 };

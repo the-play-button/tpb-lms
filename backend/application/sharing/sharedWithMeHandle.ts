@@ -1,17 +1,43 @@
 import type { Result } from '../../domain/core/Result.js';
 import { fail } from '../../domain/core/Result.js';
 import type { HandlerContext } from '../../types/HandlerContext.js';
-import { sharedWithMeAssert } from './sharedWithMeAssert.js';
+import { sharedWithMeValidateInput } from './sharedWithMeValidateInput.js';
+import { sharedWithMeHydrateContext } from './sharedWithMeHydrateContext.js';
+import { sharedWithMeValidateContext } from './sharedWithMeValidateContext.js';
+import { sharedWithMeCheckPolicies } from './sharedWithMeCheckPolicies.js';
 import { sharedWithMeExecute, type SharedWithMeEntry } from './sharedWithMeExecute.js';
+import { sharedWithMeFilter } from './sharedWithMeFilter.js';
+import { sharedWithMeTrack } from './sharedWithMeTrack.js';
 
 /**
- * Handle orchestrator: Assert -> Execute
+ * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track
  */
 export const sharedWithMeHandle = async (ctx: HandlerContext): Promise<Result<string, SharedWithMeEntry[]>> => {
-  // 0. Assert
-  const assertResult = sharedWithMeAssert(ctx.userEmail);
-  if (!assertResult.ok) return fail(assertResult.error);
+  // 1. ValidateInput
+  const inputResult = sharedWithMeValidateInput(ctx.userEmail);
+  if (!inputResult.ok) return fail(inputResult.error);
 
-  // 1. Execute
-  return sharedWithMeExecute(assertResult.value, ctx);
+  // 2. HydrateContext
+  const hydrateResult = sharedWithMeHydrateContext();
+  if (!hydrateResult.ok) return fail(hydrateResult.error);
+
+  // 3. ValidateContext
+  const validateContextResult = sharedWithMeValidateContext();
+  if (!validateContextResult.ok) return fail(validateContextResult.error);
+
+  // 4. CheckPolicies
+  const policyResult = sharedWithMeCheckPolicies();
+  if (!policyResult.ok) return fail(policyResult.error);
+
+  // 5. Execute
+  const executeResult = await sharedWithMeExecute(inputResult.value, ctx);
+  if (!executeResult.ok) return fail(executeResult.error);
+
+  // 6. Filter
+  const filtered = sharedWithMeFilter(executeResult.value, ctx.userEmail);
+
+  // 7. Track
+  sharedWithMeTrack(ctx);
+
+  return { ok: true, value: filtered };
 };

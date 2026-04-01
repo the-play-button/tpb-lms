@@ -185,6 +185,39 @@ Ne pas forcer un seul backend. La détection auto est la bonne approche.
   > `SELECT organization_id FROM iam_service_token WHERE token_prefix LIKE 'iampam_xxxx%'`
   > (les 4 premiers chars après `iampam_` suffisent à identifier la row).
 
+## GRAPHS: JS Handler Routes — RDD Refactoring Required
+
+43 JS handler routes under `backend/handlers/` are NOT pipelined. Before pipelining them, the LMS ERD (Entity-Relationship Diagram) needs clarification through a Requirements-Driven Design (RDD) pass. Many handlers may not need to exist as-is — some should be merged, some split, some removed.
+
+### Route inventory by domain (43 total)
+
+| Domain | Routes | Count |
+|--------|--------|-------|
+| Enrollment | listEnrollments, updateProgress, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus | 6 |
+| Courses | listCourses, getCourse | 2 |
+| Events | handleEvent, handleBatchEvents | 2 |
+| Signals | getStepSignals, getCourseSignalsHandler, resetCourseSignals | 3 |
+| Quiz | handleTallyWebhook, handleQuizSubmission | 2 |
+| KMS | listSpaces, getSpace, getPage | 3 |
+| Translations | getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview | 4 |
+| Glossary | getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms | 4 |
+| API Keys | createAPIKeyHandler, listAPIKeysHandler, revokeAPIKeyHandler, adminCreateAPIKeyHandler | 4 |
+| Auth/Logto | handleLogin, handleCallback, handleLogout | 3 |
+| Badges | listBadges | 1 |
+| Learner | getLearnerProgress | 1 |
+| Leaderboard | getLeaderboard, getUserStats | 2 |
+| Admin | getAdminStats, adminCreateAPIKeyHandler | 2 |
+| Content | getGitHubContent, listGitHubDirectory | 2 |
+| Health | handleHealthCheck | 1 |
+| Test | handleTestSeed | 1 |
+
+### Action needed
+
+- [ ] RDD pass: clarify LMS bounded contexts and entities
+- [ ] Identify which handlers map to which BCs (enrollment? content-delivery? assessment? administration?)
+- [ ] Simplify: merge redundant handlers, remove dead ones, rename to CRUD+List conventions
+- [ ] THEN pipeline each surviving handler into 9-step DDD
+
 ## CRUD+List Endpoint Granularity (entropy: `ddd_endpoint_granularity`)
 
 4 violations detectees. Plan detaille : `plans/2026-03_crud-list-endpoint-refactor/01-rename-endpoints.plan.md`
