@@ -23,9 +23,6 @@ LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
 
 # Secrets (set via: wrangler secret put <NAME>)
 #
-# LOGTO SSO:
-# - LOGTO_APP_SECRET: Logto application secret (from Admin Console)
-# 
 # BOOTSTRAP SECRETS (must be in wrangler - chicken-egg problem):
 # - VAULT_CLIENT_ID (LMS app client ID for vault-api)
 # - VAULT_CLIENT_SECRET (LMS app client secret for vault-api)
