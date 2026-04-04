@@ -1,4 +1,118 @@
-# tpb-lms: TODO
+# project_id: PB04 — tpb-lms
+
+## Sécurité
+
+- [ ] **Migrer `LOGTO_APP_SECRET` vers le vault (bastion tpb-iampam)** {priority:high} {tags:security+entropy+vault}
+  > **Pourquoi** : `LOGTO_APP_SECRET` a été retiré de `ALLOWED_ENV_VARS` dans l'entropy check
+  > `wrangler_secret_whitelist` (tpb-sdk, avril 2026). C'est le OAuth2 `client_secret` de l'app
+  > Logto LMS, utilisé dans `/auth/callback` pour échanger le code OIDC contre un id_token.
+  >
+  > **Fichier à modifier** : `backend/handlers/auth-logto/handleCallback.js` ligne ~43.
+  >
+  > **Code actuel (anti-pattern)** :
+  > ```javascript
+  > client_secret: env.LOGTO_APP_SECRET || '',
+  > ```
+  > Le `|| ''` masque silencieusement l'absence du secret (Logto renvoie un 401 opaque).
+  >
+  > **Code cible** — utiliser `VaultClient` + `getCachedSecret` (déjà présents dans `backend/lib/vaultClient.js`) :
+  > ```javascript
+  > import { VaultClient, getCachedSecret } from '../lib/vaultClient.js';
+  >
+  > // Dans handleCallback :
+  > const vault = new VaultClient(env.BASTION_URL, env);
+  > const logtoSecret = await getCachedSecret(vault, 'apps/lms/logto_app_secret');
+  > if (!logtoSecret) throw new Error('Vault: apps/lms/logto_app_secret not found — check org alignment between VAULT_TOKEN and secret storage org');
+  >
+  > // Dans le URLSearchParams:
+  > client_secret: logtoSecret,
+  > ```
+  >
+  > **Pourquoi `getCachedSecret`** : `vaultClient.js` exporte un `getCachedSecret(vault, path)`
+  > avec un cache module-level de 5 minutes (Map + TTL). Pattern déjà utilisé par
+  > `secrets.js` pour `tally_webhook_secret` etc. Réutiliser ce mécanisme, ne pas en créer un nouveau.
+  >
+  > **Comment l'auth bastion fonctionne** : `new VaultClient(baseUrl, env)` utilise
+  > `env.VAULT_TOKEN` (iampam_xxx) comme Bearer token. Le bastion hash le token, lookup dans
+  > `iam_service_token` (table D1), et résout l'org depuis `iam_service_token.organization_id`.
+  > Le vault filtre ensuite `sys_secret` par `path + organization_id`.
+  > Si le token est dans la mauvaise org → 404 `NO_SECRET_FOR_ORG`.
+  > Le VAULT_TOKEN doit être un M2M token (`application_id IS NOT NULL` dans `iam_service_token`,
+  > `subject_email` = `app-xxx@system`), pas un PAT.
+  >
+  > **Pré-requis : stocker le secret dans le vault** (one-time) :
+  >
+  > 1. Récupérer la valeur depuis le dashboard Logto (Settings > Application > LMS > App Secret).
+  >
+  > 2. Stocker :
+  >    ```bash
+  >    curl -X POST https://tpb-vault-infra.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
+  >      -H "Authorization: Bearer $VAULT_TOKEN" \
+  >      -H "Content-Type: application/json" \
+  >      -d '{"value": "<valeur>", "type": "api_credential", "description": "Logto OIDC client_secret for tpb-lms"}'
+  >    ```
+  >    Réponse attendue : `{ "success": true, "path": "apps/lms/logto_app_secret", ... }`.
+  >    Si 403 : le token n'a pas les scopes d'écriture vault. Vérifier `iam_service_token.scopes`.
+  >
+  > 3. Vérifier :
+  >    ```bash
+  >    curl https://tpb-vault-infra.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
+  >      -H "Authorization: Bearer $VAULT_TOKEN"
+  >    ```
+  >    Réponse : `{ "data": { "value": "xxx", "metadata": { "organization_id": "..." } } }`.
+  >
+  > **Cleanup après deploy réussi** :
+  > ```bash
+  > wrangler secret delete LOGTO_APP_SECRET
+  > ```
+  > Supprimer la ligne commentée dans `wrangler.toml` (ligne ~27).
+  >
+  > **Note org** : si le `VAULT_TOKEN` du LMS et le token utilisé pour le POST sont dans
+  > des orgs différentes, le GET renverra 404 (`NO_SECRET_FOR_ORG`). Vérifier avec :
+  > `SELECT organization_id FROM iam_service_token WHERE token_prefix LIKE 'iampam_xxxx%'`
+  > (les 4 premiers chars après `iampam_` suffisent à identifier la row).
+
+## CRUD+List Endpoint Granularity (entropy: `ddd_endpoint_granularity`)
+
+4 violations détectées. Plan détaillé : `plans/2026-03_crud-list-endpoint-refactor/01-rename-endpoints.plan.md`
+
+- [ ] Rename `sharedByMe` → `listSharedByMe` (entité Share — lister les partages créés par moi) {priority:medium} {tags:entropy+ddd+crud-list}
+- [ ] Rename `sharedWithMe` → `listSharedWithMe` (entité Share — lister les partages reçus) {priority:medium} {tags:entropy+ddd+crud-list}
+- [ ] Rename `revokeShare` → `deleteShare` (entité Share — révoquer = supprimer) {priority:medium} {tags:entropy+ddd+crud-list}
+- [ ] Rename `shareContent` → `createShare` (entité Share — partager = créer un partage) {priority:medium} {tags:entropy+ddd+crud-list}
+
+## GRAPHS: JS Handler Routes — RDD Refactoring Required
+
+43 JS handler routes under `backend/handlers/` are NOT pipelined. Before pipelining them, the LMS ERD (Entity-Relationship Diagram) needs clarification through a Requirements-Driven Design (RDD) pass. Many handlers may not need to exist as-is — some should be merged, some split, some removed.
+
+### Route inventory by domain (43 total)
+
+| Domain | Routes | Count |
+|--------|--------|-------|
+| Enrollment | listEnrollments, updateProgress, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus | 6 |
+| Courses | listCourses, getCourse | 2 |
+| Events | handleEvent, handleBatchEvents | 2 |
+| Signals | getStepSignals, getCourseSignalsHandler, resetCourseSignals | 3 |
+| Quiz | handleTallyWebhook, handleQuizSubmission | 2 |
+| KMS | listSpaces, getSpace, getPage | 3 |
+| Translations | getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview | 4 |
+| Glossary | getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms | 4 |
+| API Keys | createAPIKeyHandler, listAPIKeysHandler, revokeAPIKeyHandler, adminCreateAPIKeyHandler | 4 |
+| Auth/Logto | handleLogin, handleCallback, handleLogout | 3 |
+| Badges | listBadges | 1 |
+| Learner | getLearnerProgress | 1 |
+| Leaderboard | getLeaderboard, getUserStats | 2 |
+| Admin | getAdminStats, adminCreateAPIKeyHandler | 2 |
+| Content | getGitHubContent, listGitHubDirectory | 2 |
+| Health | handleHealthCheck | 1 |
+| Test | handleTestSeed | 1 |
+
+### Action needed
+
+- [ ] RDD pass: clarify LMS bounded contexts and entities {priority:high} {tags:ddd+lms+architecture}
+- [ ] Identify which handlers map to which BCs (enrollment? content-delivery? assessment? administration?) {priority:high} {tags:ddd+lms+architecture}
+- [ ] Simplify: merge redundant handlers, remove dead ones, rename to CRUD+List conventions {priority:medium} {tags:ddd+crud-list+lms}
+- [ ] THEN pipeline each surviving handler into 9-step DDD {priority:medium} {tags:ddd+lms}
 
 ## Direction : standalone app avec sa propre D1
 
@@ -89,12 +203,12 @@ Actuellement dans `Brain/the-play-button/PA06 KMS Setup/outputs/run/automations/
 
 ### Refactos nécessaires
 
-- [ ] Migrer les scripts PA06 vers `tpb-lms/scripts/`
-- [ ] Modifier le build pour insérer le markdown directement dans D1 (plus de GitHub raw)
-- [ ] Supprimer la dépendance au token GitHub dans le frontend
-- [ ] Le frontend fetch D1 directement (via Worker binding) au lieu de GitHub
-- [ ] Supporter le multi-org (aujourd'hui hardcodé sur TPB SOMs)
-- [ ] Les directives LMS (`PA06/automations/directives/lms/`) → absorber dans un SKILL.md tpb-cock si pertinent
+- [ ] Migrer les scripts PA06 vers `tpb-lms/scripts/` {priority:medium} {tags:lms+migration}
+- [ ] Modifier le build pour insérer le markdown directement dans D1 (plus de GitHub raw) {priority:medium} {tags:lms+d1+migration}
+- [ ] Supprimer la dépendance au token GitHub dans le frontend {priority:medium} {tags:lms+security+migration}
+- [ ] Le frontend fetch D1 directement (via Worker binding) au lieu de GitHub {priority:medium} {tags:lms+d1+ui}
+- [ ] Supporter le multi-org (aujourd'hui hardcodé sur TPB SOMs) {priority:medium} {tags:lms+multi-org}
+- [ ] Les directives LMS (`PA06/automations/directives/lms/`) → absorber dans un SKILL.md tpb-cock si pertinent {priority:medium} {tags:lms+sss}
 
 ### Hardware-aware transcription (à conserver)
 
@@ -103,7 +217,7 @@ Le pipeline de transcription supporte 3 backends :
 - **Linux/Windows NVIDIA** : `faster-whisper` + CUDA (5x realtime)
 - **CPU fallback** : `faster-whisper` CPU (0.3x realtime — lent)
 
-Detection automatique dans `transcriber.py`. Ne pas casser cette logique.
+Détection automatique dans `transcriber.py`. Ne pas casser cette logique.
 
 ### Translation backend (à conserver)
 
@@ -112,117 +226,3 @@ Priorité : Ollama local (gratuit) → OpenAI API (fallback payant).
 - OpenAI : `gpt-4o-mini` via API
 
 Ne pas forcer un seul backend. La détection auto est la bonne approche.
-
-## Sécurité
-
-- [ ] **Migrer `LOGTO_APP_SECRET` vers le vault (bastion tpb-iampam)** {tags:security+entropy+vault}
-  > **Pourquoi** : `LOGTO_APP_SECRET` a été retiré de `ALLOWED_ENV_VARS` dans l'entropy check
-  > `wrangler_secret_whitelist` (tpb-sdk, avril 2026). C'est le OAuth2 `client_secret` de l'app
-  > Logto LMS, utilisé dans `/auth/callback` pour échanger le code OIDC contre un id_token.
-  >
-  > **Fichier à modifier** : `backend/handlers/auth-logto/handleCallback.js` ligne ~43.
-  >
-  > **Code actuel (anti-pattern)** :
-  > ```javascript
-  > client_secret: env.LOGTO_APP_SECRET || '',
-  > ```
-  > Le `|| ''` masque silencieusement l'absence du secret (Logto renvoie un 401 opaque).
-  >
-  > **Code cible** — utiliser `VaultClient` + `getCachedSecret` (déjà présents dans `backend/lib/vaultClient.js`) :
-  > ```javascript
-  > import { VaultClient, getCachedSecret } from '../lib/vaultClient.js';
-  >
-  > // Dans handleCallback :
-  > const vault = new VaultClient(env.BASTION_URL, env);
-  > const logtoSecret = await getCachedSecret(vault, 'apps/lms/logto_app_secret');
-  > if (!logtoSecret) throw new Error('Vault: apps/lms/logto_app_secret not found — check org alignment between VAULT_TOKEN and secret storage org');
-  >
-  > // Dans le URLSearchParams:
-  > client_secret: logtoSecret,
-  > ```
-  >
-  > **Pourquoi `getCachedSecret`** : `vaultClient.js` exporte un `getCachedSecret(vault, path)`
-  > avec un cache module-level de 5 minutes (Map + TTL). Pattern déjà utilisé par
-  > `secrets.js` pour `tally_webhook_secret` etc. Réutiliser ce mécanisme, ne pas en créer un nouveau.
-  >
-  > **Comment l'auth bastion fonctionne** : `new VaultClient(baseUrl, env)` utilise
-  > `env.VAULT_TOKEN` (iampam_xxx) comme Bearer token. Le bastion hash le token, lookup dans
-  > `iam_service_token` (table D1), et résout l'org depuis `iam_service_token.organization_id`.
-  > Le vault filtre ensuite `sys_secret` par `path + organization_id`.
-  > Si le token est dans la mauvaise org → 404 `NO_SECRET_FOR_ORG`.
-  > Le VAULT_TOKEN doit être un M2M token (`application_id IS NOT NULL` dans `iam_service_token`,
-  > `subject_email` = `app-xxx@system`), pas un PAT.
-  >
-  > **Pré-requis : stocker le secret dans le vault** (one-time) :
-  >
-  > 1. Récupérer la valeur depuis le dashboard Logto (Settings > Application > LMS > App Secret).
-  >
-  > 2. Stocker :
-  >    ```bash
-  >    curl -X POST https://tpb-vault-infra.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
-  >      -H "Authorization: Bearer $VAULT_TOKEN" \
-  >      -H "Content-Type: application/json" \
-  >      -d '{"value": "<valeur>", "type": "api_credential", "description": "Logto OIDC client_secret for tpb-lms"}'
-  >    ```
-  >    Réponse attendue : `{ "success": true, "path": "apps/lms/logto_app_secret", ... }`.
-  >    Si 403 : le token n'a pas les scopes d'écriture vault. Vérifier `iam_service_token.scopes`.
-  >
-  > 3. Vérifier :
-  >    ```bash
-  >    curl https://tpb-vault-infra.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
-  >      -H "Authorization: Bearer $VAULT_TOKEN"
-  >    ```
-  >    Réponse : `{ "data": { "value": "xxx", "metadata": { "organization_id": "..." } } }`.
-  >
-  > **Cleanup après deploy réussi** :
-  > ```bash
-  > wrangler secret delete LOGTO_APP_SECRET
-  > ```
-  > Supprimer la ligne commentée dans `wrangler.toml` (ligne ~27).
-  >
-  > **Note org** : si le `VAULT_TOKEN` du LMS et le token utilisé pour le POST sont dans
-  > des orgs différentes, le GET renverra 404 (`NO_SECRET_FOR_ORG`). Vérifier avec :
-  > `SELECT organization_id FROM iam_service_token WHERE token_prefix LIKE 'iampam_xxxx%'`
-  > (les 4 premiers chars après `iampam_` suffisent à identifier la row).
-
-## GRAPHS: JS Handler Routes — RDD Refactoring Required
-
-43 JS handler routes under `backend/handlers/` are NOT pipelined. Before pipelining them, the LMS ERD (Entity-Relationship Diagram) needs clarification through a Requirements-Driven Design (RDD) pass. Many handlers may not need to exist as-is — some should be merged, some split, some removed.
-
-### Route inventory by domain (43 total)
-
-| Domain | Routes | Count |
-|--------|--------|-------|
-| Enrollment | listEnrollments, updateProgress, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus | 6 |
-| Courses | listCourses, getCourse | 2 |
-| Events | handleEvent, handleBatchEvents | 2 |
-| Signals | getStepSignals, getCourseSignalsHandler, resetCourseSignals | 3 |
-| Quiz | handleTallyWebhook, handleQuizSubmission | 2 |
-| KMS | listSpaces, getSpace, getPage | 3 |
-| Translations | getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview | 4 |
-| Glossary | getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms | 4 |
-| API Keys | createAPIKeyHandler, listAPIKeysHandler, revokeAPIKeyHandler, adminCreateAPIKeyHandler | 4 |
-| Auth/Logto | handleLogin, handleCallback, handleLogout | 3 |
-| Badges | listBadges | 1 |
-| Learner | getLearnerProgress | 1 |
-| Leaderboard | getLeaderboard, getUserStats | 2 |
-| Admin | getAdminStats, adminCreateAPIKeyHandler | 2 |
-| Content | getGitHubContent, listGitHubDirectory | 2 |
-| Health | handleHealthCheck | 1 |
-| Test | handleTestSeed | 1 |
-
-### Action needed
-
-- [ ] RDD pass: clarify LMS bounded contexts and entities
-- [ ] Identify which handlers map to which BCs (enrollment? content-delivery? assessment? administration?)
-- [ ] Simplify: merge redundant handlers, remove dead ones, rename to CRUD+List conventions
-- [ ] THEN pipeline each surviving handler into 9-step DDD
-
-## CRUD+List Endpoint Granularity (entropy: `ddd_endpoint_granularity`)
-
-4 violations detectees. Plan detaille : `plans/2026-03_crud-list-endpoint-refactor/01-rename-endpoints.plan.md`
-
-- [ ] Rename `sharedByMe` → `listSharedByMe` (entite Share — lister les partages crees par moi) {tags:entropy+ddd+crud-list}
-- [ ] Rename `sharedWithMe` → `listSharedWithMe` (entite Share — lister les partages recus) {tags:entropy+ddd+crud-list}
-- [ ] Rename `revokeShare` → `deleteShare` (entite Share — revoquer = supprimer) {tags:entropy+ddd+crud-list}
-- [ ] Rename `shareContent` → `createShare` (entite Share — partager = creer un partage) {tags:entropy+ddd+crud-list}
