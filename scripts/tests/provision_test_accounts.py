@@ -64,17 +64,17 @@ def get_vault_headers():
         vault = VaultClient.from_devcontainer()
         
         # Step 2: Get TPB LMS app credentials from vault
-        client_id = vault.get_secret("apps/lms/vault_client_id")
-        client_secret = vault.get_secret("apps/lms/vault_client_secret")
+        client_id = vault.get_secret("tpb/apps/lms/vault_client_id")
+        client_secret = vault.get_secret("tpb/apps/lms/vault_client_secret")
         
         if not client_id or not client_secret:
             print("❌ Missing TPB LMS credentials in vault!")
             print()
             print("   Add these secrets to vault:")
-            print("   - apps/lms/vault_client_id")
-            print("   - apps/lms/vault_client_secret")
+            print("   - tpb/apps/lms/vault_client_id")
+            print("   - tpb/apps/lms/vault_client_secret")
             print()
-            print("   Via: vault.set_secret('apps/lms/vault_client_id', '...')")
+            print("   Via: vault.set_secret('tpb/apps/lms/vault_client_id', '...')")
             sys.exit(1)
         
         # Step 3: Return headers with app credentials

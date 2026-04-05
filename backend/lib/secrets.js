@@ -15,7 +15,7 @@
  *   import { getSecret, initSecrets } from './lib/secrets.js';
  *   
  *   // In handler:
- *   const tallySecret = await getSecret(env, 'apps/lms/tally_webhook_secret', 'TALLY_WEBHOOK_SECRET');
+ *   const tallySecret = await getSecret(env, 'tpb/apps/lms/tally_webhook_secret', 'TALLY_WEBHOOK_SECRET');
  */
 
 import { VaultClient, getCachedSecret } from './vaultClient.js';
@@ -34,7 +34,7 @@ const getVaultClient = env => {
  * Get a secret value with vault fallback to env.
  * 
  * @param {object} env - Worker env
- * @param {string} vaultPath - Vault secret path (e.g., "apps/lms/tally_webhook_secret")
+ * @param {string} vaultPath - Vault secret path (e.g., "tpb/apps/lms/tally_webhook_secret")
  * @param {string} envKey - Legacy env key (e.g., "TALLY_WEBHOOK_SECRET") entropy-legacy-marker-ok: documented technical debt
  * @returns {Promise<string|null>} - Secret value
  */
@@ -59,10 +59,10 @@ export const getSecret = async (env, vaultPath, envKey) => {
  * Used for bulk fetching and documentation.
  */
 export const SECRET_MAPPINGS = {
-  'apps/lms/tally_webhook_secret': 'TALLY_WEBHOOK_SECRET',
-  'apps/lms/tally_signing_secret': 'TALLY_SIGNING_SECRET',
-  'infra/cloudflare_stream_signing_key_id': 'CLOUDFLARE_STREAM_SIGNING_KEY_ID',
-  'infra/cloudflare_stream_signing_key_pem': 'CLOUDFLARE_STREAM_SIGNING_KEY_PEM',
+  'tpb/apps/lms/tally_webhook_secret': 'TALLY_WEBHOOK_SECRET',
+  'tpb/apps/lms/tally_signing_secret': 'TALLY_SIGNING_SECRET',
+  'tpb/infra/cloudflare_stream_signing_key_id': 'CLOUDFLARE_STREAM_SIGNING_KEY_ID',
+  'tpb/infra/cloudflare_stream_signing_key_pem': 'CLOUDFLARE_STREAM_SIGNING_KEY_PEM',
 };
 
 /**

@@ -162,7 +162,7 @@ export class VaultClient {
   /**
    * Get a secret value by path
    * 
-   * @param {string} path - Secret path (e.g., "apps/lms/tally_webhook_secret")
+   * @param {string} path - Secret path (e.g., "tpb/apps/lms/tally_webhook_secret")
    * @returns {Promise<string|null>} - Secret value or null if not found
    */
   async getSecret(path) {
@@ -223,7 +223,7 @@ export class VaultClient {
   /**
    * List secrets by prefix
    * 
-   * @param {string} prefix - Path prefix (e.g., "apps/lms/")
+   * @param {string} prefix - Path prefix (e.g., "tpb/apps/lms/")
    * @returns {Promise<Array<{path: string, type: string, description: string}>>}
    */
   async listSecrets(prefix = '') {

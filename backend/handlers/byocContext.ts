@@ -44,7 +44,7 @@ export const createByocContext = async (request: Request, env: Env, userContext:
 
   const storageService = new UnifiedToStorageAdapter({
     getApiToken: async () => {
-      const token = await bastionClient.getSecret(jwt, 'integrations/unifiedto_api_token');
+      const token = await bastionClient.getSecret(jwt, 'tpb/integrations/unifiedto_api_token');
       if (!token) throw new Error('Unified.to API token not found in vault');
       return token;
     },

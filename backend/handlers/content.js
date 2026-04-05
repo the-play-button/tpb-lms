@@ -35,7 +35,7 @@ const getGitHubTokenWithDebug = async env => {
 
     if (env.BASTION_URL && env.VAULT_TOKEN) {
         try {
-            const secretPath = '/secret/data/infra/github_pat_tpb_repos';
+            const secretPath = '/secret/data/tpb/infra/github_pat_tpb_repos';
 
             const headers = {
                 'Content-Type': 'application/json',

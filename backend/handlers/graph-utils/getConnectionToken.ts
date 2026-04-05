@@ -7,7 +7,7 @@
 import { ValidationError, NotFoundError, ServiceUnavailableError } from '../../types/errors.js';
 
 export const getConnectionToken = async (getSecret: (path: string) => Promise<string | null>, connectionId: string): Promise<{ accessToken: string; provider: string }> => {
-  const unifiedToken = await getSecret('integrations/unifiedto_api_token');
+  const unifiedToken = await getSecret('tpb/integrations/unifiedto_api_token');
   if (!unifiedToken) {
     throw new ValidationError('Unified.to API token not configured', { apiToken: 'missing' });
   }

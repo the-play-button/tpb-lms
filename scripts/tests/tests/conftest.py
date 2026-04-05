@@ -57,16 +57,16 @@ def _load_api_keys():
     
     vault = get_vault()
     _api_keys = {
-        'student': vault.get_secret('apps/lms/test_api_key_student'),
-        'instructor': vault.get_secret('apps/lms/test_api_key_instructor'),
-        'admin': vault.get_secret('apps/lms/test_api_key_admin'),
+        'student': vault.get_secret('tpb/apps/lms/test_api_key_student'),
+        'instructor': vault.get_secret('tpb/apps/lms/test_api_key_instructor'),
+        'admin': vault.get_secret('tpb/apps/lms/test_api_key_admin'),
     }
     
     # Validate we have all keys
     missing = [k for k, v in _api_keys.items() if not v]
     if missing:
         print(f"WARNING: Missing API keys in vault for roles: {missing}")
-        print("Store them with: vault.set_secret('apps/lms/test_api_key_{role}', 'tpb_...')")
+        print("Store them with: vault.set_secret('tpb/apps/lms/test_api_key_{role}', 'tpb_...')")
     
     return _api_keys
 
@@ -81,7 +81,7 @@ def get_api_key_headers(role='student'):
     keys = _load_api_keys()
     key = keys.get(role)
     if not key:
-        raise ValueError(f"No API key configured for role: {role}. Check vault path: apps/lms/test_api_key_{role}")
+        raise ValueError(f"No API key configured for role: {role}. Check vault path: tpb/apps/lms/test_api_key_{role}")
     return {"Authorization": f"Bearer {key}"}
 
 
@@ -108,8 +108,8 @@ def _load_cf_tokens():
     # LMS app credentials for CF Access
     _cf_tokens = {
         'lms': {
-            'id': vault.get_secret('apps/lms/vault_client_id'),
-            'secret': vault.get_secret('apps/lms/vault_client_secret'),
+            'id': vault.get_secret('tpb/apps/lms/vault_client_id'),
+            'secret': vault.get_secret('tpb/apps/lms/vault_client_secret'),
         }
     }
     
@@ -117,8 +117,8 @@ def _load_cf_tokens():
     if not _cf_tokens['lms']['id'] or not _cf_tokens['lms']['secret']:
         print("WARNING: Missing LMS CF Access credentials in vault")
         print("Store them with:")
-        print("  vault.set_secret('apps/lms/vault_client_id', '...')")
-        print("  vault.set_secret('apps/lms/vault_client_secret', '...')")
+        print("  vault.set_secret('tpb/apps/lms/vault_client_id', '...')")
+        print("  vault.set_secret('tpb/apps/lms/vault_client_secret', '...')")
     
     return _cf_tokens
 

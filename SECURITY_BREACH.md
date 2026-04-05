@@ -26,13 +26,13 @@ LMS Backend
   ├── VAULT_CLIENT_ID = 387c91e47df84b6764f463ca3dfbdb9d.access
   ├── VAULT_CLIENT_SECRET = (dans Cloudflare Secrets)
   │
-  └── Accede a: infra/github_pat_tpb_repos
+  └── Accede a: tpb/infra/github_pat_tpb_repos
         │
         └── Ce token GitHub a acces a TOUS les repos the-play-button
 ```
 
 **Le token GitHub est stocke dans le vault** :
-- Path: `infra/github_pat_tpb_repos`
+- Path: `tpb/infra/github_pat_tpb_repos`
 - Description: "TEMPORAIRE - Token gh CLI avec full access"
 
 ---
@@ -58,18 +58,18 @@ Apres la refacto, ajouter le scope specifique au service token LMS :
 
 ```sql
 UPDATE iam_service_token 
-SET scopes = 'tpblms:*,vault:read:infra/github_pat_tpb_repos'
+SET scopes = 'tpblms:*,vault:read:tpb/infra/github_pat_tpb_repos'
 WHERE application_id = (SELECT id FROM iam_application WHERE namespace = 'tpblms')
   AND revoked_at IS NULL;
 ```
 
 ### 3. Verifier l'enforcement
 
-Tester que le LMS ne peut acceder QU'A `infra/github_pat_tpb_repos` :
+Tester que le LMS ne peut acceder QU'A `tpb/infra/github_pat_tpb_repos` :
 
 ```bash
 # Doit fonctionner
-curl "https://tpb-vault-infra.../secret/data/infra/github_pat_tpb_repos" \
+curl "https://tpb-vault-infra.../secret/data/tpb/infra/github_pat_tpb_repos" \
   -H "CF-Access-Client-Id: $LMS_CLIENT_ID" \
   -H "CF-Access-Client-Secret: $LMS_CLIENT_SECRET"
 
@@ -89,7 +89,7 @@ A la revocation de `tpb-lms-service-account` :
 {
   "message": "Application 'tpblms' has been revoked",
   "vault_access_revoked": [
-    "vault:read:infra/github_pat_tpb_repos"
+    "vault:read:tpb/infra/github_pat_tpb_repos"
   ],
   "recommendation": "Consider rotating: GitHub PAT (full repo access)"
 }
@@ -111,7 +111,7 @@ A la revocation de `tpb-lms-service-account` :
 - [x] Refacto iampam backend (`validateScopes`, `hasVaultScope`, `deleteApplication`) - **DONE 2026-01-10**
 - [x] Refacto iampam frontend (affichage scopes vault) - **DONE 2026-01-10**
 - [x] Migration tokens existants (ajouter `vault:read:*` pour backward compat) - **016_oauth_scopes.sql**
-- [x] Configurer scope LMS : `vault:read:infra/github_pat_tpb_repos` - **017_lms_vault_scope.sql**
+- [x] Configurer scope LMS : `vault:read:tpb/infra/github_pat_tpb_repos` - **017_lms_vault_scope.sql**
 - [x] Deploy tpb-iampam backend et frontend - **DONE 2026-01-10**
 - [x] Run migrations 016 et 017 - **DONE 2026-01-10**
 - [ ] Tester enforcement (403 sur autres secrets)
