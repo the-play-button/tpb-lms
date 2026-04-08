@@ -21,7 +21,7 @@ import { showContentStepConfirmation } from './confirmModal.js';
 
 const getMediaByType = (cls, type, extraCheck = null) => {
     const media = cls.media || [];
-    return media.find(({ type } = {}) => type === type && (!extraCheck || m[extraCheck]));
+    return media.find(m => m.type === type && (!extraCheck || m[extraCheck]));
 };
 
 const getDocumentMedia = cls => {
