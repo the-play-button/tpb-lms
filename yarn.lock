@@ -7,12 +7,32 @@
   resolved "https://registry.npmjs.org/@cloudflare/workers-types/-/workers-types-4.20260217.0.tgz"
   integrity sha512-R5s8h/zj91g6HSB/qndpXGS5Xc8t8Ik3BwY6qwe7XXV6r3Gey1gdthFSK4A2IrPQEmTsc7wEXbs9KpBLNttlqg==
 
+"@rollup/rollup-darwin-arm64@^4.60.1":
+  version "4.60.1"
+  resolved "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.60.1.tgz"
+  integrity sha512-mjCpF7GmkRtSJwon+Rq1N8+pI+8l7w5g9Z3vWj4T7abguC4Czwi3Yu/pFaLvA3TTeMVjnu3ctigusqWUfjZzvw==
+
+"@the-play-button/tpb-sdk-js@^1.18.16":
+  version "1.18.16"
+  resolved "https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.18.16/tpb-sdk-js-1.18.16.tgz"
+  integrity sha512-azS8eHXuUuepmftianGorbogPuR/ZjZao4u/I3mdEUIthZeh/k7nKwXamhs+Q3IMasQOyDbpm+iwLQSSi8quOA==
+  dependencies:
+    "@rollup/rollup-darwin-arm64" "^4.60.1"
+    "@unified-api/typescript-sdk" "^2.82.11"
+
+"@unified-api/typescript-sdk@^2.82.11":
+  version "2.83.34"
+  resolved "https://registry.npmjs.org/@unified-api/typescript-sdk/-/typescript-sdk-2.83.34.tgz"
+  integrity sha512-IR+RctXzz8YlO9v+aRznyG+zVWixRQoUKwi0OkmmmSJNOH+6vg8yftOJulyLKIOzYE/8NzYO9kSQ+DarJOuh3A==
+  dependencies:
+    zod "^3.25.0 || ^4.0.0"
+
 typescript@^5.9.3:
   version "5.9.3"
   resolved "https://registry.npmjs.org/typescript/-/typescript-5.9.3.tgz"
   integrity sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==
 
-zod@^3.25.76:
+"zod@^3.25.0 || ^4.0.0", zod@^3.25.76:
   version "3.25.76"
   resolved "https://registry.npmjs.org/zod/-/zod-3.25.76.tgz"
   integrity sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==

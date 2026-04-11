@@ -51,6 +51,7 @@ import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
 import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto/index.js';
 import logger from './utils/log.js';
+import { withFetchErrorHandler } from '@the-play-button/tpb-sdk-js';
 
 const log = logger('worker');
 
@@ -98,24 +99,21 @@ const handleTallyWithAuth = async (request, url, env) => {
     return await handleTallyWebhook(request, env);
 };
 
-export default {
-    async fetch(request, env, ctx) {
-        if (request.method === 'OPTIONS') {
-            return new Response(null, { 
-                status: 204,
-                headers: getCorsHeaders(request) 
-            });
-        }
+const fetchHandler = async (request, env, ctx) => {
+    if (request.method === 'OPTIONS') {
+        return new Response(null, {
+            status: 204,
+            headers: getCorsHeaders(request)
+        });
+    }
 
-        const url = new URL(request.url);
-        const path = url.pathname;
-        
-        const { traceId } = addTraceId(request);
-        
-        const rateLimited = checkRateLimit(request);
-        if (rateLimited) return rateLimited;
+    const url = new URL(request.url);
+    const path = url.pathname;
 
-        try {
+    const { traceId } = addTraceId(request);
+
+    const rateLimited = checkRateLimit(request);
+    if (rateLimited) return rateLimited;
             // ============================================
             // ============================================
             
@@ -413,12 +411,9 @@ export default {
                 return await handleQuizSubmission(request, env, userContext);
             }
 
-            return jsonResponse({ error: 'Not found' }, 404, request);
+    return jsonResponse({ error: 'Not found' }, 404, request);
+};
 
-        } catch (error) {
-            log.error('Worker error', { error, traceId, path });
-            const response = jsonResponse({ error: error.message, traceId }, 500, request);
-            return withTraceHeader(response, traceId);
-        }
-    }
+export default {
+    fetch: withFetchErrorHandler(fetchHandler, { service: 'tpb-lms' }),
 };
