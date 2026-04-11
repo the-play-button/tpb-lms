@@ -12,10 +12,10 @@
   resolved "https://registry.npmjs.org/@rollup/rollup-darwin-arm64/-/rollup-darwin-arm64-4.60.1.tgz"
   integrity sha512-mjCpF7GmkRtSJwon+Rq1N8+pI+8l7w5g9Z3vWj4T7abguC4Czwi3Yu/pFaLvA3TTeMVjnu3ctigusqWUfjZzvw==
 
-"@the-play-button/tpb-sdk-js@^1.18.16":
-  version "1.18.16"
-  resolved "https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.18.16/tpb-sdk-js-1.18.16.tgz"
-  integrity sha512-azS8eHXuUuepmftianGorbogPuR/ZjZao4u/I3mdEUIthZeh/k7nKwXamhs+Q3IMasQOyDbpm+iwLQSSi8quOA==
+"@the-play-button/tpb-sdk-js@^1.18.17":
+  version "1.18.18"
+  resolved "https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.18.18/tpb-sdk-js-1.18.18.tgz"
+  integrity sha512-shCpo2DQ8wnVNXcjb2/fsUWkyIK9wVOboJ+AHIzzZXl+1T8h70u48IQpdR2S5DsXLSh3A+n8h6FCel9ECBctVg==
   dependencies:
     "@rollup/rollup-darwin-arm64" "^4.60.1"
     "@unified-api/typescript-sdk" "^2.82.11"
@@ -26,6 +26,11 @@
   integrity sha512-IR+RctXzz8YlO9v+aRznyG+zVWixRQoUKwi0OkmmmSJNOH+6vg8yftOJulyLKIOzYE/8NzYO9kSQ+DarJOuh3A==
   dependencies:
     zod "^3.25.0 || ^4.0.0"
+
+hono@^4.0.0, hono@^4.7.10:
+  version "4.12.12"
+  resolved "https://registry.npmjs.org/hono/-/hono-4.12.12.tgz"
+  integrity sha512-p1JfQMKaceuCbpJKAPKVqyqviZdS0eUxH9v82oWo1kb9xjQ5wA6iP3FNVAPDFlz5/p7d45lO+BpSk1tuSZMF4Q==
 
 typescript@^5.9.3:
   version "5.9.3"
