@@ -1,4 +1,4 @@
-// entropy-legacy-marker-ok: debt — legacy env bindings (GITHUB_PAT, VAULT_CLIENT_*, TALLY_*) to be removed post-migration
+// entropy-legacy-marker-ok: debt — legacy env bindings (TALLY_*) to be removed post-migration
 /**
  * Cloudflare Worker Environment Bindings
  *
@@ -24,9 +24,6 @@ export interface Env {
   LOGTO_ENDPOINT: string;
 
   // --- Legacy (to be removed post-migration) ---
-  GITHUB_PAT_TPB_REPOS?: string;
-  VAULT_CLIENT_ID?: string;
-  VAULT_CLIENT_SECRET?: string;
   TPBIAMPAM_BACKEND_SECRET_KEY?: string;
   TALLY_WEBHOOK_SECRET?: string;
   TALLY_SIGNING_SECRET?: string;

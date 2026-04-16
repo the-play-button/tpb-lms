@@ -1,7 +1,6 @@
 // entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
 // entropy-single-export-ok: 2 tightly-coupled content handlers (get file, list directory) sharing GitHub auth and URL parsing
 // entropy-handler-service-pattern-ok: simple handler, business logic is minimal
-// entropy-legacy-marker-ok: debt — legacy fallback to GITHUB_PAT_TPB_REPOS env var when vault token unavailable
 // entropy-long-function-ok: getGitHubContent is a sequential handler — URL parsing + i18n path injection + vault token fetch + GitHub API call + error mapping; splitting would scatter the linear request flow
 /**
  * Content Handler
@@ -33,45 +32,33 @@ const getGitHubTokenWithDebug = async env => {
         return { token: cachedToken, debug };
     }
 
-    if (env.BASTION_URL && env.VAULT_TOKEN) {
-        try {
-            const secretPath = '/secret/data/tpb/infra/github_pat_tpb_repos';
-
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${env.VAULT_TOKEN}`,
-            };
-
-            const response = await fetch(`${env.BASTION_URL}${secretPath}`, { headers });
-            
-            debug.vaultStatus = response.status;
-            
-            if (response.ok) {
-                const result = await response.json();
-                cachedToken = result.data?.value || null;
-                if (cachedToken) {
-                    tokenExpiry = Date.now() + 5 * 60 * 1000;
-                    return { token: cachedToken, debug };
-                } else {
-                    debug.vaultError = 'Response missing data.value';
-                }
-            } else {
-                debug.vaultError = await response.text();
-            }
-        } catch (e) {
-            debug.vaultError = e.message;
-        }
+    if (!env.BASTION_URL || !env.VAULT_TOKEN) {
+        throw new Error('BASTION_URL and VAULT_TOKEN are required to fetch GitHub PAT from vault');
     }
-    
-    // entropy-legacy-marker-ok: documented technical debt
-    if (env.GITHUB_PAT_TPB_REPOS) {
-        cachedToken = env.GITHUB_PAT_TPB_REPOS;
-        tokenExpiry = Date.now() + 5 * 60 * 1000;
-        debug.fallback = true;
-        return { token: cachedToken, debug };
+
+    const secretPath = '/secret/data/tpb/infra/github_pat_tpb_repos';
+    const headers = {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${env.VAULT_TOKEN}`,
+    };
+
+    const response = await fetch(`${env.BASTION_URL}${secretPath}`, { headers });
+    debug.vaultStatus = response.status;
+
+    if (!response.ok) {
+        const body = await response.text();
+        throw new Error(`Vault fetch failed (${response.status}): ${body}`);
     }
-    
-    return { token: null, debug };
+
+    const result = await response.json();
+    const token = result.data?.value || null;
+    if (!token) {
+        throw new Error('Vault response missing data.value for tpb/infra/github_pat_tpb_repos');
+    }
+
+    cachedToken = token;
+    tokenExpiry = Date.now() + 5 * 60 * 1000;
+    return { token, debug };
 };
 
 const getGitHubToken = async env => {
