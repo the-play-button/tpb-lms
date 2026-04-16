@@ -6,11 +6,10 @@
  * Run this once to bootstrap LMS IAM structure.
  *
  * Usage:
- *   export VAULT_CLIENT_ID='your-client-id.access'
- *   export VAULT_CLIENT_SECRET='your-client-secret'
+ *   export VAULT_TOKEN='iampam_xxx'   # service token from bastion /iam/service-tokens
  *   node scripts/setup-vault-iam.js
  *
- * Credentials: Get from vault-api dashboard or admin
+ * Le token est aussi disponible dans .devcontainer/.env (loader à la charge du caller).
  */
 
 const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: fallback config URL
@@ -39,30 +38,27 @@ const LMS_GROUPS = [
   }
 ];
 
-const getAuthHeaders = async () => {
-  const clientId = process.env.VAULT_CLIENT_ID;
-  const clientSecret = process.env.VAULT_CLIENT_SECRET;
+const getAuthHeaders = () => {
+  const vaultToken = process.env.VAULT_TOKEN;
 
-  if (!clientId || !clientSecret) {
-    console.error('❌ Missing credentials!'); // entropy-console-leak-ok: CLI script
+  if (!vaultToken) {
+    console.error('❌ Missing VAULT_TOKEN env var'); // entropy-console-leak-ok: CLI script
     console.error(''); // entropy-console-leak-ok: CLI script
-    console.error('   Set these environment variables:'); // entropy-console-leak-ok: CLI script
-    console.error("   export VAULT_CLIENT_ID='your-client-id.access'"); // entropy-console-leak-ok: CLI script
-    console.error("   export VAULT_CLIENT_SECRET='your-client-secret'"); // entropy-console-leak-ok: CLI script
+    console.error('   Set it from .devcontainer/.env or from bastion service token:'); // entropy-console-leak-ok: CLI script
+    console.error("   export VAULT_TOKEN='iampam_xxx'"); // entropy-console-leak-ok: CLI script
     console.error(''); // entropy-console-leak-ok: CLI script
-    console.error('   Get credentials from vault-api dashboard or admin.'); // entropy-console-leak-ok: CLI script
+    console.error('   Create one via bastion /iam/service-tokens (scope: iam:*).'); // entropy-console-leak-ok: CLI script
     process.exit(1);
   }
 
   return {
-    'CF-Access-Client-Id': clientId,
-    'CF-Access-Client-Secret': clientSecret,
+    'Authorization': `Bearer ${vaultToken}`,
     'Content-Type': 'application/json'
   };
 };
 
 const request = async (method, path, body = null) => {
-  const headers = await getAuthHeaders();
+  const headers = getAuthHeaders();
   const options = { method, headers };
 
   if (body) {
