@@ -130,6 +130,7 @@ exceptions:
     - frontend/app/api.js       # API client used everywhere
     - frontend/app/state.js     # State management (by design)
     - zod                       # Validation library — high import count is expected
+    - "@the-play-button/tpb-sdk-js"  # SDK imported across many modules by design
   
   # Entry points that are always "used" for dead code detection
   entry_points:
