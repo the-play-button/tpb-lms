@@ -101,7 +101,7 @@ tpb_checks:
   # Sensitive logging in check_secrets.py: this IS a secrets checker, it logs secret metadata (not values)
   sensitive_logging: false            # check_secrets.py logs secret names/paths for audit — not actual secret values
   # Vault token naming in scripts: setup scripts use different env vars for CF Access auth
-  wrangler_vault_token_naming: false  # setup-vault scripts use VAULT_API_URL, VAULT_CLIENT_ID for CF Access SA — not Worker env
+  wrangler_vault_token_naming: false  # setup-vault scripts use VAULT_API_URL, BASTION_CLIENT_ID for CF Access SA — not Worker env
   # Check policies layer: false positives on access-scoping in HydrateContext
   policies_layer: false               # isOwner check in HydrateContext is data-scoping, not authz
   # Optional chaining: LMS uses ?. pervasively — destructuring with defaults would be a massive refactor with no functional gain

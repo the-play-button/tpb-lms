@@ -6,7 +6,7 @@
 
 - `tpb-slider` : Frontend statique (HTML/CSS/JS) qui charge des JSON locaux
 - `tpb-lms` : Backend avec proxy GitHub **couple** (pas d'abstraction)
-- `tpb-iampam` : Pattern `InfraProvider` + adapters (a copier pour le content)
+- `tpb-bastion` : Pattern `InfraProvider` + adapters (a copier pour le content)
 - `tpb-sdk/js` : Pattern adapter existant dans `api-broker/adapters/`
 - Deploiement manuel deja fait : `pa02-roadmap.pages.dev` (CF Pages + Access)
 
@@ -28,7 +28,7 @@ flowchart TB
     end
     
     subgraph infra [Infrastructure]
-        Bastion[tpb-vault-infra<br/>Secrets + IAM]
+        Bastion[tpb-bastion-backend<br/>Secrets + IAM]
         CFA[CF Access<br/>Auth]
     end
     
@@ -66,7 +66,7 @@ flowchart TB
 
 2. Deployer sur CF avec Access :
 
-   - Meme pattern que `tpb-iampam/cf-worker-frontend`
+   - Meme pattern que `tpb-bastion/cf-worker-frontend`
    - Proteger avec CF Access (team `theplaybutton`)
 
 **Fichiers a creer :**

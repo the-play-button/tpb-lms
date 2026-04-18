@@ -55,7 +55,7 @@ _SECRET_MASK_MIN_LEN = 8  # entropy-python-magic-numbers-ok: bitmask configurati
 class VaultClient:  # entropy-python-cohesion-ok: client class with independent API methods by design
     """Client for TPB Vault API."""
 
-    DEFAULT_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
+    DEFAULT_URL = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
     ENV_FILE = Path(__file__).parent / "lms/core/vault-api/.env"
     
     def __init__(self, client_id: str, client_secret: str, base_url: str = None):
@@ -70,7 +70,7 @@ class VaultClient:  # entropy-python-cohesion-ok: client class with independent 
         """Create client from .env file or environment.
         
         Accepts two naming conventions for env vars:
-        - VAULT_CLIENT_ID / VAULT_CLIENT_SECRET (preferred, semantic)
+        - BASTION_CLIENT_ID / BASTION_CLIENT_SECRET (preferred, semantic)
         - CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID / _SECRET (legacy)  # entropy-legacy-marker-ok: legacy pattern in vault_client, tracked for future refactoring
 
         Args:
@@ -80,8 +80,8 @@ class VaultClient:  # entropy-python-cohesion-ok: client class with independent 
             Configured VaultClient instance.
         """
         # Try both naming conventions (VAULT_* preferred)
-        client_id = os.getenv("VAULT_CLIENT_ID") or os.getenv("CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID")
-        client_secret = os.getenv("VAULT_CLIENT_SECRET") or os.getenv("CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_SECRET")
+        client_id = os.getenv("BASTION_CLIENT_ID") or os.getenv("CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID")
+        client_secret = os.getenv("BASTION_CLIENT_SECRET") or os.getenv("CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_SECRET")
         
         if not client_id or not client_secret:
             env_file = Path(env_path) if env_path else cls.ENV_FILE
@@ -94,14 +94,14 @@ class VaultClient:  # entropy-python-cohesion-ok: client class with independent 
                             key = key.strip()
                             value = value.strip().strip('"').strip("'")
                             # Accept both naming conventions
-                            if key in ("VAULT_CLIENT_ID", "CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID"):
+                            if key in ("BASTION_CLIENT_ID", "CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID"):
                                 client_id = client_id or value
-                            elif key in ("VAULT_CLIENT_SECRET", "CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_SECRET"):
+                            elif key in ("BASTION_CLIENT_SECRET", "CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_SECRET"):
                                 client_secret = client_secret or value
         
         if not client_id or not client_secret:
             raise ValueError(
-                f"Missing vault credentials. Set VAULT_CLIENT_ID/VAULT_CLIENT_SECRET env vars or check {cls.ENV_FILE}"
+                f"Missing vault credentials. Set BASTION_CLIENT_ID/BASTION_CLIENT_SECRET env vars or check {cls.ENV_FILE}"
             )
         
         return cls(client_id, client_secret)

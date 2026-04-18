@@ -11,7 +11,7 @@
 import { VaultClient } from '../lib/vaultClient.js';
 
 export const resolveRole = async (email, env) => {
-    if (env.BASTION_URL && env.VAULT_TOKEN) {
+    if (env.BASTION_URL && env.BASTION_TOKEN) {
         try {
             const vault = new VaultClient(env.BASTION_URL, env);
             const data = await vault.getUserRoles(email);

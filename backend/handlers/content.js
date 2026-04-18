@@ -21,8 +21,8 @@ const getGitHubTokenWithDebug = async env => {
     const debug = {
         cached: false,
         hasBastionUrl: !!env.BASTION_URL,
-        hasVaultToken: !!env.VAULT_TOKEN,
-        vaultTokenPrefix: env.VAULT_TOKEN ? env.VAULT_TOKEN.substring(0, 12) : null,
+        hasVaultToken: !!env.BASTION_TOKEN,
+        vaultTokenPrefix: env.BASTION_TOKEN ? env.BASTION_TOKEN.substring(0, 12) : null,
         vaultStatus: null,
         vaultError: null
     };
@@ -32,14 +32,14 @@ const getGitHubTokenWithDebug = async env => {
         return { token: cachedToken, debug };
     }
 
-    if (!env.BASTION_URL || !env.VAULT_TOKEN) {
-        throw new Error('BASTION_URL and VAULT_TOKEN are required to fetch GitHub PAT from vault');
+    if (!env.BASTION_URL || !env.BASTION_TOKEN) {
+        throw new Error('BASTION_URL and BASTION_TOKEN are required to fetch GitHub PAT from vault');
     }
 
     const secretPath = '/secret/data/tpb/infra/github_pat_tpb_repos';
     const headers = {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${env.VAULT_TOKEN}`,
+        'Authorization': `Bearer ${env.BASTION_TOKEN}`,
     };
 
     const response = await fetch(`${env.BASTION_URL}${secretPath}`, { headers });

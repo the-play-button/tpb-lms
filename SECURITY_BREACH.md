@@ -23,8 +23,8 @@ Si ce service account est compromis et revoque :
 ```
 LMS Backend
   │
-  ├── VAULT_CLIENT_ID = 387c91e47df84b6764f463ca3dfbdb9d.access
-  ├── VAULT_CLIENT_SECRET = (dans Cloudflare Secrets)
+  ├── BASTION_CLIENT_ID = 387c91e47df84b6764f463ca3dfbdb9d.access
+  ├── BASTION_CLIENT_SECRET = (dans Cloudflare Secrets)
   │
   └── Accede a: tpb/infra/github_pat_tpb_repos
         │
@@ -39,9 +39,9 @@ LMS Backend
 
 ## PREREQUIS POUR COLMATER
 
-### 1. Refactoriser tpb-iampam (Applications & Tokens OAuth2)
+### 1. Refactoriser tpb-bastion (Applications & Tokens OAuth2)
 
-Voir `Desk/CONTEXT.md` section "CHANTIER EN COURS : IAMPAM Applications & Tokens OAuth2"
+Voir `Desk/CONTEXT.md` section "CHANTIER EN COURS : BASTION Applications & Tokens OAuth2"
 
 **Modifications requises** :
 
@@ -69,12 +69,12 @@ Tester que le LMS ne peut acceder QU'A `tpb/infra/github_pat_tpb_repos` :
 
 ```bash
 # Doit fonctionner
-curl "https://tpb-vault-infra.../secret/data/tpb/infra/github_pat_tpb_repos" \
+curl "https://tpb-bastion-backend.../secret/data/tpb/infra/github_pat_tpb_repos" \
   -H "CF-Access-Client-Id: $LMS_CLIENT_ID" \
   -H "CF-Access-Client-Secret: $LMS_CLIENT_SECRET"
 
 # Doit retourner 403
-curl "https://tpb-vault-infra.../secret/data/infra/openai_api_key" \
+curl "https://tpb-bastion-backend.../secret/data/infra/openai_api_key" \
   -H "CF-Access-Client-Id: $LMS_CLIENT_ID" \
   -H "CF-Access-Client-Secret: $LMS_CLIENT_SECRET"
 ```
@@ -99,7 +99,7 @@ A la revocation de `tpb-lms-service-account` :
 
 ## DOCUMENTATION
 
-- Architecture OAuth2 : `Apps/the-play-button/tpb-iampam/backend/docs/2026-01-10_vault_access_via_scopes.md`
+- Architecture OAuth2 : `Apps/the-play-button/tpb-bastion/backend/docs/2026-01-10_vault_access_via_scopes.md`
 - Domain analysis : `Apps/external/vault-analysis/DOMAIN_ANALYSIS.md`
 - Plan detaille : Voir historique conversation ou `.cursor/plans/`
 - Context global : `Desk/CONTEXT.md`
@@ -108,11 +108,11 @@ A la revocation de `tpb-lms-service-account` :
 
 ## CHECKLIST DE CLOTURE
 
-- [x] Refacto iampam backend (`validateScopes`, `hasVaultScope`, `deleteApplication`) - **DONE 2026-01-10**
-- [x] Refacto iampam frontend (affichage scopes vault) - **DONE 2026-01-10**
+- [x] Refacto bastion backend (`validateScopes`, `hasVaultScope`, `deleteApplication`) - **DONE 2026-01-10**
+- [x] Refacto bastion frontend (affichage scopes vault) - **DONE 2026-01-10**
 - [x] Migration tokens existants (ajouter `vault:read:*` pour backward compat) - **016_oauth_scopes.sql**
 - [x] Configurer scope LMS : `vault:read:tpb/infra/github_pat_tpb_repos` - **017_lms_vault_scope.sql**
-- [x] Deploy tpb-iampam backend et frontend - **DONE 2026-01-10**
+- [x] Deploy tpb-bastion backend et frontend - **DONE 2026-01-10**
 - [x] Run migrations 016 et 017 - **DONE 2026-01-10**
 - [ ] Tester enforcement (403 sur autres secrets)
 - [ ] Tester revocation (affichage warning secrets)

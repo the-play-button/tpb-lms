@@ -8,9 +8,9 @@ Briques réutilisables du framework TPB, destinées à être extraites vers un r
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    tpb-vault-infra                           │
+│                    tpb-bastion-backend                           │
 │  Secrets d'infrastructure partagés                          │
-│  URL: https://tpb-vault-infra.matthieu-marielouise.workers.dev
+│  URL: https://tpb-bastion-backend.matthieu-marielouise.workers.dev
 │  ─────────────────────────────────────────────────────────  │
 │  CLOUDFLARE_ACCOUNT_ID        # Account Cloudflare          │
 │  CLOUDFLARE_API_TOKEN         # Token API principal         │
@@ -34,7 +34,7 @@ Briques réutilisables du framework TPB, destinées à être extraites vers un r
 
 ### Principe
 
-- **tpb-vault-infra** : Secrets d'infrastructure partagés entre tous les projets TPB
+- **tpb-bastion-backend** : Secrets d'infrastructure partagés entre tous les projets TPB
 - **{projet}-vault** : Secrets applicatifs spécifiques à chaque projet
 
 ### Sécurité
@@ -76,7 +76,7 @@ def get_secret(name: str, vault_url: str = None) -> str:
     """Fetch secret from TPB Vault."""
     vault_url = vault_url or os.environ.get(
         "TPB_VAULT_URL", 
-        "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
+        "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
     )
     
     resp = requests.get(
@@ -106,7 +106,7 @@ export CF_ACCESS_CLIENT_SECRET="xxx"
 
 | Type | Pattern | Exemple |
 |------|---------|---------|
-| Vault infra | `tpb-vault-infra` | Unique, partagé |
+| Vault infra | `tpb-bastion-backend` | Unique, partagé |
 | Vault applicatif | `{projet}-vault` | `lms-vault`, `crm-vault` |
 | Secret | `UPPER_SNAKE_CASE` | `CLOUDFLARE_API_TOKEN` |
 

@@ -7,6 +7,6 @@ scopes_allowed: ["tpblms:*", "vault:read:tpb/infra/github_pat_tpb_repos"]
 Configurer le token de service LMS avec :
 scopes: ["vault:read:tpb/infra/github_pat_tpb_repos"]
 Implémenter le proxy GitHub dans le backend LMS :
-Récupérer le PAT depuis vault via IAMPAM
+Récupérer le PAT depuis vault via BASTION
 Proxy les requêtes vers raw.githubusercontent.com
 Tester : LMS accède au contenu .md privé via le proxy

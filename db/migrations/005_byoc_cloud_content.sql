@@ -2,7 +2,7 @@
 -- BYOC (Bring Your Own Cloud) Content Tables
 -- ============================================
 -- Migrates content storage from GitHub PAT to cloud providers
--- via Unified.to + IAMPAM bastion.
+-- via Unified.to + BASTION bastion.
 --
 -- lms_content_ref: References to files in author's cloud storage
 -- lms_content_share: Granular sharing of .pitch and other files

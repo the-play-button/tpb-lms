@@ -11,11 +11,11 @@ corresponding vault-api users and group memberships.
 
 Prerequisites:
 1. Run setup-vault-iam.js first to create roles and groups
-2. Set VAULT_CLIENT_ID and VAULT_CLIENT_SECRET env vars
+2. Set BASTION_CLIENT_ID and BASTION_CLIENT_SECRET env vars
 
 Usage:
-    export VAULT_CLIENT_ID='your-client-id.access'
-    export VAULT_CLIENT_SECRET='your-client-secret'  # entropy-python-hardcoded-secrets-ok: placeholder in docstring, not actual secret
+    export BASTION_CLIENT_ID='your-client-id.access'
+    export BASTION_CLIENT_SECRET='your-client-secret'  # entropy-python-hardcoded-secrets-ok: placeholder in docstring, not actual secret
     python scripts/migrate-users-to-vault.py
 
 This is a one-time migration script. After migration, vault-api 
@@ -33,7 +33,7 @@ import requests
 # entropy-inconsistent-constant-ok: standalone scripts have their own defaults
 VAULT_API_URL = os.environ.get(
     'VAULT_API_URL',
-    'https://tpb-vault-infra.matthieu-marielouise.workers.dev'
+    'https://tpb-bastion-backend.matthieu-marielouise.workers.dev'
 )
 
 _VAULT_API_TIMEOUT = 30  # entropy-python-magic-numbers-ok: numeric literal in migrate-users-to-vault is a timeout duration in seconds
@@ -41,12 +41,12 @@ _CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width cons
 
 def get_vault_headers() -> dict[str, str]:
     """Get auth headers for vault-api."""
-    client_id = os.environ.get('VAULT_CLIENT_ID')
-    client_secret = os.environ.get('VAULT_CLIENT_SECRET')
+    client_id = os.environ.get('BASTION_CLIENT_ID')
+    client_secret = os.environ.get('BASTION_CLIENT_SECRET')
     
     if not client_id or not client_secret:
         print("❌ Missing credentials!")
-        print("   Set VAULT_CLIENT_ID and VAULT_CLIENT_SECRET")
+        print("   Set BASTION_CLIENT_ID and BASTION_CLIENT_SECRET")
         sys.exit(1)
     
     return {

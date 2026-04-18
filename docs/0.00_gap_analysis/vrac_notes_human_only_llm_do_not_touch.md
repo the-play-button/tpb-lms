@@ -6,7 +6,7 @@ documentation dans worker vault (qui est dans LMS)
 directive cloudflare/ pour l'utiliser correctement
 repasse dans tous les scripts pour taper dessus
 
-Il est peut-être temps d'implémenter le IAMPAM enterprise-grade multi-tenant de folie. Typiquement je vais avoir besoin d'un OAuth pour un peu tout si on veut être vraiment totalement intégré à tout écosystème. OAuth est un must-have pour cela. Et a priori c'est complexe :
+Il est peut-être temps d'implémenter le BASTION enterprise-grade multi-tenant de folie. Typiquement je vais avoir besoin d'un OAuth pour un peu tout si on veut être vraiment totalement intégré à tout écosystème. OAuth est un must-have pour cela. Et a priori c'est complexe :
 
 ```
 OAuth 2.0 complet c'est un gros morceau :
@@ -17,7 +17,7 @@ Scopes management
 Token storage/revocation
 ```
 
--> si notre IAMPAM est bien désigné, on devrait pouvoir ne faire la couche OAuth TPB qu'une fois. Tous les scopes et la complexité, c'est pas que "OAuth" c'est compliqué. C'est même totalement faux, c'est plutôt simple et très straightforward, avec plein de lib qui aide à le faire. C'est juste qu'il faut faire tout l'access control ! Et on a déjà prévu de le faire donc en intégrant les besoins d'OAuth, on devrait être vraiment enterprise grade.
+-> si notre BASTION est bien désigné, on devrait pouvoir ne faire la couche OAuth TPB qu'une fois. Tous les scopes et la complexité, c'est pas que "OAuth" c'est compliqué. C'est même totalement faux, c'est plutôt simple et très straightforward, avec plein de lib qui aide à le faire. C'est juste qu'il faut faire tout l'access control ! Et on a déjà prévu de le faire donc en intégrant les besoins d'OAuth, on devrait être vraiment enterprise grade.
 
 === a ajouter à l'audit
 

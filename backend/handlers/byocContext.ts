@@ -53,7 +53,7 @@ export const createByocContext = async (request: Request, env: Env, userContext:
 
   const pamClient = new PamCloudflareAdapter({
     bastionUrl: env.BASTION_URL,
-    getToken: () => env.VAULT_TOKEN,
+    getToken: () => env.BASTION_TOKEN,
   });
 
   const connectionResolver = new ConnectionResolverAdapter({

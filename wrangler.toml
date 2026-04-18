@@ -15,14 +15,14 @@ database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 # Authentication configuration
 [vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
-BASTION_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
+BASTION_URL = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
 # Logto SSO (set to "true" to enable, "false" to use CF Access)
 USE_LOGTO = "false"
 LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
 # LOGTO_APP_ID = "" # Set after registering app in Logto Admin Console
 
 # Secrets:
-# - VAULT_TOKEN (sole bootstrap secret — fetched via wrangler secret put)
+# - BASTION_TOKEN (sole bootstrap secret — fetched via wrangler secret put)
 # All other secrets are fetched from bastion at runtime (see backend/handlers/content.js for github_pat_tpb_repos example).
 #
 # MIGRATED TO VAULT (fetch via VaultClient at runtime):
@@ -53,7 +53,7 @@ database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 # Authentication configuration for production
 [env.production.vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
-BASTION_URL = "https://tpb-vault-infra.matthieu-marielouise.workers.dev"
+BASTION_URL = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
 USE_LOGTO = "false"
 LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
 

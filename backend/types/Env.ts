@@ -4,7 +4,7 @@
  *
  * Declares all bindings used by the LMS worker:
  * - D1 database
- * - Service Binding to bastion (IAMPAM)
+ * - Service Binding to bastion (BASTION)
  * - Secrets and configuration vars
  */
 
@@ -16,7 +16,7 @@ export interface Env {
   BASTION_URL: string;
 
   // --- Secrets ---
-  VAULT_TOKEN: string;
+  BASTION_TOKEN: string;
 
   // --- Vars ---
   ACCESS_TEAM_DOMAIN: string;
@@ -24,7 +24,7 @@ export interface Env {
   LOGTO_ENDPOINT: string;
 
   // --- Legacy (to be removed post-migration) ---
-  TPBIAMPAM_BACKEND_SECRET_KEY?: string;
+  BASTION_BACKEND_SECRET_KEY?: string;
   TALLY_WEBHOOK_SECRET?: string;
   TALLY_SIGNING_SECRET?: string;
 }

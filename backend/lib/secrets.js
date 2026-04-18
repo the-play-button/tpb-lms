@@ -6,7 +6,7 @@
  * Secrets Helper
  *
  * Provides unified access to secrets with fallback:
- * 1. Try vault-api first (if VAULT_CLIENT_ID/SECRET are configured)
+ * 1. Try vault-api first (if BASTION_CLIENT_ID/SECRET are configured)
  * 2. Fall back to wrangler env secrets (legacy) entropy-legacy-marker-ok: legacy pattern in secrets, tracked for future refactoring
  * 
  * This allows gradual migration from wrangler secrets to vault.
@@ -24,7 +24,7 @@ import { log } from './log.js';
 let vaultClient = null;
 
 const getVaultClient = env => {
-  if (!vaultClient && env.BASTION_URL && env.VAULT_TOKEN) {
+  if (!vaultClient && env.BASTION_URL && env.BASTION_TOKEN) {
     vaultClient = new VaultClient(env.BASTION_URL, env);
   }
   return vaultClient;

@@ -6,13 +6,13 @@
  * Run this once to bootstrap LMS IAM structure.
  *
  * Usage:
- *   export VAULT_TOKEN='iampam_xxx'   # service token from bastion /iam/service-tokens
+ *   export BASTION_TOKEN='bastion_xxx'   # service token from bastion /iam/service-tokens
  *   node scripts/setup-vault-iam.js
  *
  * Le token est aussi disponible dans .devcontainer/.env (loader à la charge du caller).
  */
 
-const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: URL in setup-vault-iam is a fallback deployment configuration
+const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-bastion-backend.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: URL in setup-vault-iam is a fallback deployment configuration
 
 const LMS_ROLES = [
   {
@@ -39,13 +39,13 @@ const LMS_GROUPS = [
 ];
 
 const getAuthHeaders = () => {
-  const vaultToken = process.env.VAULT_TOKEN;
+  const vaultToken = process.env.BASTION_TOKEN;
 
   if (!vaultToken) {
-    console.error('❌ Missing VAULT_TOKEN env var'); // entropy-console-leak-ok: CLI output in setup-vault-iam for operator visibility
+    console.error('❌ Missing BASTION_TOKEN env var'); // entropy-console-leak-ok: CLI output in setup-vault-iam for operator visibility
     console.error(''); // entropy-console-leak-ok: CLI output in setup-vault-iam for operator visibility
     console.error('   Set it from .devcontainer/.env or from bastion service token:'); // entropy-console-leak-ok: CLI output in setup-vault-iam for operator visibility
-    console.error("   export VAULT_TOKEN='iampam_xxx'"); // entropy-console-leak-ok: CLI output in setup-vault-iam for operator visibility
+    console.error("   export BASTION_TOKEN='bastion_xxx'"); // entropy-console-leak-ok: CLI output in setup-vault-iam for operator visibility
     console.error(''); // entropy-console-leak-ok: CLI output in setup-vault-iam for operator visibility
     console.error('   Create one via bastion /iam/service-tokens (scope: iam:*).'); // entropy-console-leak-ok: CLI output in setup-vault-iam for operator visibility
     process.exit(1);

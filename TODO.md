@@ -2,7 +2,7 @@
 
 ## Sécurité
 
-- [ ] **Migrer `LOGTO_APP_SECRET` vers le vault (bastion tpb-iampam)** {priority:high} {tags:security+entropy+vault}
+- [ ] **Migrer `LOGTO_APP_SECRET` vers le vault (bastion tpb-bastion)** {priority:high} {tags:security+entropy+vault}
   > **Pourquoi** : `LOGTO_APP_SECRET` a été retiré de `ALLOWED_ENV_VARS` dans l'entropy check
   > `wrangler_secret_whitelist` (tpb-sdk, avril 2026). C'est le OAuth2 `client_secret` de l'app
   > Logto LMS, utilisé dans `/auth/callback` pour échanger le code OIDC contre un id_token.
@@ -22,7 +22,7 @@
   > // Dans handleCallback :
   > const vault = new VaultClient(env.BASTION_URL, env);
   > const logtoSecret = await getCachedSecret(vault, 'apps/lms/logto_app_secret');
-  > if (!logtoSecret) throw new Error('Vault: apps/lms/logto_app_secret not found — check org alignment between VAULT_TOKEN and secret storage org');
+  > if (!logtoSecret) throw new Error('Vault: apps/lms/logto_app_secret not found — check org alignment between BASTION_TOKEN and secret storage org');
   >
   > // Dans le URLSearchParams:
   > client_secret: logtoSecret,
@@ -33,11 +33,11 @@
   > `secrets.js` pour `tally_webhook_secret` etc. Réutiliser ce mécanisme, ne pas en créer un nouveau.
   >
   > **Comment l'auth bastion fonctionne** : `new VaultClient(baseUrl, env)` utilise
-  > `env.VAULT_TOKEN` (iampam_xxx) comme Bearer token. Le bastion hash le token, lookup dans
+  > `env.BASTION_TOKEN` (bastion_xxx) comme Bearer token. Le bastion hash le token, lookup dans
   > `iam_service_token` (table D1), et résout l'org depuis `iam_service_token.organization_id`.
   > Le vault filtre ensuite `sys_secret` par `path + organization_id`.
   > Si le token est dans la mauvaise org → 404 `NO_SECRET_FOR_ORG`.
-  > Le VAULT_TOKEN doit être un M2M token (`application_id IS NOT NULL` dans `iam_service_token`,
+  > Le BASTION_TOKEN doit être un M2M token (`application_id IS NOT NULL` dans `iam_service_token`,
   > `subject_email` = `app-xxx@system`), pas un PAT.
   >
   > **Pré-requis : stocker le secret dans le vault** (one-time) :
@@ -46,8 +46,8 @@
   >
   > 2. Stocker :
   >    ```bash
-  >    curl -X POST https://tpb-vault-infra.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
-  >      -H "Authorization: Bearer $VAULT_TOKEN" \
+  >    curl -X POST https://tpb-bastion-backend.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
+  >      -H "Authorization: Bearer $BASTION_TOKEN" \
   >      -H "Content-Type: application/json" \
   >      -d '{"value": "<valeur>", "type": "api_credential", "description": "Logto OIDC client_secret for tpb-lms"}'
   >    ```
@@ -56,8 +56,8 @@
   >
   > 3. Vérifier :
   >    ```bash
-  >    curl https://tpb-vault-infra.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
-  >      -H "Authorization: Bearer $VAULT_TOKEN"
+  >    curl https://tpb-bastion-backend.matthieu-marielouise.workers.dev/secret/data/apps/lms/logto_app_secret \
+  >      -H "Authorization: Bearer $BASTION_TOKEN"
   >    ```
   >    Réponse : `{ "data": { "value": "xxx", "metadata": { "organization_id": "..." } } }`.
   >
@@ -67,10 +67,10 @@
   > ```
   > Supprimer la ligne commentée dans `wrangler.toml` (ligne ~27).
   >
-  > **Note org** : si le `VAULT_TOKEN` du LMS et le token utilisé pour le POST sont dans
+  > **Note org** : si le `BASTION_TOKEN` du LMS et le token utilisé pour le POST sont dans
   > des orgs différentes, le GET renverra 404 (`NO_SECRET_FOR_ORG`). Vérifier avec :
-  > `SELECT organization_id FROM iam_service_token WHERE token_prefix LIKE 'iampam_xxxx%'`
-  > (les 4 premiers chars après `iampam_` suffisent à identifier la row).
+  > `SELECT organization_id FROM iam_service_token WHERE token_prefix LIKE 'bastion_xxxx%'`
+  > (les 4 premiers chars après `bastion_` suffisent à identifier la row).
 
 ## CRUD+List Endpoint Granularity (entropy: `ddd_endpoint_granularity`)
 
