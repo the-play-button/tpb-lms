@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@the-play-button/tpb-sdk-js':
-        specifier: ^1.19.0
-        version: 1.19.0(hono@4.12.14)
+        specifier: ^1.19.1
+        version: 1.19.1(hono@4.12.14)
       hono:
         specifier: ^4.7.10
         version: 4.12.14
@@ -35,8 +35,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@the-play-button/tpb-sdk-js@1.19.0':
-    resolution: {integrity: sha512-UByaCENan2JfF3+r2V+VapYQg7NVvwulfOySExL08PRiQPR3HELRMRFkeEwhtiddEsPKu0FGyR827dziQo+PXw==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.19.0/tpb-sdk-js-1.19.0.tgz}
+  '@the-play-button/tpb-sdk-js@1.19.1':
+    resolution: {integrity: sha512-oTZ3nSh1Hb/uJzFY5jEkXMQlOqIJyUZb6Hu8IRmsFgCPtXkXZLn4GgNC2yMKPPGuLoG2tlqJIMQrLobNdIJAOw==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.19.1/tpb-sdk-js-1.19.1.tgz}
     peerDependencies:
       hono: ^4.0.0
 
@@ -61,7 +61,7 @@ snapshots:
 
   '@rollup/rollup-darwin-arm64@4.60.1': {}
 
-  '@the-play-button/tpb-sdk-js@1.19.0(hono@4.12.14)':
+  '@the-play-button/tpb-sdk-js@1.19.1(hono@4.12.14)':
     dependencies:
       '@rollup/rollup-darwin-arm64': 4.60.1
       '@unified-api/typescript-sdk': 2.83.39
