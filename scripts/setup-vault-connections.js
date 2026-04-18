@@ -15,7 +15,7 @@
  *   node scripts/setup-vault-connections.js
  */
 
-const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: fallback config URL
+const VAULT_API_URL = process.env.VAULT_API_URL || 'https://tpb-vault-infra.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: URL in setup-vault-connections is a fallback deployment configuration
 
 const CONNECTIONS = [
   {
@@ -41,9 +41,9 @@ const getAuthHeaders = async () => {
   const clientSecret = process.env.VAULT_CLIENT_SECRET;
 
   if (!clientId || !clientSecret) {
-    console.error('❌ Missing credentials!'); // entropy-console-leak-ok: CLI script
-    console.error('   Set VAULT_CLIENT_ID and VAULT_CLIENT_SECRET'); // entropy-console-leak-ok: CLI script
-    console.error('   (Requires admin access to create connections)'); // entropy-console-leak-ok: CLI script
+    console.error('❌ Missing credentials!'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+    console.error('   Set VAULT_CLIENT_ID and VAULT_CLIENT_SECRET'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+    console.error('   (Requires admin access to create connections)'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
     process.exit(1);
   }
 
@@ -75,7 +75,7 @@ const request = async (method, path, body = null) => {
 };
 
 const createConnection = async conn => {
-  console.log(`  🔧 Creating connection: ${conn.id}`); // entropy-console-leak-ok: CLI script
+  console.log(`  🔧 Creating connection: ${conn.id}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
 
   const { status, data } = await request('POST', '/vault/connections', {
     id: conn.id,
@@ -84,54 +84,54 @@ const createConnection = async conn => {
   });
 
   if (status === 201) {
-    console.log(`     ✅ Created`); // entropy-console-leak-ok: CLI script
+    console.log(`     ✅ Created`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
     return true;
   } else if (status === 409) {
-    console.log(`     ⚠️  Already exists`); // entropy-console-leak-ok: CLI script
+    console.log(`     ⚠️  Already exists`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
     return true;
   } else {
-    console.log(`     ❌ Failed: ${status} ${JSON.stringify(data)}`); // entropy-console-leak-ok: CLI script
+    console.log(`     ❌ Failed: ${status} ${JSON.stringify(data)}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
     return false;
   }
 };
 
 const main = async () => {
-  console.log('🚀 Setting up vault connections for LMS credentials...'); // entropy-console-leak-ok: CLI script
-  console.log(`   Target: ${VAULT_API_URL}`); // entropy-console-leak-ok: CLI script
-  console.log(''); // entropy-console-leak-ok: CLI script
+  console.log('🚀 Setting up vault connections for LMS credentials...'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log(`   Target: ${VAULT_API_URL}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
 
-  console.log('📦 Creating connections...'); // entropy-console-leak-ok: CLI script
+  console.log('📦 Creating connections...'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
 
   for (const conn of CONNECTIONS) {
     const success = await createConnection(conn);
     if (success) {
-      console.log(`     📋 Secrets needed: ${conn.secrets_required.join(', ')}`); // entropy-console-leak-ok: CLI script
+      console.log(`     📋 Secrets needed: ${conn.secrets_required.join(', ')}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
     }
   }
 
-  console.log(''); // entropy-console-leak-ok: CLI script
-  console.log('✨ Connections created!'); // entropy-console-leak-ok: CLI script
-  console.log(''); // entropy-console-leak-ok: CLI script
-  console.log('⚠️  IMPORTANT: Add secrets manually via vault-api dashboard:'); // entropy-console-leak-ok: CLI script
-  console.log(`   ${VAULT_API_URL}/dashboard`); // entropy-console-leak-ok: CLI script
-  console.log(''); // entropy-console-leak-ok: CLI script
-  console.log('   For each connection, add the required secrets:'); // entropy-console-leak-ok: CLI script
+  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('✨ Connections created!'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('⚠️  IMPORTANT: Add secrets manually via vault-api dashboard:'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log(`   ${VAULT_API_URL}/dashboard`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('   For each connection, add the required secrets:'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
 
   for (const conn of CONNECTIONS) {
-    console.log(`   • ${conn.id}: ${conn.secrets_required.join(', ')}`); // entropy-console-leak-ok: CLI script
+    console.log(`   • ${conn.id}: ${conn.secrets_required.join(', ')}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
   }
 
-  console.log(''); // entropy-console-leak-ok: CLI script
-  console.log('🔐 Alternative: Add secrets via API:'); // entropy-console-leak-ok: CLI script
-  console.log('   curl -X POST \\'); // entropy-console-leak-ok: CLI script
-  console.log('     -H "CF-Access-Client-Id: $VAULT_CLIENT_ID" \\'); // entropy-console-leak-ok: CLI script
-  console.log('     -H "CF-Access-Client-Secret: $VAULT_CLIENT_SECRET" \\'); // entropy-console-leak-ok: CLI script
-  console.log('     -H "Content-Type: application/json" \\'); // entropy-console-leak-ok: CLI script
-  console.log('     -d \'{"name": "CLIENT_ID", "value": "your-value"}\' \\'); // entropy-console-leak-ok: CLI script
-  console.log('     https://tpb-vault-infra.../vault/connections/conn_lms_service/secrets'); // entropy-console-leak-ok: CLI script
+  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('🔐 Alternative: Add secrets via API:'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('   curl -X POST \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('     -H "CF-Access-Client-Id: $VAULT_CLIENT_ID" \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('     -H "CF-Access-Client-Secret: $VAULT_CLIENT_SECRET" \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('     -H "Content-Type: application/json" \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('     -d \'{"name": "CLIENT_ID", "value": "your-value"}\' \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+  console.log('     https://tpb-vault-infra.../vault/connections/conn_lms_service/secrets'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
 };
 
 main().catch(err => { // entropy-then-catch-finally-ok: top-level script entrypoint — main().catch(err) is the Node.js convention
-  console.error('❌ Error:', err.message); // entropy-console-leak-ok: CLI script
+  console.error('❌ Error:', err.message); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
   process.exit(1);
 });

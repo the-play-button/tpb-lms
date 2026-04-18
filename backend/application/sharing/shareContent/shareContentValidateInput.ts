@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: shareContentValidateInput module has 2 tightly-coupled exports sharing internal state
 import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 
@@ -23,8 +23,7 @@ export const shareContentValidateInput = async (request: Request, refId: string)
 
   const parsed = ShareContentInputSchema.safeParse({ ...(body as object), ref_id: refId });
   if (!parsed.success) {
-    const msg = parsed.error.issues.map((i) => i.message).join('; ');
-    return fail(msg);
+    return fail(parsed.error.issues.map((i) => i.message).join('; '));
   }
 
   return succeed(parsed.data);

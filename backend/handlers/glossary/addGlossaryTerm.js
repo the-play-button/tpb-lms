@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: handler exports (addGlossaryTerm) use CF Worker positional convention (request, env, ctx)
+// entropy-handler-service-pattern-ok: addGlossaryTerm handler delegates to backend, minimal orchestration logic
 /**
  * Add a term to the glossary
  * POST /glossary/:orgId
@@ -9,8 +9,7 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 
 export const addGlossaryTerm = async (request, env, ctx) => {
-    const url = new URL(request.url);
-    const pathParts = url.pathname.split('/');
+    const pathParts = new URL(request.url).pathname.split('/');
     const orgId = pathParts[2];
 
     if (!orgId) {

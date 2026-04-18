@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: DDD pipeline step — (request, ctx, param) is the architectural convention
+// entropy-positional-args-excess-ok: shareContentHandle follows DDD pipeline convention (request, ctx, param) positional args
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
@@ -44,7 +44,7 @@ export const shareContentHandle = async (request: Request, ctx: HandlerContext, 
   );
 
   // 7. Track
-  shareContentTrack(ctx, inputResult.value.ref_id, inputResult.value.email);
+  shareContentTrack(inputResult.value.ref_id, inputResult.value.email);
 
   return { ok: true, value: filtered };
 };

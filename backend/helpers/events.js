@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (generateEventId, storeEvent) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: tightly coupled event helpers
 /**
  * Events Helper

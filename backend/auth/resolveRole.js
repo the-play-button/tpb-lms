@@ -31,15 +31,14 @@ export const resolveRole = async (email, env) => {
         }
     }
 
-    // entropy-legacy-marker-ok: documented technical debt
+    // entropy-legacy-marker-ok: legacy pattern in resolveRole, tracked for future refactoring
     const employee = await env.DB.prepare(`
     SELECT he.id, he.employee_roles_json FROM hris_employee he, json_each(he.emails_json) je
     WHERE json_extract(je.value, '$.email') = ?
   `).bind(email).first();
 
     if (employee) {
-        const roles = JSON.parse(employee.employee_roles_json || '[]');
-        if (roles.includes('admin')) return 'admin';
+        if (JSON.parse(employee.employee_roles_json || '[]').includes('admin')) return 'admin';
         return 'instructor';
     }
 

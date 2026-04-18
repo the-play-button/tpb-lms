@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: handler exports (listBadges) use CF Worker positional convention (request, env, ctx)
+// entropy-handler-service-pattern-ok: badges handler delegates to backend, minimal orchestration logic
 /**
  * Badges Handler
  *

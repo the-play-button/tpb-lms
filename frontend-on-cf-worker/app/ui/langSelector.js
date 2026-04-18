@@ -1,4 +1,4 @@
-// entropy-single-export-ok: render + init pattern
+// entropy-single-export-ok: langSelector exports render + init pair, tightly coupled lifecycle
 /**
  * Language Selector Component
  * 

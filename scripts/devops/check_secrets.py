@@ -1,6 +1,6 @@
-# entropy-single-export-ok: CLI script, functions are internal pipeline steps called by main()
-# entropy-duplicate-constant-ok: CLI scripts are standalone, shared constants not warranted
-# entropy-console-leak-ok: uses print for CLI output
+# entropy-single-export-ok: check_secrets internal pipeline steps called sequentially by main()
+# entropy-duplicate-constant-ok: check_secrets is standalone CLI script, shared constants not warranted
+# entropy-console-leak-ok: print() in check_secrets for operator terminal output
 # entropy-legacy-marker-ok: debt — TALLY_WEBHOOK_SECRET description references legacy URL param auth method
 #!/usr/bin/env python3
 """
@@ -38,8 +38,8 @@ CYAN = "\033[96m"
 DIM = "\033[2m"
 RESET = "\033[0m"
 
-_WRANGLER_TIMEOUT = 30  # entropy-python-magic-numbers-ok: timeout in seconds
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
+_WRANGLER_TIMEOUT = 30  # entropy-python-magic-numbers-ok: numeric literal in check_secrets is a timeout duration in seconds
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in check_secrets for terminal formatting
 
 # =============================================================================
 # SECRETS CONFIGURATION
@@ -47,7 +47,7 @@ _CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
 
 # Required secrets - deployment fails if missing
 REQUIRED_SECRETS = {
-    "TALLY_WEBHOOK_SECRET": "Tally webhook authentication (legacy URL param)",  # entropy-legacy-marker-ok: documented technical debt
+    "TALLY_WEBHOOK_SECRET": "Tally webhook authentication (legacy URL param)",  # entropy-legacy-marker-ok: legacy pattern in check_secrets, tracked for future refactoring
     "TEST_SECRET": "Test fixtures API authentication",
 }
 
@@ -161,7 +161,7 @@ def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> b
     """
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔐 LMS Secrets Check{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: CLI display width
+    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: display width constant in check_secrets for terminal formatting
 
     # Get configured secrets
     log("Fetching configured secrets from Cloudflare...")

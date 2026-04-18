@@ -1,6 +1,6 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (listCourses, getCourse) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: 2 tightly-coupled course handlers (list, get) sharing translation and enrichment helpers
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-handler-service-pattern-ok: courses handler delegates to backend, minimal orchestration logic
 /**
  * Courses Handler
  *
@@ -152,8 +152,7 @@ export const listCourses = async (request, env, userContext) => {
  */
 export const getCourse = async (request, env, userContext, courseId) => {
     const userId = userContext.contact?.id || userContext.employee?.id;
-    const url = new URL(request.url);
-    const lang = url.searchParams.get('lang');
+    const lang = new URL(request.url).searchParams.get('lang');
     
     const course = await env.DB.prepare(`
         SELECT * FROM lms_course WHERE id = ? AND is_active = 1
@@ -191,7 +190,7 @@ export const getCourse = async (request, env, userContext, courseId) => {
     }
     
     const completedSteps = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length;
-    const currentStep = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length; // entropy-naming-convention-ok: scalar count value
+    const currentStep = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length; // entropy-naming-convention-ok: scalar count variable naming in courses
 
     return jsonResponse({
         id: course.id,

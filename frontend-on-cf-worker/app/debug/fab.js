@@ -1,7 +1,7 @@
 // entropy-single-export-ok: init/destroy pair
 // entropy-unused-export-ok: destroyDebugFab available for lifecycle management
-// entropy-legacy-marker-ok: debt — no legacy markers found, ACK retained for header completeness
-// entropy-prohibited-timer-ok: timer use is intentional
+// entropy-legacy-marker-ok: fab has no active legacy markers, retained for audit trail
+// entropy-prohibited-timer-ok: timer in fab is intentional for UX timing
 /**
  * Debug FAB (Floating Action Button)
  * 
@@ -84,7 +84,7 @@ const handleSingleClick = async () => {
         
         if (result.success) {
             fabElement.classList.add('debug-fab--success');
-            // entropy-prohibited-timer-ok: cleanup after CSS animation
+            // entropy-prohibited-timer-ok: timer in fab cleans up after CSS animation completes
             setTimeout(() => fabElement.classList.remove('debug-fab--success'), FAB_STATE_RESET_DELAY_MS);
             
             showToast('📋 Infos copiées ! Double-clic pour console debug.', 'success');
@@ -92,7 +92,7 @@ const handleSingleClick = async () => {
             log.debug('[Debug] Info copied to clipboard:', result.data);
         } else {
             fabElement.classList.add('debug-fab--error');
-            // entropy-prohibited-timer-ok: cleanup after CSS animation
+            // entropy-prohibited-timer-ok: timer in fab cleans up after CSS animation completes
             setTimeout(() => fabElement.classList.remove('debug-fab--error'), FAB_STATE_RESET_DELAY_MS);
 
             showToast('❌ Impossible de copier. Voir la console.', 'error');
@@ -102,7 +102,7 @@ const handleSingleClick = async () => {
     } catch (error) {
         fabElement.classList.remove('debug-fab--loading');
         fabElement.classList.add('debug-fab--error');
-        // entropy-prohibited-timer-ok: cleanup after CSS animation
+        // entropy-prohibited-timer-ok: timer in fab cleans up after CSS animation completes
         setTimeout(() => fabElement.classList.remove('debug-fab--error'), FAB_STATE_RESET_DELAY_MS);
 
         showToast('❌ Erreur lors de la copie', 'error');

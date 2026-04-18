@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (applyTranslations) use CF Worker positional convention (request, env, ctx)
 /**
  * Apply translations to content object
  * Helper function used by courses handler

@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: handler exports (deleteGlossaryTerm) use CF Worker positional convention (request, env, ctx)
+// entropy-handler-service-pattern-ok: deleteGlossaryTerm handler delegates to backend, minimal orchestration logic
 /**
  * Delete a glossary term
  * DELETE /glossary/:orgId/:termId
@@ -8,8 +8,7 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 
 export const deleteGlossaryTerm = async (request, env, ctx) => {
-    const url = new URL(request.url);
-    const pathParts = url.pathname.split('/');
+    const pathParts = new URL(request.url).pathname.split('/');
     const orgId = pathParts[2];
     const termId = pathParts[3];
 

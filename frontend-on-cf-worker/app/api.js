@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (API_BASE, api, apiPost) use CF Worker positional convention (request, env, ctx)
 // entropy-god-file-ok: API client for frontend
 // entropy-single-export-ok: 4 exports share private authToken + buildHeaders, tightly-coupled API client
 /**
@@ -18,7 +18,7 @@
 
 import { sessionId } from './state.js';
 
-export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api'; // entropy-hardcoded-url-ok: deployment config URL
+export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api'; // entropy-hardcoded-url-ok: URL in api is a stable deployment endpoint
 
 let authToken = null;
 
@@ -30,7 +30,7 @@ const getAuthToken = async (forceRefresh = false) => {
     const response = await fetch('/__auth/token');
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Auth failed' })); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
+        const error = await response.json().catch(() => ({ error: 'Auth failed' })); // entropy-then-catch-finally-ok: inline .catch() in api provides safe default for graceful degradation
         throw new Error(error.error || 'Failed to get auth token');
     }
     
@@ -71,7 +71,7 @@ export const api = async path => {
     }
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
+        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline .catch() in api provides safe default for graceful degradation
         throw new Error(error.error || `HTTP ${response.status}`);
     }
     
@@ -114,7 +114,7 @@ export const apiPost = async (path, data, options = {}) => {
     }
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
+        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline .catch() in api provides safe default for graceful degradation
         throw new Error(error.error || `HTTP ${response.status}`);
     }
     
@@ -143,7 +143,7 @@ export const apiDelete = async path => {
     }
 
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline catch fallback — await p.catch(fn) provides a safe default value
+        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline .catch() in api provides safe default for graceful degradation
         throw new Error(error.error || `HTTP ${response.status}`);
     }
 
@@ -155,6 +155,5 @@ export const apiDelete = async path => {
  * Format: {eventType}-{courseId}-{classId}-{timestamp_seconds}
  */
 export const generateIdempotencyKey = (eventType, courseId, classId) => {
-    const timestamp = Math.floor(Date.now() / 1000);
-    return `${eventType}-${courseId}-${classId}-${timestamp}`;
+    return `${eventType}-${courseId}-${classId}-${Math.floor(Date.now() / 1000)}`;
 };

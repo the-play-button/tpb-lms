@@ -15,15 +15,15 @@ const debugEnabled = typeof localStorage !== 'undefined' && localStorage.getItem
 
 export const log = {
   debug(...args) {
-    if (debugEnabled) console.log('[DEBUG]', ...args); // entropy-console-leak-ok: LogService implementation
+    if (debugEnabled) console.log('[DEBUG]', ...args); // entropy-console-leak-ok: console call in log is the LogService transport layer
   },
   info(...args) {
-    console.log('[INFO]', ...args); // entropy-console-leak-ok: LogService implementation
+    console.log('[INFO]', ...args); // entropy-console-leak-ok: console call in log is the LogService transport layer
   },
   warn(...args) {
-    console.warn('[WARN]', ...args); // entropy-console-leak-ok: LogService implementation
+    console.warn('[WARN]', ...args); // entropy-console-leak-ok: console call in log is the LogService transport layer
   },
   error(...args) {
-    console.error('[ERROR]', ...args); // entropy-console-leak-ok: LogService implementation
+    console.error('[ERROR]', ...args); // entropy-console-leak-ok: console call in log is the LogService transport layer
   },
 };

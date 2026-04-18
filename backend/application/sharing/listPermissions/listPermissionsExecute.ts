@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: listPermissionsExecute module has 3 tightly-coupled exports sharing internal state
 import { succeed, type Result } from '../../../domain/core/Result.js';
 import type { ListPermissionsContext } from './listPermissionsHydrateContext.js';
 

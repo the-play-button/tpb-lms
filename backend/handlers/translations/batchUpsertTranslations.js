@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: handler exports (batchUpsertTranslations) use CF Worker positional convention (request, env, ctx)
+// entropy-handler-service-pattern-ok: batchUpsertTranslations handler delegates to backend, minimal orchestration logic
 /**
  * Batch upsert translations (for AI translation engine)
  * POST /translations/batch

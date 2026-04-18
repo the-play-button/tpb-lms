@@ -6,8 +6,7 @@ import { ValidationError } from '../../types/errors.js';
 
 export const decodeFileId = (fileId: string): { driveId: string; itemId: string } => {
   try {
-    const decoded = atob(fileId);
-    const parsed = JSON.parse(decoded);
+    const parsed = JSON.parse(atob(fileId));
     return {
       driveId: parsed.d_id || parsed.driveId,
       itemId: parsed.i_id || parsed.itemId,

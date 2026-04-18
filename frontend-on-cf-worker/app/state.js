@@ -29,7 +29,7 @@ const state = {
 
 const subscribers = new Map();
 
-export const sessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+export const sessionId = `session_${crypto.randomUUID()}`;
 
 /**
  * Get current state value

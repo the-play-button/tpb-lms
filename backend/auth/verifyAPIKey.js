@@ -44,7 +44,7 @@ export const verifyAPIKey = async (apiKey, env) => {
         };
 
     } catch (error) {
-        console.error('API Key verification error:', error);
-        return { valid: false, error: error.message };
+        console.error('API Key verification error:', error); // ACK:console_leak — auth error logging, not user-facing
+        return { valid: false, error: 'API key verification failed' }; // entropy-error-verbosity-ok: generic message, no internal details
     }
 };

@@ -87,7 +87,7 @@ def get_vault_headers():
         print(f"❌ {e}")
         sys.exit(1)
 
-def create_user_via_vault(account):  # entropy-python-long-function-ok: linear script flow
+def create_user_via_vault(account):  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
     """Create user via vault-api.
 
     Args:
@@ -167,7 +167,7 @@ def get_vault_role_name(lms_role):
     else:
         return None  # Students don't need a vault role
 
-def assign_role_to_user(user_id, lms_role):  # entropy-python-long-function-ok: linear script flow
+def assign_role_to_user(user_id, lms_role):  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
     """Assign LMS role to user via vault-api groups.
 
     Role assignment in vault-api works via groups:
@@ -229,7 +229,7 @@ def assign_role_to_user(user_id, lms_role):  # entropy-python-long-function-ok: 
     print(f"  ✅ User added to group '{group_name}'")
     return True
 
-def create_lms_contact_data(account, user_id):  # entropy-python-long-function-ok: linear script flow
+def create_lms_contact_data(account, user_id):  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
     """Create corresponding data in LMS database.
 
     Args:
@@ -290,7 +290,7 @@ def create_lms_contact_data(account, user_id):  # entropy-python-long-function-o
     print(f"  ✅ LMS data created: {contact_id}")
     return contact_id
 
-def main():  # entropy-python-long-function-ok: CLI script linear flow
+def main():  # entropy-python-long-function-ok: long function in provision_test_accounts is linear CLI script flow
     """Main provisioning function."""
     print("🚀 Provisioning test accounts via vault-api...")
     print(f"   Target: {VAULT_API_BASE}")

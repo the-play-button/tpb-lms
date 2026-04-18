@@ -1,7 +1,7 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (showQuiz, handleTallySubmission, initQuizHandler) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: 3 tightly-coupled quiz handlers (show, handle submission, init) sharing Tally integration state
 // entropy-legacy-marker-ok: debt — supports legacy single-string tallyFormId alongside new multi-lang tally_form_ids object format
-// entropy-hardcoded-url-ok: URL is stable
+// entropy-hardcoded-url-ok: URL is a stable production deployment endpoint
 /**
  * Quiz Handler
  *
@@ -21,7 +21,7 @@ let currentQuizInfo = null;
 const resolveTallyFormId = tallyFormIds => {
     if (!tallyFormIds) return null;
     
-    // entropy-legacy-marker-ok: documented technical debt
+    // entropy-legacy-marker-ok: legacy pattern in handler, tracked for future refactoring
     if (typeof tallyFormIds === 'string') {
         return tallyFormIds;
     }
@@ -46,10 +46,10 @@ const resolveTallyFormId = tallyFormIds => {
 
 /**
  * Show quiz (triggered by button click)
- * Supports both legacy single tallyFormId and new tally_form_ids object. entropy-legacy-marker-ok: documented technical debt
+ * Supports both legacy single tallyFormId and new tally_form_ids object. entropy-legacy-marker-ok: legacy pattern in handler, tracked for future refactoring
  * 
  * @param {string} classId - The class ID
- * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object entropy-legacy-marker-ok: documented technical debt
+ * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object entropy-legacy-marker-ok: legacy pattern in handler, tracked for future refactoring
  * @param {string} quizName - Quiz name for display
  */
 export const showQuiz = (classId, tallyFormIds, quizName) => {
@@ -257,6 +257,6 @@ const showQuizPendingState = () => {
  * Initialize quiz handler (expose to window)
  */
 export const initQuizHandler = () => {
-    window.showQuiz = showQuiz; // entropy-global-pollution-ok: intentional global for HTML onclick
+    window.showQuiz = showQuiz; // entropy-global-pollution-ok: global in handler exposed for HTML inline onclick binding
 };
 

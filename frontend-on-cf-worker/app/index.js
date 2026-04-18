@@ -266,8 +266,7 @@ const populateMobileBadgesGrid = () => {
     
     container.querySelectorAll('.badge-item').forEach(item => { // entropy-event-listeners-ok: one-time setup after render
         item.addEventListener('click', () => {
-            const index = parseInt(item.dataset.badgeIndex, 10);
-            const badge = allBadges[index];
+            const badge = allBadges[parseInt(item.dataset.badgeIndex, 10)];
             if (badge) {
                 showBadgeModal(badge, { isEarned: earnedIds.has(badge.id) });
             }

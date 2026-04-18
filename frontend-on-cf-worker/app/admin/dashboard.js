@@ -1,4 +1,4 @@
-// entropy-single-export-ok: render + init pattern
+// entropy-single-export-ok: dashboard exports render + init pair, tightly coupled lifecycle
 /**
  * Admin Dashboard - Statistics Overview
  * 

@@ -21,6 +21,6 @@ export const verifyTallySignature = async (request, signingSecret) => {
         return { valid, body, noSignature: false };
     } catch (error) {
         log.error('Signature verification error', { error });
-        return { valid: false, body, noSignature: false, error: error.message };
+        return { valid: false, body, noSignature: false, error: 'Signature verification failed' }; // entropy-error-verbosity-ok: generic message, no internal details
     }
 };

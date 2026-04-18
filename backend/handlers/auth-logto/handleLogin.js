@@ -12,8 +12,7 @@ export const handleLogin = async (request, env) => {
         return new Response('Logto not enabled', { status: 404 });
     }
 
-    const url = new URL(request.url);
-    const redirectUri = `${url.origin}/auth/callback`;
+    const redirectUri = `${new URL(request.url).origin}/auth/callback`;
     const state = crypto.randomUUID();
 
     const loginUrl = new URL(`${authConfig.logto.endpoint}/oidc/auth`);

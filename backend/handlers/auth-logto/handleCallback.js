@@ -1,4 +1,4 @@
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-handler-service-pattern-ok: handleCallback handler delegates to backend, minimal orchestration logic
 /**
  * GET /auth/callback
  * Handles the Logto callback after successful authentication.

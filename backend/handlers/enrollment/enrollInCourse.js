@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: handler exports (enrollInCourse) use CF Worker positional convention (request, env, ctx)
+// entropy-handler-service-pattern-ok: enrollInCourse handler delegates to backend, minimal orchestration logic
 /**
  * POST /api/courses/:id/enroll
  * Enroll in a course

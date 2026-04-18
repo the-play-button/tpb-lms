@@ -12,6 +12,7 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
+import { configureLogger } from '@the-play-button/tpb-sdk-js';
 import { ALLOWED_ORIGINS, jsonResponse } from './cors.js';
 import { authenticateRequest } from './auth/index.js';
 import { getSession } from './handlers/auth.js';
@@ -48,7 +49,6 @@ import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto
 
 const app = new Hono();
 
-// CORS — LMS-specific origins (credentials required for CF Access cookies)
 app.use('/*', cors({
   origin: ALLOWED_ORIGINS,
   credentials: true,
@@ -57,7 +57,15 @@ app.use('/*', cors({
   maxAge: 86400,
 }));
 
-// Security headers
+let loggerReady = false;
+app.use('/*', async (c, next) => {
+  if (!loggerReady) {
+    configureLogger({ service: 'tpb-lms' });
+    loggerReady = true;
+  }
+  return next();
+});
+
 app.use('/*', async (c, next) => {
   await next();
   c.header('X-Content-Type-Options', 'nosniff');
@@ -66,16 +74,14 @@ app.use('/*', async (c, next) => {
   c.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
 });
 
-// Error handler
 app.onError((err, c) => {
   console.error(`[tpb-lms] Unhandled error: ${err.message}`, err.stack);
   return c.json({ error: 'Internal Server Error' }, 500);
 });
 
-// Health
 app.get('/health', (c) => c.json({ status: 'ok', service: 'tpb-lms' }));
 app.get('/api/health', async (c) => {
-  const dbCheck = await c.env.DB.prepare('SELECT 1 as ok').first().catch(() => null); // entropy-then-catch-finally-ok: health check — null signals DB unreachable
+  const dbCheck = await c.env.DB.prepare('SELECT 1 as ok').first().catch(() => null); // entropy-then-catch-finally-ok entropy-catch-return-default-ok: health probe — null signals DB unreachable, caller checks isDbUp
   const isDbUp = dbCheck?.ok === 1;
   return c.json({
     status: isDbUp ? 'healthy' : 'degraded',
@@ -85,7 +91,6 @@ app.get('/api/health', async (c) => {
   });
 });
 
-// Rate limiting (POST/PUT/PATCH/DELETE only, GET/OPTIONS pass through inside checkRateLimit)
 app.use('/api/*', async (c, next) => {
   const rateLimited = checkRateLimit(c.req.raw);
   if (rateLimited) return rateLimited;
@@ -147,7 +152,6 @@ app.use('/api/*', async (c, next) => {
 
 // --- Route tables ---
 
-// Handler signature: (request, env, userContext, ...params)
 const standardRoutes = [
   { method: 'GET', path: '/api/auth/session', handler: getSession },
   { method: 'GET', path: '/api/admin/stats', handler: getAdminStats },
@@ -165,7 +169,6 @@ const standardRoutes = [
   { method: 'GET', path: '/api/leaderboard', handler: getLeaderboard },
   { method: 'POST', path: '/api/quiz', handler: handleQuizSubmission },
   { method: 'POST', path: '/api/admin/api-keys', handler: adminCreateAPIKeyHandler },
-  // With path params
   { method: 'GET', path: '/api/signals/:courseId/:stepId', handler: getStepSignals, params: ['courseId', 'stepId'] },
   { method: 'GET', path: '/api/signals/:courseId', handler: getCourseSignalsHandler, params: ['courseId'] },
   { method: 'POST', path: '/api/signals/:courseId/reset', handler: resetCourseSignals, params: ['courseId'] },
@@ -186,14 +189,12 @@ const standardRoutes = [
   { method: 'DELETE', path: '/api/glossary/:locale/:termId', handler: deleteGlossaryTerm, params: ['locale', 'termId'] },
 ];
 
-// Handler signature: (request, env, auth, ...params)
 const authKeyRoutes = [
   { method: 'POST', path: '/api/auth/api-keys', handler: createAPIKeyHandler },
   { method: 'GET', path: '/api/auth/api-keys', handler: listAPIKeysHandler },
   { method: 'DELETE', path: '/api/auth/api-keys/:keyId', handler: revokeAPIKeyHandler, params: ['keyId'] },
 ];
 
-// Handler signature: (request, ctx, ...params) via createByocContext
 const byocRoutes = [
   { method: 'GET', path: '/api/content/cloud', handler: getCloudContentController },
   { method: 'GET', path: '/api/content/cloud/pitch', handler: getCloudPitchController },
@@ -208,7 +209,7 @@ const byocRoutes = [
 
 // --- Generic route registrar: ONE function, different context builders per group ---
 
-function registerRoutes(honoApp, routes, buildArgs) {
+const registerRoutes = (honoApp, routes, buildArgs) => {
   for (const route of routes) {
     honoApp.on(route.method, route.path, async (c) => {
       const args = await buildArgs(c);
@@ -216,12 +217,11 @@ function registerRoutes(honoApp, routes, buildArgs) {
       return route.handler(...args);
     });
   }
-}
+};
 
 registerRoutes(app, publicRoutes, (c) => [c.req.raw, c.env]);
 registerRoutes(app, standardRoutes, (c) => [c.req.raw, c.env, c.var.userContext]);
 
-// Events with idempotency (only POST /api/events uses idempotency cache)
 app.post('/api/events', async (c) => {
   const cachedResponse = checkIdempotency(c.req.raw);
   if (cachedResponse) return cachedResponse;

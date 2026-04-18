@@ -1,6 +1,6 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (handleEvent, handleBatchEvents) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: 2 tightly-coupled event handlers (single + batch) sharing validation and projection logic
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-handler-service-pattern-ok: events handler delegates to backend, minimal orchestration logic
 // entropy-duplicate-code-handlers-ok: JSON body parsing pattern is intentionally repeated
 /**
  * Events Handler
@@ -95,8 +95,7 @@ const checkHasQuiz = async (db, classId) => {
     
     if (!cls?.media_json) return false;
     
-    const media = JSON.parse(cls.media_json);
-    return media.some(({ type } = {}) => type === 'QUIZ');
+    return JSON.parse(cls.media_json).some(({ type } = {}) => type === 'QUIZ');
 }
 
 /**

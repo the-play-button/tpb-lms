@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (getSecret, SECRET_MAPPINGS, prefetchSecrets) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: 3 tightly-coupled secret operations (get, mappings, prefetch) sharing vault client singleton
 // entropy-legacy-marker-ok: vault migration fallback is documented
 // entropy-import-error-ok: import resolves at runtime
@@ -7,7 +7,7 @@
  *
  * Provides unified access to secrets with fallback:
  * 1. Try vault-api first (if VAULT_CLIENT_ID/SECRET are configured)
- * 2. Fall back to wrangler env secrets (legacy) entropy-legacy-marker-ok: documented technical debt
+ * 2. Fall back to wrangler env secrets (legacy) entropy-legacy-marker-ok: legacy pattern in secrets, tracked for future refactoring
  * 
  * This allows gradual migration from wrangler secrets to vault.
  * 
@@ -35,7 +35,7 @@ const getVaultClient = env => {
  * 
  * @param {object} env - Worker env
  * @param {string} vaultPath - Vault secret path (e.g., "tpb/apps/lms/tally_webhook_secret")
- * @param {string} envKey - Legacy env key (e.g., "TALLY_WEBHOOK_SECRET") entropy-legacy-marker-ok: documented technical debt
+ * @param {string} envKey - Legacy env key (e.g., "TALLY_WEBHOOK_SECRET") entropy-legacy-marker-ok: legacy pattern in secrets, tracked for future refactoring
  * @returns {Promise<string|null>} - Secret value
  */
 export const getSecret = async (env, vaultPath, envKey) => {

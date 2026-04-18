@@ -1,7 +1,7 @@
 /**
  * Bastion Service - Secret & Connection Management
  *
- * USAGE:
+ * USAGE: // entropy-single-use-variables-ok: usage example in JSDoc
  * const bastion = createBastionClient({ bastionUrl: env.BASTION_URL });
  * const secret = await bastion.getSecret(jwt, 'integrations/api_key');
  */

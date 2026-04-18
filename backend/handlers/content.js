@@ -1,6 +1,6 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (getGitHubContent, listGitHubDirectory) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: 2 tightly-coupled content handlers (get file, list directory) sharing GitHub auth and URL parsing
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-handler-service-pattern-ok: content handler delegates to backend, minimal orchestration logic
 // entropy-long-function-ok: getGitHubContent is a sequential handler — URL parsing + i18n path injection + vault token fetch + GitHub API call + error mapping; splitting would scatter the linear request flow
 /**
  * Content Handler
@@ -238,7 +238,7 @@ export const getGitHubContent = async (request, env, userContext) => {
             headers: {
                 'Content-Type': 'text/markdown; charset=utf-8',
                 'Cache-Control': 'public, max-age=300',  // 5 min cache
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': '*', // entropy-cors-config-ok: public read-only GitHub content proxy, no credentials
                 'X-GitHub-Repo': `${owner}/${repo}`,
                 'X-GitHub-Branch': branch,
                 'X-GitHub-Path': path

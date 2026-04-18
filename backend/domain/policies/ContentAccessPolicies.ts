@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: ContentAccessPolicies module has 3 tightly-coupled exports sharing internal state
 import { fail, succeed, type Result } from '../core/Result.js';
 import type { Email } from '../value-objects/index.js';
 import type { DraftContentRef } from '../entities/ContentRef/DraftContentRef.js';

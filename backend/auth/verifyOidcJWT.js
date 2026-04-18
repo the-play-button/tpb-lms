@@ -22,8 +22,7 @@ export const verifyOidcJWT = async (token, env) => {
         const header = JSON.parse(new TextDecoder().decode(base64urlDecode(headerB64)));
         const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(payloadB64)));
 
-        const now = Math.floor(Date.now() / 1000);
-        if (payload.exp && payload.exp < now) {
+        if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
             return { valid: false, error: 'Token expired' };
         }
 
@@ -32,8 +31,7 @@ export const verifyOidcJWT = async (token, env) => {
         }
 
         if (authConfig.logto.appId && payload.aud) {
-            const audiences = Array.isArray(payload.aud) ? payload.aud : [payload.aud];
-            if (!audiences.includes(authConfig.logto.appId)) {
+            if (!(Array.isArray(payload.aud) ? payload.aud : [payload.aud]).includes(authConfig.logto.appId)) {
                 return { valid: false, error: 'Token not issued for this application' };
             }
         }
@@ -70,7 +68,7 @@ export const verifyOidcJWT = async (token, env) => {
         };
 
     } catch (error) {
-        console.error('OIDC JWT verification error:', error);
-        return { valid: false, error: error.message };
+        console.error('OIDC JWT verification error:', error); // ACK:console_leak — auth error logging, not user-facing
+        return { valid: false, error: 'JWT verification failed' }; // entropy-error-verbosity-ok: generic message, no internal details
     }
 };

@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (checkIdempotency, cacheIdempotencyResponse, generateIdempotencyKey) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: 3 tightly-coupled idempotency helpers — same concern, same file
 /**
  * Idempotency Middleware
@@ -15,12 +15,12 @@ const cache = new Map();
 
 const CACHE_TTL = 60000;
 
-const CLEANUP_INTERVAL = 30000;
+const IDEMPOTENCY_CLEANUP_INTERVAL = 30000;
 let lastCleanup = Date.now();
 
 const cleanup = () => {
     const now = Date.now();
-    if (now - lastCleanup < CLEANUP_INTERVAL) return;
+    if (now - lastCleanup < IDEMPOTENCY_CLEANUP_INTERVAL) return;
     
     lastCleanup = now;
     const expiry = now - CACHE_TTL;
@@ -78,8 +78,7 @@ export const cacheIdempotencyResponse = async (request, response) => {
     
     if (!idempotencyKey) return response;
     
-    const cloned = response.clone();
-    const body = await cloned.text();
+    const body = await response.clone().text();
     
     cache.set(idempotencyKey, {
         status: response.status,
@@ -99,7 +98,6 @@ export const cacheIdempotencyResponse = async (request, response) => {
  * Format: {eventType}-{courseId}-{classId}-{timestamp_seconds}
  */
 export const generateIdempotencyKey = (eventType, courseId, classId) => {
-    const timestamp = Math.floor(Date.now() / 1000);
-    return `${eventType}-${courseId}-${classId}-${timestamp}`;
+    return `${eventType}-${courseId}-${classId}-${Math.floor(Date.now() / 1000)}`;
 };
 

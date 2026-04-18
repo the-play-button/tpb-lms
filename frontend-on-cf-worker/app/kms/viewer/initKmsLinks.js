@@ -7,8 +7,7 @@ import { handleKmsLinkClick } from './handleKmsLinkClick.js';
 
 export const initKmsLinks = () => {
     document.addEventListener('click', (event) => {
-        const link = event.target.closest('a[href^="/kms/"]');
-        if (link) {
+        if (event.target.closest('a[href^="/kms/"]')) {
             handleKmsLinkClick(event);
         }
     });

@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: DDD pipeline step — (request, ctx, param) is the architectural convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: listAPIKeysHandler follows DDD pipeline convention (request, ctx, param) positional args
+// entropy-handler-service-pattern-ok: listAPIKeysHandler handler delegates to backend, minimal orchestration logic
 /**
  * List API keys for the current user
  * GET /api/auth/api-keys

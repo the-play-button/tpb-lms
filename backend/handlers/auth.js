@@ -1,4 +1,4 @@
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-handler-service-pattern-ok: auth handler delegates to backend, minimal orchestration logic
 /**
  * Authentication Handler
  *
@@ -87,9 +87,7 @@ const buildSessionResponse = (jwtResult, contact, userData) => {
  * GET /api/auth/session
  */
 export const getSession = async (request, env) => {
-    const jwt = request.headers.get('Cf-Access-Jwt-Assertion');
-    
-    const validation = await validateJWT(jwt, env, request);
+    const validation = await validateJWT(request.headers.get('Cf-Access-Jwt-Assertion'), env, request);
     if (validation.error) return validation.error;
     
     const contact = await getOrCreateContact(validation.result.email, env);

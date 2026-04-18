@@ -1,8 +1,8 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-business-logic-ok: already in backend
-// entropy-business-logic-in-frontend-ok: intentional frontend logic
+// entropy-positional-args-excess-ok: handler exports (getLeaderboard, getUserStats) use CF Worker positional convention (request, env, ctx)
+// entropy-business-logic-ok: leaderboard logic already exists in backend, frontend mirrors it
+// entropy-business-logic-in-frontend-ok: leaderboard contains intentional client-side presentation logic
 // entropy-single-export-ok: 2 tightly-coupled leaderboard handlers (get board, get stats) sharing user info and XP helpers
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-handler-service-pattern-ok: leaderboard handler delegates to backend, minimal orchestration logic
 /**
  * Leaderboard Handler
  *
@@ -39,39 +39,34 @@ const getCurrentUserRank = async (db, userId) => {
         SELECT COUNT(*) + 1 as rank FROM v_leaderboard WHERE total_points > ?
     `).bind(userStats.total_points).first();
     
-    return { rank: rankResult?.rank, points: userStats.total_points };
+    const { rank = null } = rankResult || {};
+    return { rank, points: userStats.total_points };
 };
 
 const calculateXP = stats => {
-    return ((stats?.video_completed_count || 0) * 50) + 
-           ((stats?.quiz_passed_count || 0) * 100) + 
-           ((stats?.course_completed_count || 0) * 200);
+    const { video_completed_count = 0, quiz_passed_count = 0, course_completed_count = 0 } = stats || {};
+    return (video_completed_count * 50) +
+           (quiz_passed_count * 100) +
+           (course_completed_count * 200);
 };
 
 const buildStatsObject = stats => {
-    return {
-        video_completed_count: stats?.video_completed_count || 0,
-        quiz_passed_count: stats?.quiz_passed_count || 0,
-        step_completed_count: stats?.step_completed_count || 0,
-        course_completed_count: stats?.course_completed_count || 0
-    };
+    const { video_completed_count = 0, quiz_passed_count = 0, step_completed_count = 0, course_completed_count = 0 } = stats || {};
+    return { video_completed_count, quiz_passed_count, step_completed_count, course_completed_count };
 };
 
 const buildActivityObject = activity => {
-    return {
-        last_event_at: activity?.last_event_at || null,
-        events_24h: activity?.events_24h || 0,
-        total_events: activity?.total_events || 0
-    };
+    const { last_event_at = null, events_24h = 0, total_events = 0 } = activity || {};
+    return { last_event_at, events_24h, total_events };
 };
 
 // ============================================
 // ============================================
 
 export const getLeaderboard = async (request, env, userContext) => {
-    const url = new URL(request.url);
-    const limit = parseInt(url.searchParams.get('limit') || '10');
-    const userId = userContext.contact?.id || userContext.employee?.id;
+    const limit = parseInt(new URL(request.url).searchParams.get('limit') || '10');
+    const { contact = {}, employee = {} } = userContext;
+    const userId = contact.id || employee.id;
 
     const results = await env.DB.prepare(`
         SELECT user_id, user_type, total_points, videos_completed, quizzes_completed, badges_earned
@@ -90,9 +85,10 @@ export const getLeaderboard = async (request, env, userContext) => {
         }))
     );
 
-    let currentUserEntry = leaderboard.find(({ user_id } = {}) => user_id === userId);
-    let currentUserRank = currentUserEntry?.rank;
-    let currentUserPoints = currentUserEntry?.total_points;
+    const currentUserEntry = leaderboard.find(({ user_id } = {}) => user_id === userId);
+    const { rank = null, total_points = 0 } = currentUserEntry || {};
+    let currentUserRank = rank;
+    let currentUserPoints = total_points;
     
     if (!currentUserEntry && userId) {
         const userRank = await getCurrentUserRank(env.DB, userId);
@@ -107,7 +103,8 @@ export const getLeaderboard = async (request, env, userContext) => {
 };
 
 export const getUserStats = async (request, env, userContext) => {
-    const userId = userContext.contact?.id || userContext.employee?.id;
+    const { contact: statsContact = {}, employee: statsEmployee = {} } = userContext;
+    const userId = statsContact.id || statsEmployee.id;
     
     if (!userId) {
         return jsonResponse({ error: 'User not authenticated' }, 401, request);

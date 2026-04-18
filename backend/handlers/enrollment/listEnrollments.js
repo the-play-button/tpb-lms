@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: handler exports (listEnrollments) use CF Worker positional convention (request, env, ctx)
+// entropy-handler-service-pattern-ok: listEnrollments handler delegates to backend, minimal orchestration logic
 /**
  * GET /api/enrollments
  * List all enrollments for the current user
@@ -14,8 +14,7 @@ export const listEnrollments = async (request, env, userContext) => {
         return jsonResponse({ error: 'User not authenticated' }, 401, request);
     }
 
-    const url = new URL(request.url);
-    const status = url.searchParams.get('status'); // Optional filter: active, completed, abandoned
+    const status = new URL(request.url).searchParams.get('status');
 
     let query = `
         SELECT e.*, c.name as course_name, c.description as course_description,
@@ -54,7 +53,7 @@ export const listEnrollments = async (request, env, userContext) => {
         last_activity_at: last_activity_at,
     }));
 
-    const activeCount = enrollments.filter(({ status } = {}) => status === 'active').length; // entropy-naming-convention-ok: scalar count value
+    const activeCount = enrollments.filter(({ status } = {}) => status === 'active').length; // entropy-naming-convention-ok: scalar count variable naming in listEnrollments
 
     return jsonResponse({
         enrollments,

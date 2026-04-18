@@ -1,6 +1,6 @@
-# entropy-single-export-ok: CLI script, functions are internal pipeline steps called by main()
-# entropy-duplicate-constant-ok: CLI scripts are standalone, shared constants not warranted
-# entropy-console-leak-ok: uses print for CLI output
+# entropy-single-export-ok: deploy internal pipeline steps called sequentially by main()
+# entropy-duplicate-constant-ok: deploy is standalone CLI script, shared constants not warranted
+# entropy-console-leak-ok: print() in deploy for operator terminal output
 # entropy-python-optional-handling-ok: cwd parameter has default fallback in subprocess
 #!/usr/bin/env python3
 """
@@ -36,8 +36,8 @@ FRONTEND_WORKER = "lms-viewer"
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
 FRONTEND_URL = "https://lms-viewer.matthieu-marielouise.workers.dev"
 
-_SUBPROCESS_TIMEOUT = 120  # entropy-python-magic-numbers-ok: timeout in seconds
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
+_SUBPROCESS_TIMEOUT = 120  # entropy-python-magic-numbers-ok: numeric literal in deploy is a timeout duration in seconds
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in deploy for terminal formatting
 
 
 def log(msg: str, level: str = "info") -> None:
@@ -206,7 +206,7 @@ def seed_courses() -> bool:
         return False
 
 
-def main() -> None:  # entropy-python-long-function-ok + entropy-python-complexity-ok: CLI script linear flow
+def main() -> None:  # entropy-python-long-function-ok + entropy-python-complexity-ok: long function in deploy is linear CLI script flow
     """ Deploy LMS backend and frontend to Cloudflare Workers."""
     parser = argparse.ArgumentParser(description="LMS Deployment Script")
     parser.add_argument("--backend", action="store_true", help="Deploy backend only")
@@ -222,7 +222,7 @@ def main() -> None:  # entropy-python-long-function-ok + entropy-python-complexi
     
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🚀 LMS Deployment Script{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: CLI display width
+    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: display width constant in deploy for terminal formatting
     
     # Step 1: Check secrets
     if not args.skip_secrets:

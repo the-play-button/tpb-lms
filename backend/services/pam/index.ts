@@ -1,7 +1,7 @@
 /**
  * PAM Service - Privileged Access Management
  *
- * USAGE:
+ * USAGE: // entropy-single-use-variables-ok: usage example in JSDoc
  * const pam = createPamClient({ bastionUrl: env.BASTION_URL, getToken: () => token });
  * const result = await pam.verifyAccess(connectionId, fileId, guestEmail);
  */

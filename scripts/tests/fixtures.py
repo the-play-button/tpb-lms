@@ -67,7 +67,7 @@ FIXTURES = {
 }
 
 
-def get_user_id_from_db() -> Optional[str]:  # entropy-python-nesting-ok: nested iteration over structured data
+def get_user_id_from_db() -> Optional[str]:  # entropy-python-nesting-ok: nested iteration in fixtures over multi-level structured data
     """Get latest user_id from database via wrangler."""
     cmd = ["npx", "wrangler", "d1", "execute", "lms-db", "--remote", "--command",
            "SELECT user_id FROM v_user_progress ORDER BY updated_at DESC LIMIT 1;"]
@@ -88,7 +88,7 @@ def get_user_id_from_db() -> Optional[str]:  # entropy-python-nesting-ok: nested
     return None
 
 
-def apply_fixture(fixture: str, user_id: str, email: str = None, api_base: str = API_BASE) -> bool:  # entropy-python-long-function-ok: linear script flow
+def apply_fixture(fixture: str, user_id: str, email: str = None, api_base: str = API_BASE) -> bool:  # entropy-python-long-function-ok: long function in fixtures is linear sequential script execution
     """
     Apply a fixture via the backend API.
     
@@ -162,7 +162,7 @@ def list_fixtures():
     print()
 
 
-def main():  # entropy-python-long-function-ok: CLI script linear flow
+def main():  # entropy-python-long-function-ok: long function in fixtures is linear CLI script flow
     """ Parse CLI args and apply a test fixture via the LMS backend API."""
     import argparse
     

@@ -61,8 +61,7 @@ export const renderStepsSidebar = (options = {}) => {
             const statusClass = isCurrent ? 'current' : isCompleted ? 'completed' : isLocked ? 'locked' : 'pending';
             const statusIcon = isCurrent ? '▶' : isCompleted ? '✓' : isLocked ? '🔒' : '○';
             
-            const raw = step.raw_json ? JSON.parse(step.raw_json) : {};
-            const stepType = raw.tpb_step_type || step.step_type || 'CONTENT';
+            const stepType = (step.raw_json ? JSON.parse(step.raw_json) : {}).tpb_step_type || step.step_type || 'CONTENT';
             const typeIcon = getStepTypeIcon(stepType);
             
             html += `
@@ -89,8 +88,7 @@ const groupBySection = (classes) => {
     const groups = {};
     
     for (const cls of classes) {
-        const raw = cls.raw_json ? JSON.parse(cls.raw_json) : {};
-        const section = raw.tpb_section || '';
+        const section = (cls.raw_json ? JSON.parse(cls.raw_json) : {}).tpb_section || '';
         
         if (!groups[section]) {
             groups[section] = [];

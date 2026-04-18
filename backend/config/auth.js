@@ -20,9 +20,9 @@ export const getAuthConfig = env => {
     },
 
     logto: {
-      endpoint: env.LOGTO_ENDPOINT || 'https://auth.theplaybutton.dev', // entropy-hardcoded-url-ok: fallback config URL
+      endpoint: env.LOGTO_ENDPOINT || 'https://auth.theplaybutton.dev', // entropy-hardcoded-url-ok: URL in auth is a fallback deployment configuration
       appId: env.LOGTO_APP_ID || null,
-      issuer: env.LOGTO_ISSUER || env.LOGTO_ENDPOINT || 'https://auth.theplaybutton.dev/oidc', // entropy-hardcoded-url-ok: fallback config URL
+      issuer: env.LOGTO_ISSUER || env.LOGTO_ENDPOINT || 'https://auth.theplaybutton.dev/oidc', // entropy-hardcoded-url-ok: URL in auth is a fallback deployment configuration
       jwksUri: env.LOGTO_JWKS_URI || null,
     },
   };

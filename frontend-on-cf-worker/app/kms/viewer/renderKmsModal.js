@@ -1,4 +1,4 @@
-// entropy-prohibited-timer-ok: timer use is intentional
+// entropy-prohibited-timer-ok: timer in renderKmsModal is intentional for UX timing
 /**
  * Render a KMS page in a modal
  */
@@ -58,7 +58,7 @@ export const renderKmsModal = page => {
 /**
  * Close the KMS modal
  */
-window.closeKmsModal = function() { // entropy-global-pollution-ok: intentional global for HTML onclick // entropy-orphan-global-ok: inline global function
+window.closeKmsModal = function() { // entropy-global-pollution-ok: global in renderKmsModal exposed for HTML inline onclick binding // entropy-orphan-global-ok: inline global function
     const modal = document.getElementById('kms-modal');
     if (modal) {
         modal.classList.remove('kms-modal-visible');

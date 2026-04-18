@@ -1,8 +1,8 @@
-# entropy-single-export-ok: CLI script, functions are internal pipeline steps called by main()
-# entropy-duplicate-constant-ok: CLI scripts are standalone, shared constants not warranted
-# entropy-console-leak-ok: uses print for CLI output
+# entropy-single-export-ok: verify_deploy internal pipeline steps called sequentially by main()
+# entropy-duplicate-constant-ok: verify_deploy is standalone CLI script, shared constants not warranted
+# entropy-console-leak-ok: print() in verify_deploy for operator terminal output
 # entropy-python-unused-import-ok: urllib kept for error handling fallback
-# entropy-legacy-marker-ok: debt — no legacy markers found, ACK retained for header completeness
+# entropy-legacy-marker-ok: verify_deploy has no active legacy markers, retained for audit trail
 #!/usr/bin/env python3
 """
 verify_deploy.py - Post-deployment verification
@@ -25,10 +25,10 @@ import urllib.request
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
 FRONTEND_URL = "https://lms-viewer.matthieu-marielouise.workers.dev"
 
-_HTTP_TIMEOUT = 10  # entropy-python-magic-numbers-ok: timeout in seconds
-_HTTP_STATUS_OK = 200  # entropy-python-magic-numbers-ok: HTTP 200 OK
+_HTTP_TIMEOUT = 10  # entropy-python-magic-numbers-ok: numeric literal in verify_deploy is a timeout duration in seconds
+_HTTP_STATUS_OK = 200  # entropy-python-magic-numbers-ok: HTTP status code 200 check in verify_deploy
 _HTTP_STATUS_REDIRECT = 302  # entropy-python-magic-numbers-ok: HTTP 302 redirect
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in verify_deploy for terminal formatting
 
 # Colors
 GREEN = "\033[92m"
@@ -68,19 +68,19 @@ def check_backend() -> bool:
                 
     except urllib.error.HTTPError as e:
         print(f"{RED}   ❌ HTTP Error: {e.code}{RESET}")
-        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
+        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
     except urllib.error.URLError as e:
         print(f"{RED}   ❌ Connection Error: {e.reason}{RESET}")
-        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
+        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
     except json.JSONDecodeError:
         print(f"{RED}   ❌ Invalid JSON response{RESET}")
-        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
+        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
     except (ssl.SSLError, TimeoutError, OSError) as e:
         print(f"{RED}   ❌ Error: {e}{RESET}")
-        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
+        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
 
 
-def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration over structured data
+def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration in verify_deploy over multi-level structured data
     """Check frontend is serving HTML."""
     print(f"{CYAN}🔍 Checking frontend: {FRONTEND_URL}{RESET}")
     
@@ -111,20 +111,20 @@ def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration ove
             print(f"{GREEN}   ✅ Redirecting (Cloudflare Access){RESET}")
             return True
         print(f"{RED}   ❌ HTTP Error: {e.code}{RESET}")
-        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
+        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
     except urllib.error.URLError as e:
         print(f"{RED}   ❌ Connection Error: {e.reason}{RESET}")
-        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
+        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
     except (ssl.SSLError, TimeoutError, OSError) as e:
         print(f"{RED}   ❌ Error: {e}{RESET}")
-        return False  # entropy-catch-return-default-ok: deploy health check — bool-result fn, error always printed before return
+        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
 
 
 def main() -> None:
     """ Verify backend API and frontend deployments are healthy."""
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔍 LMS Deployment Verification{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: CLI display width
+    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: display width constant in verify_deploy for terminal formatting
     
     backend_ok = check_backend()
     print()

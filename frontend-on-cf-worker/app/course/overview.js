@@ -39,8 +39,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
         if (introRefId) {
             try {
                 const rawMd = await fetchCloudContent(introRefId);
-                const cleaned = cleanMarkdownForLms(stripFrontmatter(rawMd));
-                introContent = marked.parse(cleaned);
+                introContent = marked.parse(cleanMarkdownForLms(stripFrontmatter(rawMd)));
             } catch (error) {
                 log.warn('Failed to fetch cloud intro:', error);
                 introContent = `<p>${course.description || 'Aucune description disponible.'}</p>`;
@@ -121,10 +120,10 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
  */
 const renderEnrollmentButton = (course, isEnrolled, canEnroll, enrollmentStatus) => {
     if (isEnrolled) {
-        const { enrollment: { progress_percent: progress = 0 } = {} } = enrollmentStatus ?? {};
+        const { enrollment: { progress_percent = 0 } = {} } = enrollmentStatus ?? {};
         return `
             <button class="btn-primary btn-start" data-testid="course-continue-btn" data-action="continue" data-course="${course.id}">
-                ${progress > 0 ? `Continuer (${progress}%)` : 'Commencer le cours'} →
+                ${progress_percent > 0 ? `Continuer (${progress_percent}%)` : 'Commencer le cours'} →
             </button>
             <button class="btn-secondary btn-abandon" data-testid="course-abandon-btn" data-action="abandon" data-course="${course.id}">
                 Abandonner le cours

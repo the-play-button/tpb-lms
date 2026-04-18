@@ -1,12 +1,8 @@
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 /**
  * Track step: fire-and-forget audit log for listConnections.
  */
-export const listConnectionsTrack = (ctx: HandlerContext): void => {
-  console.log(JSON.stringify({
-    operation: 'listConnections',
-    actor: ctx.userEmail,
-    timestamp: new Date().toISOString(),
-  }));
+export const listConnectionsTrack = (): void => {
+  log.info('connections:list', { file: 'listConnectionsTrack.ts' });
 };

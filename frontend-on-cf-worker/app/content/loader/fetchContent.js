@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: fetchContent module has 2 tightly-coupled exports sharing internal state
 // entropy-legacy-marker-ok: debt — dual-source content fetching supports legacy GitHub URLs alongside cloud content refs (BYOC)
 /**
  * Fetch content from a repository URL or cloud reference

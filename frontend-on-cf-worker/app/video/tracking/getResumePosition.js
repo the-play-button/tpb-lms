@@ -11,8 +11,7 @@ import { RESUME_THRESHOLD } from './_shared.js';
  * @returns {number|null} - Position in seconds, or null if none
  */
 export const getResumePosition = classId => {
-    const signals = getState('signals');
-    const videoPositions = signals?.video_positions || {};
+    const videoPositions = getState('signals')?.video_positions || {};
     const positionData = videoPositions[classId];
 
     if (positionData && positionData.position >= RESUME_THRESHOLD) {

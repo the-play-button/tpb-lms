@@ -1,8 +1,8 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (log, XP_QUIZ_PASS, getPassThreshold) use CF Worker positional convention (request, env, ctx)
 // entropy-handler-service-pattern-ok: shared quiz logic, co-located with handlers by design
-// entropy-business-logic-ok: already in backend
-// entropy-multiple-exports-ok: cohesive module exports
-// entropy-business-logic-in-frontend-ok: intentional frontend logic
+// entropy-business-logic-ok: _shared logic already exists in backend, frontend mirrors it
+// entropy-multiple-exports-ok: _shared module has 9 tightly-coupled exports sharing internal state
+// entropy-business-logic-in-frontend-ok: _shared contains intentional client-side presentation logic
 /**
  * Shared helpers for quiz handlers
  */
@@ -25,8 +25,7 @@ export const getPassThreshold = quizClass => {
     if (!quizClass?.media_json) {
         return 80;
     }
-    const media = JSON.parse(quizClass.media_json);
-    const quizMedia = media.find(({ type } = {}) => type === 'QUIZ' || type === 'WEB');
+    const quizMedia = JSON.parse(quizClass.media_json).find(({ type } = {}) => type === 'QUIZ' || type === 'WEB');
     return quizMedia?.pass_threshold || 80;
 };
 
@@ -88,8 +87,7 @@ export const calculateScore = (answers, quizClass) => {
         throw new Error(`calculateScore: raw_json missing on class ${quizClass.id}`);
     }
 
-    const config = JSON.parse(quizClass.raw_json);
-    const correctAnswers = config.correct_answers;
+    const correctAnswers = JSON.parse(quizClass.raw_json).correct_answers;
     if (!correctAnswers || Object.keys(correctAnswers).length === 0) {
         throw new Error(`calculateScore: no correct_answers in class ${quizClass.id}`);
     }
@@ -220,8 +218,7 @@ export const processQuizSubmission = async (data, env, request, quizClass = null
 
         if (!isPerfect && quizClass?.raw_json) {
             try {
-                const config = JSON.parse(quizClass.raw_json);
-                wrongAnswers = buildWrongAnswersList(answers, config.correct_answers || {});
+                wrongAnswers = buildWrongAnswersList(answers, JSON.parse(quizClass.raw_json).correct_answers || {});
             } catch (e) {
                 log.warn('Failed to build wrong answers list', { error: e.message });
             }

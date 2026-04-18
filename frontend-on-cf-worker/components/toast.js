@@ -1,4 +1,4 @@
-// entropy-prohibited-timer-ok: timer use is intentional
+// entropy-prohibited-timer-ok: timer in toast is intentional for UX timing
 /**
  * Toast Component
  *
@@ -80,6 +80,6 @@
         }
     }
 
-    window.showToast = showToast; // entropy-global-pollution-ok: intentional global for HTML onclick
+    window.showToast = showToast; // entropy-global-pollution-ok: global in toast exposed for HTML inline onclick binding
 })();
 

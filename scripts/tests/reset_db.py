@@ -350,7 +350,7 @@ def verify_database_state(remote: bool = True) -> dict:
     return state
 
 
-def print_database_state(state: dict):  # entropy-python-long-function-ok: linear script flow
+def print_database_state(state: dict):  # entropy-python-long-function-ok: long function in reset_db is linear sequential script execution
     """Affiche l'état de la base de données.
 
     Args:
@@ -418,7 +418,7 @@ def print_database_state(state: dict):  # entropy-python-long-function-ok: linea
     return is_ok
 
 
-def main():  # entropy-python-long-function-ok + entropy-python-complexity-ok: CLI script linear flow
+def main():  # entropy-python-long-function-ok + entropy-python-complexity-ok: long function in reset_db is linear CLI script flow
     """ Parse CLI args and reset the LMS D1 database for dev testing."""
     parser = argparse.ArgumentParser(description="Reset LMS Database (Dev Mode)")
     parser.add_argument("--confirm", action="store_true", help="Confirmer le reset")

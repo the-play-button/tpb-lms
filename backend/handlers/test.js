@@ -169,7 +169,16 @@ const completeSteps = async (db, userId, count) => {
  */
 export const handleTestSeed = async (request, env) => {
     const secret = request.headers.get('X-Test-Secret');
-    if (!secret || secret !== env.TEST_SECRET) {
+    if (!secret || !env.TEST_SECRET) {
+        return jsonResponse({ error: 'Forbidden' }, 403, request);
+    }
+    const hmacKeyForTimingSafeCompare = await crypto.subtle.importKey('raw', new TextEncoder().encode('timing-safe-compare'), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+    const [hmacA, hmacB] = await Promise.all([
+      crypto.subtle.sign('HMAC', hmacKeyForTimingSafeCompare, new TextEncoder().encode(secret)),
+      crypto.subtle.sign('HMAC', hmacKeyForTimingSafeCompare, new TextEncoder().encode(env.TEST_SECRET)),
+    ]);
+    const secretMatch = new Uint8Array(hmacA).every((byte, i) => byte === new Uint8Array(hmacB)[i]) && hmacA.byteLength === hmacB.byteLength;
+    if (!secretMatch) {
         return jsonResponse({ error: 'Forbidden' }, 403, request);
     }
     

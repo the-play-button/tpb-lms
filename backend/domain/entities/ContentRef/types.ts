@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: types module has 3 tightly-coupled exports sharing internal state
 import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
 
 export type ContentType = 'markdown' | 'pitch' | 'pdf';

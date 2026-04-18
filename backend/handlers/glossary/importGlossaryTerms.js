@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: handler exports (importGlossaryTerms) use CF Worker positional convention (request, env, ctx)
+// entropy-handler-service-pattern-ok: importGlossaryTerms handler delegates to backend, minimal orchestration logic
 // entropy-duplicate-code-handlers-ok: intentional duplication
 /**
  * Batch import glossary terms
@@ -10,8 +10,7 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 
 export const importGlossaryTerms = async (request, env, ctx) => {
-    const url = new URL(request.url);
-    const pathParts = url.pathname.split('/');
+    const pathParts = new URL(request.url).pathname.split('/');
     const orgId = pathParts[2];
 
     if (!orgId) {

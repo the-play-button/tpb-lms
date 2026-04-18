@@ -1,0 +1,78 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      '@the-play-button/tpb-sdk-js':
+        specifier: ^1.19.0
+        version: 1.19.0(hono@4.12.14)
+      hono:
+        specifier: ^4.7.10
+        version: 4.12.14
+      zod:
+        specifier: ^3.25.76
+        version: 3.25.76
+    devDependencies:
+      '@cloudflare/workers-types':
+        specifier: ^4.20260217.0
+        version: 4.20260418.1
+      typescript:
+        specifier: ^5.9.3
+        version: 5.9.3
+
+packages:
+
+  '@cloudflare/workers-types@4.20260418.1':
+    resolution: {integrity: sha512-bywXb2XmeSqrLCQYipcupLneqx015YhhNWz2v9b9iatpe8Cg551vP7ZuD5S2a6GfBka0dDnO70kIBiBvFglcrg==}
+
+  '@rollup/rollup-darwin-arm64@4.60.1':
+    resolution: {integrity: sha512-mjCpF7GmkRtSJwon+Rq1N8+pI+8l7w5g9Z3vWj4T7abguC4Czwi3Yu/pFaLvA3TTeMVjnu3ctigusqWUfjZzvw==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@the-play-button/tpb-sdk-js@1.19.0':
+    resolution: {integrity: sha512-UByaCENan2JfF3+r2V+VapYQg7NVvwulfOySExL08PRiQPR3HELRMRFkeEwhtiddEsPKu0FGyR827dziQo+PXw==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.19.0/tpb-sdk-js-1.19.0.tgz}
+    peerDependencies:
+      hono: ^4.0.0
+
+  '@unified-api/typescript-sdk@2.83.39':
+    resolution: {integrity: sha512-IgPjEVP5bDAI7anGLnFpYdWc9UPu4UGNfNepzTe4rv3TmIhmfNw1iyz/l296wFx8IWWou1AtObhoxMeBy0Uylg==}
+
+  hono@4.12.14:
+    resolution: {integrity: sha512-am5zfg3yu6sqn5yjKBNqhnTX7Cv+m00ox+7jbaKkrLMRJ4rAdldd1xPd/JzbBWspqaQv6RSTrgFN95EsfhC+7w==}
+    engines: {node: '>=16.9.0'}
+
+  typescript@5.9.3:
+    resolution: {integrity: sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  zod@3.25.76:
+    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
+
+snapshots:
+
+  '@cloudflare/workers-types@4.20260418.1': {}
+
+  '@rollup/rollup-darwin-arm64@4.60.1': {}
+
+  '@the-play-button/tpb-sdk-js@1.19.0(hono@4.12.14)':
+    dependencies:
+      '@rollup/rollup-darwin-arm64': 4.60.1
+      '@unified-api/typescript-sdk': 2.83.39
+      hono: 4.12.14
+
+  '@unified-api/typescript-sdk@2.83.39':
+    dependencies:
+      zod: 3.25.76
+
+  hono@4.12.14: {}
+
+  typescript@5.9.3: {}
+
+  zod@3.25.76: {}

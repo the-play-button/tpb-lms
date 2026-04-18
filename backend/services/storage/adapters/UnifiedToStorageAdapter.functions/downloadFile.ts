@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-subfolders-pattern-ok: structure is intentional
+// entropy-positional-args-excess-ok: handler exports (downloadFile) use CF Worker positional convention (request, env, ctx)
+// entropy-subfolders-pattern-ok: downloadFile subfolder structure is intentional for domain separation
 import { ServiceUnavailableError } from '../../../../types/errors.js';
 
 const UNIFIED_API = 'https://api.unified.to';

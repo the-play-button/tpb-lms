@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (findWorkingConnection) use CF Worker positional convention (request, env, ctx)
 import type { ConnectionResolverConfig } from '../../ConnectionResolverPort.js';
 import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
 import { NotFoundError } from '../../../../types/errors.js';
@@ -24,8 +24,7 @@ export const findWorkingConnection = async (config: ConnectionResolverConfig, pr
       await testAccess(config, conn.id, folderId);
       return conn;
     } catch (e) {
-      const msg = e instanceof Error ? e.message : 'Unknown error';
-      errors.push(`${conn.id}: ${msg}`);
+      errors.push(`${conn.id}: ${e instanceof Error ? e.message : 'Unknown error'}`);
     }
   }
 

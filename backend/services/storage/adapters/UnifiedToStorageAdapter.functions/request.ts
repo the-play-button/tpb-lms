@@ -1,4 +1,4 @@
-// entropy-subfolders-pattern-ok: structure is intentional
+// entropy-subfolders-pattern-ok: request subfolder structure is intentional for domain separation
 // entropy-duplicate-constant-ok: UNIFIED_API base URL duplicated in request.ts and other adapters — each adapter is independently deployable, a shared constant would couple their release cycles
 import { ServiceUnavailableError } from '../../../../types/errors.js';
 

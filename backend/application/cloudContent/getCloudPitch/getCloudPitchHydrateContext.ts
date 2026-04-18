@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: getCloudPitchHydrateContext module has 2 tightly-coupled exports sharing internal state
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { ContentRef } from '../../../domain/repositories/ContentRefsRepository.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';

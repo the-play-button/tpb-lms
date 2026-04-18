@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (testAccess) use CF Worker positional convention (request, env, ctx)
 import type { ConnectionResolverConfig } from '../../ConnectionResolverPort.js';
 import { ValidationError } from '../../../../types/errors.js';
 

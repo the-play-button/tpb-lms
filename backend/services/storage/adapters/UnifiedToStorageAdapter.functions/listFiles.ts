@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (listFiles) use CF Worker positional convention (request, env, ctx)
 import type { StorageFile } from '../../../types/StorageFile.js';
 import { request } from './request.js';
 import { mapFile } from './mapFile.js';

@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: shareContentExecute module has 2 tightly-coupled exports sharing internal state
 // entropy-audit-trail-ok: audit at higher level
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';

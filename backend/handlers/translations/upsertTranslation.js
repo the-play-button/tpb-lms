@@ -1,5 +1,5 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-positional-args-excess-ok: handler exports (upsertTranslation) use CF Worker positional convention (request, env, ctx)
+// entropy-handler-service-pattern-ok: upsertTranslation handler delegates to backend, minimal orchestration logic
 /**
  * Create or update a translation
  * PUT /translations/:type/:id/:lang
@@ -9,8 +9,7 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 
 export const upsertTranslation = async (request, env, ctx) => {
-    const url = new URL(request.url);
-    const pathParts = url.pathname.split('/');
+    const pathParts = new URL(request.url).pathname.split('/');
     const contentType = pathParts[2];
     const contentId = pathParts[3];
     const lang = pathParts[4];

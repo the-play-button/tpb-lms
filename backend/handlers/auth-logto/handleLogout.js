@@ -12,11 +12,8 @@ export const handleLogout = async (request, env) => {
         return new Response('Logto not enabled', { status: 404 });
     }
 
-    const url = new URL(request.url);
-    const postLogoutUri = url.origin;
-
     const logoutUrl = new URL(`${authConfig.logto.endpoint}/oidc/session/end`);
-    logoutUrl.searchParams.set('post_logout_redirect_uri', postLogoutUri);
+    logoutUrl.searchParams.set('post_logout_redirect_uri', new URL(request.url).origin);
     logoutUrl.searchParams.set('client_id', authConfig.logto.appId);
 
     const headers = new Headers();

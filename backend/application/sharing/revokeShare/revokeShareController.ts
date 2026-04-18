@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: DDD pipeline step — (request, ctx, param) is the architectural convention
+// entropy-positional-args-excess-ok: revokeShareController follows DDD pipeline convention (request, ctx, param) positional args
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { revokeShareHandle } from './revokeShareHandle.js';
 

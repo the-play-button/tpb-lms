@@ -1,7 +1,7 @@
 /**
  * ConnectionResolver Service - Multi-tenant connection routing
  *
- * USAGE:
+ * USAGE: // entropy-single-use-variables-ok: usage example in JSDoc
  * const resolver = createConnectionResolver({ ... });
  * const conn = await resolver.resolveConnection({ provider: 'onedrive', folderId });
  */

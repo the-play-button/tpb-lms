@@ -1,5 +1,5 @@
 // entropy-single-export-ok: tightly coupled middleware pair
-// entropy-inconsistent-constant-ok: CLEANUP_INTERVAL intentionally different per middleware
+// entropy-inconsistent-constant-ok: renamed from CLEANUP_INTERVAL to RATE_LIMIT_CLEANUP_INTERVAL for clarity
 // entropy-unused-export-ok: addRateLimitHeaders available for external consumers
 // entropy-legacy-marker-ok: debt — in-memory sliding window rate limiter, needed until Durable Objects migration
 /**
@@ -23,12 +23,12 @@ const LIMITS = {
 
 const requestCounts = new Map();
 
-const CLEANUP_INTERVAL = 60000; // 1 minute
+const RATE_LIMIT_CLEANUP_INTERVAL = 60000; // 1 minute
 let lastCleanup = Date.now();
 
 const cleanup = () => {
     const now = Date.now();
-    if (now - lastCleanup < CLEANUP_INTERVAL) return;
+    if (now - lastCleanup < RATE_LIMIT_CLEANUP_INTERVAL) return;
     
     lastCleanup = now;
     const expiry = now - 60000; // 60s window
@@ -73,9 +73,8 @@ export const checkRateLimit = request => {
     const windowStart = now - (limit.window * 1000);
     
     const key = `${ip}:${method}:${path}`;
-    const timestamps = requestCounts.get(key) || [];
-    
-    const recentTimestamps = timestamps.filter(t => t > windowStart);
+
+    const recentTimestamps = (requestCounts.get(key) || []).filter(t => t > windowStart);
     
     if (recentTimestamps.length >= limit.requests) {
         const oldestInWindow = Math.min(...recentTimestamps);
@@ -108,18 +107,14 @@ export const checkRateLimit = request => {
  * Add rate limit headers to response
  */
 export const addRateLimitHeaders = (response, request) => {
-    const url = new URL(request.url);
-    const path = url.pathname;
-    const method = request.method;
-    const ip = request.headers.get('CF-Connecting-IP') || 
-               request.headers.get('X-Forwarded-For')?.split(',')[0] || 
+    const { pathname } = new URL(request.url);
+    const { method } = request;
+    const ip = request.headers.get('CF-Connecting-IP') ||
+               request.headers.get('X-Forwarded-For')?.split(',')[0] ||
                'unknown';
-    
-    const limit = getLimit(method, path);
-    const key = `${ip}:${method}:${path}`;
-    const timestamps = requestCounts.get(key) || [];
-    const windowStart = Date.now() - (limit.window * 1000);
-    const recentCount = timestamps.filter(t => t > windowStart).length; // entropy-naming-convention-ok: scalar count value
+
+    const limit = getLimit(method, pathname);
+    const recentCount = (requestCounts.get(`${ip}:${method}:${pathname}`) || []).filter(t => t > Date.now() - (limit.window * 1000)).length; // entropy-naming-convention-ok: scalar count variable naming in rateLimit
     
     const newResponse = new Response(response.body, response);
     newResponse.headers.set('X-RateLimit-Limit', String(limit.requests));

@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: getCloudPitchValidateInput module has 2 tightly-coupled exports sharing internal state
 import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 
@@ -21,8 +21,7 @@ export const getCloudPitchValidateInput = (request: Request): Result<string, Get
 
   const parsed = GetCloudPitchInputSchema.safeParse(raw);
   if (!parsed.success) {
-    const msg = parsed.error.issues.map((i) => i.message).join('; ');
-    return fail(msg);
+    return fail(parsed.error.issues.map((i) => i.message).join('; '));
   }
 
   return succeed(parsed.data);

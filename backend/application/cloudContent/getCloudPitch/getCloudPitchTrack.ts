@@ -1,13 +1,8 @@
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 /**
  * Track step: fire-and-forget audit log for getCloudPitch.
  */
-export const getCloudPitchTrack = (ctx: HandlerContext, refId: string): void => {
-  console.log(JSON.stringify({
-    operation: 'getCloudPitch',
-    actor: ctx.userEmail,
-    refId,
-    timestamp: new Date().toISOString(),
-  }));
+export const getCloudPitchTrack = (refId: string): void => {
+  log.info('cloud-pitch:get', { file: 'getCloudPitchTrack.ts', refId });
 };

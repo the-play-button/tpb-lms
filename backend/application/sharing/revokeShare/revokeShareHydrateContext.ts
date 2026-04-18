@@ -1,4 +1,4 @@
-// entropy-multiple-exports-ok: cohesive module exports
+// entropy-multiple-exports-ok: revokeShareHydrateContext module has 2 tightly-coupled exports sharing internal state
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { ActiveShare } from '../../../domain/entities/Share/ActiveShare.js';
 import type { ContentRef } from '../../../domain/repositories/ContentRefsRepository.js';

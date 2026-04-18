@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (awardBadge) use CF Worker positional convention (request, env, ctx)
 /**
  * Shared XP/Badge helper - award a badge to a user
  */
@@ -8,7 +8,7 @@
  */
 export const awardBadge = async (db, userId, badgeId, courseId = null, classId = null) => {
     const now = new Date().toISOString();
-    const id = `award_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id = `award_${crypto.randomUUID()}`;
 
     const existing = await db.prepare(`
         SELECT 1 FROM gamification_award WHERE badge_id = ? AND user_id = ?

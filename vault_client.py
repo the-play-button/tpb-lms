@@ -16,7 +16,7 @@ Connections:
     - conn_integrations: UNIFIEDTO_*, TALLY_*
     - conn_user_<email_slug>: USER_TRIGRAM, MHO_CALENDAR_EMAIL
 """
-# entropy-python-cohesion-ok: client pattern
+# entropy-python-cohesion-ok: client-side factory pattern for API abstraction
 
 import os
 from pathlib import Path
@@ -46,10 +46,10 @@ def get_user_connection_id(email: str) -> str:
     return f"conn_user_{slugify_email(email)}"
 
 
-_VAULT_API_TIMEOUT = 10  # entropy-python-magic-numbers-ok: timeout in seconds
-_SECRET_MASK_PREFIX_LEN = 4  # entropy-python-magic-numbers-ok: masking config
-_SECRET_MASK_SUFFIX_LEN = 4  # entropy-python-magic-numbers-ok: masking config
-_SECRET_MASK_MIN_LEN = 8  # entropy-python-magic-numbers-ok: masking config
+_VAULT_API_TIMEOUT = 10  # entropy-python-magic-numbers-ok: numeric literal in vault_client is a timeout duration in seconds
+_SECRET_MASK_PREFIX_LEN = 4  # entropy-python-magic-numbers-ok: bitmask configuration value in vault_client
+_SECRET_MASK_SUFFIX_LEN = 4  # entropy-python-magic-numbers-ok: bitmask configuration value in vault_client
+_SECRET_MASK_MIN_LEN = 8  # entropy-python-magic-numbers-ok: bitmask configuration value in vault_client
 
 
 class VaultClient:  # entropy-python-cohesion-ok: client class with independent API methods by design
@@ -71,7 +71,7 @@ class VaultClient:  # entropy-python-cohesion-ok: client class with independent 
         
         Accepts two naming conventions for env vars:
         - VAULT_CLIENT_ID / VAULT_CLIENT_SECRET (preferred, semantic)
-        - CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID / _SECRET (legacy)  # entropy-legacy-marker-ok: documented technical debt
+        - CLOUDFLARE_SERVICE_ACCOUNT_ACCESS_CLIENT_ID / _SECRET (legacy)  # entropy-legacy-marker-ok: legacy pattern in vault_client, tracked for future refactoring
 
         Args:
             env_path: Optional path to .env file override.

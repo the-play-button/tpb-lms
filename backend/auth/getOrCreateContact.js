@@ -13,7 +13,7 @@ export const getOrCreateContact = async (email, env) => {
 
     if (contact) return contact;
 
-    const id = `contact_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    const id = `contact_${crypto.randomUUID()}`;
     const now = new Date().toISOString();
     const emailsJson = JSON.stringify([{ email, type: 'WORK' }]);
 

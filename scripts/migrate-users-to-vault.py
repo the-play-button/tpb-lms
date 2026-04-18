@@ -1,5 +1,5 @@
 # entropy-single-export-ok: CLI migration script, functions are internal pipeline steps called by main()
-# entropy-console-leak-ok: uses print for CLI output
+# entropy-console-leak-ok: print() in migrate-users-to-vault for operator terminal output
 # entropy-legacy-marker-ok: debt — hris_employee is deprecated for roles post vault-api migration
 # entropy-inconsistent-constant-ok: VAULT_API_URL default differs from backend (workers.dev vs wrangler.dev) — standalone migration script targets production vault directly, not routed through CF Access
 #!/usr/bin/env python3
@@ -19,7 +19,7 @@ Usage:
     python scripts/migrate-users-to-vault.py
 
 This is a one-time migration script. After migration, vault-api 
-becomes the SSOT for IAM and hris_employee is deprecated for roles.  # entropy-legacy-marker-ok: documented technical debt
+becomes the SSOT for IAM and hris_employee is deprecated for roles.  # entropy-legacy-marker-ok: legacy pattern in migrate-users-to-vault, tracked for future refactoring
 """
 
 import json
@@ -36,8 +36,8 @@ VAULT_API_URL = os.environ.get(
     'https://tpb-vault-infra.matthieu-marielouise.workers.dev'
 )
 
-_VAULT_API_TIMEOUT = 30  # entropy-python-magic-numbers-ok: timeout in seconds
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: CLI display width
+_VAULT_API_TIMEOUT = 30  # entropy-python-magic-numbers-ok: numeric literal in migrate-users-to-vault is a timeout duration in seconds
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in migrate-users-to-vault for terminal formatting
 
 def get_vault_headers() -> dict[str, str]:
     """Get auth headers for vault-api."""
@@ -104,14 +104,14 @@ def get_vault_groups() -> dict[str, str]:
         timeout=_VAULT_API_TIMEOUT
     )
     
-    if resp.status_code != 200:  # entropy-python-magic-numbers-ok: HTTP 200 OK
+    if resp.status_code != 200:  # entropy-python-magic-numbers-ok: HTTP status code 200 check in migrate-users-to-vault
         print(f"❌ Failed to fetch groups: {resp.status_code}")
         return {}
     
     groups = resp.json().get('groups', [])
     return {g['name']: g['id'] for g in groups}
 
-def create_vault_user(email: str, display_name: str) -> str | None:  # entropy-python-nesting-ok: nested iteration over structured data
+def create_vault_user(email: str, display_name: str) -> str | None:  # entropy-python-nesting-ok: nested iteration in migrate-users-to-vault over multi-level structured data
     """Create user in vault-api.
 
     Args:
@@ -142,9 +142,9 @@ def create_vault_user(email: str, display_name: str) -> str | None:  # entropy-p
         list_resp = requests.get(
             f"{VAULT_API_URL}/iam/users",
             headers=headers,
-            timeout=30  # entropy-python-magic-numbers-ok: timeout in seconds
+            timeout=30  # entropy-python-magic-numbers-ok: numeric literal in migrate-users-to-vault is a timeout duration in seconds
         )
-        if list_resp.status_code == 200:  # entropy-python-magic-numbers-ok: HTTP 200 OK
+        if list_resp.status_code == 200:  # entropy-python-magic-numbers-ok: HTTP status code 200 check in migrate-users-to-vault
             users = list_resp.json().get('users', [])
             for u in users:
                 if u['email'] == email:
@@ -180,7 +180,7 @@ def add_user_to_group(user_id: str, group_id: str, group_name: str) -> bool:
     print(f"      ❌ Failed to add to {group_name}: {resp.status_code}")
     return False
 
-def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:  # entropy-python-long-function-ok: linear script flow
+def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:  # entropy-python-long-function-ok: long function in migrate-users-to-vault is linear sequential script execution
     """Migrate a single employee to vault-api.
 
     Args:
@@ -244,7 +244,7 @@ def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[s
         'group': target_group
     }
 
-def main() -> None:  # entropy-python-long-function-ok: CLI script linear flow
+def main() -> None:  # entropy-python-long-function-ok: long function in migrate-users-to-vault is linear CLI script flow
     """ Migrate LMS employees to vault-api users and group memberships."""
     print("🚀 Migrating LMS users to vault-api...")
     print(f"   Target: {VAULT_API_URL}")

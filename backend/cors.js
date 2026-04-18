@@ -1,4 +1,4 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (ALLOWED_ORIGINS, getCorsHeaders, jsonResponse) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: 4 exports share SECURITY_HEADERS + ALLOWED_ORIGINS, tightly-coupled CORS/response utilities
 // entropy-backend-structure-ok: shared CORS utility at backend root, used by all handlers
 /**
@@ -7,7 +7,7 @@
  */
 
 export const ALLOWED_ORIGINS = [
-    'https://lms-viewer.matthieu-marielouise.workers.dev',  // Frontend (Workers) // entropy-hardcoded-url-ok: deployment config URL
+    'https://lms-viewer.matthieu-marielouise.workers.dev',  // Frontend (Workers) // entropy-hardcoded-url-ok: URL in cors is a stable deployment endpoint
     'http://localhost:8080',
     'http://127.0.0.1:8080'
 ];

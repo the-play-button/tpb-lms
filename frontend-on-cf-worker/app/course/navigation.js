@@ -138,11 +138,11 @@ const handlePopState = async event => {
  * Expose navigation functions globally
  */
 export const initNavigation = () => {
-    window.nextStep = nextStep; // entropy-global-pollution-ok: intentional global for HTML onclick
-    window.prevStep = prevStep; // entropy-global-pollution-ok: intentional global for HTML onclick
-    window.restartModule = restartModule; // entropy-global-pollution-ok: intentional global for HTML onclick
-    window.navigateToStep = navigateToStep; // entropy-global-pollution-ok: intentional global for HTML onclick
-    window.cycleSpeed = cyclePlaybackSpeed; // GAP-101: Playback speed control // entropy-global-pollution-ok: intentional global for HTML onclick // entropy-orphan-global-ok: alias
+    window.nextStep = nextStep; // entropy-global-pollution-ok: global in navigation exposed for HTML inline onclick binding
+    window.prevStep = prevStep; // entropy-global-pollution-ok: global in navigation exposed for HTML inline onclick binding
+    window.restartModule = restartModule; // entropy-global-pollution-ok: global in navigation exposed for HTML inline onclick binding
+    window.navigateToStep = navigateToStep; // entropy-global-pollution-ok: global in navigation exposed for HTML inline onclick binding
+    window.cycleSpeed = cyclePlaybackSpeed; // GAP-101: Playback speed control // entropy-global-pollution-ok: global in navigation exposed for HTML inline onclick binding // entropy-orphan-global-ok: alias
     
     window.addEventListener('popstate', handlePopState);
 };

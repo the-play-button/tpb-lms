@@ -16,10 +16,8 @@ export const getCurrentStreak = async (db, userId) => {
     }
 
     const dates = activities.results.map(({ activity_date } = {}) => activity_date);
-    const today = new Date().toISOString().split('T')[0];
-    const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
 
-    if (dates[0] !== today && dates[0] !== yesterday) {
+    if (dates[0] !== new Date().toISOString().split('T')[0] && dates[0] !== new Date(Date.now() - 86400000).toISOString().split('T')[0]) {
         return 0;
     }
 

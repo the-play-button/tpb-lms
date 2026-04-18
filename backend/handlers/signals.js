@@ -1,6 +1,6 @@
-// entropy-positional-args-excess-ok: CF Worker handler utility — (request, env, ctx, param) calling convention
+// entropy-positional-args-excess-ok: handler exports (getCourseSignalsHandler, getStepSignals, resetCourseSignals) use CF Worker positional convention (request, env, ctx)
 // entropy-single-export-ok: 3 tightly-coupled signal handlers (get course, get step, reset) sharing private helpers
-// entropy-handler-service-pattern-ok: simple handler, business logic is minimal
+// entropy-handler-service-pattern-ok: signals handler delegates to backend, minimal orchestration logic
 /**
  * Signals Handler
  *
