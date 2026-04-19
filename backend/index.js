@@ -45,6 +45,23 @@ import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
 import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto/index.js';
 
+// --- Telemetry CF Access secret (vault, cached per-isolate) ---
+let _telemetryCfAccessSecret = null;
+
+const fetchTelemetryCfAccessSecret = async (env) => {
+  if (_telemetryCfAccessSecret) return _telemetryCfAccessSecret;
+  const { createBastionClient } = await import('@the-play-button/tpb-sdk-js');
+  const bastion = createBastionClient({
+    bastionUrl: env.BASTION_URL,
+    serviceToken: env.BASTION_TOKEN,
+  });
+  const result = await bastion.getSecret('tpb/infra/cf_access_sa_client_secret');
+  if (!result.ok) throw new Error(`[telemetry] CF Access SA secret fetch failed: ${result.error}`);
+  if (!result.value) throw new Error('[telemetry] CF Access SA secret is empty');
+  _telemetryCfAccessSecret = result.value;
+  return _telemetryCfAccessSecret;
+};
+
 // --- Hono app ---
 
 const app = new Hono();
@@ -60,7 +77,18 @@ app.use('/*', cors({
 let loggerReady = false;
 app.use('/*', async (c, next) => {
   if (!loggerReady) {
-    configureLogger({ service: 'tpb-lms' });
+    const cfAccessSecret = await fetchTelemetryCfAccessSecret(c.env);
+    configureLogger({
+      service: 'tpb-lms',
+      telemetry: {
+        url: c.env.TELEMETRY_URL,
+        token: c.env.BASTION_TOKEN ?? '',
+        projectSlug: 'tpb-lms',
+        environment: 'production',
+        cfAccessClientId: c.env.CF_ACCESS_CLIENT_ID,
+        cfAccessClientSecret: cfAccessSecret,
+      },
+    });
     loggerReady = true;
   }
   return next();
