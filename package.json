@@ -9,7 +9,7 @@
     "deploy:prod": "wrangler deploy --env production"
   },
   "dependencies": {
-    "@the-play-button/tpb-sdk-js": "^1.19.1",
+    "@the-play-button/tpb-sdk-js": "^1.19.3",
     "hono": "^4.7.10",
     "zod": "^3.25.76"
   },
