@@ -27,7 +27,7 @@ export const getDefaultConnectionHandle = async (ctx: HandlerContext): Promise<R
   if (!validateContextResult.ok) return fail(validateContextResult.error);
 
   // 4. CheckPolicies
-  const policyResult = getDefaultConnectionCheckPolicies();
+  const policyResult = await getDefaultConnectionCheckPolicies(ctx);
   if (!policyResult.ok) return fail(policyResult.error);
 
   // 5. Execute

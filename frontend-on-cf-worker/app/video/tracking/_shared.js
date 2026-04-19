@@ -1,5 +1,4 @@
 // entropy-positional-args-excess-ok: handler exports (trackingState, RESUME_THRESHOLD, SPEEDS) use CF Worker positional convention (request, env, ctx)
-// entropy-multiple-exports-ok: tightly-coupled video tracking state and helpers
 // entropy-god-file-ok: shared state intentionally imported by all video tracking modules
 // entropy-prohibited-timer-ok: timer in _shared is intentional for UX timing
 /**

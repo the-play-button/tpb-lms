@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: ContentRefsRepository module has 2 tightly-coupled exports sharing internal state
 // entropy-god-file-ok: repository port — ContentRef union type + ContentRefsRepository interface with find/save/publish for Draft and Shared aggregates
 /**
  * ContentRefsRepository - Persistence port for ContentRef aggregates.

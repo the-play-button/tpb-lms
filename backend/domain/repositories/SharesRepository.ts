@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: SharesRepository module has 2 tightly-coupled exports sharing internal state
 /**
  * SharesRepository - Persistence port for Share aggregates.
  *

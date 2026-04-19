@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: SharingPolicies module has 2 tightly-coupled exports sharing internal state
 import { fail, succeed, type Result } from '../core/Result.js';
 import type { Email } from '../value-objects/index.js';
 import type { DraftContentRef } from '../entities/ContentRef/DraftContentRef.js';

@@ -1,6 +1,5 @@
 # entropy-single-export-ok: check_secrets internal pipeline steps called sequentially by main()
 # entropy-duplicate-constant-ok: check_secrets is standalone CLI script, shared constants not warranted
-# entropy-console-leak-ok: print() in check_secrets for operator terminal output
 # entropy-legacy-marker-ok: debt — TALLY_WEBHOOK_SECRET description references legacy URL param auth method
 #!/usr/bin/env python3
 """

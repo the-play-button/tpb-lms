@@ -7,6 +7,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const batchUpsertTranslations = async (request, env, ctx) => {
     let body;
@@ -43,7 +44,7 @@ export const batchUpsertTranslations = async (request, env, ctx) => {
             `).bind(id, content_type, content_id, field, lang, value, source, value, source).run();
             successCount++;
         } catch (error) {
-            console.error(`Error upserting translation ${id}:`, error);
+            log.error('translation upsert failed', error, { file: 'handlers/translations/batchUpsertTranslations.js', translationId: id });
             errorCount++;
         }
     }

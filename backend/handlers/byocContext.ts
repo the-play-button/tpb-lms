@@ -7,7 +7,7 @@
  * with all ports, repositories, and user identity.
  */
 
-import type { HandlerContext } from '../types/HandlerContext.js';
+import type { HandlerContext, AuthzBastionClient, LmsActor } from '../types/HandlerContext.js';
 import type { Env } from '../types/Env.js';
 import { BastionCloudflareAdapter } from '../services/bastion/adapters/BastionCloudflareAdapter.js';
 import { UnifiedToStorageAdapter } from '../services/storage/adapters/UnifiedToStorageAdapter.js';
@@ -25,6 +25,10 @@ interface UserContext {
 }
 
 const extractJwt = (request: Request): string => {
+  const authHeader = request.headers.get('Authorization');
+  if (authHeader?.startsWith('Bearer ') && !authHeader.startsWith('Bearer tpb_')) {
+    return authHeader.slice(7);
+  }
   return request.headers.get('Cf-Access-Jwt-Assertion') || '';
 };
 
@@ -33,8 +37,17 @@ const extractJwt = (request: Request): string => {
  *
  * This is the JS/TS bridge: the router (index.js) calls this for every
  * BYOC route, then passes the result to the TS controller.
+ *
+ * @param authzBastionClient - SDK bastion client with authzSigningSecret (from module-level singleton in index.js)
+ * @param actor - Actor resolved by auth middleware
  */
-export const createByocContext = async (request: Request, env: Env, userContext: UserContext): Promise<HandlerContext> => {
+export const createByocContext = async (
+  request: Request,
+  env: Env,
+  userContext: UserContext,
+  authzBastionClient: AuthzBastionClient,
+  actor: LmsActor,
+): Promise<HandlerContext> => {
   const jwt = extractJwt(request);
   const { user } = userContext;
   const userEmail = user.email;
@@ -78,12 +91,14 @@ export const createByocContext = async (request: Request, env: Env, userContext:
     pamClient,
     connectionResolver,
     bastionClient,
+    authzBastionClient,
+    actor,
     contentRefsRepository,
     sharesRepository,
     domainEvents,
     userEmail,
     jwt,
-    userScopes: [], // TODO: extract from JWT claims when RBAC is enabled
+    userScopes: actor.scopes,
     teamDomain: env.ACCESS_TEAM_DOMAIN,
     db: env.DB,
   };

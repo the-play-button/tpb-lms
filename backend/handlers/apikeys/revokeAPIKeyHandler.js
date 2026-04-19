@@ -6,6 +6,7 @@
  */
 
 import { jsonResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const revokeAPIKeyHandler = async (request, env, auth, keyId) => {
     try {
@@ -30,7 +31,7 @@ export const revokeAPIKeyHandler = async (request, env, auth, keyId) => {
         return jsonResponse({ success: true, message: 'API key revoked' }, 200, request);
 
     } catch (error) {
-        console.error('Revoke API key error:', error);
+        log.error('API key revoke failed', error, { file: 'handlers/apikeys/revokeAPIKeyHandler.js' });
         return jsonResponse({ error: 'Failed to revoke API key' }, 500, request);
     }
 };

@@ -6,6 +6,7 @@
  */
 
 import { jsonResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const listAPIKeysHandler = async (request, env, auth) => {
     try {
@@ -36,7 +37,7 @@ export const listAPIKeysHandler = async (request, env, auth) => {
         }, 200, request);
 
     } catch (error) {
-        console.error('List API keys error:', error);
+        log.error('API keys list failed', error, { file: 'handlers/apikeys/listAPIKeysHandler.js' });
         return jsonResponse({ error: 'Failed to list API keys' }, 500, request);
     }
 };

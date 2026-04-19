@@ -13,12 +13,38 @@ import type { ContentRefsRepository } from '../domain/repositories/ContentRefsRe
 import type { SharesRepository } from '../domain/repositories/SharesRepository.js';
 import type { DomainEvents } from '../domain/events/DomainEvents.js';
 
+/** Authz-capable bastion client for delegated authorization checks (uses service token + signing secret) */
+export interface AuthzBastionClient {
+  checkAuthzDelegated(
+    subject: { type: string; id: string; context?: { scopes?: string[]; roles?: string[]; organizationId?: string; email?: string } },
+    action: string,
+    object: { namespace: string; type: string; id: string },
+  ): Promise<{ ok: true; value: boolean } | { ok: false; error: string }>;
+}
+
+/** Actor identity resolved by middleware (bastion or API key) */
+export interface LmsActor {
+  id: string;
+  email: string | null;
+  type: string;
+  bastionUserId: string | null;
+  scopes: string[];
+  organizationId: string | null;
+  roles: string[];
+}
+
 export interface HandlerContext {
   // === Ports (injected services) ===
   storageService: StoragePort;
   pamClient: PamPort | null;
   connectionResolver: ConnectionResolverPort;
   bastionClient: BastionPort;
+
+  // === Authz-capable bastion client (service token + signing secret) ===
+  authzBastionClient: AuthzBastionClient;
+
+  // === Actor (resolved by auth middleware) ===
+  actor: LmsActor;
 
   // === Repositories (domain, publish events) ===
   contentRefsRepository: ContentRefsRepository;

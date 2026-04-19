@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: tightly-coupled cache functions
 /**
  * Content cache management
  */

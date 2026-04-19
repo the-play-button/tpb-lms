@@ -27,7 +27,7 @@ export const listConnectionsHandle = async (ctx: HandlerContext): Promise<Result
   if (!validateContextResult.ok) return fail(validateContextResult.error);
 
   // 4. CheckPolicies
-  const policyResult = listConnectionsCheckPolicies();
+  const policyResult = await listConnectionsCheckPolicies(ctx);
   if (!policyResult.ok) return fail(policyResult.error);
 
   // 5. Execute

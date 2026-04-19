@@ -1,13 +1,24 @@
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { GetCloudPitchContext } from './getCloudPitchHydrateContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 /**
  * CheckPolicies step: enforce content access rules for pitch files.
  *
- * - Owner/admin -> always allowed
- * - Learner -> must be enrolled (has active share)
+ * 1. Delegated authz check via bastion (lms:read on cloud_pitch)
+ * 2. Domain rules: owner/admin always allowed, learner must be enrolled
  */
-export const getCloudPitchCheckPolicies = (context: GetCloudPitchContext): Result<'FORBIDDEN', 'allowed'> => {
+export const getCloudPitchCheckPolicies = async (context: GetCloudPitchContext, ctx: HandlerContext): Promise<Result<'FORBIDDEN', 'allowed'>> => {
+  const { actor, authzBastionClient } = ctx;
+  const authzResult = await authzBastionClient.checkAuthzDelegated(
+    { type: actor.type, id: actor.id, context: { scopes: actor.scopes, roles: actor.roles, email: actor.email ?? undefined } },
+    'lms:read',
+    { namespace: 'lms', type: 'cloud_pitch', id: '*' },
+  );
+  if (!authzResult.ok) { log.error(`[CheckPolicies] ${authzResult.error}`); return fail('FORBIDDEN' as const); }
+  if (!authzResult.value) return fail('FORBIDDEN' as const);
+
   if (context.isOwner) {
     return succeed('allowed' as const);
   }

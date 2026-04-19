@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: PamPort module has 3 tightly-coupled exports sharing internal state
 /**
  * PAM Port - Interface for Privileged Access Management operations
  *

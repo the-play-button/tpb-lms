@@ -10,7 +10,7 @@
  */
 
 import { jsonResponse } from '../cors.js';
-import { log } from '../lib/log.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 const GITHUB_API_BASE = 'https://api.github.com'; // entropy-hardcoded-url-ok: external API endpoint
 

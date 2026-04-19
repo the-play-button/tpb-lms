@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: tightly-coupled playback speed functions
 /**
  * Playback speed control (GAP-101)
  */

@@ -8,9 +8,7 @@
 
 import { jsonResponse } from '../cors.js';
 import { requireRole } from '../middleware/guard.js';
-import logger from '../utils/log.js';
-
-const log = logger('admin');
+import { log } from '@the-play-button/tpb-sdk-js';
 
 /**
  * Get admin overview statistics

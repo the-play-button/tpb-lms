@@ -7,6 +7,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const upsertTranslation = async (request, env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
@@ -53,7 +54,7 @@ export const upsertTranslation = async (request, env, ctx) => {
             source
         });
     } catch (error) {
-        console.error('Error upserting translation:', error);
+        log.error('translation upsert failed', error, { file: 'handlers/translations/upsertTranslation.js' });
         return errorResponse('Failed to save translation', 500);
     }
 };

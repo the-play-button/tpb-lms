@@ -8,6 +8,7 @@
  */
 
 import { jsonResponse } from '../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 const CLASS_IDS = [
     'step01-valeurs-wge',
@@ -218,7 +219,7 @@ export const handleTestSeed = async (request, env) => {
         }, 200, request);
         
     } catch (e) {
-        console.error('Fixture error:', e);
+        log.error('fixture error', e, { file: 'handlers/test.js' });
         return jsonResponse({ 
             error: 'Failed to apply fixture',
             detail: e.message 

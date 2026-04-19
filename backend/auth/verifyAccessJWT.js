@@ -3,6 +3,7 @@
  */
 
 import { base64urlDecode, importPublicKey, getJWKS } from './_shared.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const verifyAccessJWT = async (token, env) => {
     if (!token) {
@@ -54,7 +55,7 @@ export const verifyAccessJWT = async (token, env) => {
         };
 
     } catch (error) {
-        console.error('JWT verification error:', error); // ACK:console_leak — auth error logging, not user-facing
+        log.error('JWT verification error', error, { file: 'auth/verifyAccessJWT.js' });
         return { valid: false, error: 'JWT verification failed' }; // entropy-error-verbosity-ok: generic message, no internal details
     }
 };

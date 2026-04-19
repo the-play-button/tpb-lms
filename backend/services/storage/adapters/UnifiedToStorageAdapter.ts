@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: UnifiedToStorageAdapter module has 2 tightly-coupled exports sharing internal state
 // entropy-class-method-length-ok: UnifiedToStorageAdapter — lazy token resolution + listFiles/getFileContent/getFileBinary all coupled by shared accessToken and Unified.to API
 /**
  * Unified.to storage adapter — production implementation via Unified.to API

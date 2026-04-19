@@ -122,23 +122,21 @@ exceptions:
   # Files allowed to have high coupling (entry points, orchestrators)
   coupling:
     - backend/index.js
-    - frontend/app/index.js
   
   # Files expected to be "god files" (shared utilities by design)
   god_files:
     - backend/cors.js           # CORS config used everywhere
-    - frontend/app/api.js       # API client used everywhere
-    - frontend/app/state.js     # State management (by design)
     - zod                       # Validation library — high import count is expected
     - "@the-play-button/tpb-sdk-js"  # SDK imported across many modules by design
   
   # Entry points that are always "used" for dead code detection
   entry_points:
     - backend/index.js
-    - frontend/app/index.js
 
-  # Console leak exceptions: LMS is legacy JS without SDK Logger — migration is a separate chantier
+  # DDD pipeline + domain modules export function + type or multiple related exports
+  multiple_exports:
+    - backend/
+    - frontend-on-cf-worker/
   console_leaks:
-    - backend/           # All backend files use console.error for error logging
     - frontend-on-cf-worker/  # Frontend files use console.error for client-side error reporting
     - scripts/           # Utility scripts use console for output

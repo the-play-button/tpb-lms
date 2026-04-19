@@ -1,5 +1,4 @@
 # entropy-single-export-ok: CLI migration script, functions are internal pipeline steps called by main()
-# entropy-console-leak-ok: print() in migrate-users-to-vault for operator terminal output
 # entropy-legacy-marker-ok: debt — hris_employee is deprecated for roles post vault-api migration
 # entropy-inconsistent-constant-ok: VAULT_API_URL default differs from backend (workers.dev vs wrangler.dev) — standalone migration script targets production vault directly, not routed through CF Access
 #!/usr/bin/env python3

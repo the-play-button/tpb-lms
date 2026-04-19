@@ -1,7 +1,6 @@
 // entropy-positional-args-excess-ok: handler exports (handleTallyWebhookWithBody, handleTallyWebhook) use CF Worker positional convention (request, env, ctx)
 // entropy-handler-service-pattern-ok: handleTallyWebhook handler delegates to backend, minimal orchestration logic
 // entropy-business-logic-ok: handleTallyWebhook logic already exists in backend, frontend mirrors it
-// entropy-multiple-exports-ok: handleTallyWebhook module has 2 tightly-coupled exports sharing internal state
 // entropy-business-logic-in-frontend-ok: handleTallyWebhook contains intentional client-side presentation logic
 /**
  * Handle Tally webhook (from request or pre-read body)

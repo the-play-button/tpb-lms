@@ -5,6 +5,8 @@
  */
 
 import { getAuthConfig } from '../../config/auth.js';
+import { log } from '@the-play-button/tpb-sdk-js';
+import { VaultClient, getCachedSecret } from '../../lib/vaultClient.js';
 
 export const handleCallback = async (request, env) => {
     const authConfig = getAuthConfig(env);
@@ -32,6 +34,11 @@ export const handleCallback = async (request, env) => {
     const tokenUrl = `${authConfig.logto.endpoint}/oidc/token`;
     const redirectUri = `${url.origin}/auth/callback`;
 
+    const logtoAppSecret = await getCachedSecret(new VaultClient(env.BASTION_URL, env), 'tpb/apps/lms/logto_app_secret');
+    if (!logtoAppSecret) {
+        throw new Error('Vault: tpb/apps/lms/logto_app_secret not found');
+    }
+
     const tokenResponse = await fetch(tokenUrl, {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -40,13 +47,13 @@ export const handleCallback = async (request, env) => {
             code,
             redirect_uri: redirectUri,
             client_id: authConfig.logto.appId,
-            client_secret: env.LOGTO_APP_SECRET || '',
+            client_secret: logtoAppSecret,
         }),
     });
 
     if (!tokenResponse.ok) {
         const body = await tokenResponse.text();
-        console.error('[Auth] Token exchange failed:', body);
+        log.error('auth token exchange failed', null, { file: 'handlers/auth-logto/handleCallback.js', responseBody: body });
         return new Response(JSON.stringify({ error: 'Token exchange failed' }),
             { status: 502, headers: { 'Content-Type': 'application/json' } });
     }

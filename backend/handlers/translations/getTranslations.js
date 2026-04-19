@@ -6,6 +6,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const getTranslations = async (request, env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
@@ -42,7 +43,7 @@ export const getTranslations = async (request, env, ctx) => {
             translations: byLang
         });
     } catch (error) {
-        console.error('Error fetching translations:', error);
+        log.error('translations fetch failed', error, { file: 'handlers/translations/getTranslations.js' });
         return errorResponse('Failed to fetch translations', 500);
     }
 };

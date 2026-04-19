@@ -1,5 +1,4 @@
 // entropy-positional-args-excess-ok: shareContentHydrateContext follows DDD pipeline convention (request, ctx, param) positional args
-// entropy-multiple-exports-ok: shareContentHydrateContext module has 2 tightly-coupled exports sharing internal state
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { ContentRef } from '../../../domain/repositories/ContentRefsRepository.js';
 import type { ActiveShare } from '../../../domain/entities/Share/ActiveShare.js';

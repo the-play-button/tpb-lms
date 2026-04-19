@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: tightly-coupled auth primitives sharing JWKS cache
 /**
  * Shared auth primitives - JWKS caching, JWT parsing, crypto helpers
  */

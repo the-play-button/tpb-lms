@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: tightly-coupled debug collector state and helpers
 /**
  * Shared debug collector state and storage helpers
  */

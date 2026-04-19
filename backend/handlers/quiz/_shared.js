@@ -1,7 +1,6 @@
 // entropy-positional-args-excess-ok: handler exports (log, XP_QUIZ_PASS, getPassThreshold) use CF Worker positional convention (request, env, ctx)
 // entropy-handler-service-pattern-ok: shared quiz logic, co-located with handlers by design
 // entropy-business-logic-ok: _shared logic already exists in backend, frontend mirrors it
-// entropy-multiple-exports-ok: _shared module has 9 tightly-coupled exports sharing internal state
 // entropy-business-logic-in-frontend-ok: _shared contains intentional client-side presentation logic
 /**
  * Shared helpers for quiz handlers
@@ -11,9 +10,9 @@ import { jsonResponse } from '../../cors.js';
 import { recordQuizEvent, checkQuizBadges, checkStreakBadges } from '../../helpers/xp/index.js';
 import { applyProjections } from '../../projections/engine.js';
 import { generateEventId } from '../../helpers/events.js';
-import { logger } from '../../utils/log.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
-export const log = logger('quiz');
+export { log };
 export const XP_QUIZ_PASS = 100;
 
 export { jsonResponse, recordQuizEvent, checkQuizBadges, checkStreakBadges, applyProjections, generateEventId };

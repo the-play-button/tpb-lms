@@ -4,6 +4,7 @@
 
 import { getAuthConfig } from '../config/auth.js';
 import { base64urlDecode, importPublicKey, getOidcJWKS } from './_shared.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const verifyOidcJWT = async (token, env) => {
     if (!token) {
@@ -68,7 +69,7 @@ export const verifyOidcJWT = async (token, env) => {
         };
 
     } catch (error) {
-        console.error('OIDC JWT verification error:', error); // ACK:console_leak — auth error logging, not user-facing
+        log.error('OIDC JWT verification error', error, { file: 'auth/verifyOidcJWT.js' });
         return { valid: false, error: 'JWT verification failed' }; // entropy-error-verbosity-ok: generic message, no internal details
     }
 };

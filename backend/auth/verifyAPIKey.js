@@ -3,6 +3,7 @@
  */
 
 import { sha256 } from './_shared.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const verifyAPIKey = async (apiKey, env) => {
     if (!apiKey) {
@@ -44,7 +45,7 @@ export const verifyAPIKey = async (apiKey, env) => {
         };
 
     } catch (error) {
-        console.error('API Key verification error:', error); // ACK:console_leak — auth error logging, not user-facing
+        log.error('API key verification error', error, { file: 'auth/verifyAPIKey.js' });
         return { valid: false, error: 'API key verification failed' }; // entropy-error-verbosity-ok: generic message, no internal details
     }
 };

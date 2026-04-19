@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: shareContentValidateInput module has 2 tightly-coupled exports sharing internal state
 import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 

@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: BastionPort module has 2 tightly-coupled exports sharing internal state
 import type { ConnectionInfo } from '../types/ConnectionInfo.js';
 
 /**

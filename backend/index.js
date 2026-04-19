@@ -12,9 +12,11 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { configureLogger } from '@the-play-button/tpb-sdk-js';
+import { configureLogger, log, createBastionAuthMiddleware, createBastionClient } from '@the-play-button/tpb-sdk-js';
 import { ALLOWED_ORIGINS, jsonResponse } from './cors.js';
-import { authenticateRequest } from './auth/index.js';
+import { verifyAPIKey } from './auth/verifyAPIKey.js';
+import { getOrCreateContact } from './auth/getOrCreateContact.js';
+import { resolveRole } from './auth/resolveRole.js';
 import { getSession } from './handlers/auth.js';
 import { listCourses, getCourse } from './handlers/courses.js';
 import { listEnrollments, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus, updateProgress } from './handlers/enrollment/index.js';
@@ -45,16 +47,32 @@ import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
 import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto/index.js';
 
+// --- BastionClient singleton with authzSigningSecret (cached per-isolate) ---
+let _bastionClient = null;
+
+const initBastionClient = async (env) => {
+  if (_bastionClient) return _bastionClient;
+  const tempClient = createBastionClient({
+    bastionUrl: env.BASTION_URL,
+    serviceToken: env.BASTION_TOKEN,
+  });
+  const secretResult = await tempClient.getSecret('tpb/apps/lms/authz_signing_secret');
+  if (!secretResult.ok) throw new Error(`[initBastionClient] ${secretResult.error}`);
+  if (!secretResult.value) throw new Error('[initBastionClient] authz signing secret is empty');
+  _bastionClient = createBastionClient({
+    bastionUrl: env.BASTION_URL,
+    serviceToken: env.BASTION_TOKEN,
+    authzSigningSecret: secretResult.value,
+  });
+  return _bastionClient;
+};
+
 // --- Telemetry CF Access secret (vault, cached per-isolate) ---
 let _telemetryCfAccessSecret = null;
 
 const fetchTelemetryCfAccessSecret = async (env) => {
   if (_telemetryCfAccessSecret) return _telemetryCfAccessSecret;
-  const { createBastionClient } = await import('@the-play-button/tpb-sdk-js');
-  const bastion = createBastionClient({
-    bastionUrl: env.BASTION_URL,
-    serviceToken: env.BASTION_TOKEN,
-  });
+  const bastion = await initBastionClient(env);
   const result = await bastion.getSecret('tpb/infra/cf_access_sa_client_secret');
   if (!result.ok) throw new Error(`[telemetry] CF Access SA secret fetch failed: ${result.error}`);
   if (!result.value) throw new Error('[telemetry] CF Access SA secret is empty');
@@ -103,7 +121,7 @@ app.use('/*', async (c, next) => {
 });
 
 app.onError((err, c) => {
-  console.error(`[tpb-lms] Unhandled error: ${err.message}`, err.stack);
+  log.error('unhandled error', err, { file: 'index.js' });
   return c.json({ error: 'Internal Server Error' }, 500);
 });
 
@@ -159,23 +177,75 @@ const publicRoutes = [
   { method: 'POST', path: '/api/test/seed', handler: handleTestSeed },
 ];
 
-// --- Auth middleware (session-based, for /api/* except public paths) ---
+// --- Layer 1: API key pre-auth (LMS-local tpb_xxx keys — bastion doesn't know these) ---
 
 app.use('/api/*', async (c, next) => {
   const path = new URL(c.req.url).pathname;
   if (PUBLIC_API_PATHS.some(p => path.startsWith(p))) return next();
 
-  const auth = await authenticateRequest(c.req.raw, c.env);
-  if (auth.error) return auth.error;
+  const authHeader = c.req.header('Authorization');
+  if (authHeader?.startsWith('Bearer tpb_')) {
+    const keyResult = await verifyAPIKey(authHeader.slice(7), c.env);
+    if (!keyResult.valid) return c.json({ error: 'Invalid API key' }, 401);
+    c.set('actor', {
+      id: keyResult.keyName || keyResult.keyId,
+      bastionUserId: keyResult.userId || null,
+      email: null,
+      type: 'api_key',
+      scopes: keyResult.scopes ? (typeof keyResult.scopes === 'string' ? JSON.parse(keyResult.scopes) : keyResult.scopes) : [],
+      organizationId: null,
+      roles: [],
+    });
+    return next();
+  }
+  return next();
+});
 
-  c.set('auth', auth);
-  c.set('userContext', {
-    user: auth.user,
-    contact: auth.contact,
-    employee: auth.employee,
-    learner: auth.contact || auth.employee,
+// --- Layer 2: Bastion auth (skip if API key already resolved actor) ---
+
+app.use('/api/*', async (c, next) => {
+  const path = new URL(c.req.url).pathname;
+  if (PUBLIC_API_PATHS.some(p => path.startsWith(p))) return next();
+  if (c.var.actor) return next();
+
+  return createBastionAuthMiddleware((ctx) => ({
+    bastionUrl: ctx.env.BASTION_URL,
+    serviceToken: ctx.env.BASTION_TOKEN,
+  }))(c, next);
+});
+
+// --- Layer 3: LMS domain enrichment (contact, role, bastionClient init) ---
+
+app.use('/api/*', async (c, next) => {
+  const path = new URL(c.req.url).pathname;
+  if (PUBLIC_API_PATHS.some(p => path.startsWith(p))) return next();
+
+  const actor = c.var.actor;
+  if (!actor) return next();
+
+  let contact = null;
+  let role = 'student';
+  if (actor.email) {
+    contact = await getOrCreateContact(actor.email, c.env);
+    role = await resolveRole(actor.email, c.env);
+  }
+
+  c.set('auth', {
+    user: { email: actor.email, role, payload: null },
+    contact,
+    learner: contact,
+    authMethod: actor.type === 'api_key' ? 'api_key' : 'bastion',
   });
-  await next();
+  c.set('userContext', {
+    user: { email: actor.email, role },
+    contact,
+    employee: null,
+    learner: contact,
+  });
+
+  await initBastionClient(c.env);
+
+  return next();
 });
 
 // --- Route tables ---
@@ -258,7 +328,10 @@ app.post('/api/events', async (c) => {
 });
 
 registerRoutes(app, authKeyRoutes, (c) => [c.req.raw, c.env, c.var.auth]);
-registerRoutes(app, byocRoutes, async (c) => [c.req.raw, await createByocContext(c.req.raw, c.env, c.var.userContext)]);
+registerRoutes(app, byocRoutes, async (c) => {
+  const authzClient = _bastionClient || await initBastionClient(c.env);
+  return [c.req.raw, await createByocContext(c.req.raw, c.env, c.var.userContext, authzClient, c.var.actor || { id: '', email: null, type: 'unknown', bastionUserId: null, scopes: [], organizationId: null, roles: [] })];
+});
 
 export default {
   fetch: (request, env, ctx) => app.fetch(request, env, ctx),

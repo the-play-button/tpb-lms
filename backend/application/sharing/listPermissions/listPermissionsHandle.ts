@@ -28,7 +28,7 @@ export const listPermissionsHandle = async (rawRefId: string, ctx: HandlerContex
   if (!validateContextResult.ok) return fail(validateContextResult.error);
 
   // 4. CheckPolicies
-  const policyResult = listPermissionsCheckPolicies(contextResult.value);
+  const policyResult = await listPermissionsCheckPolicies(contextResult.value, ctx);
   if (!policyResult.ok) return fail(policyResult.error);
 
   // 5. Execute

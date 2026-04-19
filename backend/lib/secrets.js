@@ -19,7 +19,7 @@
  */
 
 import { VaultClient, getCachedSecret } from './vaultClient.js';
-import { log } from './log.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 let vaultClient = null;
 
@@ -47,7 +47,7 @@ export const getSecret = async (env, vaultPath, envKey) => {
         return value;
       }
     } catch (err) {
-      log.warn(`Failed to fetch secret from vault (${vaultPath}):`, err.message);
+      log.warn('vault secret fetch failed', { file: 'lib/secrets.js', vaultPath, error: err.message });
     }
   }
   

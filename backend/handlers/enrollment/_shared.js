@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: tightly-coupled enrollment helpers
 // entropy-god-file-ok: shared helpers intentionally imported by all enrollment handlers
 /**
  * Shared constants and helpers for enrollment handlers

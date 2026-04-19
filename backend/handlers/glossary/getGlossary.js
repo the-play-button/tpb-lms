@@ -6,6 +6,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const getGlossary = async (request, env, ctx) => {
     const url = new URL(request.url);
@@ -46,7 +47,7 @@ export const getGlossary = async (request, env, ctx) => {
             total: result.results.length
         });
     } catch (error) {
-        console.error('Error fetching glossary:', error);
+        log.error('glossary fetch failed', error, { file: 'handlers/glossary/getGlossary.js' });
         return errorResponse('Failed to fetch glossary', 500);
     }
 };

@@ -7,6 +7,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const addGlossaryTerm = async (request, env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
@@ -50,7 +51,7 @@ export const addGlossaryTerm = async (request, env, ctx) => {
             context
         });
     } catch (error) {
-        console.error('Error adding glossary term:', error);
+        log.error('glossary term add failed', error, { file: 'handlers/glossary/addGlossaryTerm.js' });
         return errorResponse('Failed to add glossary term', 500);
     }
 };

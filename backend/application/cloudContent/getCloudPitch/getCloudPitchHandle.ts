@@ -28,7 +28,7 @@ export const getCloudPitchHandle = async (request: Request, ctx: HandlerContext)
   if (!validateContextResult.ok) return fail(validateContextResult.error);
 
   // 4. CheckPolicies
-  const policyResult = getCloudPitchCheckPolicies(contextResult.value);
+  const policyResult = await getCloudPitchCheckPolicies(contextResult.value, ctx);
   if (!policyResult.ok) return fail(policyResult.error);
 
   // 5. Execute

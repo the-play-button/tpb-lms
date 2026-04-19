@@ -6,6 +6,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const getTranslationsForReview = async (request, env, ctx) => {
     const url = new URL(request.url);
@@ -26,7 +27,7 @@ export const getTranslationsForReview = async (request, env, ctx) => {
             total: result.results.length
         });
     } catch (error) {
-        console.error('Error fetching translations for review:', error);
+        log.error('translations for review fetch failed', error, { file: 'handlers/translations/getTranslationsForReview.js' });
         return errorResponse('Failed to fetch translations', 500);
     }
 };

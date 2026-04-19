@@ -8,6 +8,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const importGlossaryTerms = async (request, env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
@@ -50,7 +51,7 @@ export const importGlossaryTerms = async (request, env, ctx) => {
             `).bind(id, orgId, source_lang, target_lang, source_term, target_term, context || null, target_term, context || null).run();
             successCount++;
         } catch (error) {
-            console.error(`Error importing term ${source_term}:`, error);
+            log.error('glossary term import failed', error, { file: 'handlers/glossary/importGlossaryTerms.js', sourceTerm: source_term });
             errorCount++;
         }
     }

@@ -9,6 +9,7 @@
  */
 
 import { VaultClient } from '../lib/vaultClient.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const resolveRole = async (email, env) => {
     if (env.BASTION_URL && env.BASTION_TOKEN) {
@@ -27,7 +28,7 @@ export const resolveRole = async (email, env) => {
             return 'student';
 
         } catch (err) {
-            console.error('vault-api role resolution failed, falling back to local:', err.message);
+            log.error('vault-api role resolution failed, falling back to local', err, { file: 'auth/resolveRole.js' });
         }
     }
 

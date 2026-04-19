@@ -28,7 +28,7 @@ export const getCloudContentHandle = async (request: Request, ctx: HandlerContex
   if (!validateContextResult.ok) return fail(validateContextResult.error);
 
   // 4. CheckPolicies
-  const policyResult = getCloudContentCheckPolicies(contextResult.value);
+  const policyResult = await getCloudContentCheckPolicies(contextResult.value, ctx);
   if (!policyResult.ok) return fail(policyResult.error);
 
   // 5. Execute

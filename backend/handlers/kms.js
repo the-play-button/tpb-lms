@@ -14,9 +14,7 @@
  */
 
 import { jsonResponse } from '../cors.js';
-import logger from '../utils/log.js';
-
-const log = logger('kms');
+import { log } from '@the-play-button/tpb-sdk-js';
 
 /**
  * List all KMS spaces

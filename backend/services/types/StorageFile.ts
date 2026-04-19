@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: StorageFile module has 2 tightly-coupled exports sharing internal state
 // entropy-god-file-ok: service DTOs — StorageFile + StoragePermission interfaces normalized from Unified.to responses
 /**
  * StorageFile - Represents a file in cloud storage

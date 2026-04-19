@@ -26,7 +26,7 @@ export const sharedWithMeHandle = async (ctx: HandlerContext): Promise<Result<st
   if (!validateContextResult.ok) return fail(validateContextResult.error);
 
   // 4. CheckPolicies
-  const policyResult = sharedWithMeCheckPolicies();
+  const policyResult = await sharedWithMeCheckPolicies(ctx);
   if (!policyResult.ok) return fail(policyResult.error);
 
   // 5. Execute

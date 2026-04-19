@@ -6,6 +6,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const deleteGlossaryTerm = async (request, env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
@@ -27,7 +28,7 @@ export const deleteGlossaryTerm = async (request, env, ctx) => {
 
         return jsonResponse({ success: true, deleted: termId });
     } catch (error) {
-        console.error('Error deleting glossary term:', error);
+        log.error('glossary term delete failed', error, { file: 'handlers/glossary/deleteGlossaryTerm.js' });
         return errorResponse('Failed to delete glossary term', 500);
     }
 };

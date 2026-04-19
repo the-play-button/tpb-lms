@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: FieldAccessPolicies module has 3 tightly-coupled exports sharing internal state
 import type { Email } from '../value-objects/index.js';
 import type { DraftContentRef } from '../entities/ContentRef/DraftContentRef.js';
 import type { SharedContentRef } from '../entities/ContentRef/SharedContentRef.js';

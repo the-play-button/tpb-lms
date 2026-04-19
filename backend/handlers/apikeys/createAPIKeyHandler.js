@@ -8,6 +8,7 @@
 
 import { jsonResponse } from '../../cors.js';
 import { generateAPIKey, getOrCreateContact } from '../../auth/index.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 export const createAPIKeyHandler = async (request, env, auth) => {
     try {
@@ -44,7 +45,7 @@ export const createAPIKeyHandler = async (request, env, auth) => {
         }, 201, request);
 
     } catch (error) {
-        console.error('Create API key error:', error);
+        log.error('API key create failed', error, { file: 'handlers/apikeys/createAPIKeyHandler.js' });
         return jsonResponse({ error: 'Failed to create API key' }, 500, request);
     }
 };

@@ -13,9 +13,7 @@
 
 import { VIDEO_PROGRESS_PROJECTION } from './rules/video_progress.js';
 import { QUIZ_RESULT_PROJECTION } from './rules/quiz_result.js';
-import { logger } from '../utils/log.js';
-
-const log = logger('projections');
+import { log } from '@the-play-button/tpb-sdk-js';
 
 const PROJECTIONS = [
     VIDEO_PROGRESS_PROJECTION,

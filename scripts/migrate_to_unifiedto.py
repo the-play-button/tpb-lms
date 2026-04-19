@@ -1,5 +1,4 @@
 # entropy-single-export-ok: CLI migration script with tightly-coupled helper functions for D1 queries and class migration
-# entropy-console-leak-ok: print() in migrate_to_unifiedto for operator terminal output
 #!/usr/bin/env python3
 """
 Migrate LMS Data to Unified.to Conformity

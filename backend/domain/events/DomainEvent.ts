@@ -1,5 +1,4 @@
 // entropy-positional-args-excess-ok: handler exports (createEvent) use CF Worker positional convention (request, env, ctx)
-// entropy-multiple-exports-ok: DomainEvent module has 2 tightly-coupled exports sharing internal state
 // entropy-god-file-ok: domain event base — DomainEvent interface + createEvent factory, single source of truth for event shape
 /**
  * Domain Event - Base interface for all domain events

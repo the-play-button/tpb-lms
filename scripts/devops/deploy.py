@@ -1,6 +1,5 @@
 # entropy-single-export-ok: deploy internal pipeline steps called sequentially by main()
 # entropy-duplicate-constant-ok: deploy is standalone CLI script, shared constants not warranted
-# entropy-console-leak-ok: print() in deploy for operator terminal output
 # entropy-python-optional-handling-ok: cwd parameter has default fallback in subprocess
 #!/usr/bin/env python3
 """

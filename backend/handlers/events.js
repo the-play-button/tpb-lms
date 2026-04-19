@@ -17,6 +17,7 @@ import { jsonResponse } from '../cors.js';
 import { applyProjections, getProgress } from '../projections/engine.js';
 import { validateEvent } from '../schemas/events.js';
 import { generateEventId, storeEvent } from '../helpers/events.js';
+import { log } from '@the-play-button/tpb-sdk-js';
 
 /**
  * POST /api/events
@@ -52,7 +53,7 @@ export const handleEvent = async (request, env, userContext) => {
             VALUES (?, ?, ?, ?, ?, ?, ?)
         `).bind(eventId, type, userId, course_id, class_id, now, JSON.stringify(payload)).run();
     } catch (e) {
-        console.error('Failed to store event:', e);
+        log.error('event store failed', e, { file: 'handlers/events.js' });
         return jsonResponse({ error: 'Failed to store event' }, 500, request);
     }
     

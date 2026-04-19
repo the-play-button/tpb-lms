@@ -29,7 +29,7 @@ export const shareContentHandle = async (request: Request, ctx: HandlerContext, 
   if (!validateContextResult.ok) return fail(validateContextResult.error);
 
   // 4. CheckPolicies
-  const policyResult = shareContentCheckPolicies(contextResult.value, ctx.userEmail);
+  const policyResult = await shareContentCheckPolicies(contextResult.value, ctx.userEmail, ctx);
   if (!policyResult.ok) return fail(policyResult.error);
 
   // 5. Execute

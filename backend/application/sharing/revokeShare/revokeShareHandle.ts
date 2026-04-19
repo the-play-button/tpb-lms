@@ -28,7 +28,7 @@ export const revokeShareHandle = async (shareId: string, ctx: HandlerContext): P
   if (!validateContextResult.ok) return fail(validateContextResult.error);
 
   // 4. CheckPolicies
-  const policyResult = revokeShareCheckPolicies(contextResult.value);
+  const policyResult = await revokeShareCheckPolicies(contextResult.value, ctx);
   if (!policyResult.ok) return fail(policyResult.error);
 
   // 5. Execute

@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: getCloudContentExecute module has 2 tightly-coupled exports sharing internal state
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import type { GetCloudContentContext } from './getCloudContentHydrateContext.js';

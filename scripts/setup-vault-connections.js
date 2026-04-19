@@ -1,4 +1,4 @@
-#!/usr/bin/env node// entropy-console-leak-ok: CLI script uses console for operator output
+#!/usr/bin/env node
 /**
  * Setup Vault Connections for LMS Credentials
  *
@@ -41,10 +41,7 @@ const getAuthHeaders = async () => {
   const clientSecret = process.env.BASTION_CLIENT_SECRET;
 
   if (!clientId || !clientSecret) {
-    console.error('❌ Missing credentials!'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-    console.error('   Set BASTION_CLIENT_ID and BASTION_CLIENT_SECRET'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-    console.error('   (Requires admin access to create connections)'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-    process.exit(1);
+    console.error('❌ Missing credentials!');    console.error('   Set BASTION_CLIENT_ID and BASTION_CLIENT_SECRET');    console.error('   (Requires admin access to create connections)');    process.exit(1);
   }
 
   return {
@@ -75,8 +72,7 @@ const request = async (method, path, body = null) => {
 };
 
 const createConnection = async conn => {
-  console.log(`  🔧 Creating connection: ${conn.id}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-
+  console.log(`  🔧 Creating connection: ${conn.id}`);
   const { status, data } = await request('POST', '/vault/connections', {
     id: conn.id,
     integration_type: conn.integration_type,
@@ -84,54 +80,30 @@ const createConnection = async conn => {
   });
 
   if (status === 201) {
-    console.log(`     ✅ Created`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-    return true;
+    console.log(`     ✅ Created`);    return true;
   } else if (status === 409) {
-    console.log(`     ⚠️  Already exists`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-    return true;
+    console.log(`     ⚠️  Already exists`);    return true;
   } else {
-    console.log(`     ❌ Failed: ${status} ${JSON.stringify(data)}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-    return false;
+    console.log(`     ❌ Failed: ${status} ${JSON.stringify(data)}`);    return false;
   }
 };
 
 const main = async () => {
-  console.log('🚀 Setting up vault connections for LMS credentials...'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log(`   Target: ${VAULT_API_URL}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-
-  console.log('📦 Creating connections...'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-
+  console.log('🚀 Setting up vault connections for LMS credentials...');  console.log(`   Target: ${VAULT_API_URL}`);  console.log('');
+  console.log('📦 Creating connections...');
   for (const conn of CONNECTIONS) {
     const success = await createConnection(conn);
     if (success) {
-      console.log(`     📋 Secrets needed: ${conn.secrets_required.join(', ')}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-    }
+      console.log(`     📋 Secrets needed: ${conn.secrets_required.join(', ')}`);    }
   }
 
-  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('✨ Connections created!'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('⚠️  IMPORTANT: Add secrets manually via vault-api dashboard:'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log(`   ${VAULT_API_URL}/dashboard`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('   For each connection, add the required secrets:'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-
+  console.log('');  console.log('✨ Connections created!');  console.log('');  console.log('⚠️  IMPORTANT: Add secrets manually via vault-api dashboard:');  console.log(`   ${VAULT_API_URL}/dashboard`);  console.log('');  console.log('   For each connection, add the required secrets:');
   for (const conn of CONNECTIONS) {
-    console.log(`   • ${conn.id}: ${conn.secrets_required.join(', ')}`); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  }
+    console.log(`   • ${conn.id}: ${conn.secrets_required.join(', ')}`);  }
 
-  console.log(''); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('🔐 Alternative: Add secrets via API:'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('   curl -X POST \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('     -H "CF-Access-Client-Id: $BASTION_CLIENT_ID" \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('     -H "CF-Access-Client-Secret: $BASTION_CLIENT_SECRET" \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('     -H "Content-Type: application/json" \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('     -d \'{"name": "CLIENT_ID", "value": "your-value"}\' \\'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-  console.log('     https://tpb-bastion-backend.../vault/connections/conn_lms_service/secrets'); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
-};
+  console.log('');  console.log('🔐 Alternative: Add secrets via API:');  console.log('   curl -X POST \\');  console.log('     -H "CF-Access-Client-Id: $BASTION_CLIENT_ID" \\');  console.log('     -H "CF-Access-Client-Secret: $BASTION_CLIENT_SECRET" \\');  console.log('     -H "Content-Type: application/json" \\');  console.log('     -d \'{"name": "CLIENT_ID", "value": "your-value"}\' \\');  console.log('     https://tpb-bastion-backend.../vault/connections/conn_lms_service/secrets');};
 
-main().catch(err => { // entropy-then-catch-finally-ok: top-level script entrypoint — main().catch(err) is the Node.js convention
-  console.error('❌ Error:', err.message); // entropy-console-leak-ok: CLI output in setup-vault-connections for operator visibility
+main().catch(err => { // entropy-then-catch-finally-ok entropy-promise-catch-log-only-ok: top-level script entrypoint — main().catch(err) is the Node.js convention, process.exit(1) ensures hard failure
+  console.error('❌ Error:', err.message);
   process.exit(1);
 });
