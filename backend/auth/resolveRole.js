@@ -1,47 +1,29 @@
-// entropy-legacy-marker-ok: debt — local hris_employee fallback for role resolution, to be removed once vault-api is fully operational
 /**
- * Resolve user role from email
+ * Resolve user role from email via bastion IAM.
  *
- * Strategy:
- * 1. Try vault-api (SSOT for IAM) - returns raw roles
- * 2. Apply LMS-specific mapping to vault roles
- * 3. Fallback to local hris_employee if vault-api unavailable
+ * Direct fetch to bastion — fail hard on error, no fallback.
+ * 404 = user has no IAM roles = student (expected for regular users).
  */
 
-import { VaultClient } from '../lib/vaultClient.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 
 export const resolveRole = async (email, env) => {
-    if (env.BASTION_URL && env.BASTION_TOKEN) {
-        try {
-            const vault = new VaultClient(env.BASTION_URL, env);
-            const data = await vault.getUserRoles(email);
-            const roleNames = (data.roles || []).map(({ name } = {}) => name);
+    const resp = await fetch(
+        `${env.BASTION_URL}/iam/users/${encodeURIComponent(email)}/roles`,
+        { headers: { 'Authorization': `Bearer ${env.BASTION_TOKEN}` } }
+    );
 
-            if (roleNames.some(r => r === 'tpblms_admin')) {
-                return 'admin';
-            }
-            if (roleNames.some(r => r === 'tpblms_instructor')) {
-                return 'instructor';
-            }
+    // 404 = user has no IAM roles = student (not an error)
+    if (resp.status === 404) return 'student';
 
-            return 'student';
-
-        } catch (err) {
-            log.error('vault-api role resolution failed, falling back to local', err, { file: 'auth/resolveRole.js' });
-        }
+    if (!resp.ok) {
+        throw new Error(`[resolveRole] bastion IAM failed: ${resp.status} ${await resp.text()}`);
     }
 
-    // entropy-legacy-marker-ok: legacy pattern in resolveRole, tracked for future refactoring
-    const employee = await env.DB.prepare(`
-    SELECT he.id, he.employee_roles_json FROM hris_employee he, json_each(he.emails_json) je
-    WHERE json_extract(je.value, '$.email') = ?
-  `).bind(email).first();
+    const data = await resp.json();
+    const roleNames = (data.roles || []).map(({ name } = {}) => name);
 
-    if (employee) {
-        if (JSON.parse(employee.employee_roles_json || '[]').includes('admin')) return 'admin';
-        return 'instructor';
-    }
-
+    if (roleNames.some(r => r === 'tpblms_admin')) return 'admin';
+    if (roleNames.some(r => r === 'tpblms_instructor')) return 'instructor';
     return 'student';
 };

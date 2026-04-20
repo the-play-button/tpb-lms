@@ -26,9 +26,7 @@ from typing import Optional
 
 import requests
 
-# Add parent directories to path for vault_client
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
-from vault_client import VaultClient
+from tpb_sdk.bastion import BastionClient
 
 # Configuration
 API_BASE = "https://lms-api.matthieu-marielouise.workers.dev"
@@ -40,10 +38,10 @@ _FIXTURE_TIMEOUT = 30
 def _get_access_credentials():
     """Get Cloudflare Access credentials from vault."""
     if not hasattr(_get_access_credentials, "_cache"):
-        vault = VaultClient.from_devcontainer()
+        bastion = BastionClient.from_devcontainer()
         _get_access_credentials._cache = {
-            "client_id": vault.get_secret("infra/cloudflare_service_account_access_client_id"),
-            "client_secret": vault.get_secret("infra/cloudflare_service_account_access_client_secret"),
+            "client_id": bastion.get_secret("tpb/infra/cloudflare_service_account_access_client_id"),
+            "client_secret": bastion.get_secret("tpb/infra/cloudflare_service_account_access_client_secret"),
         }
     return _get_access_credentials._cache
 

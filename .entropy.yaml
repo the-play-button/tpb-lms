@@ -70,7 +70,7 @@ tpb_checks:
   ddd_shared_secret_auth: false       # TEST_SECRET is test-only seed endpoint, not production auth
   ddd_direct_cf_access_parsing: false # LMS uses CF Access JWT directly for auth — pre-bastion middleware pattern
   response_format: false              # application/ controllers use raw Response — legacy pattern, not worth refactoring without SDK migration
-  authz_wiring_missing: false         # legacy handlers use authenticateRequest middleware, not withAuthz — different auth pattern
+  authz_wiring_missing: false         # handlers use bastion auth middleware, not withAuthz — LMS has its own auth pattern
   audit_trail: false                  # mutation audit logging not yet implemented in LMS — tracked in TODO.md
   config_centralization: false        # byocContext.ts accesses env directly — CF Worker pattern, no config module needed
   # VanillaJS frontend structure: LMS frontend-on-cf-worker is a static site, not SPA framework

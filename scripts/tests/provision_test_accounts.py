@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Provision Test Accounts via vault-api
+Provision Test Accounts via bastion IAM
 
-Creates test accounts with real authentication via vault-api.
+Creates test accounts with real authentication via bastion.
 Users can then login via CF Access with proper roles.
 
-Uses VaultClient for credentials (reads from .env file automatically).
+Uses BastionClient for credentials (reads from .devcontainer/.env automatically).
 """
 
 import json
@@ -16,12 +16,10 @@ from pathlib import Path
 
 import requests
 
-# Add parent directory to path for vault_client import
-sys.path.insert(0, str(Path(__file__).parent.parent.parent.parent))
-from vault_client import VaultClient
+from tpb_sdk.bastion import BastionClient
 
-# vault-api endpoint
-VAULT_API_BASE = VaultClient.DEFAULT_URL
+# bastion endpoint
+VAULT_API_BASE = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
 
 _VAULT_API_TIMEOUT = 30
 _CLI_SEPARATOR_WIDTH = 50
@@ -55,17 +53,17 @@ def get_vault_headers():
     Get auth headers for vault-api IAM operations.
     
     Flow:
-    1. Use VaultClient (your personal credentials from .devcontainer/.env) to access the vault
+    1. Use BastionClient (your personal credentials from .devcontainer/.env) to access the vault
     2. Fetch TPB LMS application credentials from vault
     3. Return headers with app credentials for IAM operations
     """
     try:
-        # Step 1: Connect to vault with personal credentials
-        vault = VaultClient.from_devcontainer()
-        
+        # Step 1: Connect to bastion with personal credentials
+        bastion = BastionClient.from_devcontainer()
+
         # Step 2: Get TPB LMS app credentials from vault
-        client_id = vault.get_secret("tpb/apps/lms/vault_client_id")
-        client_secret = vault.get_secret("tpb/apps/lms/vault_client_secret")
+        client_id = bastion.get_secret("tpb/apps/lms/vault_client_id")
+        client_secret = bastion.get_secret("tpb/apps/lms/vault_client_secret")
         
         if not client_id or not client_secret:
             print("❌ Missing TPB LMS credentials in vault!")

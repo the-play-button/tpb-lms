@@ -12,7 +12,7 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { configureLogger, log, createBastionAuthMiddleware, createBastionClient } from '@the-play-button/tpb-sdk-js';
+import { configureLogger, setLoggerWaitUntil, log, createBastionAuthMiddleware, createBastionClient } from '@the-play-button/tpb-sdk-js';
 import { ALLOWED_ORIGINS, jsonResponse } from './cors.js';
 import { verifyAPIKey } from './auth/verifyAPIKey.js';
 import { getOrCreateContact } from './auth/getOrCreateContact.js';
@@ -109,6 +109,7 @@ app.use('/*', async (c, next) => {
     });
     loggerReady = true;
   }
+  setLoggerWaitUntil(c.executionCtx.waitUntil.bind(c.executionCtx));
   return next();
 });
 
@@ -143,23 +144,44 @@ app.use('/api/*', async (c, next) => {
   await next();
 });
 
+// --- Tally secrets (vault, cached per-isolate) ---
+let _tallySigningSecret = null;
+let _tallyWebhookSecret = null;
+
+const fetchTallySigningSecret = async (env) => {
+  if (_tallySigningSecret) return _tallySigningSecret;
+  const bastion = await initBastionClient(env);
+  const result = await bastion.getSecret('tpb/apps/lms/tally_signing_secret');
+  if (!result.ok) throw new Error(`[tally] signing secret fetch failed: ${result.error}`);
+  if (!result.value) throw new Error('[tally] signing secret is empty');
+  _tallySigningSecret = result.value;
+  return _tallySigningSecret;
+};
+
+const fetchTallyWebhookSecret = async (env) => {
+  if (_tallyWebhookSecret) return _tallyWebhookSecret;
+  const bastion = await initBastionClient(env);
+  const result = await bastion.getSecret('tpb/apps/lms/tally_webhook_secret');
+  if (!result.ok) throw new Error(`[tally] webhook secret fetch failed: ${result.error}`);
+  if (!result.value) throw new Error('[tally] webhook secret is empty');
+  _tallyWebhookSecret = result.value;
+  return _tallyWebhookSecret;
+};
+
 // --- Tally webhook auth (signature-based, not session-based) ---
 const handleTallyWithAuth = async (request, url, env) => {
-  if (env.TALLY_SIGNING_SECRET) {
-    const { valid, body, noSignature } = await verifyTallySignature(request, env.TALLY_SIGNING_SECRET); // entropy-naming-convention-ok: destructured from API shape
-    if (noSignature) {
-      const webhookSecret = url.searchParams.get('secret');
-      const secretValid = env.TALLY_WEBHOOK_SECRET && webhookSecret === env.TALLY_WEBHOOK_SECRET;
-      if (!secretValid) return jsonResponse({ error: 'Invalid webhook: no signature and invalid secret' }, 403, request);
-      return await handleTallyWebhookWithBody(body, env, request);
+  const signingSecret = await fetchTallySigningSecret(env);
+  const { valid, body, noSignature } = await verifyTallySignature(request, signingSecret); // entropy-naming-convention-ok: destructured from API shape
+  if (noSignature) {
+    const webhookSecret = url.searchParams.get('secret');
+    const expectedSecret = await fetchTallyWebhookSecret(env);
+    if (webhookSecret !== expectedSecret) {
+      return jsonResponse({ error: 'Invalid webhook: no signature and invalid secret' }, 403, request);
     }
-    if (!valid) return jsonResponse({ error: 'Invalid Tally signature' }, 403, request);
     return await handleTallyWebhookWithBody(body, env, request);
   }
-  const webhookSecret = url.searchParams.get('secret');
-  const secretValid = env.TALLY_WEBHOOK_SECRET && webhookSecret === env.TALLY_WEBHOOK_SECRET;
-  if (!secretValid) return jsonResponse({ error: 'Invalid webhook secret' }, 403, request);
-  return await handleTallyWebhook(request, env);
+  if (!valid) return jsonResponse({ error: 'Invalid Tally signature' }, 403, request);
+  return await handleTallyWebhookWithBody(body, env, request);
 };
 
 // --- Public routes (no session auth) ---

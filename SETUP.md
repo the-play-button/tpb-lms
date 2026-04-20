@@ -38,7 +38,7 @@ cd tpb_system/04.Execution/lms && source venv/bin/activate && python scripts/tes
 ## Dependencies
 
 - **requests**: HTTP client for API calls
-- **httpx**: Async HTTP client (for vault_client)
+- **httpx**: Async HTTP client (for BastionClient)
 - **PyYAML**: YAML parsing for SOM files and quiz configs
 - **pytest**: Testing framework
 - **orjson**: Fast JSON handling

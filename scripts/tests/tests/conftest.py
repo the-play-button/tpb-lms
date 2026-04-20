@@ -5,19 +5,11 @@ Two authentication mechanisms:
 1. API Keys - for testing API key authentication itself
 2. CF Access Service Tokens - for testing browser user flows (RBAC)
 
-Credentials are fetched from vault-api via VaultClient.
+Credentials are fetched from bastion via BastionClient.
 No hardcoded secrets or .env files needed.
 """
 
-import sys
-from pathlib import Path
-
-# Add parent dirs to path for imports
-_project_root = Path(__file__).resolve().parents[4]
-if str(_project_root) not in sys.path:
-    sys.path.insert(0, str(_project_root))
-
-from vault_client import VaultClient
+from tpb_sdk.bastion import BastionClient
 
 # ============================================
 # Configuration
@@ -32,14 +24,14 @@ API_BASE = PROD_URL
 # Test timeout
 TIMEOUT = 10
 
-# Vault client singleton
+# Bastion client singleton
 _vault = None
 
 def get_vault():
-    """Get or create VaultClient singleton."""
+    """Get or create BastionClient singleton."""
     global _vault
     if _vault is None:
-        _vault = VaultClient.from_devcontainer()
+        _vault = BastionClient.from_devcontainer()
     return _vault
 
 # ============================================
