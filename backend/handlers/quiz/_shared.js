@@ -7,9 +7,9 @@
  */
 
 import { jsonResponse } from '../../cors.js';
-import { recordQuizEvent, checkQuizBadges, checkStreakBadges } from '../../helpers/xp/index.js';
+import { recordQuizEvent, checkQuizBadges, checkStreakBadges } from '../../utils/xp/index.js';
 import { applyProjections } from '../../projections/engine.js';
-import { generateEventId } from '../../helpers/events.js';
+import { generateEventId } from '../../utils/events.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 
 export { log };

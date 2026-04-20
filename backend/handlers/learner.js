@@ -8,7 +8,7 @@
  */
 
 import { jsonResponse } from '../cors.js';
-import { getCurrentStreak } from '../helpers/xp/index.js';
+import { getCurrentStreak } from '../utils/xp/index.js';
 
 export const getLearnerProgress = async (request, env, userContext) => {
     const userId = userContext.contact.id;

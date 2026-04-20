@@ -45,7 +45,7 @@ import { sharedWithMeController } from './application/sharing/sharedWithMeContro
 import { sharedByMeController } from './application/sharing/sharedByMeController.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
-import { handleLogin, handleCallback, handleLogout } from './handlers/auth-logto/index.js';
+
 
 // --- BastionClient singleton with authzSigningSecret (cached per-isolate) ---
 let _bastionClient = null;
@@ -167,9 +167,6 @@ const handleTallyWithAuth = async (request, url, env) => {
 const PUBLIC_API_PATHS = ['/api/health', '/api/tally-webhook', '/api/content/github', '/api/test/seed'];
 
 const publicRoutes = [
-  { method: 'GET', path: '/auth/login', handler: handleLogin },
-  { method: 'GET', path: '/auth/callback', handler: handleCallback },
-  { method: 'GET', path: '/auth/logout', handler: handleLogout },
   { method: 'POST', path: '/api/tally-webhook', handler: (req, env) => handleTallyWithAuth(req, new URL(req.url), env) },
   // entropy-legacy-marker-ok: debt — TODO re-enable auth on GitHub content proxy after fixing vault token scopes
   { method: 'GET', path: '/api/content/github', handler: (req, env) => getGitHubContent(req, env, null) },

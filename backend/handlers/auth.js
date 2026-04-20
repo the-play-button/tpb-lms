@@ -8,7 +8,7 @@
 
 import { jsonResponse } from '../cors.js';
 import { verifyAccessJWT, getOrCreateContact } from '../auth/index.js';
-import { getCurrentStreak } from '../helpers/xp/index.js';
+import { getCurrentStreak } from '../utils/xp/index.js';
 
 const validateJWT = async (jwt, env, request) => {
     if (!jwt) {

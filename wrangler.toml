@@ -16,10 +16,6 @@ database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 [vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
 BASTION_URL = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
-# Logto SSO (set to "true" to enable, "false" to use CF Access)
-USE_LOGTO = "false"
-LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
-# LOGTO_APP_ID = "" # Set after registering app in Logto Admin Console
 TELEMETRY_URL = "https://tpb-telemetry.matthieu-marielouise.workers.dev"
 CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
 # CF_ACCESS_CLIENT_SECRET — fetche depuis bastion vault au runtime (tpb/infra/cf_access_sa_client_secret)
@@ -57,8 +53,6 @@ database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 [env.production.vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
 BASTION_URL = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
-USE_LOGTO = "false"
-LOGTO_ENDPOINT = "https://auth.theplaybutton.dev"
 TELEMETRY_URL = "https://tpb-telemetry.matthieu-marielouise.workers.dev"
 CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
 # CF_ACCESS_CLIENT_SECRET — fetche depuis bastion vault au runtime (tpb/infra/cf_access_sa_client_secret)

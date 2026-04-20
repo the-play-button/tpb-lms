@@ -10,7 +10,7 @@
  */
 
 import { jsonResponse } from '../cors.js';
-import { checkCourseCompletionBadges, recordCourseCompletion } from '../helpers/xp/index.js';
+import { checkCourseCompletionBadges, recordCourseCompletion } from '../utils/xp/index.js';
 
 const parseStep = (row, currentStep) => {
     const media = JSON.parse(row.media_json || '[]');

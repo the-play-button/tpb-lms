@@ -4,7 +4,7 @@
  *
  * Declares all bindings used by the LMS worker:
  * - D1 database
- * - Service Binding to bastion (BASTION)
+ * - Bastion URL + token (HTTP)
  * - Secrets and configuration vars
  */
 
@@ -20,8 +20,6 @@ export interface Env {
 
   // --- Vars ---
   ACCESS_TEAM_DOMAIN: string;
-  USE_LOGTO: string;
-  LOGTO_ENDPOINT: string;
 
   // --- Legacy (to be removed post-migration) ---
   BASTION_BACKEND_SECRET_KEY?: string;

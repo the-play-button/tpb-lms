@@ -2,14 +2,9 @@
  * Shared auth primitives - JWKS caching, JWT parsing, crypto helpers
  */
 
-import { getAuthConfig } from '../config/auth.js';
-
 export let jwksCache = null;
 export let jwksCacheTime = 0;
 export const JWKS_CACHE_TTL = 3600000; // 1 hour
-
-export let oidcJwksCache = null;
-export let oidcJwksCacheTime = 0;
 
 /**
  * Fetch and cache JWKS from Cloudflare Access
@@ -32,26 +27,6 @@ export const getJWKS = async teamDomain => {
     jwksCacheTime = now;
 
     return jwksCache;
-};
-
-/**
- * Fetch and cache JWKS from an OIDC provider (Logto)
- */
-export const getOidcJWKS = async (issuer, jwksUri) => {
-    const now = Date.now();
-    if (oidcJwksCache && (now - oidcJwksCacheTime) < JWKS_CACHE_TTL) {
-        return oidcJwksCache;
-    }
-
-    const url = jwksUri || `${issuer}/jwks`;
-    const response = await fetch(url);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch OIDC JWKS from ${url}: ${response.status}`);
-    }
-
-    oidcJwksCache = await response.json();
-    oidcJwksCacheTime = now;
-    return oidcJwksCache;
 };
 
 /**

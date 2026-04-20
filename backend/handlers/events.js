@@ -16,7 +16,7 @@
 import { jsonResponse } from '../cors.js';
 import { applyProjections, getProgress } from '../projections/engine.js';
 import { validateEvent } from '../schemas/events.js';
-import { generateEventId, storeEvent } from '../helpers/events.js';
+import { generateEventId, storeEvent } from '../utils/events.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 
 /**
