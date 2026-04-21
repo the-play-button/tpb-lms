@@ -38,7 +38,7 @@ export const listConnectionsHandle = async (ctx: HandlerContext): Promise<Result
   const filtered = listConnectionsFilter(executeResult.value);
 
   // 7. Track
-  listConnectionsTrack();
+  listConnectionsTrack(ctx.actor);
 
   return { ok: true, value: filtered };
 };

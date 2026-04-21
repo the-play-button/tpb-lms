@@ -1,8 +1,8 @@
-import { log } from '@the-play-button/tpb-sdk-js';
+import { track } from '@the-play-button/tpb-sdk-js';
 
 /**
- * Track step: fire-and-forget audit log for listConnections.
+ * Track step: fire-and-forget domain event for listConnections.
  */
-export const listConnectionsTrack = (): void => {
-  log.info('connections:list', { file: 'listConnectionsTrack.ts' });
+export const listConnectionsTrack = (actor: { id: string; type: string }): void => {
+  track('lms:connection:listed', actor);
 };

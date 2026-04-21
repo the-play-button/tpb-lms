@@ -1,8 +1,8 @@
-import { log } from '@the-play-button/tpb-sdk-js';
+import { track } from '@the-play-button/tpb-sdk-js';
 
 /**
- * Track step: fire-and-forget audit log for sharedByMe.
+ * Track step: fire-and-forget domain event for sharedByMe.
  */
-export const sharedByMeTrack = (): void => {
-  log.info('sharing:shared-by-me', { file: 'sharedByMeTrack.ts' });
+export const sharedByMeTrack = (actor: { id: string; type: string }): void => {
+  track('lms:share:listed-by-me', actor);
 };

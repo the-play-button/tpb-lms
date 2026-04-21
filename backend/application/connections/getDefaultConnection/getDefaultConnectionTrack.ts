@@ -1,8 +1,8 @@
-import { log } from '@the-play-button/tpb-sdk-js';
+import { track } from '@the-play-button/tpb-sdk-js';
 
 /**
- * Track step: fire-and-forget audit log for getDefaultConnection.
+ * Track step: fire-and-forget domain event for getDefaultConnection.
  */
-export const getDefaultConnectionTrack = (): void => {
-  log.info('connections:get-default', { file: 'getDefaultConnectionTrack.ts' });
+export const getDefaultConnectionTrack = (actor: { id: string; type: string }): void => {
+  track('lms:connection:read-default', actor);
 };

@@ -1,8 +1,8 @@
-import { log } from '@the-play-button/tpb-sdk-js';
+import { track } from '@the-play-button/tpb-sdk-js';
 
 /**
- * Track step: fire-and-forget audit log for getCloudPitch.
+ * Track step: fire-and-forget domain event for getCloudPitch.
  */
-export const getCloudPitchTrack = (refId: string): void => {
-  log.info('cloud-pitch:get', { file: 'getCloudPitchTrack.ts', refId });
+export const getCloudPitchTrack = (actor: { id: string; type: string }, refId: string): void => {
+  track('lms:cloud-pitch:read', actor, { refId });
 };

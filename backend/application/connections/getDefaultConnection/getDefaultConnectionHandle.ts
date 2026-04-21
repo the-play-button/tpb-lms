@@ -38,7 +38,7 @@ export const getDefaultConnectionHandle = async (ctx: HandlerContext): Promise<R
   const filtered = getDefaultConnectionFilter(executeResult.value);
 
   // 7. Track
-  getDefaultConnectionTrack();
+  getDefaultConnectionTrack(ctx.actor);
 
   return { ok: true, value: filtered };
 };

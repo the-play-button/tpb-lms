@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@the-play-button/tpb-sdk-js':
-        specifier: ^1.20.0
-        version: 1.20.0(hono@4.12.14)
+        specifier: ^1.21.0
+        version: 1.21.0(hono@4.12.14)
       hono:
         specifier: ^4.7.10
         version: 4.12.14
@@ -35,8 +35,8 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
-  '@the-play-button/tpb-sdk-js@1.20.0':
-    resolution: {integrity: sha512-yOM+q0FZK7ck1he7r8LA1c9DELCYLhzsLkutuVZmZRE7HjSuuFZAhtmYFkqaX0feHNGSeoqehRyIch9xLpMKrQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.20.0/tpb-sdk-js-1.20.0.tgz}
+  '@the-play-button/tpb-sdk-js@1.21.0':
+    resolution: {integrity: sha512-IsfUB0Xx4DuAcgBrCeoxZ5idCsvNwnArd+U2Fb9lSxy4cBe4OAnXPyuTMLdkxBKk4u7K8iFermX1Dg8W2eNyKQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.21.0/tpb-sdk-js-1.21.0.tgz}
     peerDependencies:
       hono: ^4.0.0
 
@@ -55,17 +55,21 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+
 snapshots:
 
   '@cloudflare/workers-types@4.20260418.1': {}
 
   '@rollup/rollup-darwin-arm64@4.60.1': {}
 
-  '@the-play-button/tpb-sdk-js@1.20.0(hono@4.12.14)':
+  '@the-play-button/tpb-sdk-js@1.21.0(hono@4.12.14)':
     dependencies:
       '@rollup/rollup-darwin-arm64': 4.60.1
       '@unified-api/typescript-sdk': 2.83.39
       hono: 4.12.14
+      zod: 4.3.6
 
   '@unified-api/typescript-sdk@2.83.39':
     dependencies:
@@ -76,3 +80,5 @@ snapshots:
   typescript@5.9.3: {}
 
   zod@3.25.76: {}
+
+  zod@4.3.6: {}

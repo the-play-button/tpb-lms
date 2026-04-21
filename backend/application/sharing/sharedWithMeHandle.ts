@@ -37,7 +37,7 @@ export const sharedWithMeHandle = async (ctx: HandlerContext): Promise<Result<st
   const filtered = sharedWithMeFilter(executeResult.value, ctx.userEmail);
 
   // 7. Track
-  sharedWithMeTrack();
+  sharedWithMeTrack(ctx.actor);
 
   return { ok: true, value: filtered };
 };

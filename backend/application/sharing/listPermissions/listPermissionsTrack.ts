@@ -1,8 +1,8 @@
-import { log } from '@the-play-button/tpb-sdk-js';
+import { track } from '@the-play-button/tpb-sdk-js';
 
 /**
- * Track step: fire-and-forget audit log for listPermissions.
+ * Track step: fire-and-forget domain event for listPermissions.
  */
-export const listPermissionsTrack = (refId: string): void => {
-  log.info('sharing:list-permissions', { file: 'listPermissionsTrack.ts', refId });
+export const listPermissionsTrack = (actor: { id: string; type: string }, refId: string): void => {
+  track('lms:permission:listed', actor, { refId });
 };

@@ -39,7 +39,7 @@ export const revokeShareHandle = async (shareId: string, ctx: HandlerContext): P
   const filtered = revokeShareFilter(executeResult.value);
 
   // 7. Track
-  revokeShareTrack(inputResult.value.share_id);
+  revokeShareTrack(ctx.actor, inputResult.value.share_id);
 
   return { ok: true, value: filtered };
 };

@@ -44,7 +44,7 @@ export const shareContentHandle = async (request: Request, ctx: HandlerContext, 
   );
 
   // 7. Track
-  shareContentTrack(inputResult.value.ref_id, inputResult.value.email);
+  shareContentTrack(ctx.actor, inputResult.value.ref_id, inputResult.value.email);
 
   return { ok: true, value: filtered };
 };
