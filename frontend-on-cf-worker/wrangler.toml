@@ -5,7 +5,10 @@ name = "lms-viewer"
 main = "_worker.js"
 compatibility_date = "2024-01-01"
 
-# Serve static assets from this directory
+# Serve static assets from this directory.
+# `binding = "ASSETS"` is REQUIRED when `main` is also set — without it,
+# env.ASSETS is undefined and every request throws TypeError → CF 1101.
 [assets]
 directory = "./"
+binding = "ASSETS"
 
