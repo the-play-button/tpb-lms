@@ -95,18 +95,25 @@ app.use('/*', cors({
 let loggerReady = false;
 app.use('/*', async (c, next) => {
   if (!loggerReady) {
-    const cfAccessSecret = await fetchTelemetryCfAccessSecret(c.env);
-    configureLogger({
-      service: 'tpb-lms',
-      telemetry: {
-        url: c.env.TELEMETRY_URL,
-        token: c.env.BASTION_TOKEN ?? '',
-        projectSlug: 'tpb-lms',
-        environment: 'production',
-        cfAccessClientId: c.env.CF_ACCESS_CLIENT_ID,
-        cfAccessClientSecret: cfAccessSecret,
-      },
-    });
+    // Telemetry is best-effort: a broken secret fetch must NOT crash the Worker
+    // (that turns every request into CF 1101 "Worker threw exception"). Log the
+    // failure to the CF tail and mark the logger ready so we don't retry per request.
+    try {
+      const cfAccessSecret = await fetchTelemetryCfAccessSecret(c.env);
+      configureLogger({
+        service: 'tpb-lms',
+        telemetry: {
+          url: c.env.TELEMETRY_URL,
+          token: c.env.BASTION_TOKEN ?? '',
+          projectSlug: 'tpb-lms',
+          environment: 'production',
+          cfAccessClientId: c.env.CF_ACCESS_CLIENT_ID,
+          cfAccessClientSecret: cfAccessSecret,
+        },
+      });
+    } catch (err) {
+      console.error('[telemetry] logger init failed — continuing without telemetry:', err);
+    }
     loggerReady = true;
   }
   setLoggerWaitUntil(c.executionCtx.waitUntil.bind(c.executionCtx));
@@ -262,7 +269,14 @@ app.use('/api/*', async (c, next) => {
     learner: contact,
   });
 
-  await initBastionClient(c.env);
+  // initBastionClient fetches the authz signing secret; a failure here must
+  // not crash the Worker (1101). Handlers that actually need the client will
+  // re-call initBastionClient and fail visibly at that point with a 500.
+  try {
+    await initBastionClient(c.env);
+  } catch (err) {
+    console.error('[authz] initBastionClient failed:', err);
+  }
 
   return next();
 });
