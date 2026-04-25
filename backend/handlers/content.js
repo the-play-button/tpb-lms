@@ -51,9 +51,11 @@ const getGitHubTokenWithDebug = async env => {
     }
 
     const result = await response.json();
-    const token = result.data?.value || null;
+    // Bastion /secret/data/{path} returns { success, path, value, metadata } — value is
+    // top-level, not nested in `data` (that was an older Vault HCP shape).
+    const token = result.value ?? result.data?.value ?? null;
     if (!token) {
-        throw new Error('Vault response missing data.value for tpb/infra/github_pat_tpb_repos');
+        throw new Error('Vault response missing value for tpb/infra/github_pat_tpb_repos');
     }
 
     cachedToken = token;
