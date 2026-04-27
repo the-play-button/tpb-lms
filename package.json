@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "deploy:prod": "wrangler deploy --env production"
+    "deploy:prod": "wrangler deploy --env production",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@the-play-button/tpb-sdk-js": "^1.21.0",
@@ -15,6 +18,8 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260217.0",
-    "typescript": "^5.9.3"
+    "@vitest/coverage-v8": "^4.1.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.0"
   }
 }
