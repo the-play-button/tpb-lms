@@ -12,3 +12,6 @@ compatibility_date = "2024-01-01"
 directory = "./"
 binding = "ASSETS"
 
+[env.production]
+name = "lms-viewer-production"
+

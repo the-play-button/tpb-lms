@@ -486,7 +486,7 @@ INSERT OR IGNORE INTO gamification_badge (id, name, description, icon_url, type,
 INSERT OR IGNORE INTO lms_course (id, name, description, categories_json, is_active, created_at) VALUES
     ('wge-onboarding', 'Onboarding WGE', 'Découvrez les valeurs de Wonder Grip Europe et la vie dans l''entreprise', '["onboarding"]', 1, datetime('now'));
 
-INSERT OR IGNORE INTO lms_class (id, course_id, name, description, media_json, order_index, created_at) VALUES
+INSERT OR IGNORE INTO lms_class (id, course_id, name, description, media_json, sys_order_index, created_at) VALUES
     ('wge-onboarding-1', 'wge-onboarding', 'Les valeurs de WGE', 'Présentation par Julien CORNILLON', '[{"type":"VIDEO","stream_id":"618dd4d79f510ea8f4ab9e883af92fc4","name":"Les valeurs de WGE"}]', 1, datetime('now')),
     ('wge-onboarding-2', 'wge-onboarding', 'La vie dans l''entreprise', 'Présentation par Mai KUROKAWA', '[{"type":"VIDEO","stream_id":"26857db63bcbcf87a816bbad1f3d17a1","name":"La vie dans l''entreprise"}]', 2, datetime('now')),
     ('wge-onboarding-quiz', 'wge-onboarding', 'Quiz de validation', 'Validez vos acquis', '[{"type":"QUIZ","tally_form_id":"Y5R7Mq","name":"Quiz de validation"}]', 3, datetime('now'));

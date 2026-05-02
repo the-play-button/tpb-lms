@@ -29,24 +29,18 @@ CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
 port = 8787
 local_protocol = "http"
 
-# Production environment
-[env.production]
-name = "lms-api"
-
-# D1 Database binding for production
-[[env.production.d1_databases]]
-binding = "DB"
-database_name = "lms-db"
-database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
-
-# Authentication configuration for production
-[env.production.vars]
-ACCESS_TEAM_DOMAIN = "theplaybutton"
-BASTION_URL = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
-TELEMETRY_URL = "https://tpb-telemetry.matthieu-marielouise.workers.dev"
-CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
-# CF_ACCESS_CLIENT_SECRET — fetche depuis bastion vault au runtime (tpb/infra/cf_access_sa_client_secret)
-
-# Staging environment  
+# ── Production environment ──
 [env.staging]
 name = "lms-api-staging"
+
+[env.staging.vars]
+ACCESS_TEAM_DOMAIN = "theplaybutton"
+BASTION_URL = "https://tpb-bastion-backend-staging.matthieu-marielouise.workers.dev"
+TELEMETRY_URL = "https://tpb-telemetry-staging.matthieu-marielouise.workers.dev"
+CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "lms-db-staging"
+database_id = "2808b65b-b528-439d-a781-83d47ca6180c"
+migrations_dir = "db/migrations"
