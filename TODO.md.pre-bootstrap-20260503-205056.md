@@ -1,18 +1,20 @@
-<!-- template-version: 1 -->
-# TODO — tpb-lms
+# project_id: PB04 — tpb-lms
 
-> Working state de l'App agent. Curated agent + user. Lecture obligatoire au bootstrap.
-> 
-> _Migré depuis l'ancien format. Backup : `TODO.md.pre-bootstrap-*.md` au repo root._
-
-## Now
+## CRUD+List Endpoint Granularity (entropy: `ddd_endpoint_granularity`)
 
 4 violations détectées. Plan détaillé : `plans/2026-03_crud-list-endpoint-refactor/01-rename-endpoints.plan.md`
+
 - [ ] Rename `sharedByMe` → `listSharedByMe` (entité Share — lister les partages créés par moi) {priority:medium} {tags:entropy+ddd+crud-list}
 - [ ] Rename `sharedWithMe` → `listSharedWithMe` (entité Share — lister les partages reçus) {priority:medium} {tags:entropy+ddd+crud-list}
 - [ ] Rename `revokeShare` → `deleteShare` (entité Share — révoquer = supprimer) {priority:medium} {tags:entropy+ddd+crud-list}
 - [ ] Rename `shareContent` → `createShare` (entité Share — partager = créer un partage) {priority:medium} {tags:entropy+ddd+crud-list}
+
+## GRAPHS: JS Handler Routes — RDD Refactoring Required
+
 40 JS handler routes under `backend/handlers/` are NOT pipelined. Before pipelining them, the LMS ERD (Entity-Relationship Diagram) needs clarification through a Requirements-Driven Design (RDD) pass. Many handlers may not need to exist as-is — some should be merged, some split, some removed.
+
+### Route inventory by domain (40 total)
+
 | Domain | Routes | Count |
 |--------|--------|-------|
 | Enrollment | listEnrollments, updateProgress, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus | 6 |
@@ -31,11 +33,20 @@
 | Content | getGitHubContent, listGitHubDirectory | 2 |
 | Health | handleHealthCheck | 1 |
 | Test | handleTestSeed | 1 |
+
+### Action needed
+
 - [ ] RDD pass: clarify LMS bounded contexts and entities {priority:high} {tags:ddd+lms+architecture}
 - [ ] Identify which handlers map to which BCs (enrollment? content-delivery? assessment? administration?) {priority:high} {tags:ddd+lms+architecture}
 - [ ] Simplify: merge redundant handlers, remove dead ones, rename to CRUD+List conventions {priority:medium} {tags:ddd+crud-list+lms}
 - [ ] THEN pipeline each surviving handler into 9-step DDD {priority:medium} {tags:ddd+lms}
+
+## Direction : standalone app avec sa propre D1
+
 Actuellement le LMS est branché sur GitHub pour lire le contenu (markdown via GitHub raw + token depuis Vault). L'objectif est d'en faire une app standalone avec sa propre D1 comme source de données.
+
+### Flux actuel (à migrer)
+
 ```
 Brain/{org}/{project}/outputs/built/SOMs/
     ↓ (scripts PA06: upload_som.py + handler.py)
@@ -67,6 +78,9 @@ Brain/{org}/{project}/outputs/built/SOMs/
    - Token GitHub stocké dans Vault
    - Fallback language : en → source
 ```
+
+### Flux cible
+
 ```
 Brain/{org}/{project}/outputs/built/SOMs/
     ↓ (scripts de build — à migrer depuis PA06 vers tpb-lms/scripts/)
@@ -84,7 +98,11 @@ Brain/{org}/{project}/outputs/built/SOMs/
    - Requête D1 = source unique
    - i18n : query par lang + fallback en D1
 ```
+
+### Scripts PA06 à migrer vers tpb-lms
+
 Actuellement dans `Brain/the-play-button/PA06 KMS Setup/outputs/run/automations/scripts/` :
+
 | Script PA06 | Destination tpb-lms | Rôle |
 |---|---|---|
 | `upload_som.py` | `scripts/upload_som.py` | CLI entry point |
@@ -109,30 +127,29 @@ Actuellement dans `Brain/the-play-button/PA06 KMS Setup/outputs/run/automations/
 | `core/logger.py` | `scripts/core/logger.py` | Session logger |
 | `lms/sync_tally_quiz.py` | `scripts/lms/sync_tally_quiz.py` | Tally quiz sync |
 | `lms/tally_webhook.py` | `scripts/lms/tally_webhook.py` | Tally webhook handler |
+
+### Refactos nécessaires
+
 - [ ] Migrer les scripts PA06 vers `tpb-lms/scripts/` {priority:medium} {tags:lms+migration}
 - [ ] Modifier le build pour insérer le markdown directement dans D1 (plus de GitHub raw) {priority:medium} {tags:lms+d1+migration}
 - [ ] Supprimer la dépendance au token GitHub dans le frontend {priority:medium} {tags:lms+security+migration}
 - [ ] Le frontend fetch D1 directement (via Worker binding) au lieu de GitHub {priority:medium} {tags:lms+d1+ui}
 - [ ] Supporter le multi-org (aujourd'hui hardcodé sur TPB SOMs) {priority:medium} {tags:lms+multi-org}
 - [ ] Les directives LMS (`PA06/automations/directives/lms/`) → absorber dans un SKILL.md tpb-cock si pertinent {priority:medium} {tags:lms+sss}
+
+### Hardware-aware transcription (à conserver)
+
 Le pipeline de transcription supporte 3 backends :
 - **macOS M1/M2/M3** : `mlx-whisper` (Metal GPU, 5x realtime)
 - **Linux/Windows NVIDIA** : `faster-whisper` + CUDA (5x realtime)
 - **CPU fallback** : `faster-whisper` CPU (0.3x realtime — lent)
+
 Détection automatique dans `transcriber.py`. Ne pas casser cette logique.
+
+### Translation backend (à conserver)
+
 Priorité : Ollama local (gratuit) → OpenAI API (fallback payant).
 - Ollama : `qwen2.5:7b` via subprocess
 - OpenAI : `gpt-4o-mini` via API
+
 Ne pas forcer un seul backend. La détection auto est la bonne approche.
-
-## Next
-
-_(empty)_
-
-## Later
-
-_(empty)_
-
-## Done
-
-_(empty)_
