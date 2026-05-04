@@ -12,7 +12,7 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@the-play-button/tpb-sdk-js": "^1.21.0",
+    "@the-play-button/tpb-sdk-js": "^1.26.2",
     "hono": "^4.7.10",
     "zod": "^3.25.76"
   },

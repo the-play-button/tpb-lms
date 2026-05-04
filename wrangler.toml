@@ -11,6 +11,7 @@ compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 binding = "DB"
 database_name = "lms-db"
 database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
+migrations_dir = "db/migrations"
 
 # Authentication configuration
 [vars]

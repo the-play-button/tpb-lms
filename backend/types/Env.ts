@@ -17,6 +17,8 @@ export interface Env {
 
   // --- Secrets ---
   BASTION_TOKEN: string;
+  CF_ACCESS_CLIENT_ID: string;
+  CF_ACCESS_CLIENT_SECRET: string;
 
   // --- Vars ---
   ACCESS_TEAM_DOMAIN: string;

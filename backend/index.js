@@ -55,6 +55,8 @@ const initBastionClient = async (env) => {
   const tempClient = createBastionClient({
     bastionUrl: env.BASTION_URL,
     serviceToken: env.BASTION_TOKEN,
+    cfAccessClientId: env.CF_ACCESS_CLIENT_ID,
+    cfAccessClientSecret: env.CF_ACCESS_CLIENT_SECRET,
   });
   const secretResult = await tempClient.getSecret('tpb/apps/lms/authz_signing_secret');
   if (!secretResult.ok) throw new Error(`[initBastionClient] ${secretResult.error}`);
@@ -62,6 +64,8 @@ const initBastionClient = async (env) => {
   _bastionClient = createBastionClient({
     bastionUrl: env.BASTION_URL,
     serviceToken: env.BASTION_TOKEN,
+    cfAccessClientId: env.CF_ACCESS_CLIENT_ID,
+    cfAccessClientSecret: env.CF_ACCESS_CLIENT_SECRET,
     authzSigningSecret: secretResult.value,
   });
   return _bastionClient;
@@ -237,6 +241,8 @@ app.use('/api/*', async (c, next) => {
   return createBastionAuthMiddleware((ctx) => ({
     bastionUrl: ctx.env.BASTION_URL,
     serviceToken: ctx.env.BASTION_TOKEN,
+    cfAccessClientId: ctx.env.CF_ACCESS_CLIENT_ID,
+  cfAccessClientSecret: ctx.env.CF_ACCESS_CLIENT_SECRET,
   }))(c, next);
 });
 

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@the-play-button/tpb-sdk-js':
-        specifier: ^1.21.0
-        version: 1.21.0(hono@4.12.14)
+        specifier: ^1.26.2
+        version: 1.26.2(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
       hono:
         specifier: ^4.7.10
         version: 4.12.14
@@ -191,13 +191,20 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@the-play-button/tpb-sdk-js@1.21.0':
-    resolution: {integrity: sha512-IsfUB0Xx4DuAcgBrCeoxZ5idCsvNwnArd+U2Fb9lSxy4cBe4OAnXPyuTMLdkxBKk4u7K8iFermX1Dg8W2eNyKQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.21.0/tpb-sdk-js-1.21.0.tgz}
+  '@the-play-button/tpb-sdk-js@1.26.2':
+    resolution: {integrity: sha512-Qw878ALdbzjdhxOOY83dj1aTLI4Oswq12isfAmOAvMWzDdTdKln1P849OZInmhCOcwh8ZMJhWir4v00/Ly3VfA==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/1.26.2/tpb-sdk-js-1.26.2.tgz}
     peerDependencies:
+      '@the-play-button/tpb-sdk-react': '>=2.3.0'
       hono: ^4.0.0
-    peerDependenciesMeta:
-      hono:
-        optional: true
+      react: '>=18.0.0'
+      react-dom: '>=18.0.0'
+
+  '@the-play-button/tpb-sdk-react@2.6.0':
+    resolution: {integrity: sha512-+zGYFEX+YPODZOg4NdZSbeQtBIXAKVf7h1LDXWXLSCodMIFl0BXrD2xkAeSjfQWOhdBpFr0T0ChtWNAF7dcKfQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-react/-/2.6.0/tpb-sdk-react-2.6.0.tgz}
+    peerDependencies:
+      '@the-play-button/tpb-sdk-js': '>=1.20.0'
+      lucide-react: '>=0.400.0'
+      react: '>=18.0.0'
 
   '@tybys/wasm-util@0.10.1':
     resolution: {integrity: sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg==}
@@ -394,6 +401,11 @@ packages:
     resolution: {integrity: sha512-NXYBzinNrblfraPGyrbPoD19C1h9lfI/1mzgWYvXUTe414Gz/X1FD2XBZSZM7rRTrMA8JL3OtAaGifrIKhQ5yQ==}
     engines: {node: '>= 12.0.0'}
 
+  lucide-react@1.14.0:
+    resolution: {integrity: sha512-+1mdWcfSJVUsaTIjN9zoezmUhfXo5l0vP7ekBMPo3jcS/aIkxHnXqAPsByszMZx/Y8oQBRJxJx5xg+RH3urzxA==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -426,10 +438,22 @@ packages:
     resolution: {integrity: sha512-W62t/Se6rA0Az3DfCL0AqJwXuKwBeYg6nOaIgzP+xZ7N5BFCI7DYi1qs6ygUYT6rvfi6t9k65UMLJC+PHZpDAA==}
     engines: {node: ^10 || ^12 || >=14}
 
+  react-dom@19.2.5:
+    resolution: {integrity: sha512-J5bAZz+DXMMwW/wV3xzKke59Af6CHY7G4uYLN1OvBcKEsWOs4pQExj86BBKamxl/Ik5bx9whOrvBlSDfWzgSag==}
+    peerDependencies:
+      react: ^19.2.5
+
+  react@19.2.5:
+    resolution: {integrity: sha512-llUJLzz1zTUBrskt2pwZgLq59AemifIftw4aB7JxOqf1HY2FDaGDxgwpAPVzHU1kdWabH7FauP4i1oEeer2WCA==}
+    engines: {node: '>=0.10.0'}
+
   rolldown@1.0.0-rc.17:
     resolution: {integrity: sha512-ZrT53oAKrtA4+YtBWPQbtPOxIbVDbxT0orcYERKd63VJTF13zPcgXTvD4843L8pcsI7M6MErt8QtON6lrB9tyA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
+
+  scheduler@0.27.0:
+    resolution: {integrity: sha512-eNv+WrVbKu1f3vbYJT/xtiF5syA5HPIMtf9IgY/nKg0sWqzAUEvqY/xm7OcZc/qafLx/iO9FgOmeSAp4v5ti/Q==}
 
   semver@7.7.4:
     resolution: {integrity: sha512-vFKC2IEtQnVhpT78h1Yp8wzwrf8CM+MzKMHGJZfBtzhZNycRFnXsHk6E5TxIkkMsgNS7mdX3AGB7x2QM2di4lA==}
@@ -679,13 +703,21 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@the-play-button/tpb-sdk-js@1.21.0(hono@4.12.14)':
+  '@the-play-button/tpb-sdk-js@1.26.2(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)':
     dependencies:
       '@rollup/rollup-darwin-arm64': 4.60.1
+      '@the-play-button/tpb-sdk-react': 2.6.0(@the-play-button/tpb-sdk-js@1.26.2)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)
       '@unified-api/typescript-sdk': 2.83.39
-      zod: 4.3.6
-    optionalDependencies:
       hono: 4.12.14
+      react: 19.2.5
+      react-dom: 19.2.5(react@19.2.5)
+      zod: 4.3.6
+
+  '@the-play-button/tpb-sdk-react@2.6.0(@the-play-button/tpb-sdk-js@1.26.2)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)':
+    dependencies:
+      '@the-play-button/tpb-sdk-js': 1.26.2(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)
+      lucide-react: 1.14.0(react@19.2.5)
+      react: 19.2.5
 
   '@tybys/wasm-util@0.10.1':
     dependencies:
@@ -859,6 +891,10 @@ snapshots:
       lightningcss-win32-arm64-msvc: 1.32.0
       lightningcss-win32-x64-msvc: 1.32.0
 
+  lucide-react@1.14.0(react@19.2.5):
+    dependencies:
+      react: 19.2.5
+
   magic-string@0.30.21:
     dependencies:
       '@jridgewell/sourcemap-codec': 1.5.5
@@ -889,6 +925,13 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
+  react-dom@19.2.5(react@19.2.5):
+    dependencies:
+      react: 19.2.5
+      scheduler: 0.27.0
+
+  react@19.2.5: {}
+
   rolldown@1.0.0-rc.17:
     dependencies:
       '@oxc-project/types': 0.127.0
@@ -909,6 +952,8 @@ snapshots:
       '@rolldown/binding-wasm32-wasi': 1.0.0-rc.17
       '@rolldown/binding-win32-arm64-msvc': 1.0.0-rc.17
       '@rolldown/binding-win32-x64-msvc': 1.0.0-rc.17
+
+  scheduler@0.27.0: {}
 
   semver@7.7.4: {}
 

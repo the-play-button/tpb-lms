@@ -10,7 +10,9 @@ import { log } from '@the-play-button/tpb-sdk-js';
 export const resolveRole = async (email, env) => {
     const resp = await fetch(
         `${env.BASTION_URL}/iam/users/${encodeURIComponent(email)}/roles`,
-        { headers: { 'Authorization': `Bearer ${env.BASTION_TOKEN}` } }
+        { headers: {
+      'CF-Access-Client-Id': env.CF_ACCESS_CLIENT_ID,
+      'CF-Access-Client-Secret': env.CF_ACCESS_CLIENT_SECRET, 'Authorization': `Bearer ${env.BASTION_TOKEN}` } }
     );
 
     // 404 = user has no IAM roles = student (not an error)
