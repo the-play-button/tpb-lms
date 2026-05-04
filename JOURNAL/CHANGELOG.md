@@ -9,9 +9,18 @@
 
 <!-- changelog:auto:start -->
 <!-- generator: tpb-app-agents regen-changelog v1 (plan 06 — 2026-05_app-agents-and-code-graph) -->
-<!-- last-regen: never -->
+<!-- last-regen: 2026-05-04T06:02:36.279963Z -->
 
-(no cycles regenerated yet — premier `regen-changelog` non encore exécuté pour ce repo)
+## 2026-05-03 — cycle since
+
+### Code (git)
+- `dd3e864 2026-05-03 chore(app-agent): bootstrap MEMORY/TODO/JOURNAL extension (plan 03b)` (+222 -36)
+
+### Structure (graphify diff)
+- (initial baseline — no diff)
+
+### Narrative (weekly extract)
+- (no JOURNAL/weekly-2026-W18.md available for this cycle)
 
 <!-- changelog:auto:end -->
 
