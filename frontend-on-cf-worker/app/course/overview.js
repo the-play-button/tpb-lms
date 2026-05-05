@@ -199,7 +199,7 @@ export const showCourseOverview = async courseId => {
     try {
         const [course, enrollmentStatus] = await Promise.all([
             api(`/courses/${courseId}`),
-            api(`/courses/${courseId}/enrollment`).catch(() => ({ enrolled: false, can_enroll: true })) // entropy-then-catch-finally-ok: promise chain — async/await refactor tracked in TODO
+            api(`/courses/${courseId}/enrollment`).catch(() => ({ enrolled: false, can_enroll: true })) // entropy-then-catch-finally-ok: idiomatic .catch() inside Promise.all to provide a fallback for one promise without aborting the whole — async/await refactor would be more verbose for zero benefit
         ]);
         
         await renderCourseOverview(course, enrollmentStatus);
