@@ -6,6 +6,17 @@
 
 <!-- drift-history -->
 
+## 2026-05-05 18:58 UTC — rebuild
+
+**Stale edges purgées** : 0 (threshold notif : 50)
+
+**Nodes purgés** : 0
+**Nodes ajoutés** : 0
+**Edges ajoutées** : 0
+
+**Perf** : build 1.3s, files processed 1352
+
+
 ## 2026-05-04 13:01 UTC — rebuild
 
 **Stale edges purgées** : 0 (threshold notif : 50)

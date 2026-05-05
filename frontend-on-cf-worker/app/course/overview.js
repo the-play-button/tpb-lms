@@ -199,7 +199,13 @@ export const showCourseOverview = async courseId => {
     try {
         const [course, enrollmentStatus] = await Promise.all([
             api(`/courses/${courseId}`),
-            api(`/courses/${courseId}/enrollment`).catch(() => ({ enrolled: false, can_enroll: true })) // entropy-then-catch-finally-ok: idiomatic .catch() inside Promise.all to provide a fallback for one promise without aborting the whole — async/await refactor would be more verbose for zero benefit
+            api(`/courses/${courseId}/enrollment`).catch(err => {
+                // Log the failure so operators can see broken enrollment APIs
+                // ; default to non-enrolled+can-enroll so the course overview
+                // still loads (enrollment status is non-blocking for view).
+                log.warn(`enrollment fetch failed for course ${courseId}, defaulting to not-enrolled+can-enroll`, err);
+                return { enrolled: false, can_enroll: true };
+            }) // entropy-then-catch-finally-ok: idiomatic .catch() inside Promise.all to provide a fallback for one promise without aborting the whole — error logged before fallback so the failure is visible (not blind)
         ]);
         
         await renderCourseOverview(course, enrollmentStatus);
