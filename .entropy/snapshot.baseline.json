@@ -1,0 +1,112 @@
+{
+  "total": 32,
+  "by_check": [
+    {
+      "name": "double_path_ban",
+      "count": 15,
+      "examples": [
+        "backend/handlers/signals.js:26",
+        "backend/handlers/signals.js:156",
+        "backend/handlers/courses.js:71"
+      ]
+    },
+    {
+      "name": "d1_schema_column_drift",
+      "count": 6,
+      "examples": [
+        "backend/auth/getOrCreateContact.js:6",
+        "backend/auth/getOrCreateContact.js:6",
+        "backend/auth/getOrCreateContact.js:20"
+      ]
+    },
+    {
+      "name": "explanatory_comments",
+      "count": 4,
+      "examples": [
+        "backend/index.js:102",
+        "backend/handlers/content.js:54",
+        "frontend-on-cf-worker/app/course/overview.js:203"
+      ]
+    },
+    {
+      "name": "console_leak",
+      "count": 2,
+      "examples": [
+        "backend/index.js:119",
+        "backend/index.js:284"
+      ]
+    },
+    {
+      "name": "then_catch_finally",
+      "count": 2,
+      "examples": [
+        "frontend-on-cf-worker/app/course/overview.js:202",
+        "frontend-on-cf-worker/app/content/loader/cache.js:23"
+      ]
+    },
+    {
+      "name": "html_wrong_location",
+      "count": 1,
+      "examples": [
+        "graphify-out/graph.html:0"
+      ]
+    },
+    {
+      "name": "d1_deploy_migration_sync",
+      "count": 1,
+      "examples": [
+        "wrangler.toml:10"
+      ]
+    },
+    {
+      "name": "ddd_view_missing_fk_index",
+      "count": 1,
+      "examples": [
+        "db/schema.sql:449"
+      ]
+    }
+  ],
+  "by_file_top10": [
+    {
+      "file": "backend/handlers/graph-utils/mapGraphPermission.ts",
+      "count": 10
+    },
+    {
+      "file": "backend/auth/getOrCreateContact.js",
+      "count": 6
+    },
+    {
+      "file": "backend/index.js",
+      "count": 3
+    },
+    {
+      "file": "frontend-on-cf-worker/app/course/overview.js",
+      "count": 2
+    },
+    {
+      "file": "frontend-on-cf-worker/app/content/loader/cache.js",
+      "count": 2
+    },
+    {
+      "file": "backend/handlers/signals.js",
+      "count": 2
+    },
+    {
+      "file": "graphify-out/graph.html",
+      "count": 1
+    },
+    {
+      "file": "backend/handlers/content.js",
+      "count": 1
+    },
+    {
+      "file": "backend/handlers/courses.js",
+      "count": 1
+    },
+    {
+      "file": "frontend-on-cf-worker/app/notifications.js",
+      "count": 1
+    }
+  ],
+  "generated_at": "2026-05-13T22:57:16.350686+00:00"
+}
