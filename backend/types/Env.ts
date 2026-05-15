@@ -8,17 +8,11 @@
  * - Secrets and configuration vars
  */
 
-export interface Env {
+import type { BastionClientEnv } from '@the-play-button/tpb-sdk-js';
+
+export interface Env extends BastionClientEnv {
   // --- D1 Database ---
   DB: D1Database;
-
-  // --- Bastion (HTTP) ---
-  BASTION_URL: string;
-
-  // --- Secrets ---
-  BASTION_TOKEN: string;
-  CF_ACCESS_CLIENT_ID: string;
-  CF_ACCESS_CLIENT_SECRET: string;
 
   // --- Vars ---
   ACCESS_TEAM_DOMAIN: string;
