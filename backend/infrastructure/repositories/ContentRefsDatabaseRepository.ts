@@ -142,13 +142,13 @@ export class ContentRefsDatabaseRepository implements ContentRefsRepository {
       .bind(contentRefId)
       .all<ShareRow>();
 
-    return results.map(({ id, content_ref_id, shared_by, shared_with, shared_at }) =>
+    return results.map(({ id, content_ref_id, shared_by, shared_with, role, shared_at }) =>
       ActiveShare.reconstitute({
         id: ShareId.reconstitute(id),
         contentRefId: ContentRefId.reconstitute(content_ref_id),
         sharedByEmail: Email.reconstitute(shared_by),
         sharedWithEmail: Email.reconstitute(shared_with),
-        role: shareRow.role.toLowerCase() as ShareRole,
+        role: role.toLowerCase() as ShareRole,
         createdAt: new Date(shared_at),
         updatedAt: new Date(shared_at),
       }),
