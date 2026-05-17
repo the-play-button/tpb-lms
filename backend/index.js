@@ -52,17 +52,9 @@ let _bastionClient = null;
 
 const initBastionClient = async (env) => {
   if (_bastionClient) return _bastionClient;
-  const tempClient = createBastionClient({
-    bastionUrl: env.BASTION_URL,
-    serviceToken: env.BASTION_TOKEN,
-  });
-  const secretResult = await tempClient.getSecret('tpb/apps/lms/authz_signing_secret');
-  if (!secretResult.ok) throw new Error(`[initBastionClient] ${secretResult.error}`);
-  if (!secretResult.value) throw new Error('[initBastionClient] authz signing secret is empty');
   _bastionClient = createBastionClient({
     bastionUrl: env.BASTION_URL,
     serviceToken: env.BASTION_TOKEN,
-    authzSigningSecret: secretResult.value,
   });
   return _bastionClient;
 };
