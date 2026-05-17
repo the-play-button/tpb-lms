@@ -29,35 +29,3 @@ CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
 [dev]
 port = 8787
 local_protocol = "http"
-
-# ── Production environment ──
-[env.staging]
-name = "lms-api-staging"
-
-[env.staging.vars]
-ACCESS_TEAM_DOMAIN = "theplaybutton"
-BASTION_URL = "https://tpb-bastion-backend-staging.matthieu-marielouise.workers.dev"
-TELEMETRY_URL = "https://tpb-telemetry-staging.matthieu-marielouise.workers.dev"
-CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
-
-[[env.staging.d1_databases]]
-binding = "DB"
-database_name = "lms-db-staging"
-database_id = "2808b65b-b528-439d-a781-83d47ca6180c"
-migrations_dir = "db/migrations"
-
-
-[env.production]
-name = "lms-api-production"
-
-[env.production.vars]
-ACCESS_TEAM_DOMAIN = "theplaybutton"
-BASTION_URL = "https://tpb-bastion-backend-production.matthieu-marielouise.workers.dev"
-TELEMETRY_URL = "https://tpb-telemetry-production.matthieu-marielouise.workers.dev"
-CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
-
-[[env.production.d1_databases]]
-binding = "DB"
-database_name = "lms-db-production"
-database_id = "ba6cf66d-461b-4c73-9119-c286ac391138"
-migrations_dir = "db/migrations"
