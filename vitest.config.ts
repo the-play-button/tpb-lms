@@ -1,7 +1,9 @@
-import { defineConfig } from 'vitest/config';
 import path from 'path';
 
-export default defineConfig({
+import { defineConfig, mergeConfig } from 'vitest/config';
+import preset from '@the-play-button/tpb-sdk-vitest/worker';
+
+export default mergeConfig(preset, defineConfig({
   test: {
     include: ['tests/**/*.test.ts'],
     environment: 'node',
@@ -11,4 +13,4 @@ export default defineConfig({
       '@the-play-button/tpb-sdk-js': path.resolve(__dirname, '../tpb-sdk/js/src/index.ts'),
     },
   },
-});
+}));
