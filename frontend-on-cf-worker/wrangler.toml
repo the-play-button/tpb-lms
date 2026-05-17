@@ -3,7 +3,7 @@
 
 name = "lms-viewer"
 main = "_worker.js"
-compatibility_date = "2024-01-01"
+compatibility_date = "2024-12-01"
 
 # Serve static assets from this directory.
 # `binding = "ASSETS"` is REQUIRED when `main` is also set — without it,
