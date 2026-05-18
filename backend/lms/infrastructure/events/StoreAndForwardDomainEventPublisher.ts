@@ -1,6 +1,6 @@
 // entropy-class-method-length-ok: event publisher — publish/publishAll + D1 audit storage for content.accessed events, coupled by shared db handle
-import type { DomainEvents } from '../../lms/domain/events/DomainEvents.js';
-import type { DomainEvent } from '../../lms/domain/events/DomainEvent.js';
+import type { DomainEvents } from '../../domain/events/DomainEvents.js';
+import type { DomainEvent } from '../../domain/events/DomainEvent.js';
 
 /**
  * Stores events in D1 then logs them.

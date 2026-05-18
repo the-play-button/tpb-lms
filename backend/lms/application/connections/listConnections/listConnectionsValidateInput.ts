@@ -1,4 +1,4 @@
-import { succeed, type Result } from '../../../lms/domain/core/Result.js';
+import { succeed, type Result } from '../../../domain/core/Result.js';
 
 /**
  * ValidateInput step: no input parameters to validate for this use-case.

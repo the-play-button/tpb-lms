@@ -1,10 +1,10 @@
 // entropy-audit-trail-ok: audit at higher level
-import { fail, succeed, type Result } from '../../../lms/domain/core/Result.js';
+import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
-import { Email, ShareId } from '../../../lms/domain/value-objects/index.js';
-import { ActiveShare } from '../../../lms/domain/entities/Share/ActiveShare.js';
-import type { ShareRole } from '../../../lms/domain/entities/ContentRef/SharedContentRef.js';
-import { contentShared } from '../../../lms/domain/events/events/ContentShared.js';
+import { Email, ShareId } from '../../../domain/value-objects/index.js';
+import { ActiveShare } from '../../../domain/entities/Share/ActiveShare.js';
+import type { ShareRole } from '../../../domain/entities/ContentRef/SharedContentRef.js';
+import { contentShared } from '../../../domain/events/events/ContentShared.js';
 import type { ShareContentContext } from './shareContentHydrateContext.js';
 import type { ShareContentInput } from './shareContentValidateInput.js';
 

@@ -1,4 +1,4 @@
-import { succeed, type Result } from '../../lms/domain/core/Result.js';
+import { succeed, type Result } from '../../domain/core/Result.js';
 
 /**
  * HydrateContext step: no domain entities to pre-load for sharedWithMe listing.

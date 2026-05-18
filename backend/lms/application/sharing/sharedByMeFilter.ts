@@ -1,7 +1,7 @@
 /**
  * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
  */
-import { filterFields } from '../filters/FieldSecurityFilter.js';
+import { filterFields } from '../../domain/policies/FieldSecurityFilter.js';
 import type { SharedByMeEntry } from './sharedByMeExecute.js';
 
 /**

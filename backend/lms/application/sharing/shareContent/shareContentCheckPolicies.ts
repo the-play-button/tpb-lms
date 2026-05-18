@@ -1,6 +1,6 @@
-import { fail, succeed, type Result } from '../../../lms/domain/core/Result.js';
-import { Email } from '../../../lms/domain/value-objects/index.js';
-import { onlyOwnerCanSharePolicy, maxSharesPolicy } from '../../../lms/domain/policies/SharingPolicies.js';
+import { fail, succeed, type Result } from '../../../domain/core/Result.js';
+import { Email } from '../../../domain/value-objects/index.js';
+import { onlyOwnerCanSharePolicy, maxSharesPolicy } from '../../../domain/policies/SharingPolicies.js';
 import type { ShareContentContext } from './shareContentHydrateContext.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { log } from '@the-play-button/tpb-sdk-js';

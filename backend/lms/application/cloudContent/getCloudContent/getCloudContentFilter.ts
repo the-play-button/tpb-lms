@@ -1,7 +1,7 @@
 /**
  * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
  */
-import { filterFields } from '../../filters/FieldSecurityFilter.js';
+import { filterFields } from '../../../domain/policies/FieldSecurityFilter.js';
 import type { GetCloudContentOutput } from './getCloudContentExecute.js';
 import type { GetCloudContentContext } from './getCloudContentHydrateContext.js';
 

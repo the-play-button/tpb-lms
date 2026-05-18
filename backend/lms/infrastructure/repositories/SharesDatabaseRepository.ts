@@ -6,13 +6,13 @@
  * Active shares have revoked_at IS NULL; revoked shares have a revoked_at timestamp.
  */
 
-import type { SharesRepository, Share } from '../../lms/domain/repositories/SharesRepository.js';
-import type { DomainEvents } from '../../lms/domain/events/DomainEvents.js';
-import type { DomainEvent } from '../../lms/domain/events/DomainEvent.js';
-import { ActiveShare } from '../../lms/domain/entities/Share/ActiveShare.js';
-import { RevokedShare } from '../../lms/domain/entities/Share/RevokedShare.js';
-import { ShareId, ContentRefId, Email } from '../../lms/domain/value-objects/index.js';
-import type { ShareRole } from '../../lms/domain/entities/ContentRef/SharedContentRef.js';
+import type { SharesRepository, Share } from '../../domain/repositories/SharesRepository.js';
+import type { DomainEvents } from '../../domain/events/DomainEvents.js';
+import type { DomainEvent } from '../../domain/events/DomainEvent.js';
+import { ActiveShare } from '../../domain/entities/Share/ActiveShare.js';
+import { RevokedShare } from '../../domain/entities/Share/RevokedShare.js';
+import { ShareId, ContentRefId, Email } from '../../domain/value-objects/index.js';
+import type { ShareRole } from '../../domain/entities/ContentRef/SharedContentRef.js';
 
 /** Raw row shape from the lms_content_share table */
 interface ShareRow {

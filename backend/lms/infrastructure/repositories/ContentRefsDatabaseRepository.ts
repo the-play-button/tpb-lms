@@ -7,15 +7,15 @@
  * SharedContentRef when at least one active share is present.
  */
 
-import type { ContentRefsRepository, ContentRef } from '../../lms/domain/repositories/ContentRefsRepository.js';
-import type { DomainEvents } from '../../lms/domain/events/DomainEvents.js';
-import type { DomainEvent } from '../../lms/domain/events/DomainEvent.js';
-import { DraftContentRef } from '../../lms/domain/entities/ContentRef/DraftContentRef.js';
-import { SharedContentRef } from '../../lms/domain/entities/ContentRef/SharedContentRef.js';
-import { ActiveShare } from '../../lms/domain/entities/Share/ActiveShare.js';
-import { ContentRefId, ConnectionId, Email, ShareId } from '../../lms/domain/value-objects/index.js';
-import type { ContentType, ContentUsage, ContentRefProps } from '../../lms/domain/entities/ContentRef/types.js';
-import type { ShareRole } from '../../lms/domain/entities/ContentRef/SharedContentRef.js';
+import type { ContentRefsRepository, ContentRef } from '../../domain/repositories/ContentRefsRepository.js';
+import type { DomainEvents } from '../../domain/events/DomainEvents.js';
+import type { DomainEvent } from '../../domain/events/DomainEvent.js';
+import { DraftContentRef } from '../../domain/entities/ContentRef/DraftContentRef.js';
+import { SharedContentRef } from '../../domain/entities/ContentRef/SharedContentRef.js';
+import { ActiveShare } from '../../domain/entities/Share/ActiveShare.js';
+import { ContentRefId, ConnectionId, Email, ShareId } from '../../domain/value-objects/index.js';
+import type { ContentType, ContentUsage, ContentRefProps } from '../../domain/entities/ContentRef/types.js';
+import type { ShareRole } from '../../domain/entities/ContentRef/SharedContentRef.js';
 
 /** Raw row shape from the lms_content_ref table */
 interface ContentRefRow {

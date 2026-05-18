@@ -1,4 +1,4 @@
-import { fail, succeed, type Result } from '../../lms/domain/core/Result.js';
+import { fail, succeed, type Result } from '../../domain/core/Result.js';
 import type { HandlerContext } from '../../types/HandlerContext.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 

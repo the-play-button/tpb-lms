@@ -1,5 +1,5 @@
-import type { Result } from '../../../lms/domain/core/Result.js';
-import { fail } from '../../../lms/domain/core/Result.js';
+import type { Result } from '../../../domain/core/Result.js';
+import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { getCloudContentValidateInput } from './getCloudContentValidateInput.js';
 import { getCloudContentHydrateContext } from './getCloudContentHydrateContext.js';

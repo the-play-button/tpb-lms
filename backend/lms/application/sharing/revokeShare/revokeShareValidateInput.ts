@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { fail, succeed, type Result } from '../../../lms/domain/core/Result.js';
+import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 
 const RevokeShareInputSchema = z.object({
   share_id: z.string().min(1, 'share_id is required'),
