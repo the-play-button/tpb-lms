@@ -34,20 +34,20 @@ import { getTranslations, upsertTranslation, batchUpsertTranslations, getTransla
 import { getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary/index.js';
 import { getGitHubContent, listGitHubDirectory } from './handlers/content.js';
 import { createByocContext } from './handlers/byocContext.js';
-import { getCloudContentController } from './application/cloudContent/getCloudContent/getCloudContentController.js';
-import { getCloudPitchController } from './application/cloudContent/getCloudPitch/getCloudPitchController.js';
-import { listConnectionsController } from './application/connections/listConnections/listConnectionsController.js';
-import { getDefaultConnectionController } from './application/connections/getDefaultConnection/getDefaultConnectionController.js';
-import { shareContentController } from './application/sharing/shareContent/shareContentController.js';
-import { revokeShareController } from './application/sharing/revokeShare/revokeShareController.js';
-import { listPermissionsController } from './application/sharing/listPermissions/listPermissionsController.js';
-import { sharedWithMeController } from './application/sharing/sharedWithMeController.js';
-import { sharedByMeController } from './application/sharing/sharedByMeController.js';
+import { getCloudContentController } from './lms/application/cloudContent/getCloudContent/getCloudContentController.js';
+import { getCloudPitchController } from './lms/application/cloudContent/getCloudPitch/getCloudPitchController.js';
+import { listConnectionsController } from './lms/application/connections/listConnections/listConnectionsController.js';
+import { getDefaultConnectionController } from './lms/application/connections/getDefaultConnection/getDefaultConnectionController.js';
+import { shareContentController } from './lms/application/sharing/shareContent/shareContentController.js';
+import { revokeShareController } from './lms/application/sharing/revokeShare/revokeShareController.js';
+import { listPermissionsController } from './lms/application/sharing/listPermissions/listPermissionsController.js';
+import { sharedWithMeController } from './lms/application/sharing/sharedWithMeController.js';
+import { sharedByMeController } from './lms/application/sharing/sharedByMeController.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
 
 
-// --- BastionClient singleton with authzSigningSecret (cached per-isolate) ---
+// --- BastionClient singleton (cached per-isolate) ---
 let _bastionClient = null;
 
 const initBastionClient = async (env) => {

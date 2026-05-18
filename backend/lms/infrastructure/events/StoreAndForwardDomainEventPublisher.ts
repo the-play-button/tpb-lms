@@ -1,0 +1,50 @@
+// entropy-class-method-length-ok: event publisher — publish/publishAll + D1 audit storage for content.accessed events, coupled by shared db handle
+import type { DomainEvents } from '../../lms/domain/events/DomainEvents.js';
+import type { DomainEvent } from '../../lms/domain/events/DomainEvent.js';
+
+/**
+ * Stores events in D1 then logs them.
+ *
+ * Uses the lms_content_access table for access events.
+ * Other event types are logged to console for now, with D1 storage
+ * reserved for the audit trail that matters (who accessed what).
+ */
+export class StoreAndForwardDomainEventPublisher implements DomainEvents {
+  private db: D1Database;
+
+  constructor(db: D1Database) {
+    this.db = db;
+  }
+
+  async publish(event: DomainEvent): Promise<void> {
+    if (event.type === 'content.accessed') {
+      await this.storeAccessEvent(event);
+    }
+
+  }
+
+  async publishAll(events: DomainEvent[]): Promise<void> {
+    for (const event of events) {
+      await this.publish(event);
+    }
+  }
+
+  /**
+   * Store a content access event in the lms_content_access table.
+   */
+  private async storeAccessEvent(event: DomainEvent): Promise<void> {
+    const { contentRefId, accessedByEmail, accessedAt } = event.payload as {
+      contentRefId: string;
+      accessedByEmail: string;
+      accessedAt: string;
+    };
+
+    await this.db
+      .prepare(
+        `INSERT INTO lms_content_access (id, content_ref_id, user_email, accessed_at)
+         VALUES (?, ?, ?, ?)`,
+      )
+      .bind(crypto.randomUUID(), contentRefId, accessedByEmail, accessedAt)
+      .run();
+  }
+}

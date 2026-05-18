@@ -13,9 +13,9 @@ import { BastionCloudflareAdapter } from '../services/bastion/adapters/BastionCl
 import { UnifiedToStorageAdapter } from '../services/storage/adapters/UnifiedToStorageAdapter.js';
 import { PamCloudflareAdapter } from '../services/pam/adapters/PamCloudflareAdapter.js';
 import { ConnectionResolverAdapter } from '../services/connections/adapters/ConnectionResolverAdapter.js';
-import { ContentRefsDatabaseRepository } from '../infrastructure/repositories/ContentRefsDatabaseRepository.js';
-import { SharesDatabaseRepository } from '../infrastructure/repositories/SharesDatabaseRepository.js';
-import { JustForwardDomainEventPublisher } from '../infrastructure/events/JustForwardDomainEventPublisher.js';
+import { ContentRefsDatabaseRepository } from '../lms/infrastructure/repositories/ContentRefsDatabaseRepository.js';
+import { SharesDatabaseRepository } from '../lms/infrastructure/repositories/SharesDatabaseRepository.js';
+import { JustForwardDomainEventPublisher } from '../lms/infrastructure/events/JustForwardDomainEventPublisher.js';
 
 interface UserContext {
   user: { email: string };
@@ -38,7 +38,7 @@ const extractJwt = (request: Request): string => {
  * This is the JS/TS bridge: the router (index.js) calls this for every
  * BYOC route, then passes the result to the TS controller.
  *
- * @param authzBastionClient - SDK bastion client with authzSigningSecret (from module-level singleton in index.js)
+ * @param authzBastionClient - SDK bastion client (from module-level singleton in index.js) for delegated authz checks (scope+namespace, no HMAC since 2026-05-16)
  * @param actor - Actor resolved by auth middleware
  */
 export const createByocContext = async (
