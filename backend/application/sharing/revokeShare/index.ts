@@ -1,0 +1,1 @@
+export { revokeShareController } from './revokeShareController';

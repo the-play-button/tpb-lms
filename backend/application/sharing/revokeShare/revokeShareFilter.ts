@@ -1,3 +1,6 @@
+/**
+ * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
+ */
 import type { RevokeShareOutput } from './revokeShareExecute.js';
 
 /**

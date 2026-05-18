@@ -1,4 +1,7 @@
 /**
+ * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
+ */
+/**
  * Field-Level Security filter
  * Strips sensitive fields based on viewer's relationship to the data
  */

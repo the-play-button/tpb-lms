@@ -1,0 +1,1 @@
+export { shareContentController } from './shareContentController';

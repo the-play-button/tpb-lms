@@ -1,0 +1,1 @@
+export { getCloudContentController } from './getCloudContentController';
