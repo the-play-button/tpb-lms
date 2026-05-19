@@ -23,7 +23,7 @@ const parseStep = (row, currentStep) => {
     return {
         class_id: row.class_id,
         name: row.name,
-        order_index: row.sys_order_index,  // Keep API field name for backward compat
+        order_index: row.sys_order_index,  // API wire field is `order_index` ; DB column is `sys_order_index`.
         has_quiz: hasQuiz,
         video_completed: videoCompleted,
         quiz_passed: quizPassed,
@@ -153,7 +153,7 @@ export const getStepSignals = async (request, env, userContext, courseId, classI
     return jsonResponse({
         class_id: classId,
         class_name: cls.name,
-        order_index: cls.sys_order_index,  // Keep API field name for backward compat
+        order_index: cls.sys_order_index,  // API wire field is `order_index` ; DB column is `sys_order_index`.
         has_quiz: hasQuiz,
         video_completed: videoCompleted,
         quiz_passed: quizPassed,

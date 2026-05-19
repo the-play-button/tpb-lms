@@ -68,7 +68,7 @@ const enrichClass = (cls, currentStep) => {
         id: cls.id,
         name: cls.name,
         description: cls.description,
-        order_index: orderIndex, // Keep same API field name for backward compat
+        order_index: orderIndex, // API wire field is `order_index` ; DB column is `sys_order_index`.
         media: media.map(m => enrichMedia(m, videoCompleted, quizPassed, cls)),
         step_type: raw.tpb_step_type || 'CONTENT',
         content_md: raw.tpb_content_md || '',

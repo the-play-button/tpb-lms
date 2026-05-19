@@ -6,14 +6,14 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
-    "deploy:prod": "echo '\\n\u2717 Direct wrangler deploy --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
+    "deploy:prod": "echo '\\n✗ Direct wrangler deploy --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit -p backend/tsconfig.json"
   },
   "dependencies": {
-    "@the-play-button/tpb-sdk-js": "4.4.2",
+    "@the-play-button/tpb-sdk-js": "4.8.0",
     "hono": "^4.7.10",
     "zod": "^3.25.76"
   },
