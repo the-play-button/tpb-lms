@@ -25,7 +25,7 @@ class TestEntropy:
             capture_output=True,
             text=True,
             cwd=lms_root  # Run from lms root to find .entropy.yaml
-        )
+check=True)
         
         # Check summary line for P1 count
         # Expected format: "📊 Summary: 0 P1, X P2, Y P3"

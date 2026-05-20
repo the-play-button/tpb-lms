@@ -369,7 +369,7 @@ class TestEntropy:
             capture_output=True,
             text=True,
             cwd=lms_root  # Run from lms root to find .entropy.yaml
-        )
+check=True)
         
         # Check output for P1 violations (critical)
         has_p1 = 'P1' in result.stdout and '[lines_exceeded]' in result.stdout

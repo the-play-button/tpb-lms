@@ -280,7 +280,7 @@ def create_lms_contact_data(account, user_id):  # entropy-python-long-function-o
         '--remote', '--command', contact_sql
     ]
     
-    result = subprocess.run(cmd, capture_output=True, text=True, cwd='../..')
+    result = subprocess.run(cmd, capture_output=True, text=True, cwd='../..', check=True)
     if result.returncode != 0:
         print(f"  ❌ Failed to create LMS data: {result.stderr}")
         return False

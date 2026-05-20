@@ -12,7 +12,7 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { configureLogger, setLoggerWaitUntil, log, createBastionAuthMiddleware, createBastionClient } from '@the-play-button/tpb-sdk-js';
+import { configureLogger, setLoggerWaitUntil, log, createBastionAuthMiddleware, createBastionClient, createLazyVaultSecret } from '@the-play-button/tpb-sdk-js';
 import { ALLOWED_ORIGINS, jsonResponse } from './cors.js';
 import { verifyAPIKey } from './auth/verifyAPIKey.js';
 import { getOrCreateContact } from './auth/getOrCreateContact.js';
@@ -47,7 +47,7 @@ import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
 
 
-// --- BastionClient singleton (cached per-isolate) ---
+// --- BastionClient singleton (cached per-isolate). No vault dep. ---
 let _bastionClient = null;
 
 const initBastionClient = async (env) => {
@@ -59,18 +59,10 @@ const initBastionClient = async (env) => {
   return _bastionClient;
 };
 
-// --- Telemetry CF Access secret (vault, cached per-isolate) ---
-let _telemetryCfAccessSecret = null;
-
-const fetchTelemetryCfAccessSecret = async (env) => {
-  if (_telemetryCfAccessSecret) return _telemetryCfAccessSecret;
-  const bastion = await initBastionClient(env);
-  const result = await bastion.getSecret('tpb/infra/cf_access_sa_client_secret');
-  if (!result.ok) throw new Error(`[telemetry] CF Access SA secret fetch failed: ${result.error}`);
-  if (!result.value) throw new Error('[telemetry] CF Access SA secret is empty');
-  _telemetryCfAccessSecret = result.value;
-  return _telemetryCfAccessSecret;
-};
+// Vault secrets — blessed primitive (cf. CLAUDE.md § HONO — Init lazy des secrets vault).
+const getTelemetryCfAccessSa = createLazyVaultSecret('tpb/infra/cf_access_sa_client_secret');
+const getTallySigningSecret  = createLazyVaultSecret('tpb/apps/lms/tally_signing_secret');
+const getTallyWebhookSecret  = createLazyVaultSecret('tpb/apps/lms/tally_webhook_secret');
 
 // --- Hono app ---
 
@@ -91,7 +83,7 @@ app.use('/*', async (c, next) => {
     // (that turns every request into CF 1101 "Worker threw exception"). Log the
     // failure to the CF tail and mark the logger ready so we don't retry per request.
     try {
-      const cfAccessSecret = await fetchTelemetryCfAccessSecret(c.env);
+      const cfAccessSecret = await getTelemetryCfAccessSa(c.env);
       configureLogger({
         service: 'tpb-lms',
         telemetry: {
@@ -143,37 +135,13 @@ app.use('/api/*', async (c, next) => {
   await next();
 });
 
-// --- Tally secrets (vault, cached per-isolate) ---
-let _tallySigningSecret = null;
-let _tallyWebhookSecret = null;
-
-const fetchTallySigningSecret = async (env) => {
-  if (_tallySigningSecret) return _tallySigningSecret;
-  const bastion = await initBastionClient(env);
-  const result = await bastion.getSecret('tpb/apps/lms/tally_signing_secret');
-  if (!result.ok) throw new Error(`[tally] signing secret fetch failed: ${result.error}`);
-  if (!result.value) throw new Error('[tally] signing secret is empty');
-  _tallySigningSecret = result.value;
-  return _tallySigningSecret;
-};
-
-const fetchTallyWebhookSecret = async (env) => {
-  if (_tallyWebhookSecret) return _tallyWebhookSecret;
-  const bastion = await initBastionClient(env);
-  const result = await bastion.getSecret('tpb/apps/lms/tally_webhook_secret');
-  if (!result.ok) throw new Error(`[tally] webhook secret fetch failed: ${result.error}`);
-  if (!result.value) throw new Error('[tally] webhook secret is empty');
-  _tallyWebhookSecret = result.value;
-  return _tallyWebhookSecret;
-};
-
 // --- Tally webhook auth (signature-based, not session-based) ---
 const handleTallyWithAuth = async (request, url, env) => {
-  const signingSecret = await fetchTallySigningSecret(env);
+  const signingSecret = await getTallySigningSecret(env);
   const { valid, body, noSignature } = await verifyTallySignature(request, signingSecret); // entropy-naming-convention-ok: destructured from API shape
   if (noSignature) {
     const webhookSecret = url.searchParams.get('secret');
-    const expectedSecret = await fetchTallyWebhookSecret(env);
+    const expectedSecret = await getTallyWebhookSecret(env);
     if (webhookSecret !== expectedSecret) {
       return jsonResponse({ error: 'Invalid webhook: no signature and invalid secret' }, 403, request);
     }
@@ -337,20 +305,24 @@ const registerRoutes = (honoApp, routes, buildArgs) => {
     honoApp.on(route.method, route.path, async (c) => {
       const args = await buildArgs(c);
       if (route.params) args.push(...route.params.map(p => c.req.param(p)));
+      if (route.idempotent) {
+        const cachedResponse = checkIdempotency(c.req.raw);
+        if (cachedResponse) return cachedResponse;
+        const response = await route.handler(...args);
+        return cacheIdempotencyResponse(c.req.raw, response);
+      }
       return route.handler(...args);
     });
   }
 };
 
+const idempotentStandardRoutes = [
+  { method: 'POST', path: '/api/events', handler: handleEvent, idempotent: true },
+];
+
 registerRoutes(app, publicRoutes, (c) => [c.req.raw, c.env]);
 registerRoutes(app, standardRoutes, (c) => [c.req.raw, c.env, c.var.userContext]);
-
-app.post('/api/events', async (c) => {
-  const cachedResponse = checkIdempotency(c.req.raw);
-  if (cachedResponse) return cachedResponse;
-  const response = await handleEvent(c.req.raw, c.env, c.var.userContext);
-  return cacheIdempotencyResponse(c.req.raw, response);
-});
+registerRoutes(app, idempotentStandardRoutes, (c) => [c.req.raw, c.env, c.var.userContext]);
 
 registerRoutes(app, authKeyRoutes, (c) => [c.req.raw, c.env, c.var.auth]);
 registerRoutes(app, byocRoutes, async (c) => {

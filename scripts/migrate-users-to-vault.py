@@ -73,7 +73,7 @@ def fetch_lms_employees() -> list[dict[str, Any]]:
         '--remote', '--command', sql, '--json'
     ]
     
-    result = subprocess.run(cmd, capture_output=True, text=True, cwd='../..')
+    result = subprocess.run(cmd, capture_output=True, text=True, cwd='../..', check=True)
     
     if result.returncode != 0:
         print(f"❌ Failed to query LMS database: {result.stderr}")

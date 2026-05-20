@@ -39,7 +39,7 @@ def run_d1_command(sql_command):
         'npx', 'wrangler', 'd1', 'execute', 'lms-db', 
         '--remote', '--command', sql_command
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, check=True)
     if result.returncode != 0:
         print(f"❌ D1 Error: {result.stderr}")
         return None

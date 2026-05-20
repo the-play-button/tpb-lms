@@ -86,7 +86,7 @@ def check_secrets() -> bool:
     """Run secrets check script."""
     log("🔐 Checking secrets...")
     script = Path(__file__).parent / "check_secrets.py"
-    result = subprocess.run([sys.executable, str(script)], capture_output=False)
+    result = subprocess.run([sys.executable, str(script)], capture_output=False, check=True)
     return result.returncode == 0
 
 
@@ -179,7 +179,7 @@ def verify_deployment() -> bool:
     script = Path(__file__).parent / "verify_deploy.py"
     
     if script.exists():
-        result = subprocess.run([sys.executable, str(script)])
+        result = subprocess.run([sys.executable, str(script)], check=True)
         return result.returncode == 0
     else:
         log("⚠️  verify_deploy.py not found", "warn")
@@ -193,7 +193,7 @@ def seed_courses() -> bool:
     seed_script = root / "scripts" / "seed_courses.py"
     
     if seed_script.exists():
-        result = subprocess.run([sys.executable, str(seed_script)], cwd=root)
+        result = subprocess.run([sys.executable, str(seed_script)], cwd=root, check=True)
         if result.returncode == 0:
             log("✅ Courses seeded", "success")
             return True

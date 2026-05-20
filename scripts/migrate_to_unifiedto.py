@@ -46,7 +46,7 @@ def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:  # entrop
         capture_output=True, 
         text=True, 
         cwd=cwd or Path(__file__).parent.parent
-    )
+check=True)
     
     if result.returncode != 0:
         raise RuntimeError(f"D1 query failed: {result.stderr}")
@@ -84,7 +84,7 @@ def run_d1_command(sql: str, cwd: Path | None = None) -> bool:  # entropy-python
         capture_output=True, 
         text=True, 
         cwd=cwd or Path(__file__).parent.parent
-    )
+check=True)
     
     if result.returncode != 0:
         print(f"⚠️ Command failed: {result.stderr}")
