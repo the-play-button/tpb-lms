@@ -1,7 +1,7 @@
 /**
  * Storage Service - File Storage Operations
  *
- * USAGE: // entropy-single-use-variables-ok: usage example in JSDoc
+ * USAGE: // entropy-single-use-variables-ok: storage/index — JSDoc USAGE block shows storage adapter consumption pattern (SDK consumer reference)
  * const storage = createStorageService({ getApiToken: async () => env.UNIFIED_API_TOKEN });
  * const content = await storage.getFileContent(connectionId, fileId);
  */

@@ -1,8 +1,8 @@
+#!/usr/bin/env python3
 # entropy-single-export-ok: verify_deploy internal pipeline steps called sequentially by main()
 # entropy-duplicate-constant-ok: verify_deploy is standalone CLI script, shared constants not warranted
 # entropy-python-unused-import-ok: urllib kept for error handling fallback
 # entropy-legacy-marker-ok: verify_deploy has no active legacy markers, retained for audit trail
-#!/usr/bin/env python3
 """
 verify_deploy.py - Post-deployment verification
 Checks that both backend API and frontend are healthy

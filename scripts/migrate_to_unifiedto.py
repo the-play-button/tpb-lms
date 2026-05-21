@@ -1,5 +1,5 @@
-# entropy-single-export-ok: CLI migration script with tightly-coupled helper functions for D1 queries and class migration
 #!/usr/bin/env python3
+# entropy-single-export-ok: CLI migration script with tightly-coupled helper functions for D1 queries and class migration
 """
 Migrate LMS Data to Unified.to Conformity
 
@@ -45,8 +45,7 @@ def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:  # entrop
         cmd, 
         capture_output=True, 
         text=True, 
-        cwd=cwd or Path(__file__).parent.parent
-check=True)
+        cwd=cwd or Path(__file__).parent.parent, check=True)
     
     if result.returncode != 0:
         raise RuntimeError(f"D1 query failed: {result.stderr}")
@@ -83,8 +82,7 @@ def run_d1_command(sql: str, cwd: Path | None = None) -> bool:  # entropy-python
         cmd, 
         capture_output=True, 
         text=True, 
-        cwd=cwd or Path(__file__).parent.parent
-check=True)
+        cwd=cwd or Path(__file__).parent.parent, check=True)
     
     if result.returncode != 0:
         print(f"⚠️ Command failed: {result.stderr}")

@@ -1,7 +1,7 @@
+#!/usr/bin/env python3
 # entropy-single-export-ok: deploy internal pipeline steps called sequentially by main()
 # entropy-duplicate-constant-ok: deploy is standalone CLI script, shared constants not warranted
 # entropy-python-optional-handling-ok: cwd parameter has default fallback in subprocess
-#!/usr/bin/env python3
 """
 deploy.py - LMS Full Deployment Script
 Deploys backend API + frontend viewer to Cloudflare Workers
