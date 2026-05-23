@@ -9,6 +9,7 @@
 import { jsonResponse } from '../cors.js';
 import { verifyAccessJWT, getOrCreateContact } from '../auth/index.js';
 import { getCurrentStreak } from '../utils/xp/index.js';
+import { extractCallerJwt } from '@the-play-button/tpb-sdk-js';
 
 const validateJWT = async (jwt, env, request) => {
     if (!jwt) {
@@ -87,7 +88,8 @@ const buildSessionResponse = (jwtResult, contact, userData) => {
  * GET /api/auth/session
  */
 export const getSession = async (request, env) => {
-    const validation = await validateJWT(request.headers.get('Cf-Access-Jwt-Assertion'), env, request);
+    // SDK primitive — centralized JWT extraction (CLAUDE.md § BASTION AUTH).
+    const validation = await validateJWT(extractCallerJwt(request), env, request);
     if (validation.error) return validation.error;
     
     const contact = await getOrCreateContact(validation.result.email, env);

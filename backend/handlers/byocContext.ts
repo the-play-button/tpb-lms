@@ -16,6 +16,7 @@ import { ConnectionResolverAdapter } from '../services/connections/adapters/Conn
 import { ContentRefsDatabaseRepository } from '../lms/infrastructure/repositories/ContentRefsDatabaseRepository.js';
 import { SharesDatabaseRepository } from '../lms/infrastructure/repositories/SharesDatabaseRepository.js';
 import { JustForwardDomainEventPublisher } from '../lms/infrastructure/events/JustForwardDomainEventPublisher.js';
+import { extractCallerJwt } from '@the-play-button/tpb-sdk-js';
 
 interface UserContext {
   user: { email: string };
@@ -23,14 +24,6 @@ interface UserContext {
   employee?: unknown;
   learner?: unknown;
 }
-
-const extractJwt = (request: Request): string => {
-  const authHeader = request.headers.get('Authorization');
-  if (authHeader?.startsWith('Bearer ') && !authHeader.startsWith('Bearer tpb_')) {
-    return authHeader.slice(7);
-  }
-  return request.headers.get('Cf-Access-Jwt-Assertion') || '';
-};
 
 /**
  * Create the BYOC HandlerContext from env + userContext
@@ -48,7 +41,7 @@ export const createByocContext = async (
   authzBastionClient: AuthzBastionClient,
   actor: LmsActor,
 ): Promise<HandlerContext> => {
-  const jwt = extractJwt(request);
+  const jwt = extractCallerJwt(request) ?? '';
   const { user } = userContext;
   const userEmail = user.email;
 

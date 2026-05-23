@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@the-play-button/tpb-sdk-js':
-        specifier: ^4.11.1
-        version: 4.11.2(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
+        specifier: ^6.1.0
+        version: 6.1.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
       hono:
         specifier: ^4.7.10
         version: 4.12.14
@@ -384,8 +384,8 @@ packages:
   '@standard-schema/spec@1.1.0':
     resolution: {integrity: sha512-l2aFy5jALhniG5HgqrD6jXLi/rUWrKvqN/qJx6yoJsgKhblVd+iqqU4RCXavm/jPityDo5TCvKMnpjKnOriy0w==}
 
-  '@the-play-button/tpb-sdk-js@4.11.2':
-    resolution: {integrity: sha512-iULpjLE+B6XDjkQicWXhi4TgnTatDkyJhiSNYPKHXWAkinct30HTXlFpIYamvypLNywKz8FCBtyVogSN83byjw==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/4.11.2/tpb-sdk-js-4.11.2.tgz}
+  '@the-play-button/tpb-sdk-js@6.1.0':
+    resolution: {integrity: sha512-Ij8aKwo+kbr9anx53qnjGDtzYicnfvkBGSoowutSoTfDnzHx5lobIja8sTuWGhqscN16G+CxNmZAm+E02FduPQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/6.1.0/tpb-sdk-js-6.1.0.tgz}
     hasBin: true
     peerDependencies:
       '@aws-sdk/client-s3': ^3.0.0
@@ -1398,12 +1398,12 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@the-play-button/tpb-sdk-js@4.11.2(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)':
+  '@the-play-button/tpb-sdk-js@6.1.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)':
     dependencies:
       '@aws-sdk/client-s3': 3.1049.0
       '@aws-sdk/s3-request-presigner': 3.1049.0
       '@rollup/rollup-darwin-arm64': 4.60.1
-      '@the-play-button/tpb-sdk-react': 2.6.0(@the-play-button/tpb-sdk-js@4.11.2)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)
+      '@the-play-button/tpb-sdk-react': 2.6.0(@the-play-button/tpb-sdk-js@6.1.0)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)
       '@unified-api/typescript-sdk': 2.83.39
       hono: 4.12.14
       react: 19.2.5
@@ -1411,9 +1411,9 @@ snapshots:
       shiki: 4.1.0
       zod: 4.3.6
 
-  '@the-play-button/tpb-sdk-react@2.6.0(@the-play-button/tpb-sdk-js@4.11.2)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)':
+  '@the-play-button/tpb-sdk-react@2.6.0(@the-play-button/tpb-sdk-js@6.1.0)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)':
     dependencies:
-      '@the-play-button/tpb-sdk-js': 4.11.2(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
+      '@the-play-button/tpb-sdk-js': 6.1.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
       lucide-react: 1.14.0(react@19.2.5)
       react: 19.2.5
 
