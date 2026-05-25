@@ -116,7 +116,8 @@ def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:  # en
             capture_output=True,
             text=True,
             cwd=root,
-            timeout=_WRANGLER_TIMEOUT
+            timeout=_WRANGLER_TIMEOUT,
+            check=False,
         )
         
         if result.returncode != 0:

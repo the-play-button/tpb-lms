@@ -62,7 +62,7 @@ def run_cmd(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subp
         Completed process result.
     """
     try:
-        result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=_SUBPROCESS_TIMEOUT)
+        result = subprocess.run(cmd, capture_output=True, text=True, cwd=cwd, timeout=_SUBPROCESS_TIMEOUT, check=False)
         if check and result.returncode != 0:
             log(f"❌ Command failed: {' '.join(cmd)}", "error")
             if result.stderr:
