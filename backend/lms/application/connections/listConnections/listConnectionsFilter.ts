@@ -1,12 +1,8 @@
 /**
- * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
+ * Filter — Régime B : PIPELINE_STEP_PASS_THROUGH (no FLS — endpoint scope-restricted via CheckPolicies).
  */
 import type { ConnectionInfo } from '../../../../services/types/ConnectionInfo.js';
 
-/**
- * Filter step: pass-through for connection listings.
- * Connections are scoped to the authenticated user — no FLS needed.
- */
 export const listConnectionsFilter = (connections: ConnectionInfo[]): ConnectionInfo[] => {
   return connections;
 };
