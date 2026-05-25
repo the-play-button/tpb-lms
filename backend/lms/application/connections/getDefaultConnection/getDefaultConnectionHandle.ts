@@ -1,7 +1,7 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
-import type { ConnectionInfo } from '../../../services/types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../../../services/types/ConnectionInfo.js';
 import { getDefaultConnectionValidateInput } from './getDefaultConnectionValidateInput.js';
 import { getDefaultConnectionHydrateContext } from './getDefaultConnectionHydrateContext.js';
 import { getDefaultConnectionValidateContext } from './getDefaultConnectionValidateContext.js';

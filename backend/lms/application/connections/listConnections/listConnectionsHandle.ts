@@ -1,7 +1,7 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
-import type { ConnectionInfo } from '../../../services/types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../../../services/types/ConnectionInfo.js';
 import { listConnectionsValidateInput } from './listConnectionsValidateInput.js';
 import { listConnectionsHydrateContext } from './listConnectionsHydrateContext.js';
 import { listConnectionsValidateContext } from './listConnectionsValidateContext.js';

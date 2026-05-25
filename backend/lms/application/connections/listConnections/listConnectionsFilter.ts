@@ -1,7 +1,7 @@
 /**
  * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
  */
-import type { ConnectionInfo } from '../../../services/types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../../../services/types/ConnectionInfo.js';
 
 /**
  * Filter step: pass-through for connection listings.

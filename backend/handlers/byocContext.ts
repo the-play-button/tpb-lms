@@ -7,7 +7,7 @@
  * with all ports, repositories, and user identity.
  */
 
-import type { HandlerContext, AuthzBastionClient, LmsActor } from '../types/HandlerContext.js';
+import type { HandlerContext, AuthzBastionClient, LmsActor } from '../lms/types/HandlerContext.js';
 import type { Env } from '../types/Env.js';
 import { BastionCloudflareAdapter } from '../services/bastion/adapters/BastionCloudflareAdapter.js';
 import { UnifiedToStorageAdapter } from '../services/storage/adapters/UnifiedToStorageAdapter.js';

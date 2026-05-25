@@ -5,13 +5,13 @@
  * (env, userContext) to the TS handler pipeline.
  */
 
-import type { BastionPort } from '../services/bastion/BastionPort.js';
-import type { StoragePort } from '../services/storage/StoragePort.js';
-import type { PamPort } from '../services/pam/PamPort.js';
-import type { ConnectionResolverPort } from '../services/connections/ConnectionResolverPort.js';
-import type { ContentRefsRepository } from '../lms/domain/repositories/ContentRefsRepository.js';
-import type { SharesRepository } from '../lms/domain/repositories/SharesRepository.js';
-import type { DomainEvents } from '../lms/domain/events/DomainEvents.js';
+import type { BastionPort } from '../../services/bastion/BastionPort.js';
+import type { StoragePort } from '../../services/storage/StoragePort.js';
+import type { PamPort } from '../../services/pam/PamPort.js';
+import type { ConnectionResolverPort } from '../../services/connections/ConnectionResolverPort.js';
+import type { ContentRefsRepository } from '../domain/repositories/ContentRefsRepository.js';
+import type { SharesRepository } from '../domain/repositories/SharesRepository.js';
+import type { DomainEvents } from '../domain/events/DomainEvents.js';
 
 /** Authz-capable bastion client for delegated authorization checks (uses service token + signing secret) */
 export interface AuthzBastionClient {
