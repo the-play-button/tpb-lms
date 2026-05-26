@@ -1,28 +1,23 @@
 #!/usr/bin/env python3
+# entropy-single-export-ok: CLI provisioning script, functions are internal pipeline steps called by main()
 """
 Provision Test Accounts via bastion IAM
 
 Creates test accounts with real authentication via bastion.
 Users can then login via CF Access with proper roles.
 
-Uses BastionClient for credentials (reads from .devcontainer/.env automatically).
+Uses BastionClient SDK exclusively — devcontainer credentials read from .devcontainer/.env.
 """
 
-import json
-import os
+import subprocess
 import sys
-from datetime import datetime
-from pathlib import Path
+from typing import Any
 
-import requests
+import httpx
 
 from tpb_sdk.bastion import BastionClient
 
-# bastion endpoint
-VAULT_API_BASE = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
-
-_VAULT_API_TIMEOUT = 30
-_CLI_SEPARATOR_WIDTH = 50
+_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant for terminal formatting
 
 # Test accounts to create
 # Uses real emails with +alias for actual authentication via CF Access
@@ -35,7 +30,7 @@ TEST_ACCOUNTS = [
         'description': 'Test student account - real email with +alias'
     },
     {
-        'email': 'wayzate@gmail.com', 
+        'email': 'wayzate@gmail.com',
         'display_name': 'Test Instructor',
         'lms_role': 'instructor',  # Maps to tpblms_instructor vault role
         'description': 'Test instructor account - real email with +alias'
@@ -48,115 +43,69 @@ TEST_ACCOUNTS = [
     }
 ]
 
-def get_vault_headers():
-    """
-    Get auth headers for vault-api IAM operations.
-    
-    Flow:
-    1. Use BastionClient (your personal credentials from .devcontainer/.env) to access the vault
-    2. Fetch TPB LMS application credentials from vault
-    3. Return headers with app credentials for IAM operations
-    """
-    try:
-        # Step 1: Connect to bastion with personal credentials
-        bastion = BastionClient.from_devcontainer()
 
-        # Step 2: Get TPB LMS app credentials from vault
-        client_id = bastion.get_secret("tpb/apps/lms/vault_client_id")
-        client_secret = bastion.get_secret("tpb/apps/lms/vault_client_secret")
-        
-        if not client_id or not client_secret:
-            print("❌ Missing TPB LMS credentials in vault!")
-            print()
-            print("   Add these secrets to vault:")
-            print("   - tpb/apps/lms/vault_client_id")
-            print("   - tpb/apps/lms/vault_client_secret")
-            print()
-            print("   Via: vault.set_secret('tpb/apps/lms/vault_client_id', '...')")
-            sys.exit(1)
-        
-        # Step 3: Return headers with app credentials
-        return {
-            'CF-Access-Client-Id': client_id,
-            'CF-Access-Client-Secret': client_secret,
-            'Content-Type': 'application/json'
-        }
-    except ValueError as e:
-        print(f"❌ {e}")
+def get_bastion_client() -> BastionClient:
+    """Build a BastionClient from the canonical devcontainer creds path."""
+    try:
+        return BastionClient.from_devcontainer()
+    except (FileNotFoundError, ValueError, RuntimeError) as exc:
+        print(f"❌ Missing bastion credentials: {exc}")
+        print("   Configure .devcontainer/.env with BASTION_CLIENT_ID/SECRET/TOKEN.")
         sys.exit(1)
 
-def create_user_via_vault(account):  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
-    """Create user via vault-api.
+
+def create_user_via_vault(client: BastionClient, account: dict[str, Any]) -> str | None:  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
+    """Create user via vault-api using the SDK.
 
     Args:
+        client: Authenticated BastionClient.
         account: Account config dict with email, display_name, and lms_role.
 
     Returns:
         User ID string if created or found, None on failure.
     """
     print(f"🔧 Creating user: {account['email']} ({account['lms_role']})")
-    
-    headers = get_vault_headers()
-    
-    # 1. Create user
-    user_payload = {
+
+    payload = {
         'email': account['email'],
         'display_name': account['display_name'],
         'user_type': 'human',
-        'grant_vault_access': True
+        'grant_vault_access': True,
     }
-    
-    response = requests.post(
-        f"{VAULT_API_BASE}/iam/users",
-        headers=headers,
-        json=user_payload,
-        timeout=_VAULT_API_TIMEOUT
-    )
-    
-    if response.status_code == 409:
-        print(f"  ⚠️  User {account['email']} already exists")
-        # Get existing user ID by listing all users and filtering
-        user_response = requests.get(
-            f"{VAULT_API_BASE}/iam/users",
-            headers=headers,
-            timeout=_VAULT_API_TIMEOUT
-        )
-        if user_response.status_code == 200:
-            users = user_response.json().get('users', [])
-            for u in users:
-                if u['email'] == account['email']:
-                    print(f"  ✅ Found existing user: {u['id']}")
-                    return u['id']
-        print(f"  ❌ Could not find existing user")
+
+    try:
+        created = client.create_user(payload)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict — user already exists, locate by email
+            print(f"  ⚠️  User {account['email']} already exists")
+            for user in client.list_users():
+                if user.get('email') == account['email']:
+                    print(f"  ✅ Found existing user: {user['id']}")
+                    return user['id']
+            print("  ❌ Could not find existing user")
+            return None
+        print(f"  ❌ Failed to create user: {exc.response.status_code} {exc.response.text}")
         return None
-    elif response.status_code != 201:
-        print(f"  ❌ Failed to create user: {response.status_code} {response.text}")
+
+    user_id = created.get('id') if isinstance(created, dict) else None
+    if not user_id:
+        print(f"  ❌ create_user returned no id: {created}")
         return None
-    
-    user_data = response.json()
-    user_id = user_data['user']['id']
-    
+
     print(f"  ✅ User created: {user_id}")
-    
-    # 2. Check CF Access result
-    cf_access = user_data.get('cf_access', {})
+    cf_access = created.get('cf_access', {}) if isinstance(created, dict) else {}
     if cf_access.get('error'):
         print(f"  ⚠️  CF Access failed: {cf_access['error']}")
-    else:
+    elif cf_access:
         print(f"  ✅ CF Access granted")
-    
+
     return user_id
 
-def get_vault_role_name(lms_role):
+
+def get_vault_role_name(lms_role: str) -> str | None:
     """Map LMS role to vault-api role name.
 
     Uses tpblms namespace prefix (matches app namespace).
-
-    Args:
-        lms_role: LMS role name (admin, instructor, or student).
-
-    Returns:
-        Vault role name string or None for students.
     """
     if lms_role == 'admin':
         return 'tpblms_admin'
@@ -165,15 +114,17 @@ def get_vault_role_name(lms_role):
     else:
         return None  # Students don't need a vault role
 
-def assign_role_to_user(user_id, lms_role):  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
+
+def assign_role_to_user(client: BastionClient, user_id: str, lms_role: str) -> bool:  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
     """Assign LMS role to user via vault-api groups.
 
     Role assignment in vault-api works via groups:
-    1. User added to group (e.g., lms_admins)
-    2. Group has role assigned (e.g., lms_admin)
+    1. User added to group (e.g., tpblms_admins)
+    2. Group has role assigned (e.g., tpblms_admin)
     3. User inherits role through group membership
 
     Args:
+        client: Authenticated BastionClient.
         user_id: Vault user identifier.
         lms_role: LMS role name (admin, instructor, or student).
 
@@ -181,54 +132,37 @@ def assign_role_to_user(user_id, lms_role):  # entropy-python-long-function-ok: 
         True if role was assigned successfully.
     """
     vault_role = get_vault_role_name(lms_role)
-    
+
     if not vault_role:
         print(f"  ℹ️  No vault role needed for '{lms_role}' (default)")
         return True
-    
+
     print(f"🎭 Assigning role '{vault_role}' to user {user_id}")
-    
-    headers = get_vault_headers()
+
     group_name = f"{vault_role}s"  # tpblms_admin -> tpblms_admins
-    
-    # Find the group
-    groups_response = requests.get(
-        f"{VAULT_API_BASE}/iam/groups",
-        headers=headers,
-        timeout=_VAULT_API_TIMEOUT
-    )
-    
-    if groups_response.status_code != 200:
-        print(f"  ❌ Failed to list groups: {groups_response.status_code}")
-        return False
-    
-    groups = groups_response.json().get('groups', [])
-    target_group = next((g for g in groups if g['name'] == group_name), None)
-    
+
+    groups = client.list_groups()
+    target_group = next((g for g in groups if g.get('name') == group_name), None)
+
     if not target_group:
         print(f"  ⚠️  Group '{group_name}' not found. Run setup-vault-iam.js first.")
         return False
-    
-    # Add user to group
-    add_member_response = requests.post(
-        f"{VAULT_API_BASE}/iam/groups/{target_group['id']}/members",
-        headers=headers,
-        json={'user_id': user_id},
-        timeout=_VAULT_API_TIMEOUT
-    )
-    
-    if add_member_response.status_code == 409:
-        print(f"  ⚠️  User already in group '{group_name}'")
-        return True
-    elif add_member_response.status_code not in [200, 201]:
-        print(f"  ❌ Failed to add to group: {add_member_response.status_code} {add_member_response.text}")
+
+    try:
+        client.add_group_member(target_group['id'], user_id)
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict — already member
+            print(f"  ⚠️  User already in group '{group_name}'")
+            return True
+        print(f"  ❌ Failed to add to group: {exc.response.status_code} {exc.response.text}")
         return False
-    
+
     print(f"  ✅ User added to group '{group_name}'")
     return True
 
-def create_lms_contact_data(account, user_id):  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
-    """Create corresponding data in LMS database.
+
+def create_lms_contact_data(account: dict[str, Any], user_id: str) -> str | bool:  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
+    """Create corresponding data in LMS database via wrangler.
 
     Args:
         account: Account config dict with email, display_name, and lms_role.
@@ -238,13 +172,10 @@ def create_lms_contact_data(account, user_id):  # entropy-python-long-function-o
         Contact ID string if created, False on failure.
     """
     print(f"📊 Creating LMS data for {account['email']}")
-    
+
     # This creates the crm_contact and hris_employee records
     # that LMS uses for role resolution
-    
-    import subprocess
 
-    # Create crm_contact
     contact_id = f"contact_{user_id}"
     contact_sql = f"""
     INSERT OR REPLACE INTO crm_contact (id, name, emails_json, created_at, updated_at)
@@ -256,8 +187,7 @@ def create_lms_contact_data(account, user_id):  # entropy-python-long-function-o
         datetime('now')
     );
     """
-    
-    # Create hris_employee if instructor/admin
+
     if account['lms_role'] in ['instructor', 'admin']:
         roles_json = '["admin"]' if account['lms_role'] == 'admin' else '["instructor"]'
         employee_sql = f"""
@@ -273,47 +203,45 @@ def create_lms_contact_data(account, user_id):  # entropy-python-long-function-o
         );
         """
         contact_sql += employee_sql
-    
-    # Execute via wrangler
+
     cmd = [
-        'npx', 'wrangler', 'd1', 'execute', 'lms-db', 
+        'npx', 'wrangler', 'd1', 'execute', 'lms-db',
         '--remote', '--command', contact_sql
     ]
-    
+
     result = subprocess.run(cmd, capture_output=True, text=True, cwd='../..', check=True)
     if result.returncode != 0:
         print(f"  ❌ Failed to create LMS data: {result.stderr}")
         return False
-    
+
     print(f"  ✅ LMS data created: {contact_id}")
     return contact_id
+
 
 def main():  # entropy-python-long-function-ok: long function in provision_test_accounts is linear CLI script flow
     """Main provisioning function."""
     print("🚀 Provisioning test accounts via vault-api...")
-    print(f"   Target: {VAULT_API_BASE}")
+    client = get_bastion_client()
+    print(f"   Target: {client.base_url}")
     print(f"   Accounts: {len(TEST_ACCOUNTS)}")
     print()
-    
+
     results = []
-    
+
     for account in TEST_ACCOUNTS:
         print(f"📝 Processing: {account['email']}")
-        
-        # 1. Create user in vault-api
-        user_id = create_user_via_vault(account)
+
+        user_id = create_user_via_vault(client, account)
         if not user_id:
             print(f"  ❌ Skipping {account['email']} - user creation failed")
             continue
-        
-        # 2. Assign role in vault-api (via group membership)
-        role_success = assign_role_to_user(user_id, account['lms_role'])
+
+        role_success = assign_role_to_user(client, user_id, account['lms_role'])
         if not role_success:
             print(f"  ⚠️  Role assignment failed for {account['email']}")
-        
-        # 3. Create LMS data (fallback for local role resolution)
+
         contact_id = create_lms_contact_data(account, user_id)
-        
+
         results.append({
             'email': account['email'],
             'user_id': user_id,
@@ -321,13 +249,12 @@ def main():  # entropy-python-long-function-ok: long function in provision_test_
             'lms_role': account['lms_role'],
             'status': 'success' if contact_id else 'partial'
         })
-        
+
         print()
-    
-    # Summary
+
     print("📊 Provisioning Summary:")
     print("=" * _CLI_SEPARATOR_WIDTH)
-    
+
     for result in results:
         status_icon = "✅" if result['status'] == 'success' else "⚠️"
         print(f"{status_icon} {result['email']}")
@@ -335,12 +262,13 @@ def main():  # entropy-python-long-function-ok: long function in provision_test_
         print(f"   Contact ID: {result['contact_id']}")
         print(f"   LMS Role: {result['lms_role']}")
         print()
-    
+
     print("🎯 Next Steps:")
     print("1. Users can now login via CF Access at:")
     print("   https://lms-viewer.matthieu-marielouise.workers.dev")
     print("2. They will have the correct roles in LMS")
     print("3. Use these accounts for manual testing")
+
 
 if __name__ == '__main__':
     main()

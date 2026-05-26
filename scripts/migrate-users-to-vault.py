@@ -1,65 +1,53 @@
 #!/usr/bin/env python3
 # entropy-single-export-ok: CLI migration script, functions are internal pipeline steps called by main()
 # entropy-legacy-marker-ok: debt — hris_employee is deprecated for roles post vault-api migration
-# entropy-inconsistent-constant-ok: VAULT_API_URL default differs from backend (workers.dev vs wrangler.dev) — standalone migration script targets production vault directly, not routed through CF Access
 """
 Migrate LMS Users to vault-api
 
 Reads existing users from LMS hris_employee table and creates
-corresponding vault-api users and group memberships.
+corresponding vault-api users and group memberships via the BastionClient SDK.
 
 Prerequisites:
 1. Run setup-vault-iam.js first to create roles and groups
-2. Set BASTION_CLIENT_ID and BASTION_CLIENT_SECRET env vars
+2. Devcontainer bastion credentials available (.devcontainer/.env)
 
 Usage:
-    export BASTION_CLIENT_ID='your-client-id.access'
-    export BASTION_CLIENT_SECRET='your-client-secret'  # entropy-python-hardcoded-secrets-ok: placeholder in docstring, not actual secret
     python scripts/migrate-users-to-vault.py
 
-This is a one-time migration script. After migration, vault-api 
+This is a one-time migration script. After migration, vault-api
 becomes the SSOT for IAM and hris_employee is deprecated for roles.  # entropy-legacy-marker-ok: legacy pattern in migrate-users-to-vault, tracked for future refactoring
 """
 
 import json
-import os
 import subprocess
 import sys
 from typing import Any
 
-import requests
+import httpx
+from tpb_sdk.bastion import BastionClient
 
-# entropy-inconsistent-constant-ok: standalone scripts have their own defaults
-VAULT_API_URL = os.environ.get(
-    'VAULT_API_URL',
-    'https://tpb-bastion-backend.matthieu-marielouise.workers.dev'
-)
-
-_VAULT_API_TIMEOUT = 30  # entropy-python-magic-numbers-ok: numeric literal in migrate-users-to-vault is a timeout duration in seconds
 _CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in migrate-users-to-vault for terminal formatting
 
-def get_vault_headers() -> dict[str, str]:
-    """Get auth headers for vault-api."""
-    client_id = os.environ.get('BASTION_CLIENT_ID')
-    client_secret = os.environ.get('BASTION_CLIENT_SECRET')
-    
-    if not client_id or not client_secret:
-        print("❌ Missing credentials!")
-        print("   Set BASTION_CLIENT_ID and BASTION_CLIENT_SECRET")
+
+def get_bastion_client() -> BastionClient:
+    """Construct a BastionClient via the canonical devcontainer creds path.
+
+    Reads BASTION_CLIENT_ID / BASTION_CLIENT_SECRET / BASTION_TOKEN from
+    .devcontainer/.env (cf. CLAUDE.md § BASTION AUTH).
+    """
+    try:
+        return BastionClient.from_devcontainer()
+    except (FileNotFoundError, ValueError, RuntimeError) as exc:
+        print(f"❌ Missing bastion credentials: {exc}")
+        print("   Configure .devcontainer/.env with BASTION_CLIENT_ID/SECRET/TOKEN.")
         sys.exit(1)
-    
-    return {
-        'CF-Access-Client-Id': client_id,
-        'CF-Access-Client-Secret': client_secret,
-        'Content-Type': 'application/json'
-    }
 
 def fetch_lms_employees() -> list[dict[str, Any]]:
     """Fetch employees from LMS D1 database."""
     print("📊 Fetching employees from LMS database...")
-    
+
     sql = """
-    SELECT 
+    SELECT
         id,
         name,
         emails_json,
@@ -67,18 +55,18 @@ def fetch_lms_employees() -> list[dict[str, Any]]:
     FROM hris_employee
     WHERE emails_json IS NOT NULL
     """
-    
+
     cmd = [
         'npx', 'wrangler', 'd1', 'execute', 'lms-db',
         '--remote', '--command', sql, '--json'
     ]
-    
+
     result = subprocess.run(cmd, capture_output=True, text=True, cwd='../..', check=True)
-    
+
     if result.returncode != 0:
         print(f"❌ Failed to query LMS database: {result.stderr}")
         return []
-    
+
     try:
         # Parse wrangler output
         output = json.loads(result.stdout)
@@ -90,71 +78,48 @@ def fetch_lms_employees() -> list[dict[str, Any]]:
     except json.JSONDecodeError:
         print(f"❌ Failed to parse output: {result.stdout}")
         return []  # entropy-catch-return-default-ok: migration script — error printed, degrade gracefully on tool failure
-    
+
     return []
 
-def get_vault_groups() -> dict[str, str]:
-    """Fetch existing groups from vault-api."""
-    headers = get_vault_headers()
-    
-    resp = requests.get(
-        f"{VAULT_API_URL}/iam/groups",
-        headers=headers,
-        timeout=_VAULT_API_TIMEOUT
-    )
-    
-    if resp.status_code != 200:  # entropy-python-magic-numbers-ok: HTTP status code 200 check in migrate-users-to-vault
-        print(f"❌ Failed to fetch groups: {resp.status_code}")
-        return {}
-    
-    groups = resp.json().get('groups', [])
+def get_vault_groups(client: BastionClient) -> dict[str, str]:
+    """Fetch existing groups from vault-api via the SDK."""
+    groups = client.list_groups()
     return {g['name']: g['id'] for g in groups}
 
-def create_vault_user(email: str, display_name: str) -> str | None:  # entropy-python-nesting-ok: nested iteration in migrate-users-to-vault over multi-level structured data
-    """Create user in vault-api.
+def create_vault_user(client: BastionClient, email: str, display_name: str) -> str | None:
+    """Create user in vault-api via the SDK.
 
     Args:
+        client: Authenticated BastionClient.
         email: User email address.
         display_name: Human-readable name for the user.
 
     Returns:
         User ID string if created or found, None on failure.
     """
-    headers = get_vault_headers()
-    
-    resp = requests.post(
-        f"{VAULT_API_URL}/iam/users",
-        headers=headers,
-        json={
-            'email': email,
-            'display_name': display_name,
-            'user_type': 'human',
-            'grant_vault_access': True
-        },
-        timeout=_VAULT_API_TIMEOUT
-    )
-    
-    if resp.status_code == 201:  # entropy-python-magic-numbers-ok: HTTP 201 Created
-        return resp.json()['user']['id']
-    elif resp.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict
-        # User exists, try to find ID
-        list_resp = requests.get(
-            f"{VAULT_API_URL}/iam/users",
-            headers=headers,
-            timeout=30  # entropy-python-magic-numbers-ok: numeric literal in migrate-users-to-vault is a timeout duration in seconds
-        )
-        if list_resp.status_code == 200:  # entropy-python-magic-numbers-ok: HTTP status code 200 check in migrate-users-to-vault
-            users = list_resp.json().get('users', [])
-            for u in users:
-                if u['email'] == email:
-                    return u['id']
-    
-    return None
+    payload = {
+        'email': email,
+        'display_name': display_name,
+        'user_type': 'human',
+        'grant_vault_access': True,
+    }
+    try:
+        created = client.create_user(payload)
+        return created['id'] if isinstance(created, dict) and 'id' in created else None
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict — user already exists, locate by email
+            for user in client.list_users():
+                if user.get('email') == email:
+                    return user['id']
+            return None
+        print(f"      ❌ create_user failed: {exc.response.status_code}")
+        return None
 
-def add_user_to_group(user_id: str, group_id: str, group_name: str) -> bool:
-    """Add user to vault-api group.
+def add_user_to_group(client: BastionClient, user_id: str, group_id: str, group_name: str) -> bool:
+    """Add user to vault-api group via the SDK.
 
     Args:
+        client: Authenticated BastionClient.
         user_id: Vault user identifier.
         group_id: Vault group identifier.
         group_name: Group name for logging.
@@ -162,27 +127,20 @@ def add_user_to_group(user_id: str, group_id: str, group_name: str) -> bool:
     Returns:
         True if user was added or already a member.
     """
-    headers = get_vault_headers()
-    
-    resp = requests.post(
-        f"{VAULT_API_URL}/iam/groups/{group_id}/members",
-        headers=headers,
-        json={'user_id': user_id},
-        timeout=_VAULT_API_TIMEOUT
-    )
-    
-    if resp.status_code in [200, 201]:  # entropy-python-magic-numbers-ok: HTTP 200/201 success
+    try:
+        client.add_group_member(group_id, user_id)
         return True
-    elif resp.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict
-        return True  # Already member
-    
-    print(f"      ❌ Failed to add to {group_name}: {resp.status_code}")
-    return False
+    except httpx.HTTPStatusError as exc:
+        if exc.response.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict — already member
+            return True
+        print(f"      ❌ Failed to add to {group_name}: {exc.response.status_code}")
+        return False
 
-def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:  # entropy-python-long-function-ok: long function in migrate-users-to-vault is linear sequential script execution
+def migrate_employee(client: BastionClient, employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:  # entropy-python-long-function-ok: long function in migrate-users-to-vault is linear sequential script execution
     """Migrate a single employee to vault-api.
 
     Args:
+        client: Authenticated BastionClient.
         employee: Employee record dict from LMS database.
         groups: Mapping of group names to group IDs.
 
@@ -197,16 +155,16 @@ def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[s
         email = emails[0].get('email')
     except json.JSONDecodeError:
         return None  # entropy-catch-return-default-ok: migration script — error printed, degrade gracefully on tool failure
-    
+
     if not email:
         return None
-    
+
     # Parse roles
     try:
         roles = json.loads(employee.get('employee_roles_json', '[]'))
     except json.JSONDecodeError:
         roles = []
-    
+
     # Determine LMS role
     # Groups use tpblms_ namespace (matches vault-api app namespace)
     if 'admin' in roles:
@@ -215,69 +173,70 @@ def migrate_employee(employee: dict[str, Any], groups: dict[str, str]) -> dict[s
     else:
         lms_role = 'instructor'
         target_group = 'tpblms_instructors'
-    
+
     display_name = employee.get('name', email.split('@')[0])
-    
+
     print(f"  👤 {email} ({lms_role})")
-    
+
     # 1. Create user in vault-api
-    user_id = create_vault_user(email, display_name)
+    user_id = create_vault_user(client, email, display_name)
     if not user_id:
         print(f"      ❌ Failed to create user")
         return None
-    
+
     print(f"      ✅ User: {user_id}")
-    
+
     # 2. Add to appropriate group
     group_id = groups.get(target_group)
     if group_id:
-        if add_user_to_group(user_id, group_id, target_group):
+        if add_user_to_group(client, user_id, group_id, target_group):
             print(f"      ✅ Added to {target_group}")
     else:
         print(f"      ⚠️  Group {target_group} not found")
-    
+
     return {
         'email': email,
         'user_id': user_id,
         'lms_role': lms_role,
-        'group': target_group
+        'group': target_group,
     }
 
 def main() -> None:  # entropy-python-long-function-ok: long function in migrate-users-to-vault is linear CLI script flow
     """ Migrate LMS employees to vault-api users and group memberships."""
     print("🚀 Migrating LMS users to vault-api...")
-    print(f"   Target: {VAULT_API_URL}")
+    client = get_bastion_client()
+    print(f"   Target: {client.base_url}")
     print()
-    
+
     # 1. Fetch existing vault groups
     print("📋 Fetching vault-api groups...")
-    groups = get_vault_groups()
+    groups = get_vault_groups(client)
     print(f"   Found groups: {list(groups.keys())}")
     print()
-    
+
     if 'tpblms_admins' not in groups or 'tpblms_instructors' not in groups:
         print("❌ LMS groups not found! Run setup-vault-iam.js first.")
         sys.exit(1)
-    
+
     # 2. Fetch LMS employees
     employees = fetch_lms_employees()
     if not employees:
         print("   No employees to migrate")
         return
-    
+
     print()
-    
+
     # 3. Migrate each employee
     print("🔄 Migrating employees...")
     results = []
-    
+
     for emp in employees:
-        result = migrate_employee(emp, groups)
+        result = migrate_employee(client, emp, groups)
         if result:
             results.append(result)
-    
+
     print()
-    
+
     # Summary
     print("=" * _CLI_SEPARATOR_WIDTH)
     print("📊 Migration Summary")
@@ -285,19 +244,19 @@ def main() -> None:  # entropy-python-long-function-ok: long function in migrate
     print(f"   Total employees: {len(employees)}")
     print(f"   Successfully migrated: {len(results)}")
     print()
-    
+
     if results:
         admins = [r for r in results if r['lms_role'] == 'admin']
         instructors = [r for r in results if r['lms_role'] == 'instructor']
-        
+
         print(f"   Admins: {len(admins)}")
         for a in admins:
             print(f"      • {a['email']}")
-        
+
         print(f"   Instructors: {len(instructors)}")
         for i in instructors:
             print(f"      • {i['email']}")
-    
+
     print()
     print("✅ Migration complete!")
     print()
@@ -308,4 +267,3 @@ def main() -> None:  # entropy-python-long-function-ok: long function in migrate
 
 if __name__ == '__main__':
     main()
-
