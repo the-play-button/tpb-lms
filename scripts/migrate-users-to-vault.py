@@ -82,7 +82,14 @@ def fetch_lms_employees() -> list[dict[str, Any]]:
     return []
 
 def get_vault_groups(client: BastionClient) -> dict[str, str]:
-    """Fetch existing groups from vault-api via the SDK."""
+    """Fetch existing groups from vault-api via the SDK.
+
+    Args:
+        client: Authenticated BastionClient.
+
+    Returns:
+        Mapping of group name → group id.
+    """
     groups = client.list_groups()
     return {g['name']: g['id'] for g in groups}
 
