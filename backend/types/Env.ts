@@ -16,6 +16,7 @@ export interface Env extends BastionClientEnv {
 
   // --- Vars ---
   ACCESS_TEAM_DOMAIN: string;
+  STORAGE_URL: string;
 
   /** tpb-storage Worker URL — used by `TpbStorageHttpAdapter` to forward
    *  storage queries through the native StorageFilePort (microsoft / google
