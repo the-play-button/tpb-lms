@@ -1,14 +1,17 @@
 import type { StoragePort } from './StoragePort.js';
 import {
-  UnifiedToStorageAdapter,
-  type UnifiedToStorageAdapterConfig,
-} from './adapters/UnifiedToStorageAdapter.js';
+  TpbStorageHttpAdapter,
+  type TpbStorageHttpAdapterConfig,
+} from './adapters/TpbStorageHttpAdapter.js';
 
 /**
- * Factory to create Storage service
+ * Factory to create Storage service.
  *
- * @param config - Configuration with token provider
+ * Plan 13.b of plans/2026-05-26_exit-unifiedto-runtime-final/ — backed by
+ * `TpbStorageHttpAdapter` which forwards to the tpb-storage Worker (native
+ * Microsoft Graph / Google Drive adapters), replacing the legacy
+ * `UnifiedToStorageAdapter` (api.unified.to direct fetch).
  */
-export const createStorageService = (config: UnifiedToStorageAdapterConfig): StoragePort => {
-  return new UnifiedToStorageAdapter(config);
+export const createStorageService = (config: TpbStorageHttpAdapterConfig): StoragePort => {
+  return new TpbStorageHttpAdapter(config);
 };

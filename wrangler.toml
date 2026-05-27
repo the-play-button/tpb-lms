@@ -17,6 +17,7 @@ migrations_dir = "db/migrations"
 [vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
 BASTION_URL = "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
+TPB_STORAGE_URL = "https://tpb-storage.matthieu-marielouise.workers.dev"
 TELEMETRY_URL = "https://tpb-telemetry.matthieu-marielouise.workers.dev"
 CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
 # CF_ACCESS_CLIENT_SECRET — fetche depuis bastion vault au runtime (tpb/infra/cf_access_sa_client_secret)
