@@ -25,5 +25,8 @@ export const listFiles = async (accessToken: string, parentId?: string): Promise
     throw new ServiceUnavailableError('Storage', `GDrive listFiles ${response.status}`);
   }
   const data = (await response.json()) as GDriveListResponse;
-  return (data.files ?? []).map((f) => mapGDriveFileToStorageFile(f, FOLDER_MIME));
+  if (!Array.isArray(data.files)) {
+    throw new ServiceUnavailableError('Storage', `GDrive listFiles malformed response — missing 'files' array`);
+  }
+  return data.files.map((f) => mapGDriveFileToStorageFile(f, FOLDER_MIME));
 };

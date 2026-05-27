@@ -26,6 +26,9 @@ export const listFiles = async (accessToken: string, parentId?: string): Promise
     throw new ServiceUnavailableError('Storage', `MS Graph listFiles ${response.status}`);
   }
   const data = (await response.json()) as GraphChildrenResponse;
-  const items = (data.value as Parameters<typeof mapGraphItemToStorageFile>[0][]) ?? [];
+  if (!Array.isArray(data.value)) {
+    throw new ServiceUnavailableError('Storage', `MS Graph listFiles malformed response — missing 'value' array`);
+  }
+  const items = data.value as Parameters<typeof mapGraphItemToStorageFile>[0][];
   return items.map(mapGraphItemToStorageFile);
 };
