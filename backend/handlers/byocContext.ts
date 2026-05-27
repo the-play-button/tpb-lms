@@ -10,7 +10,7 @@
 import type { HandlerContext, AuthzBastionClient, LmsActor } from '../lms/types/HandlerContext.js';
 import type { Env } from '../types/Env.js';
 import { BastionCloudflareAdapter } from '../services/bastion/adapters/BastionCloudflareAdapter.js';
-import { BastionStorageAdapter } from '../services/storage/adapters/BastionStorageAdapter.js';
+import { TpbStorageAdapter } from '../services/storage/adapters/TpbStorageAdapter.js';
 import { PamCloudflareAdapter } from '../services/pam/adapters/PamCloudflareAdapter.js';
 import { ConnectionResolverAdapter } from '../services/connections/adapters/ConnectionResolverAdapter.js';
 import { ContentRefsDatabaseRepository } from '../lms/infrastructure/repositories/ContentRefsDatabaseRepository.js';
@@ -48,8 +48,8 @@ export const createByocContext = async (
   // --- Ports ---
   const bastionClient = new BastionCloudflareAdapter({ bastionUrl: env.BASTION_URL });
 
-  const storageService = new BastionStorageAdapter({
-    bastion: bastionClient,
+  const storageService = new TpbStorageAdapter({
+    storageUrl: env.STORAGE_URL,
     jwt,
   });
   await storageService.initialize();

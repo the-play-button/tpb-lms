@@ -16,6 +16,7 @@ export interface Env extends BastionClientEnv {
 
   // --- Vars ---
   ACCESS_TEAM_DOMAIN: string;
+  STORAGE_URL: string;
 
   // --- Legacy (to be removed post-migration) ---
   BASTION_BACKEND_SECRET_KEY?: string;

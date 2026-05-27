@@ -17,16 +17,6 @@ export interface BastionPort {
   getSecret(jwt: string, path: string): Promise<string | null>;
 
   /**
-   * Get the OAuth access_token (per-connection) from bastion D1 mirror.
-   * Bastion is the SSOT for connection auth.
-   *
-   * @param jwt - User's CF Access JWT
-   * @param connectionId - User's storage connection id
-   * @returns auth payload with access_token + other_auth_info
-   */
-  getConnectionAuth(jwt: string, connectionId: string): Promise<BastionConnectionAuth>;
-
-  /**
    * Get ALL storage connections for the user
    * @param jwt - User's CF Access JWT
    */
@@ -45,11 +35,6 @@ export interface BastionPort {
    * @throws Error if no connection configured
    */
   getDefaultStorageConnection(jwt: string): Promise<ConnectionInfo>;
-}
-
-export interface BastionConnectionAuth {
-  access_token?: string;
-  other_auth_info?: Array<{ key: string; value: string }>;
 }
 
 /**

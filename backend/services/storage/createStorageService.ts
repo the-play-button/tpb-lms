@@ -1,13 +1,13 @@
 import type { StoragePort } from './StoragePort.js';
-import { BastionStorageAdapter, type BastionStorageAdapterConfig } from './adapters/BastionStorageAdapter.js';
+import { TpbStorageAdapter, type TpbStorageAdapterConfig } from './adapters/TpbStorageAdapter.js';
 
 /**
- * Factory to create Storage service.
+ * Factory for the Storage service.
  *
- * Native provider dispatch (Microsoft Graph / Google Drive v3) — replaces the
- * unified.to passthrough wrapper since 2026-05-27. Per-connection OAuth token
- * resolved from bastion D1 mirror (SSOT).
+ * tpb-storage Worker (the BC owning Microsoft Graph / Google Drive native
+ * adapters) is consumed over HTTP via the SDK's `StorageClient`. The LMS does
+ * not reimplement provider-direct calls — doctrine § API-ready by design.
  */
-export const createStorageService = (config: BastionStorageAdapterConfig): StoragePort => {
-  return new BastionStorageAdapter(config);
+export const createStorageService = (config: TpbStorageAdapterConfig): StoragePort => {
+  return new TpbStorageAdapter(config);
 };
