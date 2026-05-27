@@ -10,7 +10,7 @@
 import type { HandlerContext, AuthzBastionClient, LmsActor } from '../lms/types/HandlerContext.js';
 import type { Env } from '../types/Env.js';
 import { BastionCloudflareAdapter } from '../services/bastion/adapters/BastionCloudflareAdapter.js';
-import { UnifiedToStorageAdapter } from '../services/storage/adapters/UnifiedToStorageAdapter.js';
+import { BastionStorageAdapter } from '../services/storage/adapters/BastionStorageAdapter.js';
 import { PamCloudflareAdapter } from '../services/pam/adapters/PamCloudflareAdapter.js';
 import { ConnectionResolverAdapter } from '../services/connections/adapters/ConnectionResolverAdapter.js';
 import { ContentRefsDatabaseRepository } from '../lms/infrastructure/repositories/ContentRefsDatabaseRepository.js';
@@ -48,12 +48,9 @@ export const createByocContext = async (
   // --- Ports ---
   const bastionClient = new BastionCloudflareAdapter({ bastionUrl: env.BASTION_URL });
 
-  const storageService = new UnifiedToStorageAdapter({
-    getApiToken: async () => {
-      const token = await bastionClient.getSecret(jwt, 'tpb/integrations/unifiedto_api_token');
-      if (!token) throw new Error('Unified.to API token not found in vault');
-      return token;
-    },
+  const storageService = new BastionStorageAdapter({
+    bastion: bastionClient,
+    jwt,
   });
   await storageService.initialize();
 
