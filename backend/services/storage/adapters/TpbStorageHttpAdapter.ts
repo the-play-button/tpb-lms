@@ -2,11 +2,10 @@
  * TpbStorageHttpAdapter — `StoragePort` impl that forwards to the tpb-storage
  * Worker (native Microsoft Graph / Google Drive adapters).
  *
- * Plan 13.b of plans/2026-05-26_exit-unifiedto-runtime-final/ — replaces the
- * legacy UnifiedToStorageAdapter (which called api.unified.to direct) with a
- * Worker-to-Worker HTTP forward to tpb-storage. The bastion-issued service
- * token authenticates the call ; the tpb-storage Worker resolves the
- * connection's OAuth token natively via BastionTokenResolver.
+ * Plan 13.b of plans/2026-05-26_exit-unifiedto-runtime-final/. Worker-to-Worker
+ * HTTP forward to tpb-storage : the bastion-issued service token authenticates
+ * the call ; the tpb-storage Worker resolves the connection's OAuth token
+ * natively via BastionTokenResolver and dispatches to the matching provider.
  */
 
 import type { StoragePort } from '../StoragePort.js';
