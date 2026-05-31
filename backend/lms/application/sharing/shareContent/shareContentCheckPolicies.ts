@@ -14,7 +14,7 @@ import { log } from '@the-play-button/tpb-sdk-js';
 export const shareContentCheckPolicies = async (context: ShareContentContext, userEmail: string, ctx: HandlerContext): Promise<Result<string, 'allowed'>> => {
   const { actor, authzBastionClient } = ctx;
   const authzResult = await authzBastionClient.checkAuthzDelegated(
-    { type: actor.type, id: actor.id, context: { scopes: actor.scopes, roles: actor.roles, email: actor.email ?? undefined } },
+    { type: actor.type, id: actor.id, scopes: actor.scopes || [], groupIds: actor.groupIds || [], context: { roles: actor.roles, email: actor.email ?? undefined } },
     'lms:create',
     { namespace: 'lms', type: 'share', id: '*' },
   );
