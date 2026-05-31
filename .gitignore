@@ -51,4 +51,3 @@ temp/
 # Backup files with secrets
 **/backup_before_iam_migration.yaml
 *.backup.yaml
-graphify-out/
