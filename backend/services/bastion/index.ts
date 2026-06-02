@@ -6,11 +6,11 @@
  * const secret = await bastion.getSecret(jwt, 'integrations/api_key');
  */
 
-export type { BastionPort, BastionConfig } from './BastionPort.js';
+export type { BastionDependencies, BastionConfig } from './BastionDependencies.js';
 
 export { BastionCloudflareAdapter } from './adapters/BastionCloudflareAdapter.js';
 
-import type { BastionPort, BastionConfig } from './BastionPort.js';
+import type { BastionDependencies, BastionConfig } from './BastionDependencies.js';
 import { BastionCloudflareAdapter } from './adapters/BastionCloudflareAdapter.js';
 
 /**
@@ -18,7 +18,7 @@ import { BastionCloudflareAdapter } from './adapters/BastionCloudflareAdapter.js
  *
  * @param config - Configuration with fetcher
  */
-export const createBastionClient = (config: BastionConfig): BastionPort => {
+export const createBastionClient = (config: BastionConfig): BastionDependencies => {
   return new BastionCloudflareAdapter(config);
 };
 

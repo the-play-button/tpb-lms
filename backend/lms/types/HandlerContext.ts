@@ -5,7 +5,7 @@
  * (env, userContext) to the TS handler pipeline.
  */
 
-import type { BastionPort } from '../../services/bastion/BastionPort.js';
+import type { BastionDependencies } from '../../services/bastion/bastionDependencies.js';
 import type { StoragePort } from '../../services/storage/StoragePort.js';
 import type { PamPort } from '../../services/pam/PamPort.js';
 import type { ConnectionResolverPort } from '../../services/connections/ConnectionResolverPort.js';
@@ -38,7 +38,7 @@ export interface HandlerContext {
   storageService: StoragePort;
   pamClient: PamPort | null;
   connectionResolver: ConnectionResolverPort;
-  bastionClient: BastionPort;
+  bastionClient: BastionDependencies;
 
   // === Authz-capable bastion client (service token + signing secret) ===
   authzBastionClient: AuthzBastionClient;

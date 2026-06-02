@@ -5,7 +5,7 @@
  * Uses CF Access JWT for authentication.
  */
 
-import type { BastionPort, BastionConfig } from '../BastionPort.js';
+import type { BastionDependencies, BastionConfig } from '../BastionDependencies.js';
 import type { ConnectionInfo } from '../../types/ConnectionInfo.js';
 import { bastionFetch } from './BastionCloudflareAdapter.functions/bastionFetch.js';
 import { getSecret } from './BastionCloudflareAdapter.functions/getSecret.js';
@@ -13,7 +13,7 @@ import { getAllStorageConnections } from './BastionCloudflareAdapter.functions/g
 import { getConnectionsByProvider } from './BastionCloudflareAdapter.functions/getConnectionsByProvider.js';
 import { getDefaultStorageConnection } from './BastionCloudflareAdapter.functions/getDefaultStorageConnection.js';
 
-export class BastionCloudflareAdapter implements BastionPort {
+export class BastionCloudflareAdapter implements BastionDependencies {
   private bastionUrl: string;
 
   constructor(config: BastionConfig) {
