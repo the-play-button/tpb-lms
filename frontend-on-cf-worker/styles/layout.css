@@ -1,4 +1,3 @@
-/* entropy-css-tokens-ok: existing CSS, tokenization tracked separately */
 /* =============================================
    Layout - App Structure, Header, Sidebar
    ============================================= */
@@ -212,7 +211,7 @@
 }
 
 .badge-item.common { border-color: var(--color-rarity-common-border); }
-.badge-item.rare { border-color: #3b82f6; } /* entropy-css-tokens-ok: rare-rarity blue, no matching token */
+.badge-item.rare { border-color: #3b82f6; }
 .badge-item.epic { border-color: var(--color-rarity-epic-border); }
 .badge-item.legendary {
     border-color: var(--gold);

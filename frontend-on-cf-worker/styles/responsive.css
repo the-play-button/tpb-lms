@@ -1,11 +1,10 @@
-/* entropy-css-tokens-ok: existing CSS, tokenization tracked separately */
 /* =============================================
    Responsive - Media Queries
    ============================================= */
 
 @media (max-width: 1200px) {
     .lms-main {
-        grid-template-columns: 250px 1fr; /* entropy-css-tokens-ok: responsive breakpoint override */
+        grid-template-columns: 250px 1fr;
     }
 
     .lms-leaderboard {
@@ -105,7 +104,7 @@
         align-items: center;
         justify-content: center;
         gap: var(--space-xs);
-        padding: var(--radius-lg) var(--space-xs); /* entropy-css-tokens-ok: 12px 4px shorthand, radius-lg closest to 12px vertical */
+        padding: var(--radius-lg) var(--space-xs);
         background: transparent;
         border: none;
         border-top: 3px solid transparent;
@@ -170,7 +169,7 @@
         top: 0;
         left: 0;
         right: 0;
-        bottom: 75px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        bottom: 75px;
         z-index: 500;
         background: var(--color-bg-deep);
         overflow-y: auto;
@@ -228,7 +227,7 @@
         top: 0;
         left: 0;
         right: 0;
-        bottom: 75px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        bottom: 75px;
         z-index: 500;
         background: var(--color-bg-deep);
         overflow-y: auto;
@@ -305,7 +304,7 @@
     .modal-content {
         width: 100%;
         max-width: calc(100vw - var(--space-xl));
-        max-height: calc(100vh - 100px); /* entropy-css-tokens-ok: responsive breakpoint override */
+        max-height: calc(100vh - 100px);
         padding: var(--space-lg) var(--space-md);
         margin: 0;
         overflow-y: auto;
@@ -318,14 +317,14 @@
     }
 
     .badge-icon {
-        width: 80px; /* entropy-css-tokens-ok: responsive breakpoint override */
-        height: 80px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        width: 80px;
+        height: 80px;
         margin-bottom: var(--space-md);
     }
 
     .badge-glow {
-        width: 150px; /* entropy-css-tokens-ok: responsive breakpoint override */
-        height: 150px; /* entropy-css-tokens-ok: responsive breakpoint override */
+        width: 150px;
+        height: 150px;
     }
 
     .badge-earned h2 {
@@ -345,7 +344,7 @@
 
     .badge-xp {
         font-size: 0.9rem;
-        padding: 6px var(--space-md); /* entropy-css-tokens-ok: 6px has no token match */
+        padding: 6px var(--space-md);
         margin-bottom: var(--space-md);
     }
 

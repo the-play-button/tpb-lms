@@ -1,4 +1,3 @@
-/* entropy-css-tokens-ok: existing CSS, tokenization tracked separately */
 /* =============================================
    LMS Animations & Polish
    ============================================= */
@@ -106,7 +105,6 @@
     animation: particle var(--duration-medium) ease forwards;
 }
 
-/* entropy-css-tokens-ok: JS-set transform values */
 @keyframes particle {
     0% {
         transform: translate(0, 0) scale(1);

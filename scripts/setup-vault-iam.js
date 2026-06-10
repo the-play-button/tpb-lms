@@ -167,7 +167,7 @@ const main = async () => {
   console.log('   3. Users will have roles resolved via vault-api');
 };
 
-main().catch(err => { // entropy-then-catch-finally-ok entropy-promise-catch-log-only-ok: top-level script entrypoint — main().catch(err) is the Node.js convention, process.exit(1) ensures hard failure
+main().catch(err => {
   console.error('❌ Error:', err.message);
   process.exit(1);
 });

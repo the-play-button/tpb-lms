@@ -130,7 +130,7 @@ app.onError((err, c) => {
 
 app.get('/health', (c) => c.json({ status: 'ok', service: 'tpb-lms' }));
 app.get('/api/health', async (c) => {
-  const dbCheck = await c.env.DB.prepare('SELECT 1 as ok').first().catch(() => null); // entropy-then-catch-finally-ok entropy-catch-return-default-ok: health probe — null signals DB unreachable, caller checks isDbUp
+  const dbCheck = await c.env.DB.prepare('SELECT 1 as ok').first().catch(() => null);
   const isDbUp = dbCheck?.ok === 1;
   return c.json({
     status: isDbUp ? 'healthy' : 'degraded',

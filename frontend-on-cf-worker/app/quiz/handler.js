@@ -41,10 +41,10 @@ const resolveTallyFormId = tallyFormIds => {
 
 /**
  * Show quiz (triggered by button click)
- * Supports both legacy single tallyFormId and new tally_form_ids object. entropy-legacy-marker-ok: legacy pattern in handler, tracked for future refactoring
+ * Supports both legacy single tallyFormId and new tally_form_ids object.
  * 
  * @param {string} classId - The class ID
- * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object entropy-legacy-marker-ok: legacy pattern in handler, tracked for future refactoring
+ * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object
  * @param {string} quizName - Quiz name for display
  */
 export const showQuiz = (classId, tallyFormIds, quizName) => {

@@ -1,5 +1,3 @@
-/* entropy-css-tokens-ok: existing CSS, tokenization tracked separately */
-/* entropy-lines-exceeded-ok: component styles, split tracked separately */
 /* =============================================
    Components - Welcome, Leaderboard, Modals
    ============================================= */
@@ -412,7 +410,7 @@
 .btn-danger {
     display: inline-block;
     padding: var(--space-md) var(--space-2xl);
-    background: linear-gradient(135deg, var(--error), #dc2626); /* entropy-css-tokens-ok: error gradient darker stop */
+    background: linear-gradient(135deg, var(--error), #dc2626);
     color: white;
     border: none;
     border-radius: var(--radius-md);
@@ -636,7 +634,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    gap: 2px; /* entropy-css-tokens-ok: sub-atomic spacing for tight label stacking */
+    gap: 2px;
 }
 
 .user-email {
@@ -693,8 +691,8 @@
 .logout-btn {
     display: flex;
     align-items: center;
-    gap: 6px; /* entropy-css-tokens-ok: between xs(4px) and sm(8px), tight icon-text gap */
-    padding: var(--space-sm) 14px; /* entropy-css-tokens-ok: 14px horizontal is between sm(8px) and md(16px) */
+    gap: 6px;
+    padding: var(--space-sm) 14px;
     background: var(--bg-tertiary);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
@@ -753,7 +751,7 @@
     background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
     border: 1px solid rgba(251, 191, 36, 0.3);
     border-radius: var(--radius-md);
-    padding: 12px var(--space-md); /* entropy-css-tokens-ok: 12px vertical is between sm(8px) and md(16px) */
+    padding: 12px var(--space-md);
     margin: var(--space-sm) 0;
     animation: badgeSlideIn var(--duration-normal) ease-out;
 }
@@ -781,7 +779,7 @@
 .badge-earned .badge-points {
     background: rgba(251, 191, 36, 0.2);
     color: var(--color-amber-600);
-    padding: 2px var(--space-sm); /* entropy-css-tokens-ok: 2px vertical is sub-atomic */
+    padding: 2px var(--space-sm);
     border-radius: var(--radius-sm);
     font-size: 0.75rem;
     font-weight: 600;
