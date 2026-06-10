@@ -56,6 +56,6 @@ export const verifyAccessJWT = async (token, env) => {
 
     } catch (error) {
         log.error('JWT verification error', error, { file: 'auth/verifyAccessJWT.js' });
-        return { valid: false, error: 'JWT verification failed' }; // entropy-python-error-handling-ok: generic message, no internal details
+        return { valid: false, error: 'JWT verification failed' }; // entropy-error-verbosity-ok: generic message, no internal details
     }
 };

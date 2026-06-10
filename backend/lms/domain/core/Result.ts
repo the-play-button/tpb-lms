@@ -1,4 +1,4 @@
-// entropy-python-exception-hierarchy-ok: error structure appropriate
+// entropy-error-hierarchy-ok: error structure appropriate
 // entropy-god-file-ok: Result monad — Failure/Success types + fail/succeed/unwrap constructors, single source of truth for domain error handling
 /**
  * Result type - Either<Failure, Success>
