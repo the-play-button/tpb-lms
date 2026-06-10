@@ -103,7 +103,6 @@ export const showError = message => {
     const viewer = document.getElementById('somViewer');
     if (viewer) {
         const escaped = String(message).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        // entropy-innerhtml-ok: one-time error display render
         viewer.innerHTML = `
             <div class="welcome-screen">
                 <h1>Erreur</h1>

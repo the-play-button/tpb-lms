@@ -18,7 +18,6 @@ export const renderKmsModal = page => {
     const modal = document.createElement('div');
     modal.id = 'kms-modal';
     modal.className = 'kms-modal';
-    // entropy-innerhtml-ok: one-time modal render
     modal.innerHTML = `
         <div class="kms-modal-backdrop" data-testid="kms-modal-backdrop" onclick="window.closeKmsModal()"></div>
         <div class="kms-modal-content">
