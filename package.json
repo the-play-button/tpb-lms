@@ -4,9 +4,9 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev",
-    "deploy": "wrangler deploy",
-    "deploy:prod": "echo '\\n\u2717 Direct wrangler deploy --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
+    "dev": "wrangler dev --config backend/wrangler.toml",
+    "deploy": "wrangler deploy --config backend/wrangler.toml",
+    "deploy:prod": "echo '\\n\u2717 Direct wrangler deploy --config backend/wrangler.toml --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

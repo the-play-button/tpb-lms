@@ -2,7 +2,7 @@
 # Deploy with: npx wrangler deploy
 
 name = "lms-api"
-main = "backend/index.js"
+main = "index.js"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
@@ -11,7 +11,7 @@ compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 binding = "DB"
 database_name = "lms-db"
 database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
-migrations_dir = "db/migrations"
+migrations_dir = "../db/migrations"
 
 # Authentication configuration
 [vars]
