@@ -1,4 +1,4 @@
-// entropy-single-export-ok: 3 related badge utilities (iconMap, updateGrid, init) sharing rarity config
+// entropy-multiple-exports-ok: 3 related badge utilities (iconMap, updateGrid, init) sharing rarity config
 /**
  * Badges UI Component
  *

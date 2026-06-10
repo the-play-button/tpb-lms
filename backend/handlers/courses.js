@@ -1,5 +1,5 @@
 // entropy-positional-args-excess-ok: handler exports (listCourses, getCourse) use CF Worker positional convention (request, env, ctx)
-// entropy-single-export-ok: 2 tightly-coupled course handlers (list, get) sharing translation and enrichment helpers
+// entropy-multiple-exports-ok: 2 tightly-coupled course handlers (list, get) sharing translation and enrichment helpers
 // entropy-handler-service-pattern-ok: courses handler delegates to backend, minimal orchestration logic
 /**
  * Courses Handler

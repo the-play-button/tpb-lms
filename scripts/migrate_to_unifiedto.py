@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# entropy-single-export-ok: CLI migration script with tightly-coupled helper functions for D1 queries and class migration
+# entropy-multiple-exports-ok: CLI migration script with tightly-coupled helper functions for D1 queries and class migration
 """
 Migrate LMS Data to Unified.to Conformity
 

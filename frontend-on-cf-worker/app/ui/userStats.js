@@ -1,4 +1,4 @@
-// entropy-single-export-ok: userStats exports render + init pair, tightly coupled lifecycle
+// entropy-multiple-exports-ok: userStats exports render + init pair, tightly coupled lifecycle
 // entropy-prohibited-timer-ok: timer in userStats is intentional for UX timing
 /**
  * User Stats UI Component

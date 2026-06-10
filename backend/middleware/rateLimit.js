@@ -1,4 +1,4 @@
-// entropy-single-export-ok: tightly coupled middleware pair
+// entropy-multiple-exports-ok: tightly coupled middleware pair
 // entropy-inconsistent-constant-ok: renamed from CLEANUP_INTERVAL to RATE_LIMIT_CLEANUP_INTERVAL for clarity
 // entropy-unused-export-ok: addRateLimitHeaders available for external consumers
 // entropy-legacy-marker-ok: debt — in-memory sliding window rate limiter, needed until Durable Objects migration

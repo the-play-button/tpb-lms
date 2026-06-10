@@ -25,7 +25,7 @@ export const copyDebugInfoToClipboard = async () => {
             return { success: true, data: info };
         } catch (e) {
             document.body.removeChild(textarea);
-            return { success: false, error: 'Copy to clipboard failed', data: info }; // entropy-error-verbosity-ok: generic message for UI feedback
+            return { success: false, error: 'Copy to clipboard failed', data: info }; // entropy-python-error-handling-ok: generic message for UI feedback
         }
     }
 };

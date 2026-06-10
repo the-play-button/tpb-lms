@@ -1,7 +1,7 @@
 // entropy-positional-args-excess-ok: handler exports (getLeaderboard, getUserStats) use CF Worker positional convention (request, env, ctx)
-// entropy-business-logic-ok: leaderboard logic already exists in backend, frontend mirrors it
+// entropy-business-logic-in-frontend-ok: leaderboard logic already exists in backend, frontend mirrors it
 // entropy-business-logic-in-frontend-ok: leaderboard contains intentional client-side presentation logic
-// entropy-single-export-ok: 2 tightly-coupled leaderboard handlers (get board, get stats) sharing user info and XP helpers
+// entropy-multiple-exports-ok: 2 tightly-coupled leaderboard handlers (get board, get stats) sharing user info and XP helpers
 // entropy-handler-service-pattern-ok: leaderboard handler delegates to backend, minimal orchestration logic
 /**
  * Leaderboard Handler

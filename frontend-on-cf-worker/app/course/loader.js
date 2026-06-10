@@ -1,5 +1,5 @@
 // entropy-god-file-ok: course data loader
-// entropy-single-export-ok: 3 tightly-coupled course loader functions (load, updateURL, refreshSignals) sharing state management
+// entropy-multiple-exports-ok: 3 tightly-coupled course loader functions (load, updateURL, refreshSignals) sharing state management
 /**
  * Course Loader
  *

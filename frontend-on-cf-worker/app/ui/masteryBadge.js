@@ -1,4 +1,4 @@
-// entropy-single-export-ok: 5 exports share BADGES config, tightly-coupled mastery badge rendering utilities
+// entropy-multiple-exports-ok: 5 exports share BADGES config, tightly-coupled mastery badge rendering utilities
 // entropy-unused-export-ok: getBadgeInfo and renderMasteryProgress available for future use
 // entropy-legacy-marker-ok: masteryBadge has no active legacy markers, retained for audit trail
 /**

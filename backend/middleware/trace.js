@@ -1,4 +1,4 @@
-// entropy-single-export-ok: tightly coupled middleware pair
+// entropy-multiple-exports-ok: tightly coupled middleware pair
 /**
  * Trace Middleware
  * GAP: GAP-1106

@@ -1,4 +1,4 @@
-// entropy-single-export-ok: 3 tightly-coupled debug panel lifecycle functions (open, close, toggle) sharing panel DOM state
+// entropy-multiple-exports-ok: 3 tightly-coupled debug panel lifecycle functions (open, close, toggle) sharing panel DOM state
 /**
  * Debug Panel
  *

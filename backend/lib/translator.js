@@ -1,4 +1,4 @@
-// entropy-single-export-ok: 4 exports share private glossary pre/post-processing + callTranslationAPI pipeline
+// entropy-multiple-exports-ok: 4 exports share private glossary pre/post-processing + callTranslationAPI pipeline
 /**
  * Translation Engine
  * 

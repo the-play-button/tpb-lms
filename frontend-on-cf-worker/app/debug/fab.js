@@ -1,4 +1,4 @@
-// entropy-single-export-ok: init/destroy pair
+// entropy-multiple-exports-ok: init/destroy pair
 // entropy-unused-export-ok: destroyDebugFab available for lifecycle management
 // entropy-legacy-marker-ok: fab has no active legacy markers, retained for audit trail
 // entropy-prohibited-timer-ok: timer in fab is intentional for UX timing

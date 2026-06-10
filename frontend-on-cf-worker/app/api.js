@@ -1,6 +1,6 @@
 // entropy-positional-args-excess-ok: handler exports (API_BASE, api, apiPost) use CF Worker positional convention (request, env, ctx)
 // entropy-god-file-ok: API client for frontend
-// entropy-single-export-ok: 4 exports share private authToken + buildHeaders, tightly-coupled API client
+// entropy-multiple-exports-ok: 4 exports share private authToken + buildHeaders, tightly-coupled API client
 /**
  * API Client
  * 

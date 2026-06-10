@@ -1,6 +1,6 @@
 // entropy-ts-silent-log-only-catch-ok: projection engine — per-projection write log+continue, batch projection resilience
 // entropy-positional-args-excess-ok: handler exports (applyProjections, getProgress) use CF Worker positional convention (request, env, ctx)
-// entropy-single-export-ok: tightly coupled projection pair
+// entropy-multiple-exports-ok: tightly coupled projection pair
 /**
  * Projection Engine
  * 

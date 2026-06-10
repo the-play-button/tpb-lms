@@ -1,6 +1,6 @@
 // entropy-positional-args-excess-ok: handler exports (handleQuizSubmission) use CF Worker positional convention (request, env, ctx)
 // entropy-handler-service-pattern-ok: handleQuizSubmission handler delegates to backend, minimal orchestration logic
-// entropy-business-logic-ok: handleQuizSubmission logic already exists in backend, frontend mirrors it
+// entropy-business-logic-in-frontend-ok: handleQuizSubmission logic already exists in backend, frontend mirrors it
 // entropy-business-logic-in-frontend-ok: handleQuizSubmission contains intentional client-side presentation logic
 /**
  * Handle quiz submission from HTTP request

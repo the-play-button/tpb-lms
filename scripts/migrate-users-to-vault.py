@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# entropy-single-export-ok: CLI migration script, functions are internal pipeline steps called by main()
+# entropy-multiple-exports-ok: CLI migration script, functions are internal pipeline steps called by main()
 # entropy-legacy-marker-ok: debt — hris_employee is deprecated for roles post vault-api migration
 """
 Migrate LMS Users to vault-api

@@ -1,5 +1,5 @@
 // entropy-positional-args-excess-ok: handler exports (showQuiz, handleTallySubmission, initQuizHandler) use CF Worker positional convention (request, env, ctx)
-// entropy-single-export-ok: 3 tightly-coupled quiz handlers (show, handle submission, init) sharing Tally integration state
+// entropy-multiple-exports-ok: 3 tightly-coupled quiz handlers (show, handle submission, init) sharing Tally integration state
 // entropy-legacy-marker-ok: debt — supports legacy single-string tallyFormId alongside new multi-lang tally_form_ids object format
 // entropy-hardcoded-url-ok: URL is a stable production deployment endpoint
 /**

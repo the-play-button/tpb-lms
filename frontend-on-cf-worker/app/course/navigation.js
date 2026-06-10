@@ -1,4 +1,4 @@
-// entropy-single-export-ok: 5 exports, tightly-coupled step navigation (next/prev/restart/navigate/init)
+// entropy-multiple-exports-ok: 5 exports, tightly-coupled step navigation (next/prev/restart/navigate/init)
 /**
  * Course Navigation
  * 

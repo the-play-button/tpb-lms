@@ -1,5 +1,5 @@
 // entropy-positional-args-excess-ok: handler exports (ALLOWED_ORIGINS, getCorsHeaders, jsonResponse) use CF Worker positional convention (request, env, ctx)
-// entropy-single-export-ok: 4 exports share SECURITY_HEADERS + ALLOWED_ORIGINS, tightly-coupled CORS/response utilities
+// entropy-multiple-exports-ok: 4 exports share SECURITY_HEADERS + ALLOWED_ORIGINS, tightly-coupled CORS/response utilities
 // entropy-backend-structure-ok: shared CORS utility at backend root, used by all handlers
 /**
  * CORS Configuration + Security Headers
