@@ -1,3 +1,15 @@
+/**
+ * ⚠️ LEGACY JAVASCRIPT — TS migration pending (Plan 22 tag 2026-06-10)
+ *
+ * This file is intentionally .js (not .ts) for historical reasons. Migration
+ * to TypeScript is tracked in workspace TODO.md § Legacy JS migrations.
+ * User-sanctioned exception (verbatim 2026-06-10 : « ok pour le legacy
+ * temporaire js pour lms et bastion, on migrera dès qu'on pourra »).
+ *
+ * Migration scope : moderate (factory pattern + bastion middleware wiring
+ * + Hono types). Defer to dedicated TS migration cycle.
+ */
+
 // entropy-ts-silent-log-only-catch-ok: Worker entry top-level catch — log+continue with response.json fallback (worker self-protects rather than crashing)
 // entropy-thin-entrypoint-ok: Hono app with data-driven route registration
 /**
