@@ -1,3 +1,4 @@
+// entropy-ts-silent-log-only-catch-ok: Worker entry top-level catch — log+continue with response.json fallback (worker self-protects rather than crashing)
 // entropy-thin-entrypoint-ok: Hono app with data-driven route registration
 /**
  * LMS Worker API - Entry Point (Hono)

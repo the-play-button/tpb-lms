@@ -1,3 +1,4 @@
+// entropy-ts-silent-log-only-catch-ok: frontend sharing modal — best-effort Web Share API (may be unsupported on platform)
 // entropy-event-listeners-ok: modal uses imperative DOM event listeners (click-to-close, submit, revoke) because this is a vanilla JS module without a framework — listeners are scoped to the modal element and cleaned up on modal.remove()
 // entropy-innerhtml-modal-or-error-ok: one-time modal render
 /**

@@ -1,3 +1,4 @@
+// entropy-ts-silent-log-only-catch-ok: frontend playback speed tracking — telemetry log+continue, must not affect player
 /**
  * Playback speed control (GAP-101)
  */

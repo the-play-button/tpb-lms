@@ -1,3 +1,4 @@
+// entropy-ts-silent-log-only-catch-ok: test runner script — per-case log+continue is the test harness contract
 /**
  * Test du nouveau système de scoring des quiz
  */

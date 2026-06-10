@@ -1,3 +1,4 @@
+// entropy-ts-silent-log-only-catch-ok: frontend video tracking setup — telemetry init log+continue, player works without tracking
 /**
  * Setup video tracking for a step
  */

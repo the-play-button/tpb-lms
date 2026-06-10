@@ -1,3 +1,4 @@
+// entropy-ts-silent-log-only-catch-ok: frontend notifications — best-effort browser Notification API (may be denied)
 // entropy-single-export-ok: 5 exports, tightly-coupled notification lifecycle (badge modal + error + refresh + init)
 // entropy-prohibited-timer-ok: timer in notifications is intentional for UX timing
 /**

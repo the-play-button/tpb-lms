@@ -1,3 +1,4 @@
+// entropy-ts-silent-log-only-catch-ok: frontend entry — best-effort module init ; failure logs and continues with degraded UX
 // entropy-high-coupling-ok: SPA entry point
 // entropy-lines-exceeded-ok: SPA entry point, split tracked separately
 /**

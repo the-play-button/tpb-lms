@@ -1,3 +1,4 @@
+// entropy-ts-silent-log-only-catch-ok: frontend content loader shared util — per-asset failure logs+continues (degraded media falls back to placeholder)
 // entropy-god-file-ok: content loading primitives — auth token cache, GitHub proxy, i18n URL building, cloud content fetch with fallback, markdown cleanup
 // entropy-unused-export-ok: fetchCloudContentWithI18nFallback available for external consumers
 // entropy-legacy-marker-ok: debt — GitHub proxy URL builder is legacy path, needed until all content migrated to cloud refs (BYOC)
