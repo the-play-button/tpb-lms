@@ -1,7 +1,6 @@
 /**
  * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
  */
-// entropy-positional-args-excess-ok: shareContentFilter follows DDD pipeline convention (request, ctx, param) positional args
 import { filterFields } from '../../../domain/policies/FieldSecurityFilter.js';
 import type { ShareContentOutput } from './shareContentExecute.js';
 

@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: shareContentController follows DDD pipeline convention (request, ctx, param) positional args
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { shareContentHandle } from './shareContentHandle.js';
 

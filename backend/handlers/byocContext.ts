@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (createByocContext) use CF Worker positional convention (request, env, ctx)
 // entropy-error-hierarchy-ok: error structure appropriate
 /**
  * createByocContext - Bridge between JS world (env, userContext) and TS HandlerContext

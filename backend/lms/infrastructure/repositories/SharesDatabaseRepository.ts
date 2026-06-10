@@ -1,4 +1,3 @@
-// entropy-class-method-length-ok: repository — D1 queries (findById/findActiveByContentRef/findBySharedWith/findBySharedBy) + save active/revoked + row reconstitution with 8 columns
 /**
  * SharesDatabaseRepository - D1 implementation of SharesRepository
  *

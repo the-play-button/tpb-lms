@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# entropy-multiple-exports-ok: verify_deploy internal pipeline steps called sequentially by main()
 # entropy-duplicate-constant-ok: verify_deploy is standalone CLI script, shared constants not warranted
 # entropy-python-unused-import-ok: urllib kept for error handling fallback
 # entropy-legacy-marker-ok: verify_deploy has no active legacy markers, retained for audit trail
@@ -24,10 +23,10 @@ import urllib.request
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
 FRONTEND_URL = "https://lms-viewer.matthieu-marielouise.workers.dev"
 
-_HTTP_TIMEOUT = 10  # entropy-python-magic-numbers-ok: numeric literal in verify_deploy is a timeout duration in seconds
-_HTTP_STATUS_OK = 200  # entropy-python-magic-numbers-ok: HTTP status code 200 check in verify_deploy
-_HTTP_STATUS_REDIRECT = 302  # entropy-python-magic-numbers-ok: HTTP 302 redirect
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in verify_deploy for terminal formatting
+_HTTP_TIMEOUT = 10
+_HTTP_STATUS_OK = 200
+_HTTP_STATUS_REDIRECT = 302
+_CLI_SEPARATOR_WIDTH = 50
 
 # Colors
 GREEN = "\033[92m"
@@ -67,16 +66,16 @@ def check_backend() -> bool:
                 
     except urllib.error.HTTPError as e:
         print(f"{RED}   ❌ HTTP Error: {e.code}{RESET}")
-        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
+        return False
     except urllib.error.URLError as e:
         print(f"{RED}   ❌ Connection Error: {e.reason}{RESET}")
-        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
+        return False
     except json.JSONDecodeError:
         print(f"{RED}   ❌ Invalid JSON response{RESET}")
-        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
+        return False
     except (ssl.SSLError, TimeoutError, OSError) as e:
         print(f"{RED}   ❌ Error: {e}{RESET}")
-        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
+        return False
 
 
 def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration in verify_deploy over multi-level structured data
@@ -110,20 +109,20 @@ def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration in 
             print(f"{GREEN}   ✅ Redirecting (Cloudflare Access){RESET}")
             return True
         print(f"{RED}   ❌ HTTP Error: {e.code}{RESET}")
-        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
+        return False
     except urllib.error.URLError as e:
         print(f"{RED}   ❌ Connection Error: {e.reason}{RESET}")
-        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
+        return False
     except (ssl.SSLError, TimeoutError, OSError) as e:
         print(f"{RED}   ❌ Error: {e}{RESET}")
-        return False  # entropy-catch-return-default-ok: verify_deploy health check returns bool, error printed before return
+        return False
 
 
 def main() -> None:
     """ Verify backend API and frontend deployments are healthy."""
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔍 LMS Deployment Verification{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: display width constant in verify_deploy for terminal formatting
+    print(f"{CYAN}{'='*50}{RESET}\n")
     
     backend_ok = check_backend()
     print()

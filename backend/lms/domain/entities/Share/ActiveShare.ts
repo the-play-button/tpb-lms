@@ -1,4 +1,3 @@
-// entropy-class-method-length-ok: DDD entity — factory create() with self-share guard + reconstitute + revoke command + 7 property getters, coupled by ShareProps invariant
 import { fail, succeed, type Result } from '../../core/Result.js';
 import type { ShareId, ContentRefId, Email } from '../../value-objects/index.js';
 import type { ShareRole } from '../ContentRef/SharedContentRef.js';

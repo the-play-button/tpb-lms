@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# entropy-multiple-exports-ok: CLI migration script, functions are internal pipeline steps called by main()
 # entropy-legacy-marker-ok: debt — hris_employee is deprecated for roles post vault-api migration
 """
 Migrate LMS Users to vault-api
@@ -26,7 +25,7 @@ from typing import Any
 import httpx
 from tpb_sdk.bastion import BastionClient
 
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in migrate-users-to-vault for terminal formatting
+_CLI_SEPARATOR_WIDTH = 50
 
 
 def get_bastion_client() -> BastionClient:
@@ -77,7 +76,7 @@ def fetch_lms_employees() -> list[dict[str, Any]]:
             return results
     except json.JSONDecodeError:
         print(f"❌ Failed to parse output: {result.stdout}")
-        return []  # entropy-catch-return-default-ok: migration script — error printed, degrade gracefully on tool failure
+        return []
 
     return []
 
@@ -114,7 +113,7 @@ def create_vault_user(client: BastionClient, email: str, display_name: str) -> s
         created = client.create_user(payload)
         return created['id'] if isinstance(created, dict) and 'id' in created else None
     except httpx.HTTPStatusError as exc:
-        if exc.response.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict — user already exists, locate by email
+        if exc.response.status_code == 409:
             for user in client.list_users():
                 if user.get('email') == email:
                     return user['id']
@@ -138,7 +137,7 @@ def add_user_to_group(client: BastionClient, user_id: str, group_id: str, group_
         client.add_group_member(group_id, user_id)
         return True
     except httpx.HTTPStatusError as exc:
-        if exc.response.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict — already member
+        if exc.response.status_code == 409:
             return True
         print(f"      ❌ Failed to add to {group_name}: {exc.response.status_code}")
         return False
@@ -161,7 +160,7 @@ def migrate_employee(client: BastionClient, employee: dict[str, Any], groups: di
             return None
         email = emails[0].get('email')
     except json.JSONDecodeError:
-        return None  # entropy-catch-return-default-ok: migration script — error printed, degrade gracefully on tool failure
+        return None
 
     if not email:
         return None

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# entropy-multiple-exports-ok: CLI migration script with tightly-coupled helper functions for D1 queries and class migration
 """
 Migrate LMS Data to Unified.to Conformity
 
@@ -23,7 +22,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in migrate_to_unifiedto for terminal formatting
+_CLI_SEPARATOR_WIDTH = 50
 
 
 def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:  # entropy-python-optional-handling-ok: cwd has fallback in subprocess call
@@ -231,7 +230,7 @@ def main() -> int:
         results.append(result)
     
     # Summary
-    print("\n" + "=" * 50)  # entropy-python-magic-numbers-ok: display width constant in migrate_to_unifiedto for terminal formatting
+    print("\n" + "=" * 50)
     migrated = [r for r in results if not r.get("skipped")]
     skipped = [r for r in results if r.get("skipped")]
     errors = [r for r in results if r.get("error")]

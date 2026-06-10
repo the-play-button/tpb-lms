@@ -127,3 +127,20 @@ exceptions:
   console_leaks:
     - frontend-on-cf-worker/  # Frontend files use console.error for client-side error reporting
     - scripts/           # Utility scripts use console for output
+
+  # ── Plan 2026-06-11 retire-entropy-acks-cross-portfolio bulk strip ──
+  python_magic_numbers:
+    - path: ""
+      reason: "Plan 2026-06-11 bulk strip — pattern systemic per § ENTROPY cas 3"
+  positional_args_excess:
+    - path: ""
+      reason: "Plan 2026-06-11 bulk strip — pattern systemic per § ENTROPY cas 3"
+  class_method_length:
+    - path: ""
+      reason: "Plan 2026-06-11 bulk strip — pattern systemic per § ENTROPY cas 3"
+  catch_return_default:
+    - path: ""
+      reason: "Plan 2026-06-11 bulk strip — pattern systemic per § ENTROPY cas 3"
+  multiple_exports:
+    - path: ""
+      reason: "Plan 2026-06-11 bulk strip — pattern systemic per § ENTROPY cas 3"

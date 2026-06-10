@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# entropy-multiple-exports-ok: check_secrets internal pipeline steps called sequentially by main()
 # entropy-duplicate-constant-ok: check_secrets is standalone CLI script, shared constants not warranted
 # entropy-legacy-marker-ok: debt — TALLY_WEBHOOK_SECRET description references legacy URL param auth method
 """
@@ -37,8 +36,8 @@ CYAN = "\033[96m"
 DIM = "\033[2m"
 RESET = "\033[0m"
 
-_WRANGLER_TIMEOUT = 30  # entropy-python-magic-numbers-ok: numeric literal in check_secrets is a timeout duration in seconds
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in check_secrets for terminal formatting
+_WRANGLER_TIMEOUT = 30
+_CLI_SEPARATOR_WIDTH = 50
 
 # =============================================================================
 # SECRETS CONFIGURATION
@@ -161,7 +160,7 @@ def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> b
     """
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🔐 LMS Secrets Check{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: display width constant in check_secrets for terminal formatting
+    print(f"{CYAN}{'='*50}{RESET}\n")
 
     # Get configured secrets
     log("Fetching configured secrets from Cloudflare...")

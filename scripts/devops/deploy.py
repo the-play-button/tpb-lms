@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# entropy-multiple-exports-ok: deploy internal pipeline steps called sequentially by main()
 # entropy-duplicate-constant-ok: deploy is standalone CLI script, shared constants not warranted
 # entropy-python-optional-handling-ok: cwd parameter has default fallback in subprocess
 """
@@ -35,8 +34,8 @@ FRONTEND_WORKER = "lms-viewer"
 BACKEND_URL = "https://lms-api.matthieu-marielouise.workers.dev"
 FRONTEND_URL = "https://lms-viewer.matthieu-marielouise.workers.dev"
 
-_SUBPROCESS_TIMEOUT = 120  # entropy-python-magic-numbers-ok: numeric literal in deploy is a timeout duration in seconds
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant in deploy for terminal formatting
+_SUBPROCESS_TIMEOUT = 120
+_CLI_SEPARATOR_WIDTH = 50
 
 
 def log(msg: str, level: str = "info") -> None:
@@ -221,7 +220,7 @@ def main() -> None:  # entropy-python-long-function-ok + entropy-python-complexi
     
     print(f"\n{CYAN}{'=' * _CLI_SEPARATOR_WIDTH}{RESET}")
     print(f"{CYAN}🚀 LMS Deployment Script{RESET}")
-    print(f"{CYAN}{'='*50}{RESET}\n")  # entropy-python-magic-numbers-ok: display width constant in deploy for terminal formatting
+    print(f"{CYAN}{'='*50}{RESET}\n")
     
     # Step 1: Check secrets
     if not args.skip_secrets:

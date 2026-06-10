@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (getSecret) use CF Worker positional convention (request, env, ctx)
 import { bastionFetch } from './bastionFetch.js';
 import { ServiceUnavailableError } from '../../../../types/errors.js';
 

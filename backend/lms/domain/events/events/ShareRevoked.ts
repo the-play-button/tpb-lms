@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (shareRevoked) use CF Worker positional convention (request, env, ctx)
 import type { DomainEvent } from '../DomainEvent.js';
 import { createEvent } from '../DomainEvent.js';
 
