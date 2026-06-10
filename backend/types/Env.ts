@@ -1,4 +1,3 @@
-// entropy-legacy-marker-ok: debt — legacy env bindings (TALLY_*) to be removed post-migration
 /**
  * Cloudflare Worker Environment Bindings
  *

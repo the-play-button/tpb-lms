@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: listAPIKeysHandler follows DDD pipeline convention (request, ctx, param) positional args
-// entropy-handler-service-pattern-ok: listAPIKeysHandler handler delegates to backend, minimal orchestration logic
 /**
  * List API keys for the current user
  * GET /api/auth/api-keys

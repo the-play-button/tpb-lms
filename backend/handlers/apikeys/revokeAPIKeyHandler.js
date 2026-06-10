@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: revokeAPIKeyHandler follows DDD pipeline convention (request, ctx, param) positional args
-// entropy-handler-service-pattern-ok: revokeAPIKeyHandler handler delegates to backend, minimal orchestration logic
 /**
  * Revoke an API key
  * DELETE /api/auth/api-keys/:id

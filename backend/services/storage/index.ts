@@ -1,7 +1,7 @@
 /**
  * Storage Service — File Storage Operations
  *
- * USAGE: // entropy-single-use-variables-ok: storage/index — JSDoc USAGE block shows storage adapter consumption pattern (SDK consumer reference)
+ * USAGE:
  * const storage = createStorageService({ tpbStorageUrl: env.TPB_STORAGE_URL, bastionToken: env.BASTION_TOKEN });
  * const content = await storage.getFileContent(connectionId, fileId);
  */

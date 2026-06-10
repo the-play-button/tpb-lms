@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-# entropy-duplicate-constant-ok: deploy is standalone CLI script, shared constants not warranted
-# entropy-python-optional-handling-ok: cwd parameter has default fallback in subprocess
 """
 deploy.py - LMS Full Deployment Script
 Deploys backend API + frontend viewer to Cloudflare Workers
@@ -49,7 +47,7 @@ def log(msg: str, level: str = "info") -> None:
     print(f"{colors.get(level, RESET)}{msg}{RESET}")
 
 
-def run_cmd(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:  # entropy-python-optional-handling-ok: cwd=None is valid for subprocess
+def run_cmd(cmd: list[str], cwd: Path | None = None, check: bool = True) -> subprocess.CompletedProcess[str]:
     """Run a command with error handling.
 
     Args:
@@ -204,7 +202,7 @@ def seed_courses() -> bool:
         return False
 
 
-def main() -> None:  # entropy-python-long-function-ok + entropy-python-complexity-ok: long function in deploy is linear CLI script flow
+def main() -> None:
     """ Deploy LMS backend and frontend to Cloudflare Workers."""
     parser = argparse.ArgumentParser(description="LMS Deployment Script")
     parser.add_argument("--backend", action="store_true", help="Deploy backend only")

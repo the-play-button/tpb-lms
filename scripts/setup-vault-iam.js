@@ -14,7 +14,7 @@
 
 import { createBastionClient } from '@the-play-button/tpb-sdk-js';
 
-const BASTION_URL = process.env.BASTION_URL || 'https://tpb-bastion-backend.matthieu-marielouise.workers.dev'; // entropy-hardcoded-url-ok: URL in setup-vault-iam is a fallback deployment configuration
+const BASTION_URL = process.env.BASTION_URL || 'https://tpb-bastion-backend.matthieu-marielouise.workers.dev';
 
 const LMS_ROLES = [
   {

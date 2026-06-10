@@ -1,7 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (handleEvent, handleBatchEvents) use CF Worker positional convention (request, env, ctx)
-// entropy-multiple-exports-ok: 2 tightly-coupled event handlers (single + batch) sharing validation and projection logic
-// entropy-handler-service-pattern-ok: events handler delegates to backend, minimal orchestration logic
-// entropy-duplicate-code-handlers-ok: JSON body parsing pattern is intentionally repeated
 /**
  * Events Handler
  *

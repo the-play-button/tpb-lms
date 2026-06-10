@@ -1,6 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (API_BASE, api, apiPost) use CF Worker positional convention (request, env, ctx)
-// entropy-god-file-ok: API client for frontend
-// entropy-multiple-exports-ok: 4 exports share private authToken + buildHeaders, tightly-coupled API client
 /**
  * API Client
  * 
@@ -18,7 +15,7 @@
 
 import { sessionId } from './state.js';
 
-export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api'; // entropy-hardcoded-url-ok: URL in api is a stable deployment endpoint
+export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api';
 
 let authToken = null;
 
@@ -30,7 +27,7 @@ const getAuthToken = async (forceRefresh = false) => {
     const response = await fetch('/__auth/token');
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Auth failed' })); // entropy-then-catch-finally-ok: inline .catch() in api provides safe default for graceful degradation
+        const error = await response.json().catch(() => ({ error: 'Auth failed' }));
         throw new Error(error.error || 'Failed to get auth token');
     }
     
@@ -71,7 +68,7 @@ export const api = async path => {
     }
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline .catch() in api provides safe default for graceful degradation
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
         throw new Error(error.error || `HTTP ${response.status}`);
     }
     
@@ -114,7 +111,7 @@ export const apiPost = async (path, data, options = {}) => {
     }
     
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline .catch() in api provides safe default for graceful degradation
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
         throw new Error(error.error || `HTTP ${response.status}`);
     }
     
@@ -143,7 +140,7 @@ export const apiDelete = async path => {
     }
 
     if (!response.ok) {
-        const error = await response.json().catch(() => ({ error: 'Request failed' })); // entropy-then-catch-finally-ok: inline .catch() in api provides safe default for graceful degradation
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
         throw new Error(error.error || `HTTP ${response.status}`);
     }
 

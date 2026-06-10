@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (getGlossaryMap) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: getGlossaryMap handler delegates to backend, minimal orchestration logic
 /**
  * Get glossary as lookup map (for translation engine)
  * Internal helper function

@@ -1,7 +1,7 @@
 /**
  * ConnectionResolver Service - Multi-tenant connection routing
  *
- * USAGE: // entropy-single-use-variables-ok: connections/index — JSDoc USAGE block shows connections adapter consumption pattern (SDK consumer reference)
+ * USAGE:
  * const resolver = createConnectionResolver({ ... });
  * const conn = await resolver.resolveConnection({ provider: 'onedrive', folderId });
  */

@@ -10,8 +10,6 @@
  * + Hono types). Defer to dedicated TS migration cycle.
  */
 
-// entropy-ts-silent-log-only-catch-ok: Worker entry top-level catch — log+continue with response.json fallback (worker self-protects rather than crashing)
-// entropy-thin-entrypoint-ok: Hono app with data-driven route registration
 /**
  * LMS Worker API - Entry Point (Hono)
  *
@@ -151,7 +149,7 @@ app.use('/api/*', async (c, next) => {
 // --- Tally webhook auth (signature-based, not session-based) ---
 const handleTallyWithAuth = async (request, url, env) => {
   const signingSecret = await getTallySigningSecret(env);
-  const { valid, body, noSignature } = await verifyTallySignature(request, signingSecret); // entropy-naming-convention-ok: destructured from API shape
+  const { valid, body, noSignature } = await verifyTallySignature(request, signingSecret);
   if (noSignature) {
     const webhookSecret = url.searchParams.get('secret');
     const expectedSecret = await getTallyWebhookSecret(env);
@@ -170,7 +168,6 @@ const PUBLIC_API_PATHS = ['/api/health', '/api/tally-webhook', '/api/content/git
 
 const publicRoutes = [
   { method: 'POST', path: '/api/tally-webhook', handler: (req, env) => handleTallyWithAuth(req, new URL(req.url), env) },
-  // entropy-legacy-marker-ok: debt — TODO re-enable auth on GitHub content proxy after fixing vault token scopes
   { method: 'GET', path: '/api/content/github', handler: (req, env) => getGitHubContent(req, env, null) },
   { method: 'GET', path: '/api/content/github/tree', handler: (req, env) => listGitHubDirectory(req, env, null) },
   { method: 'POST', path: '/api/test/seed', handler: handleTestSeed },

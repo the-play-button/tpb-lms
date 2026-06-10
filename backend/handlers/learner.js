@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (getLearnerProgress) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: learner handler delegates to backend, minimal orchestration logic
 /**
  * Learner Progress Handler
  *

@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# entropy-legacy-marker-ok: debt — hris_employee is deprecated for roles post vault-api migration
 """
 Migrate LMS Users to vault-api
 
@@ -14,7 +13,7 @@ Usage:
     python scripts/migrate-users-to-vault.py
 
 This is a one-time migration script. After migration, vault-api
-becomes the SSOT for IAM and hris_employee is deprecated for roles.  # entropy-legacy-marker-ok: legacy pattern in migrate-users-to-vault, tracked for future refactoring
+becomes the SSOT for IAM and hris_employee is deprecated for roles.
 """
 
 import json
@@ -142,7 +141,7 @@ def add_user_to_group(client: BastionClient, user_id: str, group_id: str, group_
         print(f"      ❌ Failed to add to {group_name}: {exc.response.status_code}")
         return False
 
-def migrate_employee(client: BastionClient, employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:  # entropy-python-long-function-ok: long function in migrate-users-to-vault is linear sequential script execution
+def migrate_employee(client: BastionClient, employee: dict[str, Any], groups: dict[str, str]) -> dict[str, str] | None:
     """Migrate a single employee to vault-api.
 
     Args:
@@ -207,7 +206,7 @@ def migrate_employee(client: BastionClient, employee: dict[str, Any], groups: di
         'group': target_group,
     }
 
-def main() -> None:  # entropy-python-long-function-ok: long function in migrate-users-to-vault is linear CLI script flow
+def main() -> None:
     """ Migrate LMS employees to vault-api users and group memberships."""
     print("🚀 Migrating LMS users to vault-api...")
     client = get_bastion_client()

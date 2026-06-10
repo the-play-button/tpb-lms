@@ -1,4 +1,3 @@
-// entropy-innerhtml-modal-or-error-ok: one-time modal render
 /**
  * Shared With Me - View files shared with the current user
  */

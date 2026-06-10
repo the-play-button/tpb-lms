@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-# entropy-duplicate-constant-ok: check_secrets is standalone CLI script, shared constants not warranted
-# entropy-legacy-marker-ok: debt — TALLY_WEBHOOK_SECRET description references legacy URL param auth method
 """
 check_secrets.py - Verify required Cloudflare Worker secrets
 
@@ -45,7 +43,7 @@ _CLI_SEPARATOR_WIDTH = 50
 
 # Required secrets - deployment fails if missing
 REQUIRED_SECRETS = {
-    "TALLY_WEBHOOK_SECRET": "Tally webhook authentication (legacy URL param)",  # entropy-legacy-marker-ok: legacy pattern in check_secrets, tracked for future refactoring
+    "TALLY_WEBHOOK_SECRET": "Tally webhook authentication (legacy URL param)",
     "TEST_SECRET": "Test fixtures API authentication",
 }
 
@@ -93,7 +91,7 @@ def get_project_root() -> Path:
     return Path(__file__).parent.parent.parent
 
 
-def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:  # entropy-python-optional-handling-ok: guarded by truthiness check
+def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:
     """
     Get list of configured secrets from Cloudflare Worker using wrangler.
 
@@ -147,7 +145,7 @@ def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:  # en
 # MAIN
 # =============================================================================
 
-def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> bool:  # entropy-python-long-function-ok + entropy-python-optional-handling-ok: guarded by delegation to get_configured_secrets
+def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> bool:
     """
     Check that all required secrets are configured.
     

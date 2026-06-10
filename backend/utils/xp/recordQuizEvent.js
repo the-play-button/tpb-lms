@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (recordQuizEvent) use CF Worker positional convention (request, env, ctx)
 /**
  * Record a quiz event in crm_event
  */

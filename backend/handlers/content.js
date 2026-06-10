@@ -1,7 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (getGitHubContent, listGitHubDirectory) use CF Worker positional convention (request, env, ctx)
-// entropy-multiple-exports-ok: 2 tightly-coupled content handlers (get file, list directory) sharing GitHub auth and URL parsing
-// entropy-handler-service-pattern-ok: content handler delegates to backend, minimal orchestration logic
-// entropy-long-function-ok: getGitHubContent is a sequential handler — URL parsing + i18n path injection + vault token fetch + GitHub API call + error mapping; splitting would scatter the linear request flow
 /**
  * Content Handler
  *
@@ -12,7 +8,7 @@
 import { jsonResponse } from '../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 
-const GITHUB_API_BASE = 'https://api.github.com'; // entropy-hardcoded-url-ok: external API endpoint
+const GITHUB_API_BASE = 'https://api.github.com';
 
 let cachedToken = null;
 let tokenExpiry = 0;
@@ -126,7 +122,6 @@ const parseGitHubUrl = url => {
  * - owner, repo, branch, path: Alternative to url
  * - lang: Optional language code to inject i18n path (e.g., ?lang=en)
  */
-// entropy-long-function-ok: sequential URL parsing and fetch logic
 export const getGitHubContent = async (request, env, userContext) => {
     const url = new URL(request.url);
     
@@ -240,7 +235,7 @@ export const getGitHubContent = async (request, env, userContext) => {
             headers: {
                 'Content-Type': 'text/markdown; charset=utf-8',
                 'Cache-Control': 'public, max-age=300',  // 5 min cache
-                'Access-Control-Allow-Origin': '*', // entropy-cors-config-ok: public read-only GitHub content proxy, no credentials
+                'Access-Control-Allow-Origin': '*',
                 'X-GitHub-Repo': `${owner}/${repo}`,
                 'X-GitHub-Branch': branch,
                 'X-GitHub-Path': path

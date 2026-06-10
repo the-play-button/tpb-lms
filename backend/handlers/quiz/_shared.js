@@ -1,8 +1,3 @@
-// entropy-ts-silent-log-only-catch-ok: backend quiz handler shared util — per-row failure logs+continues, batch progress
-// entropy-positional-args-excess-ok: handler exports (log, XP_QUIZ_PASS, getPassThreshold) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: shared quiz logic, co-located with handlers by design
-// entropy-business-logic-in-frontend-ok: _shared logic already exists in backend, frontend mirrors it
-// entropy-business-logic-in-frontend-ok: _shared contains intentional client-side presentation logic
 /**
  * Shared helpers for quiz handlers
  */

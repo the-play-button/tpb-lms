@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (checkQuizBadges) use CF Worker positional convention (request, env, ctx)
 /**
  * Check and award quiz-related badges
  */

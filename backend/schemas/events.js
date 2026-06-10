@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: 4 exports are schema declarations + validator, all share schemas map
 /**
  * Event Validation Schemas
  * GAPs: GAP-710, GAP-1210

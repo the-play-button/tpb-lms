@@ -1,6 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (listSpaces, getSpace, getPage) use CF Worker positional convention (request, env, ctx)
-// entropy-multiple-exports-ok: 3 tightly-coupled KMS handlers (list spaces, get space, get page) with shared logger
-// entropy-handler-service-pattern-ok: kms handler delegates to backend, minimal orchestration logic
 /**
  * KMS Handlers - Knowledge Management System API
  *

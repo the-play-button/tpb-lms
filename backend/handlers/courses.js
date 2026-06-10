@@ -1,6 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (listCourses, getCourse) use CF Worker positional convention (request, env, ctx)
-// entropy-multiple-exports-ok: 2 tightly-coupled course handlers (list, get) sharing translation and enrichment helpers
-// entropy-handler-service-pattern-ok: courses handler delegates to backend, minimal orchestration logic
 /**
  * Courses Handler
  *
@@ -190,7 +187,7 @@ export const getCourse = async (request, env, userContext, courseId) => {
     }
     
     const completedSteps = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length;
-    const currentStep = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length; // entropy-naming-convention-ok: scalar count variable naming in courses
+    const currentStep = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length;
 
     return jsonResponse({
         id: course.id,

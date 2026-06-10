@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (getTranslations) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: getTranslations handler delegates to backend, minimal orchestration logic
 /**
  * Get all translations for a content item
  * GET /translations/:type/:id

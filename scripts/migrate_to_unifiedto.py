@@ -25,7 +25,7 @@ from typing import Any
 _CLI_SEPARATOR_WIDTH = 50
 
 
-def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:  # entropy-python-optional-handling-ok: cwd has fallback in subprocess call
+def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:
     """Execute a D1 query via wrangler.
 
     Args:
@@ -62,7 +62,7 @@ def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:  # entrop
         return {"results": []}
 
 
-def run_d1_command(sql: str, cwd: Path | None = None) -> bool:  # entropy-python-optional-handling-ok: cwd has fallback in subprocess call
+def run_d1_command(sql: str, cwd: Path | None = None) -> bool:
     """Execute a D1 command (INSERT/UPDATE) via wrangler.
 
     Args:
@@ -102,7 +102,7 @@ def fetch_classes() -> list[dict[str, Any]]:
     return result.get("results", [])
 
 
-def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:  # entropy-python-long-function-ok + entropy-python-complexity-ok: orchestration with error handling paths
+def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:
     """Migrate a single class to unified.to format.
 
     Args:
@@ -217,7 +217,7 @@ def main() -> int:
     print("📥 Fetching classes from D1...")
     try:
         classes = fetch_classes()
-    except (RuntimeError, subprocess.SubprocessError, OSError) as e:  # entropy-error-verbosity-ok: CLI entry-point boundary
+    except (RuntimeError, subprocess.SubprocessError, OSError) as e:
         print(f"❌ Failed to fetch classes: {e}")
         return 1
     

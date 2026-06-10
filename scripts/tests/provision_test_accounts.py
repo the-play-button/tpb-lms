@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# entropy-single-export-ok: CLI provisioning script, functions are internal pipeline steps called by main()
 """
 Provision Test Accounts via bastion IAM
 
@@ -17,7 +16,7 @@ import httpx
 
 from tpb_sdk.bastion import BastionClient
 
-_CLI_SEPARATOR_WIDTH = 50  # entropy-python-magic-numbers-ok: display width constant for terminal formatting
+_CLI_SEPARATOR_WIDTH = 50
 
 # Test accounts to create
 # Uses real emails with +alias for actual authentication via CF Access
@@ -54,7 +53,7 @@ def get_bastion_client() -> BastionClient:
         sys.exit(1)
 
 
-def create_user_via_vault(client: BastionClient, account: dict[str, Any]) -> str | None:  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
+def create_user_via_vault(client: BastionClient, account: dict[str, Any]) -> str | None:
     """Create user via vault-api using the SDK.
 
     Args:
@@ -76,7 +75,7 @@ def create_user_via_vault(client: BastionClient, account: dict[str, Any]) -> str
     try:
         created = client.create_user(payload)
     except httpx.HTTPStatusError as exc:
-        if exc.response.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict — user already exists, locate by email
+        if exc.response.status_code == 409:
             print(f"  ⚠️  User {account['email']} already exists")
             for user in client.list_users():
                 if user.get('email') == account['email']:
@@ -115,7 +114,7 @@ def get_vault_role_name(lms_role: str) -> str | None:
         return None  # Students don't need a vault role
 
 
-def assign_role_to_user(client: BastionClient, user_id: str, lms_role: str) -> bool:  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
+def assign_role_to_user(client: BastionClient, user_id: str, lms_role: str) -> bool:
     """Assign LMS role to user via vault-api groups.
 
     Role assignment in vault-api works via groups:
@@ -151,7 +150,7 @@ def assign_role_to_user(client: BastionClient, user_id: str, lms_role: str) -> b
     try:
         client.add_group_member(target_group['id'], user_id)
     except httpx.HTTPStatusError as exc:
-        if exc.response.status_code == 409:  # entropy-python-magic-numbers-ok: HTTP 409 Conflict — already member
+        if exc.response.status_code == 409:
             print(f"  ⚠️  User already in group '{group_name}'")
             return True
         print(f"  ❌ Failed to add to group: {exc.response.status_code} {exc.response.text}")
@@ -161,7 +160,7 @@ def assign_role_to_user(client: BastionClient, user_id: str, lms_role: str) -> b
     return True
 
 
-def create_lms_contact_data(account: dict[str, Any], user_id: str) -> str | bool:  # entropy-python-long-function-ok: long function in provision_test_accounts is linear sequential script execution
+def create_lms_contact_data(account: dict[str, Any], user_id: str) -> str | bool:
     """Create corresponding data in LMS database via wrangler.
 
     Args:
@@ -218,7 +217,7 @@ def create_lms_contact_data(account: dict[str, Any], user_id: str) -> str | bool
     return contact_id
 
 
-def main():  # entropy-python-long-function-ok: long function in provision_test_accounts is linear CLI script flow
+def main():
     """Main provisioning function."""
     print("🚀 Provisioning test accounts via vault-api...")
     client = get_bastion_client()

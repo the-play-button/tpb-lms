@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (awardBadge) use CF Worker positional convention (request, env, ctx)
 /**
  * Shared XP/Badge helper - award a badge to a user
  */

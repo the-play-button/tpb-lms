@@ -1,7 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (showQuiz, handleTallySubmission, initQuizHandler) use CF Worker positional convention (request, env, ctx)
-// entropy-multiple-exports-ok: 3 tightly-coupled quiz handlers (show, handle submission, init) sharing Tally integration state
-// entropy-legacy-marker-ok: debt — supports legacy single-string tallyFormId alongside new multi-lang tally_form_ids object format
-// entropy-hardcoded-url-ok: URL is a stable production deployment endpoint
 /**
  * Quiz Handler
  *
@@ -21,7 +17,6 @@ let currentQuizInfo = null;
 const resolveTallyFormId = tallyFormIds => {
     if (!tallyFormIds) return null;
     
-    // entropy-legacy-marker-ok: legacy pattern in handler, tracked for future refactoring
     if (typeof tallyFormIds === 'string') {
         return tallyFormIds;
     }
@@ -80,7 +75,6 @@ En cliquant OK, vous acceptez :
         const container = document.getElementById(`quiz-container-${classId}`);
         if (container) {
             container.style.display = 'block';
-            // entropy-hardcoded-url-ok: Tally.so embed URL
             container.innerHTML = `
                 <iframe
                     src="https://tally.so/embed/${tallyFormId}?alignLeft=1&hideTitle=1&dynamicHeight=1"
@@ -257,6 +251,6 @@ const showQuizPendingState = () => {
  * Initialize quiz handler (expose to window)
  */
 export const initQuizHandler = () => {
-    window.showQuiz = showQuiz; // entropy-global-pollution-ok: global in handler exposed for HTML inline onclick binding
+    window.showQuiz = showQuiz;
 };
 

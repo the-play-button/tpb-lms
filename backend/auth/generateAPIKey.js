@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (generateAPIKey) use CF Worker positional convention (request, env, ctx)
 /**
  * Generate a new API Key
  * Returns the key only once - must be shown to user immediately

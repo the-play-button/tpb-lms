@@ -1,5 +1,3 @@
-// entropy-multiple-exports-ok: userStats exports render + init pair, tightly coupled lifecycle
-// entropy-prohibited-timer-ok: timer in userStats is intentional for UX timing
 /**
  * User Stats UI Component
  */
@@ -27,7 +25,6 @@ export const updateUserStats = () => {
         if (xpStat) {
             xpStat.classList.add('animating');
             showFloatingXP(currentXP - previousXP, xpStat);
-            // entropy-prohibited-timer-ok: timer in userStats cleans up after CSS animation completes
             setTimeout(() => xpStat.classList.remove('animating'), XP_ANIMATION_DURATION_MS);
         }
     }
@@ -53,7 +50,6 @@ const showFloatingXP = (amount, anchorEl) => {
     float.style.left = `${rect.left + rect.width / 2}px`;
     float.style.top = `${rect.top}px`;
     document.body.appendChild(float);
-    // entropy-prohibited-timer-ok: timer in userStats cleans up after CSS animation completes
     setTimeout(() => float.remove(), FLOAT_ANIMATION_DURATION_MS);
 }
 

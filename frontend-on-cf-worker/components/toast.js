@@ -1,4 +1,3 @@
-// entropy-prohibited-timer-ok: timer in toast is intentional for UX timing
 /**
  * Toast Component
  *
@@ -58,12 +57,10 @@
             toast.classList.add('toast-visible');
         });
         
-        // entropy-prohibited-timer-ok: auto-dismiss toast after duration
         setTimeout(() => {
             toast.classList.remove('toast-visible');
             toast.classList.add('toast-hiding');
 
-            // entropy-prohibited-timer-ok: cleanup after CSS exit animation
             setTimeout(() => {
                 toast.remove();
                 processQueue(); // Process next toast in queue
@@ -80,6 +77,6 @@
         }
     }
 
-    window.showToast = showToast; // entropy-global-pollution-ok: global in toast exposed for HTML inline onclick binding
+    window.showToast = showToast;
 })();
 

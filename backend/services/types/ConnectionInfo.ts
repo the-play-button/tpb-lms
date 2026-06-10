@@ -1,4 +1,3 @@
-// entropy-god-file-ok: service DTO — ConnectionInfo interface mapping a Unified.to storage connection (id + integrationType + category)
 /**
  * ConnectionInfo - Represents a cloud storage connection
  *

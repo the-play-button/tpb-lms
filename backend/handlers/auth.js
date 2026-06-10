@@ -1,4 +1,3 @@
-// entropy-handler-service-pattern-ok: auth handler delegates to backend, minimal orchestration logic
 /**
  * Authentication Handler
  *

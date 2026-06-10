@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (listEnrollments) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: listEnrollments handler delegates to backend, minimal orchestration logic
 /**
  * GET /api/enrollments
  * List all enrollments for the current user
@@ -53,7 +51,7 @@ export const listEnrollments = async (request, env, userContext) => {
         last_activity_at: last_activity_at,
     }));
 
-    const activeCount = enrollments.filter(({ status } = {}) => status === 'active').length; // entropy-naming-convention-ok: scalar count variable naming in listEnrollments
+    const activeCount = enrollments.filter(({ status } = {}) => status === 'active').length;
 
     return jsonResponse({
         enrollments,

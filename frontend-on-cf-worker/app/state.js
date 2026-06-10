@@ -1,6 +1,3 @@
-// entropy-ts-silent-log-only-catch-ok: frontend state hook — best-effort localStorage read/write ; failure falls back to in-memory state
-// entropy-god-file-ok: global SPA state
-// entropy-multiple-exports-ok: 5 exports (getState/setState/subscribe + sessionId + default) form core pub/sub state, 16 importers
 /**
  * Reactive State Management
  * 

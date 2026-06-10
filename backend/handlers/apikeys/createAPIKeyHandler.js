@@ -1,6 +1,3 @@
-// entropy-positional-args-excess-ok: createAPIKeyHandler follows DDD pipeline convention (request, ctx, param) positional args
-// entropy-handler-service-pattern-ok: createAPIKeyHandler handler delegates to backend, minimal orchestration logic
-// entropy-duplicate-code-handlers-ok: error handling pattern is intentionally similar across API key handlers
 /**
  * Create a new API key
  * POST /api/auth/api-keys

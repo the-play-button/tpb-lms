@@ -1,7 +1,3 @@
-// entropy-multiple-exports-ok: 5 exports are modal variants + show/close, all share modal styles and core showConfirmModal
-// entropy-unused-export-ok: showQuizWarningConfirmation and showAbandonConfirmation available for future use
-// entropy-legacy-marker-ok: confirmModal has no active legacy markers, retained for audit trail
-// entropy-prohibited-timer-ok: timer in confirmModal is intentional for UX timing
 
 const MODAL_FOCUS_DELAY_MS = 100; // Allow DOM paint before focusing confirm button
 
@@ -65,7 +61,6 @@ export const showConfirmModal = options => {
     
     document.body.style.overflow = 'hidden';
     
-    // entropy-prohibited-timer-ok: delay for UX focus after render
     setTimeout(() => {
         modal.querySelector('.modal-confirm')?.focus();
     }, MODAL_FOCUS_DELAY_MS);

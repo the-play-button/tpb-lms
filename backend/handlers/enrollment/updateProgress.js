@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (updateProgress) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: updateProgress handler delegates to backend, minimal orchestration logic
 /**
  * PATCH /api/enrollments/:id/progress
  * Update enrollment progress (called when navigating to a new step)

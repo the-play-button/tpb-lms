@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: courseList exports render + init pair, tightly coupled lifecycle
 /**
  * Course List UI Component
  */

@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: dashboard exports render + init pair, tightly coupled lifecycle
 /**
  * Admin Dashboard - Statistics Overview
  * 

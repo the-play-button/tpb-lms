@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (completeCourse) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: completeCourse handler delegates to backend, minimal orchestration logic
 /**
  * POST /api/courses/:id/complete
  * Mark a course as completed (called internally when all steps are done)

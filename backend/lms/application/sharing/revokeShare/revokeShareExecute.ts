@@ -1,4 +1,3 @@
-// entropy-audit-trail-ok: audit at higher level
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { Email } from '../../../domain/value-objects/index.js';

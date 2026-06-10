@@ -1,4 +1,3 @@
-// entropy-subfolders-pattern-ok: pamFetch subfolder structure is intentional for domain separation
 
 /**
  * Make a delegated PAM API request via HTTP

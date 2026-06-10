@@ -1,7 +1,3 @@
-// entropy-multiple-exports-ok: tightly coupled render pair
-// entropy-lines-exceeded-ok: renderer complexity, split tracked separately
-// entropy-legacy-marker-ok: debt — renderer supports legacy QUIZ type and GitHub URL paths alongside unified.to schema and BYOC
-// entropy-hardcoded-url-ok: URL is a stable production deployment endpoint
 /**
  * Course Step Renderer
  * 
@@ -90,7 +86,6 @@ const getStepContext = () => {
         videoId: videoInfo.streamId,
         videoUrl: videoInfo.videoUrl,
         videoDuration: videoInfo.duration,
-        // entropy-legacy-marker-ok: legacy pattern in renderer, tracked for future refactoring
         quizMedia: getMediaByType(cls, 'QUIZ', 'tally_form_id') || getMediaByType(cls, 'WEB', 'tally_form_id'),
         ...signalData
     };
@@ -129,7 +124,6 @@ const renderVideoSection = ctx => {
             defaultTextTrack: currentLang
         });
 
-        // entropy-hardcoded-url-ok: CF Stream embed URL
         return `
             ${speedControl}
             <div class="video-container">
@@ -242,7 +236,6 @@ const renderQuizSection = ctx => {
     
     const quizName = quizMedia.name || 'Quiz de validation';
     
-    // entropy-legacy-marker-ok: legacy pattern in renderer, tracked for future refactoring
     const formIds = quizMedia.tally_form_ids || quizMedia.tally_form_id;
     const formIdsJson = typeof formIds === 'object'
         ? JSON.stringify(formIds).replace(/"/g, '&quot;')

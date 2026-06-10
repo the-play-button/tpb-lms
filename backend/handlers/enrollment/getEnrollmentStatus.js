@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (getEnrollmentStatus) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: getEnrollmentStatus handler delegates to backend, minimal orchestration logic
 /**
  * GET /api/courses/:id/enrollment
  * Get enrollment status for a specific course

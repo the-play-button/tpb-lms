@@ -1,4 +1,3 @@
-// entropy-god-file-ok: service DTOs — StorageFile + StoragePermission interfaces normalized from Unified.to responses
 /**
  * StorageFile - Represents a file in cloud storage
  *

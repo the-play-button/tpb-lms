@@ -7,7 +7,7 @@
 
 import { log } from '../log.js';
 
-const CF_ACCESS_LOGOUT_URL = 'https://theplaybutton.cloudflareaccess.com/cdn-cgi/access/logout'; // entropy-hardcoded-url-ok: CF Access logout endpoint
+const CF_ACCESS_LOGOUT_URL = 'https://theplaybutton.cloudflareaccess.com/cdn-cgi/access/logout';
 
 /**
  * Initialize user menu

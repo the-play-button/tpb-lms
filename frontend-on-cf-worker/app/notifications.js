@@ -1,6 +1,3 @@
-// entropy-ts-silent-log-only-catch-ok: frontend notifications — best-effort browser Notification API (may be denied)
-// entropy-multiple-exports-ok: 5 exports, tightly-coupled notification lifecycle (badge modal + error + refresh + init)
-// entropy-prohibited-timer-ok: timer in notifications is intentional for UX timing
 /**
  * Notifications
  * 
@@ -29,7 +26,6 @@ const createBadgeParticles = container => {
     }
     
     container.appendChild(particlesDiv);
-    // entropy-prohibited-timer-ok: timer in notifications cleans up after CSS animation completes
     setTimeout(() => particlesDiv.remove(), PARTICLE_ANIMATION_DURATION_MS);
 };
 
@@ -143,6 +139,6 @@ export const refreshUserData = async () => {
  * Initialize notifications (expose to window)
  */
 export const initNotifications = () => {
-    window.closeBadgeModal = closeBadgeModal; // entropy-global-pollution-ok: global in notifications exposed for HTML inline onclick binding
+    window.closeBadgeModal = closeBadgeModal;
 };
 

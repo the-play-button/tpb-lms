@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (deleteGlossaryTerm) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: deleteGlossaryTerm handler delegates to backend, minimal orchestration logic
 /**
  * Delete a glossary term
  * DELETE /glossary/:orgId/:termId

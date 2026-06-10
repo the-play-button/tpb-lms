@@ -1,7 +1,4 @@
 #!/usr/bin/env python3
-# entropy-duplicate-constant-ok: verify_deploy is standalone CLI script, shared constants not warranted
-# entropy-python-unused-import-ok: urllib kept for error handling fallback
-# entropy-legacy-marker-ok: verify_deploy has no active legacy markers, retained for audit trail
 """
 verify_deploy.py - Post-deployment verification
 Checks that both backend API and frontend are healthy
@@ -78,7 +75,7 @@ def check_backend() -> bool:
         return False
 
 
-def check_frontend() -> bool:  # entropy-python-nesting-ok: nested iteration in verify_deploy over multi-level structured data
+def check_frontend() -> bool:
     """Check frontend is serving HTML."""
     print(f"{CYAN}🔍 Checking frontend: {FRONTEND_URL}{RESET}")
     

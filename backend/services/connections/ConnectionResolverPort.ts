@@ -1,4 +1,3 @@
-// entropy-god-file-ok: port interfaces — ResolveConnectionOptions + ConnectionResolverConfig + ConnectionResolverPort for multi-tenant connection routing
 /**
  * ConnectionResolver Port - Interface for multi-tenant connection routing
  *

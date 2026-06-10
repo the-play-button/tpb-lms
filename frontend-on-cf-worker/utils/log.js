@@ -1,4 +1,3 @@
-// entropy-import-error-ok: import resolves at runtime
 /**
  * Frontend Logger - Standardized logging format
  * GAP-1102: Format standardisé pour debug frontend
@@ -41,7 +40,7 @@ export const log = {
     }
 };
 
-window.LMSLog = log; // entropy-global-pollution-ok: intentional global for non-module scripts // entropy-orphan-global-ok: inline assignment
+window.LMSLog = log;
 
 export default log;
 

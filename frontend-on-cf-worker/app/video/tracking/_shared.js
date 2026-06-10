@@ -1,7 +1,3 @@
-// entropy-ts-silent-log-only-catch-ok: frontend video tracking shared util — telemetry log+continue, must not block playback
-// entropy-positional-args-excess-ok: handler exports (trackingState, RESUME_THRESHOLD, SPEEDS) use CF Worker positional convention (request, env, ctx)
-// entropy-god-file-ok: shared state intentionally imported by all video tracking modules
-// entropy-prohibited-timer-ok: timer in _shared is intentional for UX timing
 /**
  * Shared video tracking state and helpers
  */
@@ -107,7 +103,6 @@ export const setupNativeVideoTracking = (videoElement, videoDuration, courseId, 
         updateUIWithoutVideoReset();
     });
 
-    // entropy-prohibited-timer-ok: periodic video progress ping
     trackingState.videoTrackingInterval = setInterval(async () => {
         if (!trackingState.isPlaying) return;
 

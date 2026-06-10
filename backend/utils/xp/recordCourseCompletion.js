@@ -1,4 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (recordCourseCompletion) use CF Worker positional convention (request, env, ctx)
 /**
  * Record course completion signal
  */

@@ -1,4 +1,3 @@
-// entropy-god-file-ok: domain event base — DomainEvent interface + createEvent factory, single source of truth for event shape
 /**
  * Domain Event - Base interface for all domain events
  *

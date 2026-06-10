@@ -1,4 +1,3 @@
-// entropy-legacy-marker-ok: debt — dual-source content fetching supports legacy GitHub URLs alongside cloud content refs (BYOC)
 /**
  * Fetch content from a repository URL or cloud reference
  *

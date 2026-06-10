@@ -1,4 +1,3 @@
-// entropy-multiple-exports-ok: 5 exports share sidebar DOM state, tightly-coupled sidebar lifecycle utilities
 /**
  * Steps Sidebar
  * 

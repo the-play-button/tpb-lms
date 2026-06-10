@@ -1,6 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (importGlossaryTerms) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: importGlossaryTerms handler delegates to backend, minimal orchestration logic
-// entropy-duplicate-code-handlers-ok: intentional duplication
 /**
  * Batch import glossary terms
  * POST /glossary/:orgId/import

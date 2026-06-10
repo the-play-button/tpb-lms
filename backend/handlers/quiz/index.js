@@ -1,4 +1,3 @@
-// entropy-business-logic-in-frontend-ok: index logic already exists in backend, frontend mirrors it
 /**
  * Quiz Handler - barrel export
  */

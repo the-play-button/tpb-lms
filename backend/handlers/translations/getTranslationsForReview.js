@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (getTranslationsForReview) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: getTranslationsForReview handler delegates to backend, minimal orchestration logic
 /**
  * Get translations needing review
  * GET /translations/review?source=ai&limit=50

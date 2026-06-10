@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (upsertTranslation) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: upsertTranslation handler delegates to backend, minimal orchestration logic
 /**
  * Create or update a translation
  * PUT /translations/:type/:id/:lang

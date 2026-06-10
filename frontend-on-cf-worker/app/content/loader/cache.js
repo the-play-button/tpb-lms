@@ -25,7 +25,7 @@ export const preloadContent = async urls => {
             // null = "preload skipped, will re-fetch on demand" (non-blocking).
             log.warn(`preload fetch failed for ${url}, will re-fetch on demand`, err);
             return null;
-        })); // entropy-then-catch-finally-ok: idiomatic .map(url => fetch().catch()) for partial-failure-tolerant Promise.all — error logged before fallback (not blind)  # entropy-catch-return-default-ok: null signals missing cache entry — error logged, intentional fallback for Promise.all
+        }));
 
     await Promise.all(promises);
 };

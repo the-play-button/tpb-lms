@@ -1,4 +1,3 @@
-// entropy-prohibited-timer-ok: timer in renderKmsModal is intentional for UX timing
 /**
  * Render a KMS page in a modal
  */
@@ -57,11 +56,10 @@ export const renderKmsModal = page => {
 /**
  * Close the KMS modal
  */
-window.closeKmsModal = function() { // entropy-global-pollution-ok: global in renderKmsModal exposed for HTML inline onclick binding // entropy-orphan-global-ok: inline global function
+window.closeKmsModal = function() {
     const modal = document.getElementById('kms-modal');
     if (modal) {
         modal.classList.remove('kms-modal-visible');
-        // entropy-prohibited-timer-ok: delay for CSS exit animation
         setTimeout(() => modal.remove(), MODAL_EXIT_ANIMATION_MS);
     }
 };

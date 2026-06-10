@@ -1,6 +1,3 @@
-// entropy-ts-silent-log-only-catch-ok: projection engine — per-projection write log+continue, batch projection resilience
-// entropy-positional-args-excess-ok: handler exports (applyProjections, getProgress) use CF Worker positional convention (request, env, ctx)
-// entropy-multiple-exports-ok: tightly coupled projection pair
 /**
  * Projection Engine
  * 
@@ -42,7 +39,7 @@ export const applyProjections = async (db, event) => {
                 ? JSON.parse(event.payload_json) 
                 : event.payload_json;
             
-            const next = projection.reduce(current || {}, { ...event, payload }); // entropy-naming-convention-ok: next state value
+            const next = projection.reduce(current || {}, { ...event, payload });
             await upsertState(db, key, event.course_id, next);
             
             if (projection.name === 'video_progress') {

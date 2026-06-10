@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (addGlossaryTerm) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: addGlossaryTerm handler delegates to backend, minimal orchestration logic
 /**
  * Add a term to the glossary
  * POST /glossary/:orgId

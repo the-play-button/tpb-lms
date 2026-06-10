@@ -1,4 +1,3 @@
-// entropy-ts-silent-log-only-catch-ok: frontend leaderboard — best-effort fetch ; failure shows empty list, user can refresh
 /**
  * Leaderboard
  * 

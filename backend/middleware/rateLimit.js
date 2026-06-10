@@ -1,7 +1,3 @@
-// entropy-multiple-exports-ok: tightly coupled middleware pair
-// entropy-inconsistent-constant-ok: renamed from CLEANUP_INTERVAL to RATE_LIMIT_CLEANUP_INTERVAL for clarity
-// entropy-unused-export-ok: addRateLimitHeaders available for external consumers
-// entropy-legacy-marker-ok: debt — in-memory sliding window rate limiter, needed until Durable Objects migration
 /**
  * Rate Limiting Middleware
  * 
@@ -34,7 +30,7 @@ const cleanup = () => {
     const expiry = now - 60000; // 60s window
     
     for (const [key, timestamps] of requestCounts.entries()) {
-        const valid = timestamps.filter(t => t > expiry); // entropy-naming-convention-ok: descriptive local variable
+        const valid = timestamps.filter(t => t > expiry);
         if (valid.length === 0) {
             requestCounts.delete(key);
         } else {
@@ -114,7 +110,7 @@ export const addRateLimitHeaders = (response, request) => {
                'unknown';
 
     const limit = getLimit(method, pathname);
-    const recentCount = (requestCounts.get(`${ip}:${method}:${pathname}`) || []).filter(t => t > Date.now() - (limit.window * 1000)).length; // entropy-naming-convention-ok: scalar count variable naming in rateLimit
+    const recentCount = (requestCounts.get(`${ip}:${method}:${pathname}`) || []).filter(t => t > Date.now() - (limit.window * 1000)).length;
     
     const newResponse = new Response(response.body, response);
     newResponse.headers.set('X-RateLimit-Limit', String(limit.requests));

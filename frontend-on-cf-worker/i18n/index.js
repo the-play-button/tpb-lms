@@ -1,5 +1,3 @@
-// entropy-unused-export-ok: hasTranslation available for external consumers
-// entropy-legacy-marker-ok: index has no active legacy markers, retained for audit trail
 /**
  * i18n Module - Internationalization for LMS UI
  * 
@@ -139,5 +137,5 @@ export const hasTranslation = key => {
 initLanguage();
 
 if (typeof window !== 'undefined') {
-    window.i18n = { t, setLanguage, getLanguage, getSupportedLanguages, initLanguage }; // entropy-global-pollution-ok: intentional global for non-module scripts // entropy-orphan-global-ok: inline assignment
+    window.i18n = { t, setLanguage, getLanguage, getSupportedLanguages, initLanguage };
 }

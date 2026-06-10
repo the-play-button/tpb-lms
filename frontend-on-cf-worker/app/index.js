@@ -1,6 +1,3 @@
-// entropy-ts-silent-log-only-catch-ok: frontend entry — best-effort module init ; failure logs and continues with degraded UX
-// entropy-high-coupling-ok: SPA entry point
-// entropy-lines-exceeded-ok: SPA entry point, split tracked separately
 /**
  * LMS Frontend Application
  * 
@@ -222,7 +219,7 @@ const populateMobileCourseList = () => {
         `;
     }).join('');
     
-    container.querySelectorAll('.course-item').forEach(item => { // entropy-event-listeners-ok: one-time setup after render
+    container.querySelectorAll('.course-item').forEach(item => {
         item.addEventListener('click', () => {
             const courseId = item.dataset.courseId;
             loadCourse(courseId);
@@ -265,7 +262,7 @@ const populateMobileBadgesGrid = () => {
         container.parentElement?.appendChild(hint);
     }
     
-    container.querySelectorAll('.badge-item').forEach(item => { // entropy-event-listeners-ok: one-time setup after render
+    container.querySelectorAll('.badge-item').forEach(item => {
         item.addEventListener('click', () => {
             const badge = allBadges[parseInt(item.dataset.badgeIndex, 10)];
             if (badge) {

@@ -1,5 +1,3 @@
-// entropy-positional-args-excess-ok: handler exports (getAdminStats) use CF Worker positional convention (request, env, ctx)
-// entropy-handler-service-pattern-ok: admin handler delegates to backend, minimal orchestration logic
 /**
  * Admin Handlers
  *

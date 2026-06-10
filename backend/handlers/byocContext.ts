@@ -1,4 +1,3 @@
-// entropy-error-hierarchy-ok: error structure appropriate
 /**
  * createByocContext - Bridge between JS world (env, userContext) and TS HandlerContext
  *
