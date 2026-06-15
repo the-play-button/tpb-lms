@@ -357,7 +357,7 @@ class TestEntropy:
     """Entropy checks to ensure code stays clean (per directive 1.17)."""
     
     def test_entropy_violations(self):
-        """Run tpb_sdk.entropy module and verify no P1 violations."""
+        """Run tpb_entropy module and verify no P1 violations."""
         import subprocess
 
         # Get the script path relative to the test file
@@ -365,7 +365,7 @@ class TestEntropy:
         lms_root = os.path.dirname(os.path.dirname(script_dir))
         
         result = subprocess.run(
-            ['python3', '-m', 'tpb_sdk.entropy', '--path', lms_root],
+            ['python3', '-m', 'tpb_entropy', '--path', lms_root],
             capture_output=True,
             text=True,
             cwd=lms_root,  # Run from lms root to find .entropy.yaml

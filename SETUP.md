@@ -62,7 +62,7 @@ cd tpb_system/04.Execution/lms && source venv/bin/activate && python scripts/tes
 - `parse_som.py` - Parse SOM folder structure
 - `tally_webhook.py` - Tally webhook handler
 
-### 📁 Code Quality (`tpb_sdk.entropy`)
+### 📁 Code Quality (`tpb_entropy`)
 - Comprehensive code quality audit tool (via TPB SDK)
 - Detects complexity, duplicates, dead code, etc.
 - Config: `.entropy.yaml` at project root
