@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "updated": "2026-06-10",
+  "updated": "2026-06-18",
   "total": 24,
   "by_check": {
     "ack_generic_reason": 0,
@@ -398,6 +398,7 @@
     "wrangler_url_allowlist": 0,
     "wrangler_vault_token_naming": 0,
     "ws_broadcast_missing_entity_updates": 0,
-    "zod_coerce_boolean_ban": 0
+    "zod_coerce_boolean_ban": 0,
+    "zod_safeparse_silent_fallback": 0
   }
 }
