@@ -11,7 +11,7 @@
 import type { StoragePort } from '../StoragePort.js';
 import type { StorageFile } from '../../types/StorageFile.js';
 
-// Note: `listFiles` is not part of StoragePort but is exposed by the legacy
+// Note: `listFiles` is not part of StoragePort but is exposed by the prior
 // adapter for ConnectionResolverAdapter.testAccess. Kept here to preserve the
 // public contract.
 

@@ -1,16 +1,4 @@
 /**
- * ⚠️ LEGACY JAVASCRIPT — TS migration pending (Plan 22 tag 2026-06-10)
- *
- * This file is intentionally .js (not .ts) for historical reasons. Migration
- * to TypeScript is tracked in workspace TODO.md § Legacy JS migrations.
- * User-sanctioned exception (verbatim 2026-06-10 : « ok pour le legacy
- * temporaire js pour lms et bastion, on migrera dès qu'on pourra »).
- *
- * Migration scope : moderate (factory pattern + bastion middleware wiring
- * + Hono types). Defer to dedicated TS migration cycle.
- */
-
-/**
  * LMS Worker API - Entry Point (Hono)
  *
  * Event-Based Architecture:
@@ -149,7 +137,7 @@ app.use('/api/*', async (c, next) => {
 // --- Tally webhook auth (signature-based, not session-based) ---
 const handleTallyWithAuth = async (request, url, env) => {
   const signingSecret = await getTallySigningSecret(env);
-  const { valid, body, noSignature } = await verifyTallySignature(request, signingSecret);
+  const { valid: isValid, body, noSignature } = await verifyTallySignature(request, signingSecret);
   if (noSignature) {
     const webhookSecret = url.searchParams.get('secret');
     const expectedSecret = await getTallyWebhookSecret(env);
@@ -158,7 +146,7 @@ const handleTallyWithAuth = async (request, url, env) => {
     }
     return await handleTallyWebhookWithBody(body, env, request);
   }
-  if (!valid) return jsonResponse({ error: 'Invalid Tally signature' }, 403, request);
+  if (!isValid) return jsonResponse({ error: 'Invalid Tally signature' }, 403, request);
   return await handleTallyWebhookWithBody(body, env, request);
 };
 

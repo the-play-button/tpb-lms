@@ -43,7 +43,7 @@ _CLI_SEPARATOR_WIDTH = 50
 
 # Required secrets - deployment fails if missing
 REQUIRED_SECRETS = {
-    "TALLY_WEBHOOK_SECRET": "Tally webhook authentication (legacy URL param)",
+    "TALLY_WEBHOOK_SECRET": "Tally webhook authentication (URL param)",
     "TEST_SECRET": "Test fixtures API authentication",
 }
 

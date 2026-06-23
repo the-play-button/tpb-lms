@@ -12,6 +12,8 @@ import { renderCurrentStep } from '../course/renderer.js';
 import { loadLeaderboard } from '../leaderboard.js';
 import { refreshUserData } from '../notifications.js';
 
+const TALLY_EMBED_BASE_URL = 'https://tally.so/embed';
+
 let currentQuizInfo = null;
 
 const resolveTallyFormId = tallyFormIds => {
@@ -41,10 +43,10 @@ const resolveTallyFormId = tallyFormIds => {
 
 /**
  * Show quiz (triggered by button click)
- * Supports both legacy single tallyFormId and new tally_form_ids object.
+ * Supports both single tallyFormId (string) and per-language tally_form_ids object.
  * 
  * @param {string} classId - The class ID
- * @param {string|object} tallyFormIds - Single ID (legacy) or { lang: id } object
+ * @param {string|object} tallyFormIds - Single ID (string) or { lang: id } object
  * @param {string} quizName - Quiz name for display
  */
 export const showQuiz = (classId, tallyFormIds, quizName) => {
@@ -77,7 +79,7 @@ En cliquant OK, vous acceptez :
             container.style.display = 'block';
             container.innerHTML = `
                 <iframe
-                    src="https://tally.so/embed/${tallyFormId}?alignLeft=1&hideTitle=1&dynamicHeight=1"
+                    src="${TALLY_EMBED_BASE_URL}/${tallyFormId}?alignLeft=1&hideTitle=1&dynamicHeight=1"
                     width="100%"
                     height="500"
                     frameborder="0"

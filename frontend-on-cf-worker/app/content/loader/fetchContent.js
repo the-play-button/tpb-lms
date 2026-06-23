@@ -1,13 +1,13 @@
 /**
  * Fetch content from a repository URL or cloud reference
  *
- * Dual-source: supports both GitHub URLs (legacy) and cloud content refs (BYOC).
+ * Dual-source: supports both GitHub URLs (default) and cloud content refs (BYOC).
  */
 
 import { contentCache, CACHE_TTL_MS, isGitHubUrl, buildProxyUrl, isCloudRef, fetchCloudContentDirect, getAuthToken, log } from './_shared.js';
 
 /**
- * Fetch content from a repository URL (legacy GitHub path)
+ * Fetch content from a repository URL (GitHub path)
  * @param {string} url - Raw URL to fetch (e.g., https://raw.githubusercontent.com/...)
  * @returns {Promise<string>} - Content as string
  */
