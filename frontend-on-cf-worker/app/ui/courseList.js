@@ -3,37 +3,39 @@
  */
 import { getState, subscribe } from '../state.js';
 import { renderMasteryBadge, getMasteryLevel, injectMasteryStyles } from './masteryBadge.js';
+import { safeHtml, raw, setSafeHtml } from './safe-dom.js';
 
 export const renderCourseList = () => {
     const list = document.getElementById('somList');
     if (!list) return;
-    
+
     const courses = getState('courses') || [];
     const currentCourse = getState('currentCourse');
-    
+
     injectMasteryStyles();
-    
-    list.innerHTML = courses.map(course => {
+
+    const html = courses.map((course) => {
         const hasProgress = course.progress && course.progress.steps_completed > 0;
         const statusClass = course.progress?.course_completed ? 'completed' : (hasProgress ? 'in-progress' : '');
         const activeClass = course.id === currentCourse ? 'active' : '';
-        
         const progressPercent = course.progress?.progress_percent || 0;
         const masteryLevel = getMasteryLevel(progressPercent);
         const masteryBadge = renderMasteryBadge(masteryLevel, { size: 'small' });
-        
-        return `
+
+        return safeHtml`
             <li>
                 <a href="#" class="${statusClass} ${activeClass}" data-testid="course-list-item-${course.id}" data-som-id="${course.id}">
                     <span class="course-title">${course.title}</span>
                     <span class="course-badges">
-                        ${masteryBadge}
+                        ${raw(masteryBadge)}
                     ${course.progress?.course_completed ? ' ✅' : ''}
                     </span>
                 </a>
             </li>
         `;
     }).join('');
+
+    setSafeHtml(list, html);
 };
 
 export const initCourseList = () => {
