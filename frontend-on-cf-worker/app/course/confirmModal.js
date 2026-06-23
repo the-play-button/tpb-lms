@@ -1,6 +1,4 @@
 
-const MODAL_FOCUS_DELAY_MS = 100; // Allow DOM paint before focusing confirm button
-
 /**
  * Confirmation Modal
  * 
@@ -61,9 +59,11 @@ export const showConfirmModal = options => {
     
     document.body.style.overflow = 'hidden';
     
-    setTimeout(() => {
+    // Signal-based focus : requestAnimationFrame runs after the browser
+    // layouts the newly-appended modal, so .focus() targets a painted node.
+    requestAnimationFrame(() => {
         modal.querySelector('.modal-confirm')?.focus();
-    }, MODAL_FOCUS_DELAY_MS);
+    });
     
     modal.addEventListener('click', (e) => {
         const action = e.target.dataset?.action;

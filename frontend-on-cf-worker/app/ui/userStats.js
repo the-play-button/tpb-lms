@@ -4,38 +4,41 @@
 import { getState, subscribe } from '../state.js';
 import { formatNumber } from '../utils.js';
 
-const XP_ANIMATION_DURATION_MS = 400;   // CSS XP stat pulse animation
-const FLOAT_ANIMATION_DURATION_MS = 1500; // CSS floating XP number rise animation
-
 let previousXP = null;
 
 export const updateUserStats = () => {
     const profile = getState('profile') || {};
     const courses = getState('courses') || [];
-    
+
     const streakEl = document.getElementById('streakDays');
     const xpEl = document.getElementById('totalXP');
     const levelEl = document.getElementById('userLevel');
     const coursesEl = document.getElementById('somsCompleted');
-    
+
     const currentXP = profile.total_points || 0;
-    
+
     if (previousXP !== null && currentXP > previousXP) {
         const xpStat = document.querySelector('.stat.xp');
         if (xpStat) {
             xpStat.classList.add('animating');
             showFloatingXP(currentXP - previousXP, xpStat);
-            setTimeout(() => xpStat.classList.remove('animating'), XP_ANIMATION_DURATION_MS);
+            // Signal-based cleanup : drop the 'animating' class when the
+            // CSS pulse animation ends (one event per animation iteration).
+            const onPulseEnd = () => {
+                xpStat.classList.remove('animating');
+                xpStat.removeEventListener('animationend', onPulseEnd);
+            };
+            xpStat.addEventListener('animationend', onPulseEnd);
         }
     }
     previousXP = currentXP;
-    
+
     if (streakEl) streakEl.textContent = profile.current_streak || 0;
     if (xpEl) xpEl.textContent = formatNumber(currentXP);
     if (levelEl) levelEl.textContent = profile.level || 1;
-    
+
     if (coursesEl) {
-        const completedCourses = courses.filter(({ progress } = {}) => 
+        const completedCourses = courses.filter(({ progress } = {}) =>
             progress && progress.course_completed
         ).length;
         coursesEl.textContent = completedCourses;
@@ -50,7 +53,8 @@ const showFloatingXP = (amount, anchorEl) => {
     float.style.left = `${rect.left + rect.width / 2}px`;
     float.style.top = `${rect.top}px`;
     document.body.appendChild(float);
-    setTimeout(() => float.remove(), FLOAT_ANIMATION_DURATION_MS);
+    // Signal-based cleanup : remove DOM node when the CSS rise animation ends.
+    float.addEventListener('animationend', () => float.remove(), { once: true });
 }
 
 export const initUserStats = () => {

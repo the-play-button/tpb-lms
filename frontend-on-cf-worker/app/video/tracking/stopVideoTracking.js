@@ -12,8 +12,6 @@ export const stopVideoTracking = () => {
         trackingState.isPlaying = false;
         trackingState.videoCompletedHandled = false;
     }
-    if (trackingState.videoTrackingInterval) {
-        clearInterval(trackingState.videoTrackingInterval);
-        trackingState.videoTrackingInterval = null;
-    }
+    // Signal-based pings are bound to the <video> element via 'timeupdate' —
+    // they auto-stop when the video is removed from the DOM. No interval to clear.
 };

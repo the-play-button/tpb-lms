@@ -84,8 +84,10 @@ export const setupVideoTracking = (stepIndex, resumePosition = null) => {
         });
 
         log.debug('Stream SDK tracking initialized');
+        trackingState.streamSdkOk = true;
 
     } catch (error) {
         log.error('Failed to initialize Stream SDK:', error);
+        trackingState.streamSdkOk = false; // explicit fail marker — tracking disabled this session
     }
 };

@@ -9,24 +9,32 @@ import { getState, setState } from './state.js';
 import { iconMap } from './ui/badges.js';
 import { log } from './log.js';
 
-const PARTICLE_ANIMATION_DURATION_MS = 1500; // CSS badge particle dispersion animation
+const BADGE_PARTICLE_COUNT = 12;
 
 const createBadgeParticles = container => {
     const particlesDiv = document.createElement('div');
     particlesDiv.className = 'badge-particles';
-    
-    for (let i = 0; i < 12; i++) {
+
+    for (let i = 0; i < BADGE_PARTICLE_COUNT; i++) {
         const particle = document.createElement('span');
-        const angle = (i / 12) * Math.PI * 2;
+        const angle = (i / BADGE_PARTICLE_COUNT) * Math.PI * 2;
         const distance = 80 + Math.random() * 40;
         particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
         particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
         particle.style.animationDelay = `${i * 0.05}s`;
         particlesDiv.appendChild(particle);
     }
-    
+
     container.appendChild(particlesDiv);
-    setTimeout(() => particlesDiv.remove(), PARTICLE_ANIMATION_DURATION_MS);
+
+    // Signal-based cleanup : when the last CSS animation ends, the parent
+    // div has nothing more to render — remove. animationend bubbles from
+    // child <span> elements per the W3C Animation spec.
+    let ended = 0;
+    particlesDiv.addEventListener('animationend', () => {
+        ended += 1;
+        if (ended >= BADGE_PARTICLE_COUNT) particlesDiv.remove();
+    });
 };
 
 /**
@@ -132,13 +140,13 @@ export const refreshUserData = async () => {
         
     } catch (error) {
         log.warn('Failed to refresh user data:', error.message);
+        setState('userDataStale', true); // explicit recovery — UI can show "refresh needed" badge
     }
 };
 
 /**
- * Initialize notifications (expose to window)
+ * Initialize notifications (= no-op currently ; window.closeBadgeModal
+ * exposure lives in app/init/globals.js per § global_pollution doctrine).
  */
-export const initNotifications = () => {
-    window.closeBadgeModal = closeBadgeModal;
-};
+export const initNotifications = () => {};
 

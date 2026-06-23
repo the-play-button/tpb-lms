@@ -40,7 +40,7 @@ export const log = {
     }
 };
 
-window.LMSLog = log;
+// window.LMSLog bridge lives in app/init/globals.js per § global_pollution.
 
 export default log;
 

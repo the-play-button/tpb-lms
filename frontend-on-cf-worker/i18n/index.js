@@ -128,6 +128,5 @@ export const t = (key, params = {}) => {
 
 initLanguage();
 
-if (typeof window !== 'undefined') {
-    window.i18n = { t, setLanguage, getLanguage, getSupportedLanguages, initLanguage };
-}
+// window.i18n bridge lives in app/init/globals.js per § global_pollution.
+export const i18nApi = { t, setLanguage, getLanguage, getSupportedLanguages, initLanguage };

@@ -138,7 +138,7 @@ app.use('/api/*', async (c, next) => {
 // --- Tally webhook auth (signature-based, not session-based) ---
 const handleTallyWithAuth = async (request, url, env) => {
   const signingSecret = await getTallySigningSecret(env);
-  const { valid: isValid, body, noSignature } = await verifyTallySignature(request, signingSecret);
+  const { isValid, body, noSignature } = await verifyTallySignature(request, signingSecret);
   if (noSignature) {
     const webhookSecret = url.searchParams.get('secret');
     const expectedSecret = await getTallyWebhookSecret(env);

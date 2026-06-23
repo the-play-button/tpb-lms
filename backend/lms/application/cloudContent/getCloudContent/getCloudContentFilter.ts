@@ -1,17 +1,22 @@
 /**
- * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
+ * Filter — applies field-level security via filterFields, then projects
+ * to the canonical wire shape via getCloudContentToWire helper (= shape
+ * SSOT per ddd_structural_patterns.md § 2.9).
  */
 import { filterFields } from '../../../domain/policies/FieldSecurityFilter.js';
 import type { GetCloudContentOutput } from './getCloudContentExecute.js';
 import type { GetCloudContentContext } from './getCloudContentHydrateContext.js';
 
-/**
- * Filter step: apply field-level security to strip connection details.
- *
- * For getCloudContent the response is the raw content string, so FLS
- * applies to metadata only. We ensure no connection details leak
- * through the response object.
- */
+/** Named wire-shape projection : canonical CloudContent output. */
+const getCloudContentToWire = (
+  output: GetCloudContentOutput,
+  filtered: Record<string, unknown>,
+): GetCloudContentOutput => ({
+  content: output.content,
+  contentType: output.contentType,
+  lang: filtered.lang as string | undefined,
+});
+
 export const getCloudContentFilter = (
   output: GetCloudContentOutput,
   context: GetCloudContentContext,
@@ -23,9 +28,5 @@ export const getCloudContentFilter = (
     viewerEmail,
     contentRef.ownerEmail.value
   );
-  return {
-    content: output.content,
-    contentType: output.contentType,
-    lang: (filtered as Record<string, unknown>).lang as string | undefined,
-  };
+  return getCloudContentToWire(output, filtered as Record<string, unknown>);
 };

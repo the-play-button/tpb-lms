@@ -8,7 +8,7 @@ export const verifyTallySignature = async (request, signingSecret) => {
     const signature = request.headers.get('Tally-Signature');
     const body = await request.text();
 
-    if (!signature) return { valid: false, body, noSignature: true };
+    if (!signature) return { isValid: false, body, noSignature: true };
 
     try {
         const encoder = new TextEncoder();
@@ -17,10 +17,10 @@ export const verifyTallySignature = async (request, signingSecret) => {
             { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']
         );
         const signatureBytes = Uint8Array.from(atob(signature), c => c.charCodeAt(0));
-        const valid = await crypto.subtle.verify('HMAC', key, signatureBytes, encoder.encode(body));
-        return { valid, body, noSignature: false };
+        const isValid = await crypto.subtle.verify('HMAC', key, signatureBytes, encoder.encode(body));
+        return { isValid, body, noSignature: false };
     } catch (error) {
         log.error('Signature verification error', { error });
-        return { valid: false, body, noSignature: false, error: 'Signature verification failed' };
+        return { isValid: false, body, noSignature: false, error: 'Signature verification failed' };
     }
 };

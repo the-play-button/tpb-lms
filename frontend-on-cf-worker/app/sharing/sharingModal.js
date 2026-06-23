@@ -129,6 +129,7 @@ const loadPermissions = async (contentRefId) => {
                     loadPermissions(refId);
                 } catch (error) {
                     log.error('Revoke failed:', error);
+                    alert('Impossible de révoquer cet accès — veuillez réessayer.'); // explicit user feedback
                 }
             });
         });

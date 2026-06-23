@@ -2,8 +2,6 @@
  * Render a KMS page in a modal
  */
 
-const MODAL_EXIT_ANIMATION_MS = 200; // CSS modal fade-out animation duration
-
 /**
  * Render a KMS page in a modal
  * @param {Object} page - Page data from API
@@ -54,12 +52,18 @@ export const renderKmsModal = page => {
 };
 
 /**
- * Close the KMS modal
+ * Close the KMS modal — exposed via init/globals.js for HTML onclick callsites.
  */
-window.closeKmsModal = function() {
+export const closeKmsModal = () => {
     const modal = document.getElementById('kms-modal');
     if (modal) {
         modal.classList.remove('kms-modal-visible');
-        setTimeout(() => modal.remove(), MODAL_EXIT_ANIMATION_MS);
+        // Signal-based cleanup : remove DOM node when CSS fade-out transition
+        // completes. The fade is driven by the visibility class toggle.
+        const onFadeEnd = () => {
+            modal.remove();
+            modal.removeEventListener('transitionend', onFadeEnd);
+        };
+        modal.addEventListener('transitionend', onFadeEnd);
     }
 };

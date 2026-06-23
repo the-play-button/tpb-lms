@@ -1,0 +1,44 @@
+/**
+ * UI orchestration — aggregates per-component init + initial render.
+ *
+ * Extracted from bootSequence.js to reduce coupling : bootSequence imports
+ * ONE UI module instead of N.
+ */
+import { updateUserStats, initUserStats } from './userStats.js';
+import { updateBadgesGrid, initBadges } from './badges.js';
+import { renderCourseList, initCourseList } from './courseList.js';
+import { initUserMenu } from './userMenu.js';
+import { renderLangSelector, initLangSelector } from './langSelector.js';
+
+const initLangSelectorInHeader = () => {
+    const userMenu = document.getElementById('userMenu');
+    if (!userMenu) return;
+
+    const langContainer = document.createElement('div');
+    langContainer.innerHTML = renderLangSelector();
+    userMenu.parentElement.insertBefore(langContainer.firstElementChild, userMenu);
+
+    initLangSelector();
+};
+
+/**
+ * Subscribe + initial-render all UI components.
+ * @param {{ user: object, profile: object }} session
+ */
+export const initAllUI = (session) => {
+    // Subscriptions (reactive UI)
+    initUserStats();
+    initBadges();
+    initCourseList();
+
+    // Initial render
+    updateUserStats();
+    renderCourseList();
+    updateBadgesGrid();
+
+    // User menu (logout button)
+    initUserMenu(session.user, session.profile);
+
+    // Language selector in header
+    initLangSelectorInHeader();
+};

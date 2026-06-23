@@ -31,6 +31,9 @@ export const cyclePlaybackSpeed = () => {
         }
     } catch (error) {
         log.error('video', 'Failed to change playback speed', { error: error.message });
+        if (typeof showToast === 'function') {
+            showToast('Impossible de changer la vitesse de lecture', 'warning'); // explicit user feedback
+        }
     }
 };
 

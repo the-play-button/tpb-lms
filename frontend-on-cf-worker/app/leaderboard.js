@@ -17,6 +17,7 @@ export const loadLeaderboard = async () => {
         renderLeaderboard(data.leaderboard || [], data.currentUser);
     } catch (error) {
         log.warn('Failed to load leaderboard:', error.message);
+        renderLeaderboard([], null); // explicit fallback — empty state instead of stale UI
     }
 };
 

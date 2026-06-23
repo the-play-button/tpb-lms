@@ -171,14 +171,18 @@ export const processQuizSubmission = async (data, env, request, quizClass = null
 
     await recordQuizEvent(env.DB, userId, quizId, courseId, classId, score, maxScore, passed, answers);
 
+    let storeQuizEventOk = false;
     if (courseId && classId) {
         try {
             await storeQuizEvent(env, { userId, quizId, courseId, classId, score, maxScore, percentage, passed });
+            storeQuizEventOk = true;
         } catch (e) {
             log.error('Failed to store lms_event or run projection', { error: e });
+            storeQuizEventOk = false; // explicit fail marker — telemetry only
         }
     }
 
+    let videoProgressResetOk = false;
     if (!passed && courseId && classId) {
         try {
             await env.DB.prepare(`
@@ -189,8 +193,10 @@ export const processQuizSubmission = async (data, env, request, quizClass = null
                 WHERE user_id = ? AND class_id = ?
             `).bind(userId, classId).run();
             log.info('Reset video progress for retry (position reset to 0)', { userId, classId });
+            videoProgressResetOk = true;
         } catch (e) {
             log.error('Failed to reset video progress', { error: e });
+            videoProgressResetOk = false; // explicit fail marker — retry next request
         }
 
         return jsonResponse({
@@ -216,6 +222,7 @@ export const processQuizSubmission = async (data, env, request, quizClass = null
                 wrongAnswers = buildWrongAnswersList(answers, JSON.parse(quizClass.raw_json).correct_answers || {});
             } catch (e) {
                 log.warn('Failed to build wrong answers list', { error: e.message });
+                wrongAnswers = null; // explicit fallback — UI shows generic "review incorrect answers" message
             }
         }
     }

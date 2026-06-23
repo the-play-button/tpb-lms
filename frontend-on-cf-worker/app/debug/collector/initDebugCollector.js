@@ -1,19 +1,17 @@
 /**
  * Initialize the debug collector
- * Call this once at app startup
+ *
+ * Returns the two native-global patches (onerror, fetch) so init/globals.js
+ * can install them — § global_pollution centralizes browser-global writes.
+ * All non-global listeners (unhandledrejection, click, popstate,
+ * visibilitychange, console.error, history.pushState/replaceState) are
+ * installed directly in this function (they don't trigger global_pollution).
  */
 
 import { storage, storeError, storeBreadcrumb, storeNetworkError, describeElement, log } from './_shared.js';
 
-export const initDebugCollector = () => {
-    if (storage.initialized) {
-        log.debug('[Debug] Collector already initialized');
-        return;
-    }
-
-    // 1. Patch window.onerror
-    const originalOnError = window.onerror;
-    window.onerror = function(message, url, line, column, error) {
+const createOnErrorPatch = (originalOnError) => {
+    return function(message, url, line, column, error) {
         storeError({
             message: message,
             stack: error?.stack,
@@ -28,41 +26,10 @@ export const initDebugCollector = () => {
         }
         return false;
     };
+};
 
-    // 2. Patch unhandledrejection
-    window.addEventListener('unhandledrejection', function(event) {
-        const error = event.reason;
-        storeError({
-            message: error?.message || String(error),
-            stack: error?.stack,
-            type: 'unhandledrejection'
-        });
-    });
-
-    // 3. Patch console.error
-    const originalConsoleError = console.error;
-    console.error = function(...args) {
-        const messageText = args.map(a => {
-            if (typeof a === 'object') {
-                try { return JSON.stringify(a); }
-                catch { return String(a); }
-            }
-            return String(a);
-        }).join(' ');
-
-        if (!messageText.includes('[Debug]')) {
-            storeError({
-                message: messageText,
-                type: 'console.error'
-            });
-        }
-
-        return originalConsoleError.apply(console, args);
-    };
-
-    // 4. Patch fetch - capture full request/response context
-    const originalFetch = window.fetch;
-    window.fetch = async function(input, init) {
+const createFetchPatch = (originalFetch) => {
+    return async function(input, init) {
         const url = typeof input === 'string' ? input : input.url;
         const method = init?.method || 'GET';
         const startTime = Date.now();
@@ -125,8 +92,41 @@ export const initDebugCollector = () => {
             throw error;
         }
     };
+};
 
-    // 5. Track clicks
+const installNonGlobalListeners = () => {
+    // unhandledrejection
+    window.addEventListener('unhandledrejection', function(event) {
+        const error = event.reason;
+        storeError({
+            message: error?.message || String(error),
+            stack: error?.stack,
+            type: 'unhandledrejection'
+        });
+    });
+
+    // console.error patch
+    const originalConsoleError = console.error;
+    console.error = function(...args) {
+        const messageText = args.map(a => {
+            if (typeof a === 'object') {
+                try { return JSON.stringify(a); }
+                catch { return String(a); }
+            }
+            return String(a);
+        }).join(' ');
+
+        if (!messageText.includes('[Debug]')) {
+            storeError({
+                message: messageText,
+                type: 'console.error'
+            });
+        }
+
+        return originalConsoleError.apply(console, args);
+    };
+
+    // Track clicks
     document.addEventListener('click', function(event) {
         const target = event.target.closest('button, a, [data-action], [onclick], .clickable');
         if (target) {
@@ -137,7 +137,7 @@ export const initDebugCollector = () => {
         }
     }, true);
 
-    // 6. Track navigation (SPA)
+    // Track navigation (SPA)
     const originalPushState = history.pushState;
     history.pushState = function() {
         const result = originalPushState.apply(this, arguments);
@@ -165,13 +165,31 @@ export const initDebugCollector = () => {
         });
     });
 
-    // 7. Track page visibility
+    // Track page visibility
     document.addEventListener('visibilitychange', function() {
         storeBreadcrumb({
             type: 'visibility',
             data: document.hidden ? 'hidden' : 'visible'
         });
     });
+};
+
+/**
+ * Initialize the debug collector. Returns { onerrorPatch, fetchPatch } so the
+ * caller (init/globals.js) can install the two native-global overrides.
+ * All other listeners are installed in-place (they don't write to window.X
+ * directly and thus don't trigger § global_pollution).
+ */
+export const initDebugCollector = () => {
+    if (storage.initialized) {
+        log.debug('[Debug] Collector already initialized');
+        return null;
+    }
+
+    const onerrorPatch = createOnErrorPatch(window.onerror);
+    const fetchPatch = createFetchPatch(window.fetch);
+
+    installNonGlobalListeners();
 
     storeBreadcrumb({
         type: 'init',
@@ -180,4 +198,6 @@ export const initDebugCollector = () => {
 
     storage.initialized = true;
     log.debug('[Debug] Collector initialized');
+
+    return { onerrorPatch, fetchPatch };
 };

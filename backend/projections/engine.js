@@ -52,9 +52,10 @@ export const applyProjections = async (db, event) => {
             log.info('Projection applied', { name: projection.name, video_completed: next.video_completed, quiz_passed: next.quiz_passed });
         } catch (error) {
             log.error('Projection failed', { name: projection.name, error });
+            result[`${projection.name}_failed`] = true; // explicit failure marker — caller can detect
         }
     }
-    
+
     return result;
 };
 

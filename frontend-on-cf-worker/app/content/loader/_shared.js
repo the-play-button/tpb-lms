@@ -122,25 +122,32 @@ export const fetchContentDirect = async url => {
  * Try to fetch content with i18n fallback.
  * Order: current lang -> en -> original URL
  */
+/** Try-or-null helper : returns content on success, null on miss + logs the
+ *  intended fallback step. Replaces silent-log catch pattern with explicit
+ *  null discriminator per § ALWAYS FAIL HARD (= caller cascades on null). */
+const tryFetchOrNull = async (localizedUrl, missMessage) => {
+    try {
+        return await fetchContentDirect(localizedUrl);
+    } catch (e) {
+        log.debug(missMessage, { error: e?.message ?? String(e) });
+        return null;
+    }
+};
+
 export const fetchContentWithI18nFallback = async url => {
     const currentLang = window.i18n?.getLanguage?.() || 'fr';
 
-    try {
-        const localizedUrl = buildLocalizedUrl(url, currentLang);
-        const content = await fetchContentDirect(localizedUrl);
-        return { content, lang: currentLang, url: localizedUrl };
-    } catch (e) {
-        log.debug(`[content] ${currentLang} not found, trying fallback...`);
-    }
+    const localizedUrl = buildLocalizedUrl(url, currentLang);
+    const localizedContent = await tryFetchOrNull(
+        localizedUrl,
+        `[content] ${currentLang} not found, trying fallback...`,
+    );
+    if (localizedContent !== null) return { content: localizedContent, lang: currentLang, url: localizedUrl };
 
     if (currentLang !== 'en') {
-        try {
-            const enUrl = buildLocalizedUrl(url, 'en');
-            const content = await fetchContentDirect(enUrl);
-            return { content, lang: 'en', url: enUrl };
-        } catch (e) {
-            log.debug(`[content] en not found, trying original...`);
-        }
+        const enUrl = buildLocalizedUrl(url, 'en');
+        const enContent = await tryFetchOrNull(enUrl, `[content] en not found, trying original...`);
+        if (enContent !== null) return { content: enContent, lang: 'en', url: enUrl };
     }
 
     const content = await fetchContentDirect(url);

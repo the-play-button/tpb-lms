@@ -160,6 +160,13 @@ def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> b
     print(f"{CYAN}🔐 LMS Secrets Check{RESET}")
     print(f"{CYAN}{'='*50}{RESET}\n")
 
+    # Explicit Optional handling per CLAUDE.md § ALWAYS FAIL HARD : surface
+    # which worker resolution path is in use, no silent default.
+    if worker_name is None:
+        log("No worker name passed — wrangler will use the default from wrangler.toml.", "info")
+    else:
+        log(f"Targeting worker: {worker_name}", "info")
+
     # Get configured secrets
     log("Fetching configured secrets from Cloudflare...")
     configured = get_configured_secrets(worker_name)

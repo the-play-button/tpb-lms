@@ -250,9 +250,8 @@ const showQuizPendingState = () => {
 }
 
 /**
- * Initialize quiz handler (expose to window)
+ * Initialize quiz handler (= no-op currently ; window.showQuiz exposure
+ * lives in app/init/globals.js per § global_pollution doctrine).
  */
-export const initQuizHandler = () => {
-    window.showQuiz = showQuiz;
-};
+export const initQuizHandler = () => {};
 

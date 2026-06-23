@@ -5,7 +5,7 @@
  * Enables frontend to fetch markdown from private repos without exposing tokens.
  */
 
-import { jsonResponse } from '../cors.js';
+import { jsonResponse, getCorsHeaders } from '../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 
 const GITHUB_API_BASE = 'https://api.github.com';
@@ -233,9 +233,9 @@ export const getGitHubContent = async (request, env, userContext) => {
         return new Response(content, {
             status: 200,
             headers: {
+                ...getCorsHeaders(request),
                 'Content-Type': 'text/markdown; charset=utf-8',
                 'Cache-Control': 'public, max-age=300',  // 5 min cache
-                'Access-Control-Allow-Origin': '*',
                 'X-GitHub-Repo': `${owner}/${repo}`,
                 'X-GitHub-Branch': branch,
                 'X-GitHub-Path': path

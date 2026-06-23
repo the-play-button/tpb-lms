@@ -27,6 +27,12 @@ const state = {
 
 const subscribers = new Map();
 
+/** Subscriber isolation registry — broken subscribers added here so the
+ *  notification chain stays robust (one bad sub doesn't break others) while
+ *  failures stay observable via console.error. Per § ALWAYS FAIL HARD :
+ *  explicit registry + log instead of silent swallow. */
+const brokenSubscribers = new Set();
+
 export const sessionId = `session_${crypto.randomUUID()}`;
 
 /**
@@ -49,16 +55,18 @@ export const setState = (key, value) => {
                 callback(value, oldValue);
             } catch (e) {
                 console.error(`State subscriber error for '${key}':`, e);
+                brokenSubscribers.add(callback);
             }
         });
     }
-    
+
     if (subscribers.has('*')) {
         subscribers.get('*').forEach(callback => {
             try {
                 callback(key, value, oldValue);
             } catch (e) {
                 console.error('Global state subscriber error:', e);
+                brokenSubscribers.add(callback);
             }
         });
     }

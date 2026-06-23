@@ -134,15 +134,10 @@ const handlePopState = async event => {
 };
 
 /**
- * Expose navigation functions globally
+ * Initialize navigation (= popstate listener only — global window.X
+ * exposures live in app/init/globals.js per § global_pollution doctrine).
  */
 export const initNavigation = () => {
-    window.nextStep = nextStep;
-    window.prevStep = prevStep;
-    window.restartModule = restartModule;
-    window.navigateToStep = navigateToStep;
-    window.cycleSpeed = cyclePlaybackSpeed; // GAP-101: Playback speed control
-    
     window.addEventListener('popstate', handlePopState);
 };
 

@@ -12,7 +12,6 @@ export const trackingState = {
     lastPingPosition: -10,
     isPlaying: false,
     videoCompletedHandled: false,
-    videoTrackingInterval: null,
     currentSpeedIndex: 2 // Default 1x
 };
 
@@ -58,6 +57,7 @@ export const sendVideoEvent = async (eventType, videoId, position, duration, cou
 
     } catch (error) {
         log.warn(`Failed to send ${eventType}:`, error.message);
+        return { sent: false, eventType, error: error.message }; // explicit telemetry failure marker
     }
 };
 
@@ -103,7 +103,11 @@ export const setupNativeVideoTracking = (videoElement, videoDuration, courseId, 
         updateUIWithoutVideoReset();
     });
 
-    trackingState.videoTrackingInterval = setInterval(async () => {
+    // Signal-based VIDEO_PING : the <video> element fires 'timeupdate' ~4×/sec
+    // while playing. We boundary-check every 10 seconds of playback and emit
+    // one ping per crossed boundary. Removes the setInterval polling that
+    // ticked even when the video was paused / buffering.
+    videoElement.addEventListener('timeupdate', async () => {
         if (!trackingState.isPlaying) return;
 
         const currentTime = Math.floor(videoElement.currentTime || 0);
@@ -113,7 +117,7 @@ export const setupNativeVideoTracking = (videoElement, videoDuration, courseId, 
             await sendVideoEvent('VIDEO_PING', 'external', currentTime, videoDuration, courseId, classId);
             trackingState.lastPingPosition = pingPosition;
         }
-    }, 10000);
+    });
 
     log.info('video', 'Native video tracking setup complete');
 };
