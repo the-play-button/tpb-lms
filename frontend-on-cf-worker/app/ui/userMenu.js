@@ -6,6 +6,7 @@
  */
 
 import { log } from '../log.js';
+import { safeHtml, raw, setSafeHtml } from './safe-dom.js';
 
 const CF_ACCESS_LOGOUT_URL = 'https://theplaybutton.cloudflareaccess.com/cdn-cgi/access/logout';
 
@@ -25,14 +26,17 @@ export const initUserMenu = (user, profile) => {
     const role = profile?.role || 'student';
     const displayRole = getRoleDisplay(role);
     
-    container.innerHTML = `
+    const adminLinkHtml = role === 'admin'
+        ? safeHtml`<a href="/admin" class="admin-link" data-testid="admin-dashboard-link" title="Dashboard Admin">📊</a>`
+        : '';
+    setSafeHtml(container, safeHtml`
         <div class="user-menu-content">
             <div class="user-info-compact">
                 <span class="user-email" title="${email}">${truncateEmail(email)}</span>
                 <span class="user-role-badge ${role}">${displayRole}</span>
             </div>
-            ${role === 'admin' ? `<a href="/admin" class="admin-link" data-testid="admin-dashboard-link" title="Dashboard Admin">📊</a>` : ''}
-            <button class="logout-btn" data-testid="logout-btn" onclick="window.location.href='${CF_ACCESS_LOGOUT_URL}'" title="Se déconnecter">
+            ${raw(adminLinkHtml)}
+            <button class="logout-btn" data-testid="logout-btn" onclick="window.location.href='${raw(CF_ACCESS_LOGOUT_URL)}'" title="Se déconnecter">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                     <polyline points="16 17 21 12 16 7"></polyline>
@@ -41,7 +45,7 @@ export const initUserMenu = (user, profile) => {
                 <span class="logout-text">Déconnexion</span>
             </button>
         </div>
-    `;
+    `);
 };
 
 /**

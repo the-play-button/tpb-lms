@@ -6,6 +6,7 @@
  */
 
 import { getState } from '../state.js';
+import { safeHtml, raw, setSafeHtml } from './safe-dom.js';
 
 /**
  * Render the steps sidebar
@@ -33,49 +34,49 @@ export const renderStepsSidebar = (options = {}) => {
     
     const grouped = showSections ? groupBySection(classes) : { '': classes };
     
-    let html = `
+    const widthPercent = `${(completedSteps.size / course.classes.length) * 100}%`;
+    const fragments = [safeHtml`
         <div class="sidebar-header">
             <h3 class="sidebar-title">${course.title || course.name}</h3>
             <div class="sidebar-progress">
                 <span class="progress-text">${completedSteps.size}/${course.classes.length}</span>
                 <div class="progress-bar-mini">
-                    <div class="progress-fill" style="width: ${(completedSteps.size / course.classes.length) * 100}%"></div>
+                    <div class="progress-fill" style="width: ${widthPercent}"></div>
                 </div>
             </div>
         </div>
         <nav class="steps-list">
-    `;
-    
+    `];
+
     for (const [section, steps] of Object.entries(grouped)) {
         if (section && showSections) {
-            html += `<div class="section-header">${section}</div>`;
+            fragments.push(safeHtml`<div class="section-header">${section}</div>`);
         }
-        
+
         for (const step of steps) {
             const index = course.classes.findIndex(({ id } = {}) => id === step.id);
             const isCompleted = completedSteps.has(step.id);
             const isCurrent = index === currentStepIndex;
             const isLocked = index > currentStepIndex + 1;
-            
+
             const statusClass = isCurrent ? 'current' : isCompleted ? 'completed' : isLocked ? 'locked' : 'pending';
             const statusIcon = isCurrent ? '▶' : isCompleted ? '✓' : isLocked ? '🔒' : '○';
-            
+
             const stepType = (step.raw_json ? JSON.parse(step.raw_json) : {}).tpb_step_type || step.step_type || 'CONTENT';
             const typeIcon = getStepTypeIcon(stepType);
-            
-            html += `
+
+            fragments.push(safeHtml`
                 <div class="step-item ${statusClass}" data-step="${index}" title="${getStepTooltip(statusClass)}">
                     <span class="step-status">${statusIcon}</span>
                     <span class="step-name">${step.name}</span>
                     <span class="step-type-icon">${typeIcon}</span>
                 </div>
-            `;
+            `);
         }
     }
-    
-    html += `</nav>`;
-    
-    sidebar.innerHTML = html;
+
+    fragments.push(`</nav>`);
+    setSafeHtml(sidebar, fragments.join(''));
 };
 
 /**

@@ -5,6 +5,7 @@
  */
 
 import { getState, subscribe } from '../state.js';
+import { safeHtml, setSafeHtml } from './safe-dom.js';
 
 export const iconMap = {
     'first_video': '🎬',
@@ -37,26 +38,26 @@ export const updateBadgesGrid = () => {
     const allBadges = getState('allBadges') || [];
     
     if (allBadges.length === 0) {
-        grid.innerHTML = '<p class="no-badges">Chargement...</p>';
+        setSafeHtml(grid, safeHtml`<p class="no-badges">Chargement...</p>`);
         return;
     }
-    
-    grid.innerHTML = allBadges.map(badge => {
+
+    const html = allBadges.map((badge) => {
         const icon = iconMap[badge.id] || '🏆';
         const rarityClass = badge.rarity ? badge.rarity.toLowerCase() : 'common';
         const rarityLabel = rarityLabels[rarityClass] || 'Commun';
         const points = badge.points_reward || 50;
         const isEarned = badge.earned;
-        
+
         if (!isEarned) {
-            return `
+            return safeHtml`
                 <div class="badge-item ${rarityClass} locked" data-badge-id="${badge.id}">
                     ${icon}
                 </div>
             `;
         }
-        
-        return `
+
+        return safeHtml`
             <div class="badge-item ${rarityClass}" data-badge-id="${badge.id}">
                 ${icon}
                 <div class="badge-tooltip">
@@ -73,6 +74,7 @@ export const updateBadgesGrid = () => {
             </div>
         `;
     }).join('');
+    setSafeHtml(grid, html);
 };
 
 /**
