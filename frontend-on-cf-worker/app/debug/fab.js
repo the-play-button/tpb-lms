@@ -8,6 +8,7 @@
 import { copyDebugInfoToClipboard } from './collector/index.js';
 import { togglePanel } from './panel.js';
 import { log } from '../log.js';
+import { safeHtml, setSafeHtml } from '../ui/safe-dom.js';
 
 const DOUBLE_CLICK_WINDOW_MS = 250;    // Window to detect double-click vs single-click
 const FAB_STATE_RESET_DELAY_MS = 1500; // CSS success/error state animation duration
@@ -33,13 +34,13 @@ export const initDebugFab = () => {
     fabElement.className = 'debug-fab';
     fabElement.setAttribute('aria-label', 'Copier les infos de debug');
     fabElement.setAttribute('title', 'Copier les infos techniques pour le support');
-    fabElement.innerHTML = `
+    setSafeHtml(fabElement, safeHtml`
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <circle cx="12" cy="12" r="10"/>
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
             <line x1="12" y1="17" x2="12.01" y2="17"/>
         </svg>
-    `;
+    `);
     
     fabElement.addEventListener('click', handleFabClick);
     
