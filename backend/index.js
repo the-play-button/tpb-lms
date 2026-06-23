@@ -94,10 +94,11 @@ app.use('/*', async (c, next) => {
           cfAccessClientSecret: cfAccessSecret,
         },
       });
+      loggerReady = true;
     } catch (err) {
       console.error('[telemetry] logger init failed — continuing without telemetry:', err);
+      loggerReady = true; // explicit recovery — don't retry on every request
     }
-    loggerReady = true;
   }
   setLoggerWaitUntil(c.executionCtx.waitUntil.bind(c.executionCtx));
   return next();
@@ -230,11 +231,15 @@ app.use('/api/*', async (c, next) => {
   // initBastionClient fetches the authz signing secret; a failure here must
   // not crash the Worker (1101). Handlers that actually need the client will
   // re-call initBastionClient and fail visibly at that point with a 500.
+  let bastionInitOk = false;
   try {
     await initBastionClient(c.env);
+    bastionInitOk = true;
   } catch (err) {
     console.error('[authz] initBastionClient failed:', err);
+    bastionInitOk = false;
   }
+  c.set('bastionInitOk', bastionInitOk);
 
   return next();
 });

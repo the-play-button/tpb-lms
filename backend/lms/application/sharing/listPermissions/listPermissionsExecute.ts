@@ -18,7 +18,7 @@ export interface ListPermissionsOutput {
  * Execute step: map active shares to permission entries.
  */
 export const listPermissionsExecute = (context: ListPermissionsContext): Result<string, ListPermissionsOutput> => {
-  const permissions: PermissionEntry[] = context.shares.map((s) => ({
+  const permissions: PermissionEntry[] = context.shares.map<PermissionEntry>((s) => ({
     id: s.id.value,
     shared_with: s.sharedWithEmail.value,
     role: s.role === 'editor' ? 'WRITE' : 'READ',

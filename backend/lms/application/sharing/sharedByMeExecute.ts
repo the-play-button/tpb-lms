@@ -20,7 +20,7 @@ export const sharedByMeExecute = async (input: SharedByMeValidatedInput, ctx: Ha
 
   const shares = await ctx.sharesRepository.findBySharedBy(emailResult.value);
 
-  const entries: SharedByMeEntry[] = shares.map((s) => ({
+  const entries: SharedByMeEntry[] = shares.map<SharedByMeEntry>((s) => ({
     id: s.id.value,
     content_ref_id: s.contentRefId.value,
     shared_with: s.sharedWithEmail.value,
