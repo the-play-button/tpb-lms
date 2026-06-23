@@ -22,24 +22,24 @@ const _ESCAPE_MAP = {
 
 const _RAW_MARKER = Symbol('safe-dom-raw');
 
-export function escapeHtml(value) {
+export const escapeHtml = (value) => {
     if (value === null || value === undefined) return '';
     return String(value).replace(/[&<>"'`]/g, (ch) => _ESCAPE_MAP[ch]);
-}
+};
 
 /**
  * Wrap an already-safe HTML fragment so the `safeHtml` tag skips escaping it.
  * Use sparingly — every `raw(...)` call is an audit point.
  */
-export function raw(htmlFragment) {
+export const raw = (htmlFragment) => {
     return { [_RAW_MARKER]: true, html: String(htmlFragment) };
-}
+};
 
 /**
  * Tagged template literal that escapes interpolated values by default.
  * Pass `raw(...)` to opt out for a specific interpolation site.
  */
-export function safeHtml(strings, ...values) {
+export const safeHtml = (strings, ...values) => {
     let out = strings[0];
     for (let i = 0; i < values.length; i += 1) {
         const v = values[i];
@@ -51,13 +51,13 @@ export function safeHtml(strings, ...values) {
         out += strings[i + 1];
     }
     return out;
-}
+};
 
 /**
  * Single chokepoint for setting innerHTML. Future: route through DOMPurify
  * for an additional sanitization layer.
  */
-export function setSafeHtml(element, htmlString) {
+export const setSafeHtml = (element, htmlString) => {
     if (!element) return;
     element.innerHTML = htmlString;
-}
+};

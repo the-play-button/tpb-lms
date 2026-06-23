@@ -187,7 +187,7 @@ export const getCourse = async (request, env, userContext, courseId) => {
     }
     
     const completedSteps = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length;
-    const currentStep = enrichedClasses.filter(({ step_completed } = {}) => step_completed).length;
+    const currentStepIndex = completedSteps;
 
     return jsonResponse({
         id: course.id,
@@ -198,8 +198,8 @@ export const getCourse = async (request, env, userContext, courseId) => {
         progress: {
             total_steps: enrichedClasses.length,
             completed_steps: completedSteps,
-            current_step: currentStep,
-            can_access_step: Math.min(currentStep + 1, enrichedClasses.length)
+            current_step: currentStepIndex,
+            can_access_step: Math.min(currentStepIndex + 1, enrichedClasses.length)
         }
     }, 200, request);
 };

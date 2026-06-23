@@ -103,14 +103,3 @@ const handleSingleClick = async () => {
     }
 }
 
-/**
- * Remove the FAB (for cleanup)
- */
-export const destroyDebugFab = () => {
-    if (fabElement) {
-        fabElement.removeEventListener('click', handleFabClick);
-        fabElement.remove();
-        fabElement = null;
-    }
-};
-

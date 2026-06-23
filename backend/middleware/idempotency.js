@@ -90,12 +90,3 @@ export const cacheIdempotencyResponse = async (request, response) => {
     return newResponse;
 };
 
-/**
- * Generate idempotency key for an event
- * (Helper for client-side reference)
- * Format: {eventType}-{courseId}-{classId}-{timestamp_seconds}
- */
-export const generateIdempotencyKey = (eventType, courseId, classId) => {
-    return `${eventType}-${courseId}-${classId}-${Math.floor(Date.now() / 1000)}`;
-};
-

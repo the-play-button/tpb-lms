@@ -13,7 +13,7 @@ Usage:
     python scripts/migrate-users-to-vault.py
 
 This is a one-time migration script. After migration, vault-api
-becomes the SSOT for IAM and hris_employee is deprecated for roles.
+becomes the SSOT for IAM and hris_employee is no longer used for roles.
 """
 
 import json

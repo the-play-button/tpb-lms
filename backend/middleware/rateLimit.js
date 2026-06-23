@@ -99,23 +99,3 @@ export const checkRateLimit = request => {
     return null; // Continue processing
 };
 
-/**
- * Add rate limit headers to response
- */
-export const addRateLimitHeaders = (response, request) => {
-    const { pathname } = new URL(request.url);
-    const { method } = request;
-    const ip = request.headers.get('CF-Connecting-IP') ||
-               request.headers.get('X-Forwarded-For')?.split(',')[0] ||
-               'unknown';
-
-    const limit = getLimit(method, pathname);
-    const recentCount = (requestCounts.get(`${ip}:${method}:${pathname}`) || []).filter(t => t > Date.now() - (limit.window * 1000)).length;
-    
-    const newResponse = new Response(response.body, response);
-    newResponse.headers.set('X-RateLimit-Limit', String(limit.requests));
-    newResponse.headers.set('X-RateLimit-Remaining', String(Math.max(0, limit.requests - recentCount)));
-    
-    return newResponse;
-};
-

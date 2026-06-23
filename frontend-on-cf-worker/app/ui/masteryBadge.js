@@ -57,15 +57,6 @@ export const getMasteryLevel = progressPercent => {
 };
 
 /**
- * Get badge info for a specific level
- * @param {string} level - Mastery level
- * @returns {object} Badge configuration
- */
-export const getBadgeInfo = level => {
-  return BADGES[level] || BADGES.none;
-};
-
-/**
  * Inject mastery badge styles into the document
  * Call this once when loading the page
  */
@@ -139,30 +130,5 @@ export const injectMasteryStyles = () => {
   `;
   
   document.head.appendChild(style);
-};
-
-/**
- * Render mastery progress bar with badge
- * @param {number} progressPercent - Progress percentage
- * @param {object} options - Optional configuration
- * @returns {string} HTML string for progress bar with badge
- */
-export const renderMasteryProgress = (progressPercent, options = {}) => {
-  const level = getMasteryLevel(progressPercent);
-  const badge = renderMasteryBadge(level, { size: 'small' });
-  
-  return `
-    <div class="mastery-progress-container">
-      <div class="mastery-progress-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
-        <span style="font-size: 0.875rem; opacity: 0.8;">${Math.round(progressPercent)}%</span>
-        ${badge}
-      </div>
-      <div class="mastery-progress-bar">
-        <div class="mastery-progress-fill" 
-             data-mastery="${level}"
-             style="width: ${progressPercent}%"></div>
-      </div>
-    </div>
-  `;
 };
 

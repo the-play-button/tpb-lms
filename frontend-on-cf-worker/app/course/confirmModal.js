@@ -128,56 +128,6 @@ export const showContentStepConfirmation = options => {
     });
 };
 
-/**
- * Show quiz warning confirmation
- * Confirmation before starting a quiz (one attempt only)
- * @param {Object} options - Options
- * @param {string} options.quizName - Quiz name
- * @param {Function} options.onConfirm - Callback on confirm
- * @param {Function} options.onCancel - Callback on cancel
- */
-export const showQuizWarningConfirmation = options => {
-    const { quizName = 'ce quiz', onConfirm, onCancel } = options;
-    
-    return showConfirmModal({
-        title: 'Commencer le quiz ?',
-        message: `
-            <strong>⚠️ Une seule tentative</strong><br><br>
-            Vous n'avez qu'<strong>une seule tentative</strong> pour "${quizName}".<br><br>
-            Assurez-vous d'être prêt avant de commencer.
-        `,
-        confirmText: 'Commencer le quiz',
-        cancelText: 'Pas encore',
-        type: 'danger',
-        onConfirm,
-        onCancel
-    });
-};
-
-/**
- * Show abandon course confirmation
- * @param {Object} options - Options
- * @param {string} options.courseName - Course name
- * @param {Function} options.onConfirm - Callback on confirm
- * @param {Function} options.onCancel - Callback on cancel
- */
-export const showAbandonConfirmation = options => {
-    const { courseName = 'ce cours', onConfirm, onCancel } = options;
-    
-    return showConfirmModal({
-        title: 'Abandonner le cours ?',
-        message: `
-            Êtes-vous sûr de vouloir abandonner "${courseName}" ?<br><br>
-            Votre progression sera conservée et vous pourrez vous réinscrire plus tard.
-        `,
-        confirmText: 'Abandonner',
-        cancelText: 'Continuer le cours',
-        type: 'danger',
-        onConfirm,
-        onCancel
-    });
-};
-
 const modalStyles = `
 .confirm-modal {
     position: fixed;

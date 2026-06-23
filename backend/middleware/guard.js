@@ -26,29 +26,3 @@ export const requireRole = (...allowedRoles) => {
   };
 };
 
-/**
- * Check if user has any of the required roles
- * Alias for requireRole for clarity
- */
-export const requireAnyRole = requireRole;
-
-/**
- * Check if user has ALL of the required roles (admin only for now)
- * @param {...string} requiredRoles
- */
-export const requireAllRoles = (...requiredRoles) => {
-  return (userContext) => {
-    const { user: { role = 'student' } = {} } = userContext ?? {};
-    
-    if (role !== 'admin' && requiredRoles.length > 0) {
-      return { 
-        error: 'Forbidden - insufficient permissions',
-        requiredRoles,
-        actualRole: role
-      };
-    }
-    
-    return null; // OK
-  };
-};
-

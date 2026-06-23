@@ -14,7 +14,8 @@
 
 import { createBastionClient } from '@the-play-button/tpb-sdk-js';
 
-const BASTION_URL = process.env.BASTION_URL || 'https://tpb-bastion-backend.matthieu-marielouise.workers.dev';
+const DEFAULT_BASTION_URL = 'https://tpb-bastion-backend.matthieu-marielouise.workers.dev';
+const BASTION_URL = process.env.BASTION_URL || DEFAULT_BASTION_URL;
 
 const LMS_ROLES = [
   {

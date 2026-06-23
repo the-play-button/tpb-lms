@@ -126,14 +126,6 @@ export const t = (key, params = {}) => {
     return value;
 };
 
-/**
- * Check if a translation key exists
- */
-export const hasTranslation = key => {
-    const langData = translations[currentLang] || translations[DEFAULT_LANGUAGE];
-    return getNestedValue(langData, key) !== undefined;
-};
-
 initLanguage();
 
 if (typeof window !== 'undefined') {

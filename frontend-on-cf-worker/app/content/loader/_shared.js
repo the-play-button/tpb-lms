@@ -195,33 +195,6 @@ export const fetchCloudContentDirect = async (contentRefId, lang) => {
 };
 
 /**
- * Fetch cloud content with i18n fallback.
- * Order: current lang -> en -> source
- */
-export const fetchCloudContentWithI18nFallback = async contentRefId => {
-    const currentLang = window.i18n?.getLanguage?.() || 'fr';
-
-    try {
-        const content = await fetchCloudContentDirect(contentRefId, currentLang);
-        return { content, lang: currentLang };
-    } catch (e) {
-        log.debug(`[content] cloud ${currentLang} not found, trying fallback...`);
-    }
-
-    if (currentLang !== 'en') {
-        try {
-            const content = await fetchCloudContentDirect(contentRefId, 'en');
-            return { content, lang: 'en' };
-        } catch (e) {
-            log.debug(`[content] cloud en not found, trying source...`);
-        }
-    }
-
-    const content = await fetchCloudContentDirect(contentRefId);
-    return { content, lang: 'source' };
-};
-
-/**
  * Resolve a relative path against a base URL
  */
 export const resolvePath = (baseDir, path) => {

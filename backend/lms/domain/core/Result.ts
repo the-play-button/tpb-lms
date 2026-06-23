@@ -25,13 +25,3 @@ export const succeed = <S>(value: S): Success<S> => {
   return { ok: true, value };
 };
 
-/**
- * Unwrap a Result, throwing if it's a Failure.
- * Use sparingly — prefer pattern matching with ok/error.
- */
-export const unwrap = <F, S>(result: Result<F, S>): S => {
-  if (!result.ok) {
-    throw new Error(`Unwrap called on Failure: ${JSON.stringify(result.error)}`);
-  }
-  return result.value;
-};

@@ -1,11 +1,16 @@
 /**
  * Translation Engine
- * 
+ *
  * AI-powered translation with glossary support.
  * Uses Claude API for translation with pre/post-processing for business terms.
+ *
+ * NOTE per CLAUDE.md § JAMAIS DE CLÉ D'API ANTHROPIC : direct anthropic API
+ * usage here is a doctrine violation to be retired in a dedicated initiative.
  */
 
 import { getGlossaryMap } from '../handlers/glossary/index.js';
+
+const ANTHROPIC_MESSAGES_ENDPOINT = 'https://api.anthropic.com/v1/messages';
 
 /**
  * Detect language of text using simple heuristics
@@ -77,7 +82,7 @@ const callTranslationAPI = async (text, sourceLang, targetLang, apiKey) => {
     const sourceLanguage = langNames[sourceLang] || sourceLang;
     const targetLanguage = langNames[targetLang] || targetLang;
     
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(ANTHROPIC_MESSAGES_ENDPOINT, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

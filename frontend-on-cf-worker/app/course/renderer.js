@@ -13,6 +13,8 @@ import { getState } from '../state.js';
 import { setupVideoTracking, getResumePosition } from '../video/tracking/index.js';
 import { fetchMarkdown, getDocumentUrl, isCloudRef, fetchCloudContent } from '../content/loader/index.js';
 import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
+
+const CLOUDFLARE_STREAM_IFRAME_BASE = 'https://iframe.cloudflarestream.com';
 import { showContentStepConfirmation } from './confirmModal.js';
 
 const getMediaByType = (cls, type, extraCheck = null) => {
@@ -127,7 +129,7 @@ const renderVideoSection = ctx => {
         return `
             ${speedControl}
             <div class="video-container">
-                <iframe src="https://iframe.cloudflarestream.com/${videoId}?${streamParams.toString()}"
+                <iframe src="${CLOUDFLARE_STREAM_IFRAME_BASE}/${videoId}?${streamParams.toString()}"
                     style="border: none; width: 100%; aspect-ratio: 16/9; border-radius: 8px;"
                     allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
                     allowfullscreen="true" id="video-player-${stepIndex}"

@@ -42,7 +42,7 @@ export const initDebugCollector = () => {
     // 3. Patch console.error
     const originalConsoleError = console.error;
     console.error = function(...args) {
-        const message = args.map(a => {
+        const messageText = args.map(a => {
             if (typeof a === 'object') {
                 try { return JSON.stringify(a); }
                 catch { return String(a); }
@@ -50,9 +50,9 @@ export const initDebugCollector = () => {
             return String(a);
         }).join(' ');
 
-        if (!message.includes('[Debug]')) {
+        if (!messageText.includes('[Debug]')) {
             storeError({
-                message: message,
+                message: messageText,
                 type: 'console.error'
             });
         }

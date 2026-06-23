@@ -61,10 +61,3 @@ export class ServiceUnavailableError extends Error {
   }
 }
 
-export type AppError =
-  | NotFoundError
-  | ValidationError
-  | ForbiddenError
-  | UnauthorizedError
-  | ConflictError
-  | ServiceUnavailableError;
