@@ -5,6 +5,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import { listForReview } from '../../services/translations/TranslationsService.js';
 
 export const getTranslationsForReview = async (request, env, ctx) => {
     const url = new URL(request.url);
@@ -12,18 +13,8 @@ export const getTranslationsForReview = async (request, env, ctx) => {
     const limit = parseInt(url.searchParams.get('limit') || '50', 10);
 
     try {
-        const result = await env.DB.prepare(`
-            SELECT id, content_type, content_id, field, lang, value, source, created_at
-            FROM translations
-            WHERE source = ? AND reviewed_at IS NULL
-            ORDER BY created_at DESC
-            LIMIT ?
-        `).bind(source, limit).all();
-
-        return jsonResponse({
-            translations: result.results,
-            total: result.results.length
-        });
+        const translations = await listForReview(env, source, limit);
+        return jsonResponse({ translations, total: translations.length });
     } catch (error) {
         log.error('translations for review fetch failed', error, { file: 'handlers/translations/getTranslationsForReview.js' });
         return errorResponse('Failed to fetch translations', 500);

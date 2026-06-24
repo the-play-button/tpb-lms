@@ -4,37 +4,13 @@
  */
 
 import { jsonResponse, getUserId } from './_shared.js';
+import { completeUserCourse } from '../../services/enrollment/EnrollmentService.js';
 
 export const completeCourse = async (request, env, userContext, courseId) => {
     const userId = getUserId(userContext);
+    if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
-    if (!userId) {
-        return jsonResponse({ error: 'User not authenticated' }, 401, request);
-    }
-
-    const enrollment = await env.DB.prepare(
-        `SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ?`
-    ).bind(userId, courseId).first();
-
-    if (!enrollment) {
-        return jsonResponse({ error: 'No enrollment found for this course' }, 404, request);
-    }
-
-    if (enrollment.status === 'completed') {
-        return jsonResponse({ message: 'Course already completed' }, 200, request);
-    }
-
-    await env.DB.prepare(`
-        UPDATE lms_enrollment
-        SET status = 'completed',
-            completed_at = datetime('now'),
-            updated_at = datetime('now')
-        WHERE id = ?
-    `).bind(enrollment.id).run();
-
-    return jsonResponse({
-        message: 'Course completed',
-        enrollment_id: enrollment.id,
-        course_id: courseId,
-    }, 200, request);
+    const result = await completeUserCourse(env, userId, courseId);
+    const out = result.error ?? result.value;
+    return jsonResponse(out.body, out.status, request);
 };

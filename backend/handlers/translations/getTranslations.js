@@ -5,6 +5,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import { listByContent } from '../../services/translations/TranslationsService.js';
 
 export const getTranslations = async (request, env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
@@ -16,29 +17,11 @@ export const getTranslations = async (request, env, ctx) => {
     }
 
     try {
-        const result = await env.DB.prepare(`
-            SELECT field, lang, value, source, reviewed_at, reviewed_by, updated_at
-            FROM translations
-            WHERE content_type = ? AND content_id = ?
-            ORDER BY lang, field
-        `).bind(contentType, contentId).all();
-
-        const byLang = {};
-        for (const row of result.results) {
-            if (!byLang[row.lang]) byLang[row.lang] = {};
-            byLang[row.lang][row.field] = {
-                value: row.value,
-                source: row.source,
-                reviewed_at: row.reviewed_at,
-                reviewed_by: row.reviewed_by,
-                updated_at: row.updated_at
-            };
-        }
-
+        const translations = await listByContent(env, contentType, contentId);
         return jsonResponse({
             content_type: contentType,
             content_id: contentId,
-            translations: byLang
+            translations,
         });
     } catch (error) {
         log.error('translations fetch failed', error, { file: 'handlers/translations/getTranslations.js' });

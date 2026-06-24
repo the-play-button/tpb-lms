@@ -6,6 +6,7 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import { upsertOne } from '../../services/translations/TranslationsService.js';
 
 export const upsertTranslation = async (request, env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
@@ -25,22 +26,14 @@ export const upsertTranslation = async (request, env, ctx) => {
     }
 
     const { field, value, source = 'manual' } = body;
-
     if (!field || value === undefined) {
         return errorResponse('Missing field or value', 400);
     }
 
     const userId = ctx.user?.id || 'system';
-    const id = `${contentType}:${contentId}:${field}:${lang}`;
 
     try {
-        await env.DB.prepare(`
-            INSERT INTO translations (id, content_type, content_id, field, lang, value, source, reviewed_at, reviewed_by, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), ?, datetime('now'))
-            ON CONFLICT(content_type, content_id, field, lang)
-            DO UPDATE SET value = ?, source = ?, reviewed_at = datetime('now'), reviewed_by = ?, updated_at = datetime('now')
-        `).bind(id, contentType, contentId, field, lang, value, source, userId, value, source, userId).run();
-
+        const id = await upsertOne(env, { contentType, contentId, field, lang, value, source, userId });
         return jsonResponse({
             success: true,
             id,
@@ -49,10 +42,10 @@ export const upsertTranslation = async (request, env, ctx) => {
             field,
             lang,
             value,
-            source
+            source,
         });
     } catch (error) {
         log.error('translation upsert failed', error, { file: 'handlers/translations/upsertTranslation.js' });
-        return errorResponse('Failed to save translation', 500);
+        return errorResponse('Failed to upsert translation', 500);
     }
 };

@@ -3,40 +3,14 @@
  * Abandon a course enrollment
  */
 
-import { jsonResponse, MAX_ACTIVE_ENROLLMENTS, getUserId } from './_shared.js';
+import { jsonResponse, getUserId } from './_shared.js';
+import { abandonUserCourse } from '../../services/enrollment/EnrollmentService.js';
 
 export const abandonCourse = async (request, env, userContext, courseId) => {
     const userId = getUserId(userContext);
+    if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
-    if (!userId) {
-        return jsonResponse({ error: 'User not authenticated' }, 401, request);
-    }
-
-    const enrollment = await env.DB.prepare(
-        `SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ? AND status = 'active'`
-    ).bind(userId, courseId).first();
-
-    if (!enrollment) {
-        return jsonResponse({ error: 'No active enrollment found for this course' }, 404, request);
-    }
-
-    await env.DB.prepare(`
-        UPDATE lms_enrollment
-        SET status = 'abandoned',
-            abandoned_at = datetime('now'),
-            updated_at = datetime('now')
-        WHERE id = ?
-    `).bind(enrollment.id).run();
-
-    const activeCount = await env.DB.prepare(
-        `SELECT COUNT(*) as count FROM lms_enrollment WHERE user_id = ? AND status = 'active'`
-    ).bind(userId).first();
-
-    return jsonResponse({
-        message: 'Course abandoned',
-        enrollment_id: enrollment.id,
-        course_id: courseId,
-        active_enrollments: activeCount.count,
-        max_active: MAX_ACTIVE_ENROLLMENTS,
-    }, 200, request);
+    const result = await abandonUserCourse(env, userId, courseId);
+    const out = result.error ?? result.value;
+    return jsonResponse(out.body, out.status, request);
 };

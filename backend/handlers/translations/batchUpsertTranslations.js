@@ -5,7 +5,7 @@
  */
 
 import { jsonResponse, errorResponse } from '../../cors.js';
-import { log } from '@the-play-button/tpb-sdk-js';
+import { bulkUpsert } from '../../services/translations/TranslationsService.js';
 
 export const batchUpsertTranslations = async (request, env, ctx) => {
     let body;
@@ -21,35 +21,10 @@ export const batchUpsertTranslations = async (request, env, ctx) => {
     }
 
     const userId = ctx.user?.id || 'system';
-    let successCount = 0;
-    let errorCount = 0;
-
-    for (const t of translations) {
-        const { content_type, content_id, field, lang, value, source = 'ai' } = t;
-        if (!content_type || !content_id || !field || !lang || value === undefined) {
-            errorCount++;
-            continue;
-        }
-
-        const id = `${content_type}:${content_id}:${field}:${lang}`;
-
-        try {
-            await env.DB.prepare(`
-                INSERT INTO translations (id, content_type, content_id, field, lang, value, source, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
-                ON CONFLICT(content_type, content_id, field, lang)
-                DO UPDATE SET value = ?, source = ?, updated_at = datetime('now')
-            `).bind(id, content_type, content_id, field, lang, value, source, value, source).run();
-            successCount++;
-        } catch (error) {
-            log.error('translation upsert failed', error, { file: 'handlers/translations/batchUpsertTranslations.js', translationId: id });
-            errorCount++;
-        }
-    }
-
+    const { successCount, errorCount } = await bulkUpsert(env, translations, userId);
     return jsonResponse({
         success: true,
         inserted: successCount,
-        errors: errorCount
+        errors: errorCount,
     });
 };

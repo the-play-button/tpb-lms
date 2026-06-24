@@ -5,44 +5,25 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import { listTerms } from '../../services/glossary/GlossaryService.js';
+import { extractOrgIdFromUrl } from './_glossaryShared.js';
 
 export const getGlossary = async (request, env, ctx) => {
+    const orgId = extractOrgIdFromUrl(request);
+    if (!orgId) return errorResponse('Missing org_id', 400);
+
     const url = new URL(request.url);
-    const pathParts = url.pathname.split('/');
-    const orgId = pathParts[2];
-
-    if (!orgId) {
-        return errorResponse('Missing org_id', 400);
-    }
-
-    const sourceLang = url.searchParams.get('source_lang');
-    const targetLang = url.searchParams.get('target_lang');
-
-    let query = `
-        SELECT id, source_lang, target_lang, source_term, target_term, context, created_at
-        FROM glossary
-        WHERE org_id = ?
-    `;
-    const params = [orgId];
-
-    if (sourceLang) {
-        query += ' AND source_lang = ?';
-        params.push(sourceLang);
-    }
-    if (targetLang) {
-        query += ' AND target_lang = ?';
-        params.push(targetLang);
-    }
-
-    query += ' ORDER BY source_term';
+    const filters = {
+        sourceLang: url.searchParams.get('source_lang'),
+        targetLang: url.searchParams.get('target_lang'),
+    };
 
     try {
-        const result = await env.DB.prepare(query).bind(...params).all();
-
+        const result = await listTerms(env, orgId, filters);
         return jsonResponse({
             org_id: orgId,
             terms: result.results,
-            total: result.results.length
+            total: result.results.length,
         });
     } catch (error) {
         log.error('glossary fetch failed', error, { file: 'handlers/glossary/getGlossary.js' });

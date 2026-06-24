@@ -6,7 +6,8 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
-import { extractOrgIdFromUrl, isValidTermPayload, upsertGlossaryTerm } from './_glossaryShared.js';
+import { upsertTerm } from '../../services/glossary/GlossaryService.js';
+import { extractOrgIdFromUrl, isValidTermPayload } from './_glossaryShared.js';
 
 export const addGlossaryTerm = async (request, env, ctx) => {
     const orgId = extractOrgIdFromUrl(request);
@@ -24,7 +25,7 @@ export const addGlossaryTerm = async (request, env, ctx) => {
     }
 
     try {
-        const id = await upsertGlossaryTerm(env.DB, orgId, body);
+        const id = await upsertTerm(env, orgId, body);
         const { source_lang, target_lang, source_term, target_term, context } = body;
         return jsonResponse({
             success: true,
