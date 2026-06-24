@@ -1,259 +1,113 @@
 /**
  * Content Handler
  *
- * Proxies content from private GitHub repositories using API token.
- * Enables frontend to fetch markdown from private repos without exposing tokens.
+ * Proxies content from private GitHub repositories using a vault-managed PAT.
+ * Delegates to GithubContentService for all I/O. The handler keeps only HTTP-level
+ * parsing + response formatting.
  */
 
 import { jsonResponse, getCorsHeaders } from '../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import {
+    parseGitHubUrl,
+    injectI18nIntoPath,
+    fetchRawContent,
+    fetchDirectoryListing,
+} from '../services/content/GithubContentService.js';
 
-const GITHUB_API_BASE = 'https://api.github.com';
+const resolveGitHubParams = (url) => {
+    const urlParam = url.searchParams.get('url');
+    if (urlParam) {
+        const parsed = parseGitHubUrl(decodeURIComponent(urlParam));
+        if (!parsed) return { error: 'Invalid GitHub URL format' };
+        return { params: parsed };
+    }
+    const owner = url.searchParams.get('owner');
+    const repo = url.searchParams.get('repo');
+    const branch = url.searchParams.get('branch') || 'main';
+    const path = url.searchParams.get('path');
+    return { params: { owner, repo, branch, path } };
+};
 
-let cachedToken = null;
-let tokenExpiry = 0;
-
-const getGitHubTokenWithDebug = async env => {
-    const debug = {
-        cached: false,
-        hasBastionUrl: !!env.BASTION_URL,
-        hasVaultToken: !!env.BASTION_TOKEN,
-        vaultTokenPrefix: env.BASTION_TOKEN ? env.BASTION_TOKEN.substring(0, 12) : null,
-        vaultStatus: null,
-        vaultError: null
+const buildAuthErrorResponse = (request, response, errorBody, token, vaultDebug) => {
+    const baseDebug = {
+        gitHubStatus: response.status,
+        gitHubError: errorBody,
+        hasToken: !!token,
+        tokenPrefix: token ? token.substring(0, 8) : null,
+        vault: vaultDebug,
     };
-
-    if (cachedToken && Date.now() < tokenExpiry) {
-        debug.cached = true;
-        return { token: cachedToken, debug };
+    if (response.status === 404) {
+        return jsonResponse({
+            error: 'File not found',
+            _debug: { apiUrl: response.url, ...baseDebug },
+        }, 404, request);
     }
-
-    if (!env.BASTION_URL || !env.BASTION_TOKEN) {
-        throw new Error('BASTION_URL and BASTION_TOKEN are required to fetch GitHub PAT from vault');
-    }
-
-    const secretPath = '/secret/data/tpb/infra/github_pat_tpb_repos';
-    const headers = {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${env.BASTION_TOKEN}`,
-    };
-
-    const response = await fetch(`${env.BASTION_URL}${secretPath}`, { headers });
-    debug.vaultStatus = response.status;
-
-    if (!response.ok) {
-        const body = await response.text();
-        throw new Error(`Vault fetch failed (${response.status}): ${body}`);
-    }
-
-    const result = await response.json();
-    // Bastion /secret/data/{path} returns { success, path, value, metadata } — value is
-    // top-level, not nested in `data` (that was an older Vault HCP shape).
-    const token = result.value ?? result.data?.value ?? null;
-    if (!token) {
-        throw new Error('Vault response missing value for tpb/infra/github_pat_tpb_repos');
-    }
-
-    cachedToken = token;
-    tokenExpiry = Date.now() + 5 * 60 * 1000;
-    return { token, debug };
-};
-
-const getGitHubToken = async env => {
-    const result = await getGitHubTokenWithDebug(env);
-    return result.token;
-};
-
-const injectI18nIntoPath = (path, lang) => {
-    if (!lang) return path;
-    
-    if (path.includes('/STEPS/')) {
-        return path.replace('/STEPS/', `/i18n/${lang}/STEPS/`);
-    }
-    
-    const match = path.match(/^(.+\/SOM_[^/]+\/)(.+)$/);
-    if (match) {
-        return `${match[1]}i18n/${lang}/${match[2]}`;
-    }
-    
-    return path;
-};
-
-const parseGitHubUrl = url => {
-    const rawMatch = url.match(/raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+)/);
-    if (rawMatch) {
-        return {
-            owner: rawMatch[1],
-            repo: rawMatch[2],
-            branch: rawMatch[3],
-            path: rawMatch[4]
-        };
-    }
-    
-    const blobMatch = url.match(/github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/);
-    if (blobMatch) {
-        return {
-            owner: blobMatch[1],
-            repo: blobMatch[2],
-            branch: blobMatch[3],
-            path: blobMatch[4]
-        };
-    }
-    
-    const simpleMatch = url.match(/^([^/]+)\/([^/]+)\/(.+)$/);
-    if (simpleMatch) {
-        return {
-            owner: simpleMatch[1],
-            repo: simpleMatch[2],
-            branch: 'main',
-            path: simpleMatch[3]
-        };
-    }
-    
-    return null;
+    return jsonResponse({
+        error: 'GitHub authentication failed',
+        hint: 'Check GITHUB_TOKEN configuration',
+        _debug: baseDebug,
+    }, 403, request);
 };
 
 /**
  * GET /api/content/github
- * Fetch content from a GitHub repository
- * 
- * Query params:
- * - url: Full GitHub raw URL or owner/repo/path format
- * - owner, repo, branch, path: Alternative to url
- * - lang: Optional language code to inject i18n path (e.g., ?lang=en)
  */
 export const getGitHubContent = async (request, env, userContext) => {
     const url = new URL(request.url);
-    
-    let owner, repo, branch, path;
-    
-    const urlParam = url.searchParams.get('url');
     const langParam = url.searchParams.get('lang');
-    // #region agent log H3
-    log.debug('[DEBUG H3] urlParam:', urlParam, 'lang:', langParam);
-    // #endregion
-    if (urlParam) {
-        const parsed = parseGitHubUrl(decodeURIComponent(urlParam));
-        // #region agent log H3
-        log.debug('[DEBUG H3] parsed:', JSON.stringify(parsed));
-        // #endregion
-        if (!parsed) {
-            return jsonResponse({ error: 'Invalid GitHub URL format' }, 400, request);
-        }
-        ({ owner, repo, branch, path } = parsed);
-    } else {
-        owner = url.searchParams.get('owner');
-        repo = url.searchParams.get('repo');
-        branch = url.searchParams.get('branch') || 'main';
-        path = url.searchParams.get('path');
-    }
-    
-    if (!owner || !repo || !path) {
-        return jsonResponse({ 
+    const resolved = resolveGitHubParams(url);
+    if (resolved.error) return jsonResponse({ error: resolved.error }, 400, request);
+    const params = { ...resolved.params };
+    if (!params.owner || !params.repo || !params.path) {
+        return jsonResponse({
             error: 'Missing required parameters',
             required: 'url OR (owner, repo, path)',
-            optional: 'branch (defaults to main), lang (for i18n)'
+            optional: 'branch (defaults to main), lang (for i18n)',
         }, 400, request);
     }
-    
-    if (langParam) {
-        path = injectI18nIntoPath(path, langParam);
-        log.debug('[DEBUG] i18n path:', path);
-    }
-    
-    const tokenResult = await getGitHubTokenWithDebug(env);
-    const token = tokenResult.token;
-    // #region agent log H1
-    log.debug('[DEBUG H1] token fetched:', token ? `yes (${token.substring(0,8)}...)` : 'NO TOKEN');
-    // #endregion
-    
-    const apiUrl = `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
-    // #region agent log H3
-    log.debug('[DEBUG H3] apiUrl:', apiUrl);
-    // #endregion
-    
+    if (langParam) params.path = injectI18nIntoPath(params.path, langParam);
+
     try {
-        const headers = {
-            'Accept': 'application/vnd.github.v3.raw',  // Get raw content directly
-            'User-Agent': 'TPB-LMS/1.0'
-        };
-        
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
-        
-        const response = await fetch(apiUrl, { headers });
-        // #region agent log H2 H4
-        log.debug('[DEBUG H2/H4] GitHub response:', response.status, response.statusText);
-        // #endregion
-        
+        const { response, tokenResult } = await fetchRawContent(env, params);
         if (!response.ok) {
-            // #region agent log H2 H4
             const errorBody = await response.text();
-            log.debug('[DEBUG H2/H4] GitHub error body:', errorBody);
-            // #endregion
-            if (response.status === 404) {
-                return jsonResponse({ 
-                    error: 'File not found',
-                    path: `${owner}/${repo}/${branch}/${path}`,
-                    // #region agent debug
-                    _debug: {
-                        apiUrl: apiUrl,
-                        hasToken: !!token,
-                        tokenPrefix: token ? token.substring(0,8) : null,
-                        gitHubError: errorBody,
-                        vault: tokenResult.debug
-                    }
-                    // #endregion
-                }, 404, request);
+            if (response.status === 404 || response.status === 401 || response.status === 403) {
+                return buildAuthErrorResponse(request, response, errorBody, tokenResult.token, tokenResult.debug);
             }
-            if (response.status === 401 || response.status === 403) {
-                return jsonResponse({ 
-                    error: 'GitHub authentication failed',
-                    hint: 'Check GITHUB_TOKEN configuration',
-                    // #region agent debug - expose full context for debugging
-                    _debug: {
-                        gitHubStatus: response.status,
-                        gitHubError: errorBody,
-                        hasToken: !!token,
-                        tokenPrefix: token ? token.substring(0,8) : null,
-                        vault: tokenResult.debug
-                    }
-                    // #endregion
-                }, 403, request);
-            }
-            return jsonResponse({ 
+            return jsonResponse({
                 error: `GitHub API error: ${response.status}`,
-                message: await response.text()
+                message: errorBody,
             }, response.status, request);
         }
-        
         const content = await response.text();
-        
         return new Response(content, {
             status: 200,
             headers: {
                 ...getCorsHeaders(request),
                 'Content-Type': 'text/markdown; charset=utf-8',
-                'Cache-Control': 'public, max-age=300',  // 5 min cache
-                'X-GitHub-Repo': `${owner}/${repo}`,
-                'X-GitHub-Branch': branch,
-                'X-GitHub-Path': path
-            }
+                'Cache-Control': 'public, max-age=300',
+                'X-GitHub-Repo': `${params.owner}/${params.repo}`,
+                'X-GitHub-Branch': params.branch,
+                'X-GitHub-Path': params.path,
+            },
         });
-        
     } catch (error) {
         log.error('GitHub content fetch error:', error);
-        return jsonResponse({ 
-            error: 'Failed to fetch content',
-            message: error.message
-        }, 500, request);
+        return jsonResponse({ error: 'Failed to fetch content', message: error.message }, 500, request);
     }
 };
 
+const projectDirectoryItem = (item) => ({
+    name: item.name,
+    path: item.path,
+    type: item.type,
+    size: item.size,
+    download_url: item.download_url,
+});
+
 /**
  * GET /api/content/github/tree
- * List files in a GitHub directory
  */
 export const listGitHubDirectory = async (request, env, userContext) => {
     const url = new URL(request.url);
@@ -261,51 +115,21 @@ export const listGitHubDirectory = async (request, env, userContext) => {
     const repo = url.searchParams.get('repo');
     const branch = url.searchParams.get('branch') || 'main';
     const path = url.searchParams.get('path') || '';
-    
-    if (!owner || !repo) {
-        return jsonResponse({ error: 'Missing owner or repo' }, 400, request);
-    }
-    
-    const token = await getGitHubToken(env);
-    
-    const apiUrl = `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
-    
+    if (!owner || !repo) return jsonResponse({ error: 'Missing owner or repo' }, 400, request);
+
     try {
-        const headers = {
-            'Accept': 'application/vnd.github.v3+json',
-            'User-Agent': 'TPB-LMS/1.0'
-        };
-        
-        if (token) {
-            headers['Authorization'] = `Bearer ${token}`;
-        }
-        
-        const response = await fetch(apiUrl, { headers });
-        
+        const response = await fetchDirectoryListing(env, { owner, repo, branch, path });
         if (!response.ok) {
-            return jsonResponse({ 
-                error: `GitHub API error: ${response.status}` 
-            }, response.status, request);
+            return jsonResponse({ error: `GitHub API error: ${response.status}` }, response.status, request);
         }
-        
         const items = await response.json();
-        
-        const files = items.map(({ name, path, type, size, download_url } = {}) => ({
-            name: name,
-            path: path,
-            type: type,  // 'file' or 'dir'
-            size: size,
-            download_url: download_url
-        }));
-        
-        return jsonResponse({ 
-            owner, 
-            repo, 
-            branch, 
+        return jsonResponse({
+            owner,
+            repo,
+            branch,
             path: path || '/',
-            files 
+            files: items.map(projectDirectoryItem),
         }, 200, request);
-        
     } catch (error) {
         return jsonResponse({ error: error.message }, 500, request);
     }
