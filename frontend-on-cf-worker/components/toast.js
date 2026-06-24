@@ -9,6 +9,8 @@
  *   showToast('Quiz débloqué !', 'success');
  */
 
+import { setSafeHtml, safeHtml } from '../app/ui/safe-dom.js';
+
 const TOAST_EXIT_ANIMATION_MS = 300; // CSS toast slide-out animation duration
 const MAX_VISIBLE_TOASTS = 2;
 const toastQueue = [];
@@ -56,10 +58,10 @@ export const showToast = (message, type = 'info', duration = 3000) => {
         error: '❌'
     };
 
-    toast.innerHTML = `
+    setSafeHtml(toast, safeHtml`
         <span class="toast-icon">${icons[type] || icons.info}</span>
         <span class="toast-message">${message}</span>
-    `;
+    `);
 
     root.appendChild(toast);
 

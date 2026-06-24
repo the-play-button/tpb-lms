@@ -9,13 +9,14 @@ import { updateBadgesGrid, initBadges } from './badges.js';
 import { renderCourseList, initCourseList } from './courseList.js';
 import { initUserMenu } from './userMenu.js';
 import { renderLangSelector, initLangSelector } from './langSelector.js';
+import { setSafeHtml } from './safe-dom.js';
 
 const initLangSelectorInHeader = () => {
     const userMenu = document.getElementById('userMenu');
     if (!userMenu) return;
 
     const langContainer = document.createElement('div');
-    langContainer.innerHTML = renderLangSelector();
+    setSafeHtml(langContainer, renderLangSelector());
     userMenu.parentElement.insertBefore(langContainer.firstElementChild, userMenu);
 
     initLangSelector();

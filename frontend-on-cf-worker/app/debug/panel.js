@@ -10,8 +10,8 @@
 import { getState } from '../state.js';
 import { apiPost, api } from '../api.js';
 import { loadCourse } from '../course/loader.js';
-
-const showToast = (...args) => window.showToast?.(...args);
+import { setSafeHtml , safeHtml} from '../ui/safe-dom.js';
+import { showToast } from '../../components/toast.js';
 
 let panelElement = null;
 let isOpen = false;
@@ -20,7 +20,7 @@ const createPanel = () => {
     const panel = document.createElement('div');
     panel.id = 'debug-panel';
     panel.className = 'debug-panel';
-    panel.innerHTML = `
+    setSafeHtml(panel, safeHtml`
         <div class="debug-panel__backdrop"></div>
         <div class="debug-panel__content">
             <div class="debug-panel__header">
@@ -56,7 +56,7 @@ const createPanel = () => {
                 </section>
             </div>
         </div>
-    `;
+    `);
     return panel;
 };
 
@@ -68,7 +68,7 @@ const updatePanelState = () => {
     const infoEl = panelElement.querySelector('#debug-current-course');
     
     if (infoEl) {
-        infoEl.innerHTML = `Cours actuel: <strong>${courseData?.title || currentCourse || '—'}</strong>`;
+        setSafeHtml(infoEl, safeHtml`Cours actuel: <strong>${courseData?.title || currentCourse || '—'}</strong>`);
     }
 };
 

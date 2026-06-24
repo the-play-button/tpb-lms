@@ -7,6 +7,7 @@ import { getState } from '../state.js';
 import { loadCourse } from '../course/loader.js';
 import { iconMap } from './badges.js';
 import { showBadgeModal } from '../notifications.js';
+import { setSafeHtml, safeHtml } from './safe-dom.js';
 
 /**
  * Populate mobile course list from state
@@ -18,7 +19,7 @@ const populateMobileCourseList = () => {
     const courses = getState('courses') || [];
     const currentCourse = getState('currentCourse');
 
-    container.innerHTML = courses.map(course => {
+    setSafeHtml(container, courses.map(course => {
         const isCompleted = course.progress?.course_completed;
         const stepsCompleted = course.progress?.steps_completed || 0;
         const isCurrentCourse = course.id === currentCourse;
@@ -33,23 +34,26 @@ const populateMobileCourseList = () => {
             statusText = 'Non commencé';
         }
 
-        return `
+        return safeHtml`
             <div class="course-item ${isCurrentCourse ? 'active' : ''}"
                  data-course-id="${course.id}">
                 <div class="course-name">${course.title || course.name}</div>
                 <div class="course-progress">${statusText}</div>
             </div>
         `;
-    }).join('');
+    }).join(''));
 
-    container.querySelectorAll('.course-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const courseId = item.dataset.courseId;
-            loadCourse(courseId);
-            history.pushState({}, '', `?som=${courseId}`);
-            switchToContentTab();
-        });
-    });
+    // Event delegation : single listener on container handles every row click.
+    // Replaces per-row addEventListener inside forEach (= entropy
+    // `event_listeners` anti-pattern + duplicate-listener risk on re-populate).
+    container.onclick = (event) => {
+        const item = event.target.closest('.course-item');
+        if (!item || !container.contains(item)) return;
+        const courseId = item.dataset.courseId;
+        loadCourse(courseId);
+        history.pushState({}, '', `?som=${courseId}`);
+        switchToContentTab();
+    };
 };
 
 /**
@@ -64,17 +68,17 @@ const populateMobileBadgesGrid = () => {
     const earnedBadges = getState('badges') || [];
     const earnedIds = new Set(earnedBadges.map(({ badge_id, id } = {}) => badge_id || id));
 
-    container.innerHTML = allBadges.map((badge, index) => {
+    setSafeHtml(container, allBadges.map((badge, index) => {
         const isEarned = earnedIds.has(badge.id);
         const icon = iconMap[badge.id] || '🏆';
-        return `
+        return safeHtml`
             <div class="badge-item ${isEarned ? 'earned' : 'locked'}"
                  data-badge-index="${index}">
                 <span class="badge-icon">${icon}</span>
                 <span class="badge-name">${badge.name}</span>
             </div>
         `;
-    }).join('');
+    }).join(''));
 
     const hintEl = document.querySelector('.mobile-badges-view .badge-hint');
     if (!hintEl) {
@@ -84,14 +88,15 @@ const populateMobileBadgesGrid = () => {
         container.parentElement?.appendChild(hint);
     }
 
-    container.querySelectorAll('.badge-item').forEach(item => {
-        item.addEventListener('click', () => {
-            const badge = allBadges[parseInt(item.dataset.badgeIndex, 10)];
-            if (badge) {
-                showBadgeModal(badge, { isEarned: earnedIds.has(badge.id) });
-            }
-        });
-    });
+    // Event delegation : single listener on container handles every badge tap.
+    container.onclick = (event) => {
+        const item = event.target.closest('.badge-item');
+        if (!item || !container.contains(item)) return;
+        const badge = allBadges[parseInt(item.dataset.badgeIndex, 10)];
+        if (badge) {
+            showBadgeModal(badge, { isEarned: earnedIds.has(badge.id) });
+        }
+    };
 };
 
 /**

@@ -9,12 +9,10 @@ import { copyDebugInfoToClipboard } from './collector/index.js';
 import { togglePanel } from './panel.js';
 import { log } from '../log.js';
 import { safeHtml, setSafeHtml } from '../ui/safe-dom.js';
+import { showToast } from '../../components/toast.js';
 
 const DOUBLE_CLICK_WINDOW_MS = 250;    // Window to detect double-click vs single-click
 const FAB_STATE_RESET_DELAY_MS = 1500; // CSS success/error state animation duration
-
-// showToast is exposed globally by components/toast.js
-const showToast = (...args) => window.showToast?.(...args);
 
 let fabElement = null;
 let clickCount = 0;

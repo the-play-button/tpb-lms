@@ -6,6 +6,7 @@
  * Render a KMS page in a modal
  * @param {Object} page - Page data from API
  */
+import { setSafeHtml, safeHtml, raw } from '../../ui/safe-dom.js';
 export const renderKmsModal = page => {
     const existingModal = document.getElementById('kms-modal');
     if (existingModal) {
@@ -15,7 +16,7 @@ export const renderKmsModal = page => {
     const modal = document.createElement('div');
     modal.id = 'kms-modal';
     modal.className = 'kms-modal';
-    modal.innerHTML = `
+    setSafeHtml(modal, safeHtml`
         <div class="kms-modal-backdrop" data-testid="kms-modal-backdrop" onclick="window.closeKmsModal()"></div>
         <div class="kms-modal-content">
             <div class="kms-modal-header">
@@ -27,14 +28,14 @@ export const renderKmsModal = page => {
                 <button class="kms-close-btn" data-testid="kms-modal-close" onclick="window.closeKmsModal()" title="Fermer">\u2715</button>
             </div>
             <div class="kms-modal-body markdown-body">
-                ${marked.parse(page.content_md || '*Aucun contenu disponible*')}
+                ${raw(marked.parse(page.content_md || '*Aucun contenu disponible*'))}
             </div>
             <div class="kms-modal-footer">
                 <span class="kms-meta">Type: ${page.type || 'MARKDOWN'}</span>
-                ${page.updated_at ? `<span class="kms-meta">Mis \u00E0 jour: ${new Date(page.updated_at).toLocaleDateString('fr-FR')}</span>` : ''}
+                ${page.updated_at ? raw(safeHtml`<span class="kms-meta">Mis \u00E0 jour: ${new Date(page.updated_at).toLocaleDateString('fr-FR')}</span>`) : ''}
             </div>
         </div>
-    `;
+    `);
 
     document.body.appendChild(modal);
 

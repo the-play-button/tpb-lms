@@ -11,6 +11,7 @@ import { refreshSignals } from '../course/loader.js';
 import { renderCurrentStep } from '../course/renderer.js';
 import { loadLeaderboard } from '../leaderboard.js';
 import { refreshUserData } from '../notifications.js';
+import { setSafeHtml , safeHtml} from '../ui/safe-dom.js';
 
 const TALLY_EMBED_BASE_URL = 'https://tally.so/embed';
 
@@ -77,7 +78,7 @@ En cliquant OK, vous acceptez :
         const container = document.getElementById(`quiz-container-${classId}`);
         if (container) {
             container.style.display = 'block';
-            container.innerHTML = `
+            setSafeHtml(container, safeHtml`
                 <iframe
                     src="${TALLY_EMBED_BASE_URL}/${tallyFormId}?alignLeft=1&hideTitle=1&dynamicHeight=1"
                     width="100%"
@@ -85,7 +86,7 @@ En cliquant OK, vous acceptez :
                     frameborder="0"
                     style="border-radius: 8px; background: #ffffff;">
                 </iframe>
-            `;
+            `);
             const startBtn = container.previousElementSibling;
             if (startBtn?.classList.contains('quiz-start-btn')) {
                 startBtn.style.display = 'none';
@@ -161,7 +162,7 @@ export const handleTallySubmission = async tallyEvent => {
 const showCorrectionsModal = (wrongAnswers, score, maxScore) => {
     const modal = document.createElement('div');
     modal.className = 'quiz-modal-overlay';
-    modal.innerHTML = `
+    setSafeHtml(modal, safeHtml`
         <div class="quiz-modal quiz-success">
             <div class="quiz-modal-header">
                 <span class="quiz-modal-icon">✅</span>
@@ -185,7 +186,7 @@ const showCorrectionsModal = (wrongAnswers, score, maxScore) => {
                 Continuer
             </button>
         </div>
-    `;
+    `);
     document.body.appendChild(modal);
 }
 
@@ -196,7 +197,7 @@ const showCorrectionsModal = (wrongAnswers, score, maxScore) => {
 const showFailureModal = (score, maxScore, percentage) => {
     const modal = document.createElement('div');
     modal.className = 'quiz-modal-overlay';
-    modal.innerHTML = `
+    setSafeHtml(modal, safeHtml`
         <div class="quiz-modal quiz-failure">
             <div class="quiz-modal-header">
                 <span class="quiz-modal-icon">❌</span>
@@ -213,7 +214,7 @@ const showFailureModal = (score, maxScore, percentage) => {
                 Compris
             </button>
         </div>
-    `;
+    `);
     document.body.appendChild(modal);
 }
 
@@ -228,20 +229,20 @@ const showQuizPendingState = () => {
     
     const quizContainer = quizSection.querySelector('.quiz-container');
     if (quizContainer && quizContainer.style.display !== 'none') {
-        quizContainer.innerHTML = `
+        setSafeHtml(quizContainer, safeHtml`
             <div class="quiz-pending-message">
                 <div class="spinner"></div>
                 <p>Validation en cours...</p>
                 <p class="pending-subtext">Veuillez patienter pendant que nous enregistrons votre résultat.</p>
             </div>
-        `;
+        `);
     }
     
     const requirementsEl = document.querySelector('.step-requirements ul');
     if (requirementsEl) {
         const quizLi = requirementsEl.querySelector('li:last-child');
         if (quizLi && quizLi.textContent.includes('quiz')) {
-            quizLi.innerHTML = `⏳ Validation du quiz en cours...`;
+            setSafeHtml(quizLi, safeHtml`⏳ Validation du quiz en cours...`);
             quizLi.className = 'pending validating';
         }
     }

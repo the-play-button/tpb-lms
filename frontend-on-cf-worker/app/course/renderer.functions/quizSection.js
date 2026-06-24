@@ -3,6 +3,8 @@
  * trigger button.
  */
 
+import { escapeHtml, safeHtml, raw } from '../../ui/safe-dom.js';
+
 export const renderQuizSection = ctx => {
     const { cls, quizMedia, videoCompleted, quizPassed } = ctx;
 
@@ -10,13 +12,17 @@ export const renderQuizSection = ctx => {
 
     const quizName = quizMedia.name || 'Quiz de validation';
 
+    // SSOT-escaped JSON payload for the `onclick` JS argument. JSON.stringify
+    // produces a valid JS literal (object → `{...}`, string → `"..."`,
+    // number → `123`). `escapeHtml` then quotes-encode the result so the
+    // browser decodes back to the original JS expression at parse time.
     const formIds = quizMedia.tally_form_ids || quizMedia.tally_form_id;
-    const formIdsJson = typeof formIds === 'object'
-        ? JSON.stringify(formIds).replace(/"/g, '&quot;')
-        : `&quot;${formIds}&quot;`;
+    const formIdsJson = escapeHtml(JSON.stringify(formIds));
+    const quizNameJsEscaped = quizName.replace(/'/g, "\\'");
+    const onclickHandler = `window.showQuiz('${cls.id}', ${formIdsJson}, '${quizNameJsEscaped}')`;
 
     if (quizPassed) {
-        return `
+        return safeHtml`
             <div class="step-quiz quiz-passed">
                 <div class="quiz-header">
                     <h3>🎯 ${quizName}</h3>
@@ -27,7 +33,7 @@ export const renderQuizSection = ctx => {
     }
 
     if (!videoCompleted) {
-        return `
+        return safeHtml`
             <div class="step-quiz quiz-locked">
                 <div class="quiz-header">
                     <h3>🎯 ${quizName}</h3>
@@ -38,7 +44,7 @@ export const renderQuizSection = ctx => {
         `;
     }
 
-    return `
+    return safeHtml`
         <div class="step-quiz quiz-ready">
             <div class="quiz-header">
                 <h3>🎯 ${quizName}</h3>
@@ -51,7 +57,7 @@ export const renderQuizSection = ctx => {
                     <p>Vous n'aurez qu'<strong>une seule tentative</strong> pour ce quiz.</p>
                 </div>
             </div>
-            <button class="quiz-start-btn" data-testid="quiz-start-btn" onclick="window.showQuiz('${cls.id}', ${formIdsJson}, '${quizName.replace(/'/g, "\\'")}')">
+            <button class="quiz-start-btn" data-testid="quiz-start-btn" onclick="${raw(onclickHandler)}">
                 Commencer le quiz
             </button>
             <div id="quiz-container-${cls.id}" class="quiz-container" style="display: none;"></div>

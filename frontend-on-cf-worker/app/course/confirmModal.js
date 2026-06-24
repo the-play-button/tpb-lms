@@ -16,6 +16,7 @@
  * @param {Function} options.onConfirm - Callback on confirm
  * @param {Function} options.onCancel - Callback on cancel
  */
+import { setSafeHtml, safeHtml } from '../ui/safe-dom.js';
 export const showConfirmModal = options => {
     const {
         title = 'Confirmer',
@@ -38,7 +39,7 @@ export const showConfirmModal = options => {
     const modal = document.createElement('div');
     modal.id = 'confirmModal';
     modal.className = `confirm-modal ${type}`;
-    modal.innerHTML = `
+    setSafeHtml(modal, safeHtml`
         <div class="modal-overlay" data-action="cancel"></div>
         <div class="modal-content">
             <div class="modal-header">
@@ -53,7 +54,7 @@ export const showConfirmModal = options => {
                 <button class="btn-primary modal-confirm" data-testid="confirm-modal-confirm" data-action="confirm">${confirmText}</button>
             </div>
         </div>
-    `;
+    `);
     
     document.body.appendChild(modal);
     
@@ -115,8 +116,8 @@ export const showContentStepConfirmation = options => {
     
     return showConfirmModal({
         title: 'Passer à l\'étape suivante ?',
-        message: `
-            <strong>Attention :</strong> Une fois que vous passez à l'étape suivante, 
+        message: safeHtml`
+            <strong>Attention :</strong> Une fois que vous passez à l'étape suivante,
             vous ne pourrez plus revenir à "${stepName}".<br><br>
             Assurez-vous d'avoir bien lu et compris le contenu avant de continuer.
         `,

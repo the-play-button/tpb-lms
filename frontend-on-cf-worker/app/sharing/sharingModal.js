@@ -7,6 +7,7 @@
 
 import { api, apiPost, apiDelete } from '../api.js';
 import { log } from '../log.js';
+import { setSafeHtml , safeHtml} from '../ui/safe-dom.js';
 
 /**
  * Show sharing modal for a content reference
@@ -20,7 +21,7 @@ export const showSharingModal = (contentRefId, contentName) => {
     const modal = document.createElement('div');
     modal.id = 'sharing-modal';
     modal.className = 'modal-overlay';
-    modal.innerHTML = `
+    setSafeHtml(modal, safeHtml`
         <div class="modal-content sharing-modal">
             <div class="modal-header">
                 <h3>Partager "${contentName}"</h3>
@@ -49,7 +50,7 @@ export const showSharingModal = (contentRefId, contentName) => {
                 </div>
             </div>
         </div>
-    `;
+    `);
 
     document.body.appendChild(modal);
 
@@ -102,11 +103,11 @@ const loadPermissions = async (contentRefId) => {
         const permissions = data.permissions || [];
 
         if (permissions.length === 0) {
-            container.innerHTML = '<p class="no-permissions">Aucun partage actif.</p>';
+            setSafeHtml(container, '<p class="no-permissions">Aucun partage actif.</p>');
             return;
         }
 
-        container.innerHTML = permissions.map(({ id, shared_with, role } = {}) => `
+        setSafeHtml(container, permissions.map(({ id, shared_with, role } = {}) => `
             <div class="permission-item" data-share-id="${id}">
                 <div class="permission-info">
                     <span class="permission-email">${shared_with}</span>
@@ -116,24 +117,24 @@ const loadPermissions = async (contentRefId) => {
                     Révoquer
                 </button>
             </div>
-        `).join('');
+        `).join(''));
 
-        container.querySelectorAll('[data-action="revoke"]').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const refId = e.target.dataset.ref;
-                const shareId = e.target.dataset.share;
-                if (!confirm('Révoquer cet accès ?')) return;
-
-                try {
-                    await apiDelete(`/content/${refId}/share/${shareId}`);
-                    loadPermissions(refId);
-                } catch (error) {
-                    log.error('Revoke failed:', error);
-                    alert('Impossible de révoquer cet accès — veuillez réessayer.'); // explicit user feedback
-                }
-            });
-        });
+        // Event delegation : single listener on container handles every revoke.
+        container.onclick = async (event) => {
+            const btn = event.target.closest('[data-action="revoke"]');
+            if (!btn || !container.contains(btn)) return;
+            const refId = btn.dataset.ref;
+            const shareId = btn.dataset.share;
+            if (!confirm('Révoquer cet accès ?')) return;
+            try {
+                await apiDelete(`/content/${refId}/share/${shareId}`);
+                loadPermissions(refId);
+            } catch (error) {
+                log.error('Revoke failed:', error);
+                alert('Impossible de révoquer cet accès — veuillez réessayer.'); // explicit user feedback
+            }
+        };
     } catch (error) {
-        container.innerHTML = '<p class="error">Erreur lors du chargement des permissions.</p>';
+        setSafeHtml(container, '<p class="error">Erreur lors du chargement des permissions.</p>');
     }
 }

@@ -5,16 +5,17 @@
 import { fetchMarkdown, isCloudRef, fetchCloudContent } from '../../content/loader/index.js';
 import { stripFrontmatter, cleanMarkdownForLms } from '../../content/loader/_shared.js';
 import { getDocumentMedia } from './_mediaHelpers.js';
+import { setSafeHtml, safeHtml, raw } from '../../ui/safe-dom.js';
 
 export const renderDocumentSection = cls => {
     const documentMedia = getDocumentMedia(cls);
     if (!documentMedia) {
         return cls.description
-            ? `<p class="step-description">${cls.description}</p>`
+            ? safeHtml`<p class="step-description">${cls.description}</p>`
             : '';
     }
 
-    return `
+    return safeHtml`
         <div id="document-content-${cls.id}" class="document-content loading">
             <div class="loading-spinner"></div>
             <p>Chargement du contenu...</p>
@@ -29,7 +30,7 @@ export const renderVideoContent = (ctx, videoHtml) => {
         return videoHtml + '<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">' + documentHtml;
     }
 
-    return videoHtml || documentHtml || '<p>Aucun contenu disponible pour cette étape.</p>';
+    return videoHtml || documentHtml || safeHtml`<p>Aucun contenu disponible pour cette étape.</p>`;
 };
 
 export const loadDocumentContent = async cls => {
@@ -43,8 +44,8 @@ export const loadDocumentContent = async cls => {
         let markdown;
 
         if (isCloudRef(documentMedia)) {
-            const raw = await fetchCloudContent(documentMedia.content_ref_id);
-            markdown = stripFrontmatter(raw);
+            const rawMd = await fetchCloudContent(documentMedia.content_ref_id);
+            markdown = stripFrontmatter(rawMd);
             markdown = cleanMarkdownForLms(markdown);
         } else {
             markdown = await fetchMarkdown(documentMedia.url);
@@ -53,16 +54,16 @@ export const loadDocumentContent = async cls => {
         const html = marked.parse(markdown);
 
         container.classList.remove('loading');
-        container.innerHTML = `<div class="markdown-body">${html}</div>`;
+        setSafeHtml(container, safeHtml`<div class="markdown-body">${raw(html)}</div>`);
     } catch (error) {
         console.error('Failed to load document content', { error });
         container.classList.remove('loading');
         container.classList.add('error');
-        container.innerHTML = `
+        setSafeHtml(container, safeHtml`
             <div class="error-message">
                 <p>Erreur lors du chargement du contenu.</p>
                 <button data-testid="content-reload-btn" onclick="window.location.reload()">Réessayer</button>
             </div>
-        `;
+        `);
     }
 };

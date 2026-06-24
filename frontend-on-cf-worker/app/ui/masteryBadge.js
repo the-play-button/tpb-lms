@@ -9,6 +9,8 @@
  * - Master: 100%
  */
 
+import { safeHtml, raw } from './safe-dom.js';
+
 const BADGES = {
   none:   { icon: '⚪', label: 'Non commencé', color: '#666' },
   bronze: { icon: '🥉', label: 'Bronze (25%)', color: '#cd7f32' },
@@ -32,13 +34,13 @@ export const renderMasteryBadge = (level, options = {}) => {
   
   const sizeClass = `mastery-badge-${size}`;
   
-  return `
-    <span class="mastery-badge ${sizeClass}" 
-          style="color: ${badge.color}" 
+  return safeHtml`
+    <span class="mastery-badge ${sizeClass}"
+          style="color: ${badge.color}"
           title="${badge.label}"
           data-mastery-level="${level}">
       <span class="mastery-icon">${badge.icon}</span>
-      ${showLabel ? `<span class="mastery-label">${badge.label}</span>` : ''}
+      ${showLabel ? raw(safeHtml`<span class="mastery-label">${badge.label}</span>`) : ''}
     </span>
   `;
 };

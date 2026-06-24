@@ -5,6 +5,7 @@
  */
 
 import { getState } from '../state.js';
+import { setSafeHtml, safeHtml, raw } from '../ui/safe-dom.js';
 
 /**
  * Render module end screen
@@ -20,7 +21,7 @@ export const renderModuleEndScreen = () => {
     
     let badgesHtml = '';
     if (badgesEarned.length > 0) {
-        badgesHtml = badgesEarned.map(({ name, points_reward } = {}) => `
+        badgesHtml = badgesEarned.map(({ name, points_reward } = {}) => safeHtml`
             <div class="badge-earned">
                 <span class="badge-icon">🎖️</span>
                 <span class="badge-name">${name}</span>
@@ -33,7 +34,7 @@ export const renderModuleEndScreen = () => {
     const badgePoints = badgesEarned.reduce((sum, b) => sum + (b.points_reward || 0), 0);
     const totalPoints = basePoints + badgePoints;
     
-    viewer.innerHTML = `
+    setSafeHtml(viewer, safeHtml`
         <div class="module-end-screen">
             <div class="module-success">
                 <div class="success-icon">🎉</div>
@@ -41,13 +42,13 @@ export const renderModuleEndScreen = () => {
                 <p>Vous avez terminé le module "${course.title}".</p>
                 <div class="rewards">
                     <p>🏆 +${totalPoints} pts gagnés</p>
-                    ${badgesHtml || '<p class="no-new-badge">Continuez pour débloquer plus de badges !</p>'}
+                    ${raw(badgesHtml) || raw('<p class="no-new-badge">Continuez pour débloquer plus de badges !</p>')}
                 </div>
                 <button class="btn-primary" data-testid="end-screen-home-btn" onclick="window.location.href='/'">
                     Retour à l'accueil
                 </button>
             </div>
         </div>
-    `;
+    `);
 };
 

@@ -18,6 +18,7 @@ import { renderVideoSection } from './renderer.functions/videoSection.js';
 import { renderVideoContent, loadDocumentContent } from './renderer.functions/documentSection.js';
 import { renderQuizSection } from './renderer.functions/quizSection.js';
 import { renderRequirements } from './renderer.functions/requirements.js';
+import { setSafeHtml, setSafeOuterHtml , safeHtml} from '../ui/safe-dom.js';
 
 /**
  * Render current step (main orchestrator)
@@ -39,7 +40,7 @@ export const renderCurrentStep = () => {
 
     const videoHtml = renderVideoSection(ctx);
 
-    viewer.innerHTML = `
+    setSafeHtml(viewer, safeHtml`
         <div class="step-viewer">
             <div class="step-header">
                 <div class="step-progress">
@@ -67,7 +68,7 @@ export const renderCurrentStep = () => {
 
             ${renderRequirements(ctx)}
         </div>
-    `;
+    `);
 
     const resumePosition = getResumePosition(cls.id);
     setupVideoTracking(stepIndex, resumePosition);
@@ -91,14 +92,14 @@ export const updateUIWithoutVideoReset = () => {
     const videoLi = document.querySelector('.step-requirements ul li:first-child');
     if (videoLi) {
         videoLi.className = videoCompleted ? 'done' : 'pending';
-        videoLi.innerHTML = `${videoCompleted ? '✅' : '⏳'} Regarder la vidéo à 90%+`;
+        setSafeHtml(videoLi, safeHtml`${videoCompleted ? '✅' : '⏳'} Regarder la vidéo à 90%+`);
     }
 
     // 2. Unlock quiz if video just completed
     if (quizMedia && videoCompleted && !quizPassed) {
         const quizSection = document.querySelector('.step-quiz.quiz-locked');
         if (quizSection) {
-            quizSection.outerHTML = renderQuizSection(ctx);
+            setSafeOuterHtml(quizSection, renderQuizSection(ctx));
         }
     }
 

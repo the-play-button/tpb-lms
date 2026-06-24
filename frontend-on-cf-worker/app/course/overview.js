@@ -11,6 +11,7 @@ import { log } from '../log.js';
 import { fetchMarkdown, fetchCloudContent } from '../content/loader/index.js';
 import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
 import { loadCourse } from './loader.js';
+import { setSafeHtml, safeHtml, raw } from '../ui/safe-dom.js';
 
 /**
  * Render course overview screen
@@ -21,17 +22,17 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
     const viewer = document.getElementById('somViewer');
     if (!viewer) return;
     
-    viewer.innerHTML = `
+    setSafeHtml(viewer, safeHtml`
         <div class="course-overview loading">
             <div class="loading-spinner"></div>
             <p>Chargement du cours...</p>
         </div>
-    `;
+    `);
     
     try {
-        const raw = course.raw ? JSON.parse(course.raw) : {};
-        const introUrl = raw.tpb_intro_url;
-        const introRefId = raw.tpb_intro_ref_id;
+        const courseRaw = course.raw ? JSON.parse(course.raw) : {};
+        const introUrl = courseRaw.tpb_intro_url;
+        const introRefId = courseRaw.tpb_intro_ref_id;
 
         let introContent = '';
         if (introRefId) {
@@ -40,7 +41,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                 introContent = marked.parse(cleanMarkdownForLms(stripFrontmatter(rawMd)));
             } catch (error) {
                 log.warn('Failed to fetch cloud intro:', error);
-                introContent = `<p>${course.description || 'Aucune description disponible.'}</p>`;
+                introContent = safeHtml`<p>${course.description || 'Aucune description disponible.'}</p>`;
             }
         } else if (introUrl) {
             try {
@@ -48,68 +49,63 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                 introContent = marked.parse(markdown);
             } catch (error) {
                 log.warn('Failed to fetch intro:', error);
-                introContent = `<p>${course.description || 'Aucune description disponible.'}</p>`;
+                introContent = safeHtml`<p>${course.description || 'Aucune description disponible.'}</p>`;
             }
         } else {
-            introContent = `<p>${course.description || 'Aucune description disponible.'}</p>`;
+            introContent = safeHtml`<p>${course.description || 'Aucune description disponible.'}</p>`;
         }
         
         const isEnrolled = enrollmentStatus?.enrolled && enrollmentStatus.enrollment?.status === 'active';
         const canEnroll = enrollmentStatus?.can_enroll ?? true;
         
-        viewer.innerHTML = `
+        const categoriesHtml = course.categories?.length
+            ? safeHtml`<div class="course-categories">${raw(course.categories.map((cat) => safeHtml`<span class="category-tag">${cat}</span>`).join(''))}</div>`
+            : '';
+        const progressHtml = course.progress
+            ? safeHtml`<div class="meta-item"><span class="meta-icon">📊</span><span class="meta-text">${course.progress.completed_steps}/${course.progress.total_steps} complétées</span></div>`
+            : '';
+        const enrollmentWarningHtml = !canEnroll && !isEnrolled
+            ? safeHtml`<div class="enrollment-limit-warning"><span class="warning-icon">⚠️</span><p>Vous avez atteint la limite de ${enrollmentStatus?.max_active || 3} cours actifs. Terminez ou abandonnez un cours pour en commencer un nouveau.</p></div>`
+            : '';
+
+        setSafeHtml(viewer, safeHtml`
             <div class="course-overview">
                 <header class="overview-header">
                     <h1 class="course-title">${course.title || course.name}</h1>
-                    ${course.categories?.length ? `
-                        <div class="course-categories">
-                            ${course.categories.map(cat => `<span class="category-tag">${cat}</span>`).join('')}
-                        </div>
-                    ` : ''}
+                    ${raw(categoriesHtml)}
                 </header>
-                
+
                 <div class="overview-content markdown-body">
-                    ${introContent}
+                    ${raw(introContent)}
                 </div>
-                
+
                 <div class="course-meta">
                     <div class="meta-item">
                         <span class="meta-icon">📚</span>
                         <span class="meta-text">${course.classes?.length || 0} étapes</span>
                     </div>
-                    ${course.progress ? `
-                        <div class="meta-item">
-                            <span class="meta-icon">📊</span>
-                            <span class="meta-text">${course.progress.completed_steps}/${course.progress.total_steps} complétées</span>
-                        </div>
-                    ` : ''}
+                    ${raw(progressHtml)}
                 </div>
-                
+
                 <div class="overview-actions">
-                    ${renderEnrollmentButton(course, isEnrolled, canEnroll, enrollmentStatus)}
+                    ${raw(renderEnrollmentButton(course, isEnrolled, canEnroll, enrollmentStatus))}
                 </div>
-                
-                ${!canEnroll && !isEnrolled ? `
-                    <div class="enrollment-limit-warning">
-                        <span class="warning-icon">⚠️</span>
-                        <p>Vous avez atteint la limite de ${enrollmentStatus?.max_active || 3} cours actifs. 
-                        Terminez ou abandonnez un cours pour en commencer un nouveau.</p>
-                    </div>
-                ` : ''}
+
+                ${raw(enrollmentWarningHtml)}
             </div>
-        `;
+        `);
         
         setupOverviewHandlers(course.id);
         
     } catch (error) {
         log.error('Failed to render overview:', error);
-        viewer.innerHTML = `
+        setSafeHtml(viewer, safeHtml`
             <div class="course-overview error">
                 <h2>Erreur</h2>
                 <p>Impossible de charger le cours: ${error.message}</p>
                 <button class="btn-primary" data-testid="overview-reload-btn" onclick="window.location.reload()">Réessayer</button>
             </div>
-        `;
+        `);
     }
 };
 
@@ -119,30 +115,31 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
 const renderEnrollmentButton = (course, isEnrolled, canEnroll, enrollmentStatus) => {
     if (isEnrolled) {
         const { enrollment: { progress_percent = 0 } = {} } = enrollmentStatus ?? {};
-        return `
+        const label = progress_percent > 0 ? `Continuer (${progress_percent}%)` : 'Commencer le cours';
+        return safeHtml`
             <button class="btn-primary btn-start" data-testid="course-continue-btn" data-action="continue" data-course="${course.id}">
-                ${progress_percent > 0 ? `Continuer (${progress_percent}%)` : 'Commencer le cours'} →
+                ${label} →
             </button>
             <button class="btn-secondary btn-abandon" data-testid="course-abandon-btn" data-action="abandon" data-course="${course.id}">
                 Abandonner le cours
             </button>
         `;
     }
-    
+
     if (canEnroll) {
-        return `
+        return safeHtml`
             <button class="btn-primary btn-enroll" data-testid="course-enroll-btn" data-action="enroll" data-course="${course.id}">
                 S'inscrire au cours
             </button>
         `;
     }
-    
-    return `
+
+    return safeHtml`
         <button class="btn-disabled" data-testid="course-limit-btn" disabled>
             Limite d'inscriptions atteinte
         </button>
     `;
-}
+};
 
 /**
  * Setup click handlers for overview buttons
@@ -211,12 +208,12 @@ export const showCourseOverview = async courseId => {
         log.error('Failed to show overview:', error);
         const viewer = document.getElementById('somViewer');
         if (viewer) {
-            viewer.innerHTML = `
+            setSafeHtml(viewer, safeHtml`
                 <div class="error">
                     <h2>Erreur</h2>
                     <p>Impossible de charger le cours: ${error.message}</p>
                 </div>
-            `;
+            `);
         }
     }
 };

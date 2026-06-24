@@ -6,6 +6,7 @@
 
 import { api } from '../api.js';
 import { getState } from '../state.js';
+import { setSafeHtml, safeHtml, raw } from '../ui/safe-dom.js';
 
 const loadAdminStats = async () => {
     try {
@@ -23,7 +24,7 @@ export const renderAdminDashboard = async container => {
     const stats = await loadAdminStats();
     
     if (!stats || !stats.success) {
-        container.innerHTML = `
+        setSafeHtml(container, safeHtml`
             <div class="admin-dashboard">
                 <div class="admin-error">
                     <span class="error-icon">🔒</span>
@@ -32,13 +33,13 @@ export const renderAdminDashboard = async container => {
                     <a href="/" class="back-btn" data-testid="admin-back-home-link">← Retour à l'accueil</a>
                 </div>
             </div>
-        `;
+        `);
         return;
     }
     
     const data = stats.stats;
-    
-    container.innerHTML = `
+
+    setSafeHtml(container, safeHtml`
         <div class="admin-dashboard">
             <header class="admin-header">
                 <h1>📊 Dashboard Admin</h1>
@@ -95,27 +96,27 @@ export const renderAdminDashboard = async container => {
                 </div>
             </div>
             
-            ${data.recent_activity ? `
+            ${data.recent_activity ? raw(safeHtml`
             <section class="admin-section">
                 <h2>📋 Activité récente</h2>
                 <div class="activity-list">
-                    ${data.recent_activity.map(({ type, user_email, action, created_at } = {}) => `
+                    ${raw(data.recent_activity.map(({ type, user_email, action, created_at } = {}) => safeHtml`
                         <div class="activity-item">
                             <span class="activity-icon">${getActivityIcon(type)}</span>
                             <span class="activity-user">${user_email || 'Anonyme'}</span>
                             <span class="activity-action">${action || type}</span>
                             <span class="activity-time">${formatRelativeTime(created_at)}</span>
                         </div>
-                    `).join('')}
+                    `).join(''))}
                 </div>
             </section>
-            ` : ''}
+            `) : ''}
             
             <footer class="admin-footer">
                 <a href="/" class="back-btn" data-testid="admin-back-lms-link">← Retour au LMS</a>
             </footer>
         </div>
-    `;
+    `);
 };
 
 /**
@@ -159,14 +160,14 @@ export const initAdminDashboard = async () => {
     const container = document.getElementById('somViewer');
     if (!container) return;
     
-    container.innerHTML = `
+    setSafeHtml(container, safeHtml`
         <div class="admin-dashboard">
             <div class="admin-loading">
                 <div class="spinner"></div>
                 <p>Chargement des statistiques...</p>
             </div>
         </div>
-    `;
+    `);
     
     await renderAdminDashboard(container);
 };

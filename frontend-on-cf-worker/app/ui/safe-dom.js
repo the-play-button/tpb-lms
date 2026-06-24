@@ -61,3 +61,13 @@ export const setSafeHtml = (element, htmlString) => {
     if (!element) return;
     element.innerHTML = htmlString;
 };
+
+/**
+ * Single chokepoint for replacing an entire element with new HTML (outerHTML).
+ * Used by re-render-in-place patterns (= replace `.quiz-locked` block with
+ * unlocked variant) so the surrounding code stays free of raw `outerHTML =`.
+ */
+export const setSafeOuterHtml = (element, htmlString) => {
+    if (!element) return;
+    element.outerHTML = htmlString;
+};

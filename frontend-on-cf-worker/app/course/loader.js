@@ -11,6 +11,7 @@ import { log } from '../log.js';
 import { stopVideoTracking } from '../video/tracking/index.js';
 import { renderCurrentStep } from './renderer.js';
 import { getLanguage } from '../../i18n/index.js';
+import { setSafeHtml } from '../ui/safe-dom.js';
 
 /**
  * Load a course by ID
@@ -68,7 +69,7 @@ export const loadCourse = async (courseId, initialStepIndex = null) => {
         errorDiv.className = 'error';
         errorDiv.textContent = `Erreur: ${error.message}`;
         const viewer = document.getElementById('somViewer');
-        viewer.innerHTML = '';
+        setSafeHtml(viewer, '');
         viewer.appendChild(errorDiv);
     }
 };

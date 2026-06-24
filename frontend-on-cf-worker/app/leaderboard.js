@@ -7,6 +7,7 @@
 import { api } from './api.js';
 import { formatNumber } from './utils.js';
 import { log } from './log.js';
+import { setSafeHtml, safeHtml } from './ui/safe-dom.js';
 
 /**
  * Load leaderboard from API
@@ -29,16 +30,16 @@ const renderLeaderboard = (entries, currentUser) => {
     if (!list) return;
     
     if (entries.length === 0) {
-        list.innerHTML = '<li class="empty">Pas encore de données</li>';
+        setSafeHtml(list, '<li class="empty">Pas encore de données</li>');
         return;
     }
     
-    list.innerHTML = entries.map(({ user_id, rank, total_points } = {}) => `
+    setSafeHtml(list, entries.map(({ user_id, rank, total_points } = {}) => safeHtml`
         <li ${user_id === currentUser?.id ? 'class="current-user"' : ''}>
             <span class="rank">#${rank}</span>
             <span class="leaderboard-name">${entry.user?.email || entry.user?.name || 'Anonyme'}</span>
             <span class="leaderboard-xp">${formatNumber(total_points)} pts</span>
         </li>
-    `).join('');
+    `).join(''));
 }
 

@@ -8,6 +8,7 @@ import { api } from './api.js';
 import { getState, setState } from './state.js';
 import { iconMap } from './ui/badges.js';
 import { log } from './log.js';
+import { setSafeHtml, escapeHtml , safeHtml} from './ui/safe-dom.js';
 
 const BADGE_PARTICLE_COUNT = 12;
 
@@ -114,14 +115,14 @@ export const closeBadgeModal = () => {
 export const showError = message => {
     const viewer = document.getElementById('somViewer');
     if (viewer) {
-        const escaped = String(message).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-        viewer.innerHTML = `
+        const escaped = escapeHtml(message);
+        setSafeHtml(viewer, safeHtml`
             <div class="welcome-screen">
                 <h1>Erreur</h1>
                 <p>${escaped}</p>
                 <p>Veuillez réessayer ou contacter le support.</p>
             </div>
-        `;
+        `);
     }
 };
 
