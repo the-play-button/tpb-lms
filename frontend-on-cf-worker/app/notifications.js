@@ -15,10 +15,18 @@ const createBadgeParticles = container => {
     const particlesDiv = document.createElement('div');
     particlesDiv.className = 'badge-particles';
 
+    // Use a CSPRNG even for the visual jitter — Math.random is flagged by
+    // bearer § insufficiently-random-values, and crypto.getRandomValues is
+    // free here (= 12 particles, one-shot). Buffer holds Uint32 samples
+    // normalised to [0, 1).
+    const randomBuf = new Uint32Array(BADGE_PARTICLE_COUNT);
+    crypto.getRandomValues(randomBuf);
+
     for (let i = 0; i < BADGE_PARTICLE_COUNT; i++) {
         const particle = document.createElement('span');
         const angle = (i / BADGE_PARTICLE_COUNT) * Math.PI * 2;
-        const distance = 80 + Math.random() * 40;
+        const jitter = randomBuf[i] / 0xffffffff;
+        const distance = 80 + jitter * 40;
         particle.style.setProperty('--tx', `${Math.cos(angle) * distance}px`);
         particle.style.setProperty('--ty', `${Math.sin(angle) * distance}px`);
         particle.style.animationDelay = `${i * 0.05}s`;

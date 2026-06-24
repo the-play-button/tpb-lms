@@ -6,11 +6,12 @@
  */
 
 /**
- * Generate unique event ID
+ * Generate unique event ID. CSPRNG `crypto.randomUUID()` for the suffix
+ * (Math.random is predictable per bearer § insufficiently-random-values).
  * Format: evt_{timestamp}_{random}
  */
 export const generateEventId = () => {
-    return `evt_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return `evt_${Date.now()}_${crypto.randomUUID().replace(/-/g, '').slice(0, 9)}`;
 };
 
 /**

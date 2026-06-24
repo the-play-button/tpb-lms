@@ -135,6 +135,25 @@ app.use('/api/*', async (c, next) => {
   await next();
 });
 
+/**
+ * Constant-time string comparison — XOR loop over UTF-8 bytes. Returns
+ * true iff the inputs are byte-equal in length AND content. Per bearer
+ * § observable-timing : short-circuit `===` on secret-equality leaks
+ * length + prefix-match info via observable timing.
+ */
+const timingSafeStrEqual = (a, b) => {
+  if (typeof a !== 'string' || typeof b !== 'string') return false;
+  const encoder = new TextEncoder();
+  const aBytes = encoder.encode(a);
+  const bBytes = encoder.encode(b);
+  if (aBytes.length !== bBytes.length) return false;
+  let diff = 0;
+  for (let i = 0; i < aBytes.length; i += 1) {
+    diff |= aBytes[i] ^ bBytes[i];
+  }
+  return diff === 0;
+};
+
 // --- Tally webhook auth (signature-based, not session-based) ---
 const handleTallyWithAuth = async (request, url, env) => {
   const signingSecret = await getTallySigningSecret(env);
@@ -142,7 +161,7 @@ const handleTallyWithAuth = async (request, url, env) => {
   if (noSignature) {
     const webhookSecret = url.searchParams.get('secret');
     const expectedSecret = await getTallyWebhookSecret(env);
-    if (webhookSecret !== expectedSecret) {
+    if (!timingSafeStrEqual(webhookSecret ?? '', expectedSecret ?? '')) {
       return jsonResponse({ error: 'Invalid webhook: no signature and invalid secret' }, 403, request);
     }
     return await handleTallyWebhookWithBody(body, env, request);

@@ -54,7 +54,9 @@ export const setState = (key, value) => {
             try {
                 callback(value, oldValue);
             } catch (e) {
-                console.error(`State subscriber error for '${key}':`, e);
+                // Constant format string — key passed as structured arg so
+                // an attacker-controlled key can't forge log specifiers.
+                console.error('State subscriber error', { key, error: e });
                 brokenSubscribers.add(callback);
             }
         });

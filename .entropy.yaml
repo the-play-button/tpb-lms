@@ -144,3 +144,15 @@ exceptions:
   multiple_exports:
     - path: ""
       reason: "Plan 2026-06-11 bulk strip — pattern systemic per § ENTROPY cas 3"
+
+  # ── 2026-06-24 Situation 3 carve-out (= file deleted, history retained) ──
+  # File `test_quiz_scoring.js` was deleted in commit a212858 (= dead ad-hoc
+  # test, zero consumers). Gitleaks continues to scan git history per § JAMAIS
+  # DE filter-repo, and re-detects 4 FR-language quiz answer strings + person
+  # names ("Excellence, Confiance, Engagement", "Innovation, Qualité, Service",
+  # "Julien CORNILLON", "Mai KUROKAWA") as generic API keys via Shannon entropy
+  # — these are TRUE false positives, not real secrets. Working tree is clean.
+  # Exception scope = single deleted path. Per CLAUDE.md § ENTROPY 3 SITUATIONS
+  # Situation 3 « checker correct + legitimate file-specific reason ».
+  mega-gitleaks-generic-api-key:
+    - test_quiz_scoring.js

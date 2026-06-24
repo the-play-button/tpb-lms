@@ -14,7 +14,10 @@ export const initSessionData = async (lang) => {
     setState('profile', session.profile);
     setState('badges', session.badges || []);
 
-    log.info('🔐 Session loaded:', session.user.email);
+    // Don't pass full email to the log — emit only opaque marker. The user
+    // identity is already in Sentry context below (= structured user obj),
+    // not in plaintext browser console. Per bearer:javascript-lang-logger.
+    log.info('🔐 Session loaded');
 
     if (window.Sentry) {
         window.Sentry.setUser({
