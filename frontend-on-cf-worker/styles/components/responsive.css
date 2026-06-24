@@ -1,0 +1,76 @@
+/* Responsive - hide text on smaller screens */
+@media (max-width: 900px) {
+    .logout-text {
+        display: none;
+    }
+    
+    .logout-btn {
+        padding: 8px;
+    }
+    
+    .user-email {
+        max-width: 120px;
+    }
+}
+
+/* Mobile - simplified menu */
+@media (max-width: 768px) {
+    .user-info-compact {
+        display: none;
+    }
+    
+    .admin-link {
+        display: none;
+    }
+}
+
+/* ========================================
+   Module End Screen - Badge Earned
+   ======================================== */
+.badge-earned {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    background: linear-gradient(135deg, rgba(251, 191, 36, 0.15), rgba(245, 158, 11, 0.1));
+    border: 1px solid rgba(251, 191, 36, 0.3);
+    border-radius: var(--radius-md);
+    padding: 12px var(--space-md);
+    margin: var(--space-sm) 0;
+    animation: badgeSlideIn var(--duration-normal) ease-out;
+}
+
+@keyframes badgeSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.badge-earned .badge-icon {
+    font-size: 1.5rem;
+}
+
+.badge-earned .badge-name {
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.badge-earned .badge-points {
+    background: rgba(251, 191, 36, 0.2);
+    color: var(--color-amber-600);
+    padding: 2px var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.no-new-badge {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+

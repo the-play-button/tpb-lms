@@ -1,0 +1,212 @@
+/* Quiz Success Modal */
+.quiz-modal.quiz-success {
+    border-left: 4px solid var(--success);
+}
+
+.quiz-modal.quiz-success h3 {
+    color: var(--success);
+}
+
+/* Quiz Failure Modal */
+.quiz-modal.quiz-failure {
+    border-left: 4px solid var(--error);
+}
+
+.quiz-modal.quiz-failure h3 {
+    color: var(--error);
+}
+
+.failure-score {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-md);
+}
+
+.failure-message {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-sm);
+}
+
+.failure-instruction {
+    color: var(--warning);
+    padding: var(--space-md);
+    background: rgba(234, 179, 8, 0.1);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-lg);
+}
+
+/* Corrections List */
+.corrections-list {
+    list-style: none;
+    padding: 0;
+    margin: var(--space-lg) 0;
+}
+
+.correction-item {
+    background: var(--bg-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+    border: 1px solid var(--border);
+}
+
+.correction-question {
+    font-weight: 600;
+    margin-bottom: var(--space-sm);
+    color: var(--text-primary);
+}
+
+.correction-wrong,
+.correction-correct {
+    font-size: 0.9rem;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    margin-top: var(--space-xs);
+}
+
+.correction-wrong {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error);
+}
+
+.correction-wrong .label {
+    opacity: 0.7;
+}
+
+.correction-correct {
+    background: rgba(34, 197, 94, 0.1);
+    color: var(--success);
+}
+
+.correction-correct .label {
+    opacity: 0.7;
+}
+
+/* Quiz Modal Button */
+.quiz-modal-btn {
+    width: 100%;
+    padding: var(--space-md) var(--space-xl);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.quiz-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.quiz-failure .quiz-modal-btn {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.quiz-failure .quiz-modal-btn:hover {
+    background: var(--bg-secondary);
+    box-shadow: none;
+}
+
+/* =============================================
+   User Menu Component (Email, Role, Logout)
+   ============================================= */
+
+.user-menu {
+    display: flex;
+    align-items: center;
+}
+
+.user-menu-content {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.user-info-compact {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 2px;
+}
+
+.user-email {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.user-role-badge {
+    font-size: 0.6875rem;
+    padding: 2px 8px;
+    border-radius: var(--radius-full);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.user-role-badge.admin {
+    background: rgba(239, 68, 68, 0.15);
+    color: var(--error);
+}
+
+.user-role-badge.instructor {
+    background: rgba(234, 179, 8, 0.15);
+    color: var(--color-amber-600);
+}
+
+.user-role-badge.student {
+    background: rgba(34, 197, 94, 0.15);
+    color: var(--success);
+}
+
+.admin-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--bg-tertiary);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.admin-link:hover {
+    background: var(--bg-card);
+    transform: scale(1.05);
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: var(--space-sm) 14px;
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.logout-btn:hover {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--error);
+}
+
+.logout-btn svg {
+    width: 16px;
+    height: 16px;
+}
+

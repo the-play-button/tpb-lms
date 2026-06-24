@@ -156,3 +156,27 @@ exceptions:
   # Situation 3 « checker correct + legitimate file-specific reason ».
   mega-gitleaks-generic-api-key:
     - test_quiz_scoring.js
+
+  # ── 2026-06-24 Situation 3 carve-out (= Worker SPA root entry) ──
+  # `frontend-on-cf-worker/index.html` is the SINGLE-page-application root
+  # served by a Cloudflare Worker (`[assets] directory = "./"` in
+  # `frontend-on-cf-worker/wrangler.toml`). The VanillaJS doctrine
+  # `frontend/pages/[name]/index.html` is multi-page convention — tpb-lms is
+  # explicitly Worker-SPA (= same family carve-out as `required_tpb_dirs` and
+  # `vanillajs_required_pages` already opted-out above). Moving the file
+  # would require re-configuring the CF Worker assets binding + rewriting
+  # every relative `<script src="...">` path. Scope = single SPA root.
+  html_wrong_location:
+    - frontend-on-cf-worker/index.html
+
+  # ── 2026-06-24 Situation 3 carve-out (= Python 3.4.3+ SSL doctrine) ──
+  # `scripts/devops/verify_deploy.py` migrated from `urllib.request` to
+  # `http.client.HTTPSConnection` (Plan 05) per § CF ACCESS doctrine. The
+  # semgrep `httpsconnection-detected` rule warns about pre-Python-3.4.3
+  # SSL verification defaults — our code explicitly creates an
+  # `ssl.create_default_context()` (= verification enabled by default).
+  # All TPB CI runners + dev containers run Python ≥ 3.11. Scope = single
+  # devops verification script. Same pattern is used cross-portfolio in
+  # tpb-cock's `doctor_framework.py` + `_forgejo_client.py`.
+  mega-semgrep-python-lang-security-audit-httpsconnection-detected:
+    - scripts/devops/verify_deploy.py

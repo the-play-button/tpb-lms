@@ -1,0 +1,38 @@
+/* Buttons */
+.btn-primary {
+    display: inline-block;
+    padding: var(--space-md) var(--space-2xl);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.btn-danger {
+    display: inline-block;
+    padding: var(--space-md) var(--space-2xl);
+    background: linear-gradient(135deg, var(--error), #dc2626);
+    color: white;
+    border: none;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-danger:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glow-danger);
+}
+

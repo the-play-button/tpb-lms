@@ -1,9 +1,10 @@
 /**
- * Course Step Renderer
- * 
- * Renders current step content, video, quiz UI.
- * Refactored for reduced complexity (split into smaller functions).
- * 
+ * Course Step Renderer — thin orchestrator.
+ *
+ * Pure render helpers extracted to `renderer.functions/` per § lines_exceeded
+ * doctrine « SPLIT into folder with barrel export. MECHANICAL REFACTORING
+ * ONLY: never change logic during split. »
+ *
  * Unified.to Conformity:
  * - Reads step_type from raw_json.tpb_step_type
  * - Fetches content from media[].url for DOCUMENT type
@@ -11,311 +12,12 @@
 
 import { getState } from '../state.js';
 import { setupVideoTracking, getResumePosition } from '../video/tracking/index.js';
-import { fetchMarkdown, getDocumentUrl, isCloudRef, fetchCloudContent } from '../content/loader/index.js';
-import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
-
-const CLOUDFLARE_STREAM_IFRAME_BASE = 'https://iframe.cloudflarestream.com';
-import { showContentStepConfirmation } from './confirmModal.js';
-
-const getMediaByType = (cls, type, extraCheck = null) => {
-    const media = cls.media || [];
-    return media.find(m => m.type === type && (!extraCheck || m[extraCheck]));
-};
-
-const getDocumentMedia = cls => {
-    const media = cls.media || [];
-    return media.find(m => m.type === 'DOCUMENT' && (m.url || isCloudRef(m)));
-};
-
-const getSubtitleTracks = cls => {
-    const media = cls.media || [];
-    const subtitles = media.filter(({ type } = {}) => type === 'SUBTITLE' || type === 'CAPTION');
-    
-    const langLabels = {
-        fr: 'Français',
-        en: 'English',
-        es: 'Español',
-        de: 'Deutsch',
-        it: 'Italiano',
-        pt: 'Português'
-    };
-    
-    return subtitles.map(({ url, vtt_url, lang, label } = {}) => ({
-        url: url || vtt_url,
-        lang: lang || 'en',
-        label: label || langLabels[lang] || lang
-    })).filter(({ url } = {}) => url);
-};
-
-const getVideoInfo = cls => {
-    const videoMedia = getMediaByType(cls, 'VIDEO');
-    if (!videoMedia) return { hasVideo: false };
-    
-    return {
-        hasVideo: true,
-        streamId: videoMedia.stream_id,
-        videoUrl: videoMedia.video_url,
-        duration: videoMedia.duration_sec || 300
-    };
-};
-
-const getStepSignalData = (signals, classId) => {
-    const stepSignal = signals?.steps?.find(({ class_id } = {}) => class_id === classId) || {};
-    return {
-        hasQuiz: stepSignal.has_quiz || false,
-        videoCompleted: stepSignal.video_completed || false,
-        quizPassed: stepSignal.quiz_passed || false,
-        stepCompleted: stepSignal.step_completed || false
-    };
-};
-
-const getStepContext = () => {
-    const course = getState('courseData');
-    const { classes = [] } = course ?? {};
-    if (!classes.length) return null;
-    
-    const signals = getState('signals');
-    const stepIndex = getState('currentStepIndex');
-    const cls = classes[stepIndex];
-    
-    const videoInfo = getVideoInfo(cls);
-    const signalData = getStepSignalData(signals, cls.id);
-    
-    return {
-        course, cls, stepIndex,
-        currentCourse: getState('currentCourse'),
-        totalSteps: course.classes.length,
-        videoId: videoInfo.streamId,
-        videoUrl: videoInfo.videoUrl,
-        videoDuration: videoInfo.duration,
-        quizMedia: getMediaByType(cls, 'QUIZ', 'tally_form_id') || getMediaByType(cls, 'WEB', 'tally_form_id'),
-        ...signalData
-    };
-};
-
-const renderVideoSection = ctx => {
-    const { cls, stepIndex, currentCourse, videoId, videoUrl, videoDuration, quizPassed, hasQuiz } = ctx;
-    
-    if (quizPassed && hasQuiz) {
-        return `
-            <div class="video-locked">
-                <div class="locked-icon">🔒</div>
-                <p>La vidéo n'est plus accessible après le quiz.</p>
-            </div>
-        `;
-    }
-    
-    if (!videoId && !videoUrl) {
-        return '';
-    }
-    
-    const speedControl = `
-        <div class="video-controls" style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem; gap: 0.5rem;">
-            <button class="speed-btn" data-testid="video-speed-btn" onclick="window.cycleSpeed()" 
-                    title="Changer la vitesse de lecture (0.5x - 2x)"
-                    style="padding: 0.5rem 1rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text-primary); cursor: pointer; font-size: 0.875rem; font-weight: 500; transition: all 0.2s;">
-                <span id="speed-display">1x</span> ⚡
-            </button>
-        </div>
-    `;
-    
-    if (videoId) {
-        const currentLang = window.i18n?.getLanguage?.() || 'fr';
-        const streamParams = new URLSearchParams({
-            preload: 'metadata',
-            defaultTextTrack: currentLang
-        });
-
-        return `
-            ${speedControl}
-            <div class="video-container">
-                <iframe src="${CLOUDFLARE_STREAM_IFRAME_BASE}/${videoId}?${streamParams.toString()}"
-                    style="border: none; width: 100%; aspect-ratio: 16/9; border-radius: 8px;"
-                    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
-                    allowfullscreen="true" id="video-player-${stepIndex}"
-                    data-video-id="${videoId}" data-video-duration="${videoDuration}"
-                    data-course-id="${currentCourse}" data-class-id="${cls.id}">
-                </iframe>
-            </div>
-        `;
-    }
-    
-    if (videoUrl) {
-        const subtitles = getSubtitleTracks(cls);
-        const currentLang = window.i18n?.getLanguage?.() || 'fr';
-        
-        return `
-            ${speedControl}
-            <div class="video-container">
-                <video controls preload="metadata"
-                    style="width: 100%; aspect-ratio: 16/9; border-radius: 8px; background: #000;"
-                    id="video-player-${stepIndex}"
-                    data-video-url="${videoUrl}" data-video-duration="${videoDuration}"
-                    data-course-id="${currentCourse}" data-class-id="${cls.id}">
-                    <source src="${videoUrl}" type="video/mp4">
-                    ${subtitles.map(({ url, lang, label } = {}) => `
-                        <track kind="subtitles" src="${url}" srclang="${lang}" 
-                               label="${label}" ${lang === currentLang ? 'default' : ''}>
-                    `).join('')}
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        `;
-    }
-    
-    return '';
-};
-
-const renderDocumentSection = cls => {
-    const documentMedia = getDocumentMedia(cls);
-    if (!documentMedia) {
-        return cls.description 
-            ? `<p class="step-description">${cls.description}</p>` 
-            : '';
-    }
-    
-    return `
-        <div id="document-content-${cls.id}" class="document-content loading">
-            <div class="loading-spinner"></div>
-            <p>Chargement du contenu...</p>
-        </div>
-    `;
-};
-
-const renderVideoContent = ctx => {
-    const { cls } = ctx;
-    
-    const videoHtml = renderVideoSection(ctx);
-    
-    const documentHtml = renderDocumentSection(cls);
-    
-    if (videoHtml && documentHtml) {
-        return videoHtml + '<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">' + documentHtml;
-    }
-    
-    return videoHtml || documentHtml || '<p>Aucun contenu disponible pour cette étape.</p>';
-};
-
-const loadDocumentContent = async cls => {
-    const documentMedia = getDocumentMedia(cls);
-    if (!documentMedia) return;
-
-    const container = document.getElementById(`document-content-${cls.id}`);
-    if (!container) return;
-
-    try {
-        let markdown;
-
-        if (isCloudRef(documentMedia)) {
-            const raw = await fetchCloudContent(documentMedia.content_ref_id);
-            markdown = stripFrontmatter(raw);
-            markdown = cleanMarkdownForLms(markdown);
-        } else {
-            markdown = await fetchMarkdown(documentMedia.url);
-        }
-
-        const html = marked.parse(markdown);
-
-        container.classList.remove('loading');
-        container.innerHTML = `<div class="markdown-body">${html}</div>`;
-    } catch (error) {
-        console.error('Failed to load document content:', error);
-        container.classList.remove('loading');
-        container.classList.add('error');
-        container.innerHTML = `
-            <div class="error-message">
-                <p>Erreur lors du chargement du contenu.</p>
-                <button data-testid="content-reload-btn" onclick="window.location.reload()">Réessayer</button>
-            </div>
-        `;
-    }
-};
-
-const renderQuizSection = ctx => {
-    const { cls, quizMedia, videoCompleted, quizPassed } = ctx;
-    
-    if (!quizMedia) return '';
-    
-    const quizName = quizMedia.name || 'Quiz de validation';
-    
-    const formIds = quizMedia.tally_form_ids || quizMedia.tally_form_id;
-    const formIdsJson = typeof formIds === 'object'
-        ? JSON.stringify(formIds).replace(/"/g, '&quot;')
-        : `&quot;${formIds}&quot;`;
-    
-    if (quizPassed) {
-        return `
-            <div class="step-quiz quiz-passed">
-                <div class="quiz-header">
-                    <h3>🎯 ${quizName}</h3>
-                    <span class="quiz-badge">✅ Quiz réussi</span>
-                </div>
-            </div>
-        `;
-    }
-    
-    if (!videoCompleted) {
-        return `
-            <div class="step-quiz quiz-locked">
-                <div class="quiz-header">
-                    <h3>🎯 ${quizName}</h3>
-                    <span class="quiz-badge">🔒 Verrouillé</span>
-                </div>
-                <p class="quiz-locked-msg">Regardez la vidéo à 90% minimum pour débloquer le quiz.</p>
-            </div>
-        `;
-    }
-    
-    return `
-        <div class="step-quiz quiz-ready">
-            <div class="quiz-header">
-                <h3>🎯 ${quizName}</h3>
-                <span class="quiz-badge">✅ Débloqué</span>
-            </div>
-            <div class="quiz-warning">
-                <div class="warning-icon">⚠️</div>
-                <div class="warning-text">
-                    <strong>Attention - Une seule tentative</strong>
-                    <p>Vous n'aurez qu'<strong>une seule tentative</strong> pour ce quiz.</p>
-                </div>
-            </div>
-            <button class="quiz-start-btn" data-testid="quiz-start-btn" onclick="window.showQuiz('${cls.id}', ${formIdsJson}, '${quizName.replace(/'/g, "\\'")}')">
-                Commencer le quiz
-            </button>
-            <div id="quiz-container-${cls.id}" class="quiz-container" style="display: none;"></div>
-        </div>
-    `;
-};
-
-const renderRequirements = ctx => {
-    const { cls, hasQuiz, videoCompleted, quizPassed, stepCompleted, videoId, videoUrl, quizMedia } = ctx;
-    
-    if (stepCompleted) return '';
-    
-    const hasVideo = !!(videoId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
-    const hasQuizContent = !!quizMedia;
-    if (!hasVideo && !hasQuizContent) {
-        return ''; // CONTENT step - no requirements
-    }
-    
-    return `
-        <div class="step-requirements">
-            <h4>Pour débloquer "Suivant" :</h4>
-            <ul>
-                ${hasVideo ? `
-                    <li class="${videoCompleted ? 'done' : 'pending'}">
-                        ${videoCompleted ? '✅' : '⏳'} Regarder la vidéo à 90%+
-                    </li>
-                ` : ''}
-                ${hasQuiz ? `
-                    <li class="${quizPassed ? 'done' : 'pending'}">
-                        ${quizPassed ? '✅' : '⏳'} Passer le quiz
-                    </li>
-                ` : ''}
-            </ul>
-        </div>
-    `;
-};
+import { getDocumentMedia } from './renderer.functions/_mediaHelpers.js';
+import { getStepContext } from './renderer.functions/stepContext.js';
+import { renderVideoSection } from './renderer.functions/videoSection.js';
+import { renderVideoContent, loadDocumentContent } from './renderer.functions/documentSection.js';
+import { renderQuizSection } from './renderer.functions/quizSection.js';
+import { renderRequirements } from './renderer.functions/requirements.js';
 
 /**
  * Render current step (main orchestrator)
@@ -323,18 +25,20 @@ const renderRequirements = ctx => {
 export const renderCurrentStep = () => {
     const ctx = getStepContext();
     if (!ctx) return;
-    
+
     const { cls, stepIndex, totalSteps, stepCompleted, videoId, videoUrl, quizMedia } = ctx;
     const isLastStep = stepIndex === totalSteps - 1;
-    
+
     const hasVideo = !!(videoId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
     const hasQuiz = !!quizMedia;
     const isContentStep = !hasVideo && !hasQuiz;
-    
+
     const canProceed = isContentStep || stepCompleted;
-    
+
     const viewer = document.getElementById('somViewer');
-    
+
+    const videoHtml = renderVideoSection(ctx);
+
     viewer.innerHTML = `
         <div class="step-viewer">
             <div class="step-header">
@@ -346,28 +50,28 @@ export const renderCurrentStep = () => {
                 </div>
                 <h2 class="step-title">${cls.name}</h2>
             </div>
-            
+
             <div class="step-content markdown-body">
-                ${renderVideoContent(ctx)}
+                ${renderVideoContent(ctx, videoHtml)}
             </div>
-            
+
             ${renderQuizSection(ctx)}
-            
+
             <div class="step-navigation">
                 <button class="nav-btn prev" data-testid="nav-prev-btn" disabled title="Progression linéaire - pas de retour">← Précédent</button>
-                <button class="nav-btn next" data-testid="nav-next-btn" ${canProceed ? '' : 'disabled'} onclick="window.nextStep()" 
+                <button class="nav-btn next" data-testid="nav-next-btn" ${canProceed ? '' : 'disabled'} onclick="window.nextStep()"
                     title="${!canProceed ? 'Complétez la vidéo et le quiz pour continuer' : (isLastStep ? 'Terminer le module' : 'Étape suivante')}">
                     ${isLastStep ? 'Terminer 🎉' : 'Suivant →'}
                 </button>
             </div>
-            
+
             ${renderRequirements(ctx)}
         </div>
     `;
-    
+
     const resumePosition = getResumePosition(cls.id);
     setupVideoTracking(stepIndex, resumePosition);
-    
+
     const documentMedia = getDocumentMedia(cls);
     if (documentMedia) {
         loadDocumentContent(cls);
@@ -380,16 +84,16 @@ export const renderCurrentStep = () => {
 export const updateUIWithoutVideoReset = () => {
     const ctx = getStepContext();
     if (!ctx) return;
-    
-    const { cls, quizMedia, videoCompleted, quizPassed, stepCompleted } = ctx;
-    
+
+    const { quizMedia, videoCompleted, quizPassed, stepCompleted } = ctx;
+
     // 1. Update requirements checklist
     const videoLi = document.querySelector('.step-requirements ul li:first-child');
     if (videoLi) {
         videoLi.className = videoCompleted ? 'done' : 'pending';
         videoLi.innerHTML = `${videoCompleted ? '✅' : '⏳'} Regarder la vidéo à 90%+`;
     }
-    
+
     // 2. Unlock quiz if video just completed
     if (quizMedia && videoCompleted && !quizPassed) {
         const quizSection = document.querySelector('.step-quiz.quiz-locked');
@@ -397,7 +101,7 @@ export const updateUIWithoutVideoReset = () => {
             quizSection.outerHTML = renderQuizSection(ctx);
         }
     }
-    
+
     // 3. Enable next/finish button if step completed
     const nextBtn = document.querySelector('.nav-btn.next');
     if (nextBtn && stepCompleted) {

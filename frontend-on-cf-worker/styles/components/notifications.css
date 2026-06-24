@@ -1,0 +1,39 @@
+/* Notifications */
+.notifications {
+    position: fixed;
+    bottom: var(--space-xl);
+    right: var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    z-index: 1000;
+}
+
+.notification {
+    padding: var(--space-md) var(--space-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-card);
+    animation: slideIn var(--transition-normal);
+}
+
+.notification.xp {
+    border-left: 3px solid var(--accent-primary);
+}
+
+.notification.badge {
+    border-left: 3px solid var(--gold);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
