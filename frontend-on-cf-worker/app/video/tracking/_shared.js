@@ -62,7 +62,9 @@ export const sendVideoEvent = async (eventType, videoId, position, duration, cou
 };
 
 /**
- * Send video ping (alias for backward compatibility)
+ * Send VIDEO_PING event — thin convenience wrapper.
+ * Lets the calling code stay declarative (« send a ping ») instead of
+ * spelling the event-type string inline at each call site.
  */
 export const sendVideoPing = async (videoId, position, duration, courseId, classId) => {
     return sendVideoEvent('VIDEO_PING', videoId, position, duration, courseId, classId);

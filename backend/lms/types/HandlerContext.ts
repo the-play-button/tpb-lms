@@ -5,7 +5,7 @@
  * (env, userContext) to the TS handler pipeline.
  */
 
-import type { BastionDependencies } from '../../services/bastion/bastionDependencies.js';
+import type { BastionDependencies } from '../../services/bastion/BastionDependencies.js';
 import type { StoragePort } from '../../services/storage/StoragePort.js';
 import type { PamPort } from '../../services/pam/PamPort.js';
 import type { ConnectionResolverPort } from '../../services/connections/ConnectionResolverPort.js';

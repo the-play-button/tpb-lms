@@ -50,7 +50,7 @@ const createBadgeParticles = container => {
  * Show badge modal (unified for earned events and mobile tap)
  * @param {Object} badge - Badge data
  * @param {Object} options - Display options
- * @param {boolean} options.isEarned - Whether badge is earned (default: true for backward compat)
+ * @param {boolean} options.isEarned - Whether badge is earned. Default true matches the original « earned-event » call site, the most common path.
  */
 export const showBadgeModal = (badge, options = {}) => {
     const { isEarned = true } = options;

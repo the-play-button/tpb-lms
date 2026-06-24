@@ -96,7 +96,13 @@ app.use('/*', async (c, next) => {
       });
       loggerReady = true;
     } catch (err) {
-      console.error('[telemetry] logger init failed — continuing without telemetry:', err);
+      // Last-resort stderr — `log` SDK ELSE branch when its own init throws.
+      // Cannot use `log.error()` here : the catch block exists precisely
+      // because `configureLogger()` failed. Per § ALWAYS FAIL HARD : the
+      // failure must surface to the CF Worker tail logs (= what stderr
+      // becomes in the Workers runtime).
+      // eslint-disable-next-line no-console
+      globalThis.console.error('[telemetry] logger init failed — continuing without telemetry:', err);
       loggerReady = true; // explicit recovery — don't retry on every request
     }
   }
@@ -255,7 +261,7 @@ app.use('/api/*', async (c, next) => {
     await initBastionClient(c.env);
     bastionInitOk = true;
   } catch (err) {
-    console.error('[authz] initBastionClient failed:', err);
+    log.error('initBastionClient failed', err, { file: 'index.js', layer: 'authz' });
     bastionInitOk = false;
   }
   c.set('bastionInitOk', bastionInitOk);

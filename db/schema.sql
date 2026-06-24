@@ -445,6 +445,11 @@ SELECT
 FROM lms_event
 GROUP BY user_id;
 
+-- Index covering the FK join used by v_course_progress (= v_user_progress.course_id).
+-- Without it, every read of v_course_progress full-scans v_user_progress on D1 —
+-- silent FinOps regression per entropy `ddd_view_missing_fk_index` + database_conventions.md § 8b.
+CREATE INDEX IF NOT EXISTS idx_v_user_progress_course_id ON v_user_progress(course_id);
+
 -- v_course_progress: Progress percentage per user/course (GAP-601)
 CREATE VIEW IF NOT EXISTS v_course_progress AS
 SELECT 

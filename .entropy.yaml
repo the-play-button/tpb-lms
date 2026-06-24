@@ -106,6 +106,22 @@ tpb_checks:
 
 # Project-specific exceptions
 exceptions:
+  # ── Situation 3 carve-out — legacy nested use-case grouping (2026-06-24) ──
+  # tpb-lms history pre-dates the canonical `application/{useCase}/` flat
+  # shape. `cloudContent/{getCloudContent,getCloudPitch}/`, `sharing/{listPermissions,revokeShare,shareContent}/`
+  # + `sharedByMe*` / `sharedWithMe*` flat 9-step files at the same level,
+  # `connections/{getDefaultConnection,listConnections}/` are GROUPING dirs
+  # holding several real use cases. Each inner use case already has its
+  # canonical 9-step pipeline. Flattening + `.types/` extraction is a
+  # multi-day structural refactor tracked under
+  # `2026-06-24_round-cross-portfolio/plans/11.followup-flatten-application-groupings.plan.md`.
+  # Scope = the 3 grouping dirs only (= the inner use cases are NOT checked
+  # by `usecase_types_subfolder_named` per its single-level iteration).
+  usecase_types_subfolder_named:
+    - backend/lms/application/cloudContent
+    - backend/lms/application/sharing
+    - backend/lms/application/connections
+
   # Files allowed to have high coupling (entry points, orchestrators)
   coupling:
     - backend/index.js
@@ -127,6 +143,14 @@ exceptions:
   console_leaks:
     - frontend-on-cf-worker/  # Frontend files use console.error for client-side error reporting
     - scripts/           # Utility scripts use console for output
+    # ── Situation 3 carve-out — last-resort stderr fallback (2026-06-24) ──
+    # `backend/index.js` line 105 is the catch block of `configureLogger()`
+    # itself failing during the first-request lazy init (= can't `log.error()`
+    # because the SDK logger is the very thing that just threw). Per
+    # § ALWAYS FAIL HARD the failure must surface to the CF Worker tail
+    # log stream — stderr is the only path before the logger is wired.
+    # Scope = single bootstrap catch block in backend/index.js.
+    - backend/index.js
 
   # ── Plan 2026-06-11 retire-entropy-acks-cross-portfolio bulk strip ──
   python_magic_numbers:

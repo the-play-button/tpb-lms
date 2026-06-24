@@ -119,17 +119,34 @@ def setup_database(skip: bool = False) -> bool:
 
 
 def deploy_backend() -> bool:
-    """Deploy the backend Worker API."""
+    """Deploy the backend Worker API.
+
+    Pre-deploy migration apply : ensures the remote D1 schema matches
+    the migrations declared in `db/migrations/` BEFORE the new Worker
+    code lands. Without this, code that references columns added in an
+    unapplied migration will throw runtime SQL errors. Per entropy check
+    `d1_deploy_migration_sync`.
+    """
     log(f"🚀 Deploying {BACKEND_WORKER}...")
     root = get_project_root()
-    
+
+    log("📦 Applying D1 migrations to remote lms-db...")
+    migrate_result = run_cmd(
+        ["npx", "wrangler", "d1", "migrations", "apply", "lms-db", "--remote"],
+        cwd=root, check=False,
+    )
+    if migrate_result.returncode != 0:
+        log(f"❌ D1 migrations apply failed", "error")
+        print(migrate_result.stderr)
+        return False
+    log(f"✅ D1 migrations applied", "success")
+
     result = run_cmd(["npx", "wrangler", "deploy"], cwd=root, check=False)
-    
     if result.returncode != 0:
         log(f"❌ Backend deploy failed", "error")
         print(result.stderr)
         return False
-    
+
     log(f"✅ Backend deployed: {BACKEND_URL}", "success")
     return True
 
