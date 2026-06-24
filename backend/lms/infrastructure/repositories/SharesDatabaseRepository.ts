@@ -147,8 +147,8 @@ export class SharesDatabaseRepository implements SharesRepository {
     return this.reconstituteActive(row);
   }
 
-  private reconstituteActive(row: ShareRow): ActiveShare {
-    return ActiveShare.reconstitute({
+  private baseShareProps(row: ShareRow) {
+    return {
       id: ShareId.reconstitute(row.id),
       contentRefId: ContentRefId.reconstitute(row.content_ref_id),
       sharedByEmail: Email.reconstitute(row.shared_by),
@@ -156,18 +156,16 @@ export class SharesDatabaseRepository implements SharesRepository {
       role: this.dbRoleToDomain(row.role),
       createdAt: new Date(row.shared_at),
       updatedAt: new Date(row.shared_at),
-    });
+    };
+  }
+
+  private reconstituteActive(row: ShareRow): ActiveShare {
+    return ActiveShare.reconstitute(this.baseShareProps(row));
   }
 
   private reconstituteRevoked(row: ShareRow): RevokedShare {
     return RevokedShare.reconstitute({
-      id: ShareId.reconstitute(row.id),
-      contentRefId: ContentRefId.reconstitute(row.content_ref_id),
-      sharedByEmail: Email.reconstitute(row.shared_by),
-      sharedWithEmail: Email.reconstitute(row.shared_with),
-      role: this.dbRoleToDomain(row.role),
-      createdAt: new Date(row.shared_at),
-      updatedAt: new Date(row.shared_at),
+      ...this.baseShareProps(row),
       revokedAt: new Date(row.revoked_at!),
       revokedByEmail: Email.reconstitute(row.shared_by),
     });

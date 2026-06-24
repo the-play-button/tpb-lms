@@ -4,7 +4,23 @@
  * Dual-source: supports both GitHub URLs (default) and cloud content refs (BYOC).
  */
 
-import { contentCache, CACHE_TTL_MS, isGitHubUrl, buildProxyUrl, isCloudRef, fetchCloudContentDirect, getAuthToken, log } from './_shared.js';
+import { contentCache, CACHE_TTL_MS, fetchContentDirect, fetchCloudContentDirect, log } from './_shared.js';
+
+const getCachedOrFetch = async (cacheKey, fetcher, errorContext) => {
+    const cached = contentCache.get(cacheKey);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
+        return cached.content;
+    }
+
+    try {
+        const content = await fetcher();
+        contentCache.set(cacheKey, { content, timestamp: Date.now() });
+        return content;
+    } catch (error) {
+        log.error(errorContext, error);
+        throw error;
+    }
+};
 
 /**
  * Fetch content from a repository URL (GitHub path)
@@ -12,45 +28,8 @@ import { contentCache, CACHE_TTL_MS, isGitHubUrl, buildProxyUrl, isCloudRef, fet
  * @returns {Promise<string>} - Content as string
  */
 export const fetchContent = async url => {
-    if (!url) {
-        throw new Error('URL is required');
-    }
-
-    const cached = contentCache.get(url);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-        return cached.content;
-    }
-
-    try {
-        const fetchUrl = isGitHubUrl(url) ? buildProxyUrl(url) : url;
-
-        const headers = {
-            'Accept': 'text/plain, text/markdown, */*'
-        };
-
-        if (isGitHubUrl(url)) {
-            const token = await getAuthToken();
-            headers['Cf-Access-Jwt-Assertion'] = token;
-        }
-
-        const response = await fetch(fetchUrl, { headers });
-
-        if (!response.ok) {
-            throw new Error(`Failed to fetch content: ${response.status}`);
-        }
-
-        const content = await response.text();
-
-        contentCache.set(url, {
-            content,
-            timestamp: Date.now()
-        });
-
-        return content;
-    } catch (error) {
-        log.error('Content fetch error:', error);
-        throw error;
-    }
+    if (!url) throw new Error('URL is required');
+    return getCachedOrFetch(url, () => fetchContentDirect(url), 'Content fetch error:');
 };
 
 /**
@@ -60,28 +39,10 @@ export const fetchContent = async url => {
  * @returns {Promise<string>} - Content as string
  */
 export const fetchCloudContent = async (contentRefId, lang) => {
-    if (!contentRefId) {
-        throw new Error('Content ref ID is required');
-    }
-
-    const cacheKey = `cloud:${contentRefId}:${lang || 'source'}`;
-
-    const cached = contentCache.get(cacheKey);
-    if (cached && Date.now() - cached.timestamp < CACHE_TTL_MS) {
-        return cached.content;
-    }
-
-    try {
-        const content = await fetchCloudContentDirect(contentRefId, lang);
-
-        contentCache.set(cacheKey, {
-            content,
-            timestamp: Date.now()
-        });
-
-        return content;
-    } catch (error) {
-        log.error('Cloud content fetch error:', error);
-        throw error;
-    }
+    if (!contentRefId) throw new Error('Content ref ID is required');
+    return getCachedOrFetch(
+        `cloud:${contentRefId}:${lang || 'source'}`,
+        () => fetchCloudContentDirect(contentRefId, lang),
+        'Cloud content fetch error:',
+    );
 };

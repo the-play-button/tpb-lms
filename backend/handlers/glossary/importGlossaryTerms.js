@@ -6,14 +6,11 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import { extractOrgIdFromUrl, isValidTermPayload, upsertGlossaryTerm } from './_glossaryShared.js';
 
 export const importGlossaryTerms = async (request, env, ctx) => {
-    const pathParts = new URL(request.url).pathname.split('/');
-    const orgId = pathParts[2];
-
-    if (!orgId) {
-        return errorResponse('Missing org_id', 400);
-    }
+    const orgId = extractOrgIdFromUrl(request);
+    if (!orgId) return errorResponse('Missing org_id', 400);
 
     let body;
     try {
@@ -31,24 +28,15 @@ export const importGlossaryTerms = async (request, env, ctx) => {
     let errorCount = 0;
 
     for (const term of terms) {
-        const { source_lang, target_lang, source_term, target_term, context } = term;
-        if (!source_lang || !target_lang || !source_term || !target_term) {
+        if (!isValidTermPayload(term)) {
             errorCount++;
             continue;
         }
-
-        const id = `${orgId}-${source_lang}-${target_lang}-${source_term.toLowerCase().replace(/\s+/g, '_')}`;
-
         try {
-            await env.DB.prepare(`
-                INSERT INTO glossary (id, org_id, source_lang, target_lang, source_term, target_term, context, updated_at)
-                VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
-                ON CONFLICT(org_id, source_lang, target_lang, source_term)
-                DO UPDATE SET target_term = ?, context = ?, updated_at = datetime('now')
-            `).bind(id, orgId, source_lang, target_lang, source_term, target_term, context || null, target_term, context || null).run();
+            await upsertGlossaryTerm(env.DB, orgId, term);
             successCount++;
         } catch (error) {
-            log.error('glossary term import failed', error, { file: 'handlers/glossary/importGlossaryTerms.js', sourceTerm: source_term });
+            log.error('glossary term import failed', error, { file: 'handlers/glossary/importGlossaryTerms.js', sourceTerm: term.source_term });
             errorCount++;
         }
     }
@@ -56,6 +44,6 @@ export const importGlossaryTerms = async (request, env, ctx) => {
     return jsonResponse({
         success: true,
         imported: successCount,
-        errors: errorCount
+        errors: errorCount,
     });
 };

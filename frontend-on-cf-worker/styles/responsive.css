@@ -162,8 +162,9 @@
         display: none !important;
     }
 
-    /* Parcours view - Course list only */
-    .mobile-parcours-view.visible {
+    /* SSOT shell — mobile fullscreen overlay (used by Parcours + Badges views). */
+    .mobile-parcours-view.visible,
+    .mobile-badges-view.visible {
         display: block;
         position: fixed;
         top: 0;
@@ -176,7 +177,9 @@
         padding: var(--space-100) var(--space-20) var(--space-20) var(--space-20);
     }
 
-    .mobile-parcours-view h2 {
+    /* SSOT — mobile fullscreen heading. */
+    .mobile-parcours-view h2,
+    .mobile-badges-view h2 {
         color: var(--text-primary);
         font-size: 1.5rem;
         margin-bottom: var(--space-20);
@@ -220,28 +223,7 @@
         color: var(--text-dim);
     }
 
-    /* Badges view - Icons only grid (tap for details) */
-    .mobile-badges-view.visible {
-        display: block;
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 75px;
-        z-index: 500;
-        background: var(--color-bg-deep);
-        overflow-y: auto;
-        padding: var(--space-100) var(--space-20) var(--space-20) var(--space-20);
-    }
-
-    .mobile-badges-view h2 {
-        color: var(--text-primary);
-        font-size: 1.5rem;
-        margin-bottom: var(--space-20);
-        padding-bottom: var(--space-10);
-        border-bottom: 1px solid var(--border-subtle);
-    }
-
+    /* Badges view — shell + heading share with parcours view (see SSOT above). */
     .mobile-badges-view .badges-grid {
         display: grid;
         grid-template-columns: repeat(4, 1fr);

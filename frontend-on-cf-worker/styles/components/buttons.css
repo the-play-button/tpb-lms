@@ -1,8 +1,11 @@
 /* Buttons */
-.btn-primary {
+
+/* SSOT — shared button shell. Variants only override background + hover shadow. */
+.btn-primary,
+.btn-danger,
+.quiz-modal-btn {
     display: inline-block;
     padding: var(--space-md) var(--space-2xl);
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
     color: white;
     border: none;
     border-radius: var(--radius-md);
@@ -13,26 +16,32 @@
     text-decoration: none;
 }
 
+/* Quiz modal button — overrides padding (uses --space-xl instead of --space-2xl) + full-width */
+.quiz-modal-btn {
+    width: 100%;
+    padding: var(--space-md) var(--space-xl);
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+}
+
+.quiz-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+}
+
 .btn-primary:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 15px var(--accent-glow);
 }
 
 .btn-danger {
-    display: inline-block;
-    padding: var(--space-md) var(--space-2xl);
     background: linear-gradient(135deg, var(--error), #dc2626);
-    color: white;
-    border: none;
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all var(--transition-fast);
 }
 
 .btn-danger:hover {
     transform: translateY(-2px);
     box-shadow: var(--glow-danger);
 }
-

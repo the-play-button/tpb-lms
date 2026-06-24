@@ -6,14 +6,11 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import { extractOrgIdFromUrl, isValidTermPayload, upsertGlossaryTerm } from './_glossaryShared.js';
 
 export const addGlossaryTerm = async (request, env, ctx) => {
-    const pathParts = new URL(request.url).pathname.split('/');
-    const orgId = pathParts[2];
-
-    if (!orgId) {
-        return errorResponse('Missing org_id', 400);
-    }
+    const orgId = extractOrgIdFromUrl(request);
+    if (!orgId) return errorResponse('Missing org_id', 400);
 
     let body;
     try {
@@ -22,22 +19,13 @@ export const addGlossaryTerm = async (request, env, ctx) => {
         return errorResponse('Invalid JSON body', 400);
     }
 
-    const { source_lang, target_lang, source_term, target_term, context } = body;
-
-    if (!source_lang || !target_lang || !source_term || !target_term) {
+    if (!isValidTermPayload(body)) {
         return errorResponse('Missing required fields: source_lang, target_lang, source_term, target_term', 400);
     }
 
-    const id = `${orgId}-${source_lang}-${target_lang}-${source_term.toLowerCase().replace(/\s+/g, '_')}`;
-
     try {
-        await env.DB.prepare(`
-            INSERT INTO glossary (id, org_id, source_lang, target_lang, source_term, target_term, context, updated_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
-            ON CONFLICT(org_id, source_lang, target_lang, source_term)
-            DO UPDATE SET target_term = ?, context = ?, updated_at = datetime('now')
-        `).bind(id, orgId, source_lang, target_lang, source_term, target_term, context || null, target_term, context || null).run();
-
+        const id = await upsertGlossaryTerm(env.DB, orgId, body);
+        const { source_lang, target_lang, source_term, target_term, context } = body;
         return jsonResponse({
             success: true,
             id,
@@ -46,7 +34,7 @@ export const addGlossaryTerm = async (request, env, ctx) => {
             target_lang,
             source_term,
             target_term,
-            context
+            context,
         });
     } catch (error) {
         log.error('glossary term add failed', error, { file: 'handlers/glossary/addGlossaryTerm.js' });

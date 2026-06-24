@@ -43,18 +43,24 @@ interface TpbStorageDownloadResponse {
 export class TpbStorageHttpAdapter implements StoragePort {
   constructor(private readonly config: TpbStorageHttpAdapterConfig) {}
 
-  async listFiles(connectionId: string, parentId?: string): Promise<StorageFile[]> {
-    const params = new URLSearchParams();
-    params.set('connectionId', connectionId);
-    if (parentId) params.set('parent_id', parentId);
-    const url = `${this.config.tpbStorageUrl}/api/storage/list?${params.toString()}`;
+  private async fetchStorage(path: string, params: Record<string, string | undefined>, label: string): Promise<Response> {
+    const usp = new URLSearchParams();
+    for (const [k, v] of Object.entries(params)) {
+      if (v !== undefined) usp.set(k, v);
+    }
+    const url = `${this.config.tpbStorageUrl}${path}?${usp.toString()}`;
     const resp = await fetch(url, {
       headers: { Authorization: `Bearer ${this.config.bastionToken}` },
     });
     if (!resp.ok) {
       const text = await resp.text().catch(() => '');
-      throw new Error(`tpb-storage list failed: ${resp.status} ${text.slice(0, 200)}`);
+      throw new Error(`tpb-storage ${label} failed: ${resp.status} ${text.slice(0, 200)}`);
     }
+    return resp;
+  }
+
+  async listFiles(connectionId: string, parentId?: string): Promise<StorageFile[]> {
+    const resp = await this.fetchStorage('/api/storage/list', { connectionId, parent_id: parentId }, 'list');
     const body = (await resp.json()) as TpbStorageListResponse;
     return (body.files ?? []).map((f) => ({
       id: String(f.id ?? ''),
@@ -68,33 +74,13 @@ export class TpbStorageHttpAdapter implements StoragePort {
   }
 
   async getFileContent(connectionId: string, fileId: string): Promise<string> {
-    const params = new URLSearchParams();
-    params.set('connectionId', connectionId);
-    params.set('fileId', fileId);
-    const url = `${this.config.tpbStorageUrl}/api/storage/file?${params.toString()}`;
-    const resp = await fetch(url, {
-      headers: { Authorization: `Bearer ${this.config.bastionToken}` },
-    });
-    if (!resp.ok) {
-      const text = await resp.text().catch(() => '');
-      throw new Error(`tpb-storage download failed: ${resp.status} ${text.slice(0, 200)}`);
-    }
+    const resp = await this.fetchStorage('/api/storage/file', { connectionId, fileId }, 'download');
     const body = (await resp.json()) as TpbStorageDownloadResponse;
     return body.content;
   }
 
   async getFileBinary(connectionId: string, fileId: string): Promise<ArrayBuffer> {
-    const params = new URLSearchParams();
-    params.set('connectionId', connectionId);
-    params.set('fileId', fileId);
-    const url = `${this.config.tpbStorageUrl}/api/storage/file?${params.toString()}`;
-    const resp = await fetch(url, {
-      headers: { Authorization: `Bearer ${this.config.bastionToken}` },
-    });
-    if (!resp.ok) {
-      const text = await resp.text().catch(() => '');
-      throw new Error(`tpb-storage binary fetch failed: ${resp.status} ${text.slice(0, 200)}`);
-    }
+    const resp = await this.fetchStorage('/api/storage/file', { connectionId, fileId }, 'binary fetch');
     return resp.arrayBuffer();
   }
 }

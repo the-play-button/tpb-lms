@@ -1,7 +1,8 @@
 import { fail, succeed, type Result } from '../../core/Result.js';
-import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
-import type { ContentRefProps, ContentType, ContentUsage } from './types.js';
+import type { ContentRefId, Email } from '../../value-objects/index.js';
+import type { ContentRefProps } from './types.js';
 import type { ActiveShare } from '../Share/ActiveShare.js';
+import { BaseContentRef } from './BaseContentRef.js';
 
 export type ShareRole = 'viewer' | 'editor';
 
@@ -11,13 +12,15 @@ export type ShareRole = 'viewer' | 'editor';
  * Represents a content reference that has been shared with others.
  * Tracks active shares and supports sharing operations.
  */
-export class SharedContentRef {
+export class SharedContentRef extends BaseContentRef {
   readonly kind = 'shared' as const;
 
   private constructor(
-    private readonly props: ContentRefProps,
+    props: ContentRefProps,
     private readonly _shares: ActiveShare[],
-  ) {}
+  ) {
+    super(props);
+  }
 
   static reconstitute(props: ContentRefProps, shares: ActiveShare[]): SharedContentRef {
     return new SharedContentRef(props, shares);
@@ -48,28 +51,5 @@ export class SharedContentRef {
     });
   }
 
-  // === Getters ===
-
-  get id(): ContentRefId { return this.props.id; }
-  get connectionId(): ConnectionId { return this.props.connectionId; }
-  get fileId(): string { return this.props.fileId; }
-  get name(): string { return this.props.name; }
-  get contentType(): ContentType { return this.props.contentType; }
-  get ownerEmail(): Email { return this.props.ownerEmail; }
-  get courseId(): string | null { return this.props.courseId; }
-  get classId(): string | null { return this.props.classId; }
-  get usage(): ContentUsage | null { return this.props.usage; }
-  get lang(): string { return this.props.lang; }
-  get sourceRefId(): ContentRefId | null { return this.props.sourceRefId; }
-  get createdAt(): Date { return this.props.createdAt; }
-  get updatedAt(): Date { return this.props.updatedAt; }
   get shares(): readonly ActiveShare[] { return [...this._shares]; }
-
-  /**
-   * Returns a plain-object snapshot of all properties.
-   * Useful for persistence and serialization.
-   */
-  toProps(): Readonly<ContentRefProps> {
-    return { ...this.props };
-  }
 }
