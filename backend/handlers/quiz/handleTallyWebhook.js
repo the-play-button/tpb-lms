@@ -2,27 +2,9 @@
  * Handle Tally webhook (from request or pre-read body)
  */
 
-import { jsonResponse, extractFieldsFromPayload, calculateScore, processQuizSubmission, log } from './_shared.js';
+import { jsonResponse, extractFieldsFromPayload, calculateScore, processQuizSubmission } from './_shared.js';
+import { findQuizClassByTallyFormId } from '../../services/quiz/QuizService.js';
 
-/**
- * Handle Tally webhook with body already read
- */
-export const handleTallyWebhookWithBody = async (bodyText, env, request) => {
-    const payload = JSON.parse(bodyText);
-    return await processTallyPayload(payload, env, request);
-};
-
-/**
- * Handle Tally webhook from request (direct JSON parsing)
- */
-export const handleTallyWebhook = async (request, env) => {
-    const payload = await request.json();
-    return await processTallyPayload(payload, env, request);
-};
-
-/**
- * Process Tally webhook payload
- */
 const processTallyPayload = async (payload, env, request) => {
     if (payload.eventType !== 'FORM_RESPONSE') {
         return jsonResponse({ ignored: true, reason: 'Not a form response' }, 200, request);
@@ -30,22 +12,24 @@ const processTallyPayload = async (payload, env, request) => {
 
     const { userId, courseId, answers } = extractFieldsFromPayload(payload.data?.fields || []);
     const formId = payload.data?.formId;
+    if (!userId) return jsonResponse({ error: 'Missing user_id in submission' }, 400, request);
 
-    if (!userId) {
-        return jsonResponse({ error: 'Missing user_id in submission' }, 400, request);
-    }
-
-    const quizClass = await env.DB.prepare(`
-        SELECT lc.* FROM lms_class lc, json_each(lc.media_json) je
-        WHERE json_extract(je.value, '$.tally_form_id') = ?
-    `).bind(formId).first();
-
+    const quizClass = await findQuizClassByTallyFormId(env, formId);
     const { score, maxScore } = calculateScore(answers, quizClass);
 
-    return await processQuizSubmission({
-        userId, quizId: formId,
+    return processQuizSubmission({
+        userId,
+        quizId: formId,
         courseId: courseId || quizClass?.course_id,
         classId: quizClass?.id,
-        score, maxScore, answers
+        score,
+        maxScore,
+        answers,
     }, env, request, quizClass);
-}
+};
+
+export const handleTallyWebhookWithBody = (bodyText, env, request) =>
+    processTallyPayload(JSON.parse(bodyText), env, request);
+
+export const handleTallyWebhook = async (request, env) =>
+    processTallyPayload(await request.json(), env, request);

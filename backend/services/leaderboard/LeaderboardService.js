@@ -1,0 +1,110 @@
+/**
+ * LeaderboardService — leaderboard + user stats queries.
+ */
+
+const buildStatsObject = (stats) => {
+    const {
+        video_completed_count = 0,
+        quiz_passed_count = 0,
+        step_completed_count = 0,
+        course_completed_count = 0,
+    } = stats || {};
+    return { video_completed_count, quiz_passed_count, step_completed_count, course_completed_count };
+};
+
+const buildActivityObject = (activity) => {
+    const { last_event_at = null, events_24h = 0, total_events = 0 } = activity || {};
+    return { last_event_at, events_24h, total_events };
+};
+
+const calculateXP = (stats) => {
+    const { video_completed_count = 0, quiz_passed_count = 0, course_completed_count = 0 } = stats || {};
+    return (video_completed_count * 50) + (quiz_passed_count * 100) + (course_completed_count * 200);
+};
+
+const fetchUserInfo = async (db, userId) => {
+    let user = await db.prepare(`
+        SELECT id, name, json_extract(emails_json, '$[0].email') as email
+        FROM crm_contact WHERE id = ?
+    `).bind(userId).first();
+
+    if (!user) {
+        user = await db.prepare(`
+            SELECT id, name, json_extract(emails_json, '$[0].email') as email
+            FROM hris_employee WHERE id = ?
+        `).bind(userId).first();
+    }
+
+    return user ? { id: user.id, name: user.name, email: user.email } : { id: userId };
+};
+
+const fetchCurrentUserRank = async (db, userId) => {
+    const userStats = await db.prepare(
+        'SELECT user_id, total_points FROM v_leaderboard WHERE user_id = ?'
+    ).bind(userId).first();
+    if (!userStats) return { rank: null, points: 0 };
+
+    const rankResult = await db.prepare(
+        'SELECT COUNT(*) + 1 as rank FROM v_leaderboard WHERE total_points > ?'
+    ).bind(userStats.total_points).first();
+    const { rank = null } = rankResult || {};
+    return { rank, points: userStats.total_points };
+};
+
+const enrichLeaderboardEntry = async (db, entry, index) => ({
+    rank: index + 1,
+    user_id: entry.user_id,
+    total_points: entry.total_points || 0,
+    video_completed_count: entry.videos_completed || 0,
+    quiz_passed_count: entry.quizzes_completed || 0,
+    badges_count: entry.badges_earned || 0,
+    user: await fetchUserInfo(db, entry.user_id),
+});
+
+export const fetchLeaderboard = async (env, userId, limit) => {
+    const results = await env.DB.prepare(`
+        SELECT user_id, user_type, total_points, videos_completed, quizzes_completed, badges_earned
+        FROM v_leaderboard LIMIT ?
+    `).bind(limit).all();
+
+    const leaderboard = await Promise.all(
+        (results.results || []).map((entry, index) => enrichLeaderboardEntry(env.DB, entry, index))
+    );
+
+    const currentUserEntry = leaderboard.find((e) => e.user_id === userId);
+    const { rank = null, total_points = 0 } = currentUserEntry || {};
+    let currentUserRank = rank;
+    let currentUserPoints = total_points;
+
+    if (!currentUserEntry && userId) {
+        const userRank = await fetchCurrentUserRank(env.DB, userId);
+        currentUserRank = userRank.rank;
+        currentUserPoints = userRank.points;
+    }
+
+    return {
+        leaderboard,
+        currentUser: { id: userId, rank: currentUserRank || null, total_points: currentUserPoints || 0 },
+    };
+};
+
+const fetchUserStatsParallel = (env, userId) => Promise.all([
+    env.DB.prepare('SELECT * FROM v_signal_summary WHERE user_id = ?').bind(userId).first(),
+    env.DB.prepare('SELECT * FROM v_user_activity WHERE user_id = ?').bind(userId).first(),
+    env.DB.prepare(`
+        SELECT b.id, b.name, b.icon_url, b.rarity, a.awarded_at
+        FROM gamification_award a JOIN gamification_badge b ON a.badge_id = b.id
+        WHERE a.user_id = ? ORDER BY a.awarded_at DESC
+    `).bind(userId).all(),
+]);
+
+export const fetchUserStats = async (env, userId) => {
+    const [stats, activity, badges] = await fetchUserStatsParallel(env, userId);
+    return {
+        user_id: userId,
+        stats: buildStatsObject(stats),
+        activity: buildActivityObject(activity),
+        badges: badges.results || [],
+        xp: { total: calculateXP(stats) },
+    };
+};

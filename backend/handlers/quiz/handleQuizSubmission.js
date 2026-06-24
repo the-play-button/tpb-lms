@@ -2,22 +2,10 @@
  * Handle quiz submission from HTTP request
  */
 
-import { calculateScore, processQuizSubmission, log } from './_shared.js';
+import { submitQuizFromUser } from '../../services/quiz/QuizService.js';
 
 export const handleQuizSubmission = async (request, env, userContext) => {
     const body = await request.json();
     body.userId = userContext.contact.id;
-
-    const quizClass = await env.DB.prepare(`
-        SELECT lc.* FROM lms_class lc, json_each(lc.media_json) je
-        WHERE json_extract(je.value, '$.tally_form_id') = ?
-    `).bind(body.quizId).first();
-
-    const { score, maxScore } = calculateScore(body.answers || [], quizClass);
-    body.score = score;
-    body.maxScore = maxScore;
-    body.classId = body.classId || quizClass?.id;
-    body.courseId = body.courseId || quizClass?.course_id;
-
-    return await processQuizSubmission(body, env, request, quizClass);
+    return submitQuizFromUser(env, request, body);
 };
