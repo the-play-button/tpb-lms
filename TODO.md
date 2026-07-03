@@ -7,6 +7,14 @@
 
 ## Now
 
+**INITIATIVE (2026-07-04, en attente de validation)** — `plans/2026-07-04_lms-api-doctrine-nesting-unifiedto-exit/` : revue complète de l'API vs doctrines CRUD/api-only + write-API manquant + sections imbriquées (adjacency-list) + exit sémantique Unified.to + hébergement vidéo YouTube privé. **Supersède le stub `2026-03_crud-list-endpoint-refactor`** (jamais exécuté, ne couvrait que 4 endpoints sharing).
+- [ ] Plan 03 — nested sections ERD (`lms_class.parent_class_id` + `node_kind`) {priority:high} {tags:erd+lms+nesting}
+- [ ] Plan 02 — content-authoring CRUD API (POST/PATCH/DELETE courses+classes) {priority:high} {tags:ddd+crud+lms}
+- [ ] Plan 01 — API CRUD/list conformance (renames, aliases, bulk, filtered-lists) {priority:high} {tags:entropy+ddd+crud-list}
+- [ ] Plan 04 — exit sémantique Unified.to + vidéo YouTube privé {priority:medium} {tags:unifiedto+lms+video}
+
+---
+
 4 violations détectées. Plan détaillé : `plans/2026-03_crud-list-endpoint-refactor/01-rename-endpoints.plan.md`
 - [ ] Rename `sharedByMe` → `listSharedByMe` (entité Share — lister les partages créés par moi) {priority:medium} {tags:entropy+ddd+crud-list}
 - [ ] Rename `sharedWithMe` → `listSharedWithMe` (entité Share — lister les partages reçus) {priority:medium} {tags:entropy+ddd+crud-list}
