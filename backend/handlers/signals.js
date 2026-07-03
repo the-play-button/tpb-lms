@@ -39,7 +39,7 @@ export const getStepSignals = async (request, env, userContext, courseId, classI
 /**
  * POST /api/signals/:courseId/reset
  */
-export const resetCourseSignals = async (request, env, userContext, courseId) => {
+export const deleteCourseSignals = async (request, env, userContext, courseId) => {
     const userId = resolveUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 

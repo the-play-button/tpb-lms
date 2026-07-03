@@ -1,2 +1,2 @@
-export { sharedByMeController } from './sharedByMeController';
-export { sharedWithMeController } from './sharedWithMeController';
+export { listSharedByMeController } from './listSharedByMe/index.js';
+export { listSharedWithMeController } from './listSharedWithMe/index.js';

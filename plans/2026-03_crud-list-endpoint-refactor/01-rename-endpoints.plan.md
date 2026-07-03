@@ -169,3 +169,11 @@ python3 -m tpb_sdk.entropy --path . --format lint | grep ddd_endpoint_granularit
 - **Structure mixte** : `sharedByMe` et `sharedWithMe` sont des fichiers plats — le plan les reorganise en sous-dossiers (normalisation structurelle).
 - **Pipeline deprecated** : tous les use cases utilisent `Assert` au lieu de `ValidateInput`. Le rename conserve le nom deprecated — la migration pipeline est un chantier separe.
 - **Pas de consumers cross-repo** : tous les appels sont internes a tpb-lms.
+
+## Superseded 2026-07-04
+
+Superseded par l'initiative `plans/2026-07-04_lms-api-doctrine-nesting-unifiedto-exit/`
+(Plan 01 `api-crud-list-conformance`). Les 4 renames sharing y sont exécutés
+(chemins réels `backend/lms/application/sharing/`, pas `backend/application/`) :
+`shareContent→createShare`, `revokeShare→deleteShare`,
+`sharedByMe→listSharedByMe`, `sharedWithMe→listSharedWithMe`.

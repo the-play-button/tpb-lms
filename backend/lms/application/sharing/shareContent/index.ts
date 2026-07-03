@@ -1,1 +1,0 @@
-export { shareContentController } from './shareContentController';

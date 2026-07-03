@@ -1,0 +1,1 @@
+export { createShareController } from './createShareController';

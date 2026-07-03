@@ -21,27 +21,27 @@ import { listCourses, getCourse } from './handlers/courses.js';
 import { listEnrollments, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus, updateProgress } from './handlers/enrollment/index.js';
 import { listBadges } from './handlers/badges.js';
 import { handleEvent, handleBatchEvents } from './handlers/events.js';
-import { getStepSignals, getCourseSignalsHandler, resetCourseSignals } from './handlers/signals.js';
+import { getStepSignals, getCourseSignalsHandler, deleteCourseSignals } from './handlers/signals.js';
 import { handleQuizSubmission, handleTallyWebhook, handleTallyWebhookWithBody, verifyTallySignature } from './handlers/quiz/index.js';
 import { getLearnerProgress } from './handlers/learner.js';
 import { getLeaderboard, getUserStats } from './handlers/leaderboard.js';
 import { handleTestSeed } from './handlers/test.js';
-import { createAPIKeyHandler, listAPIKeysHandler, revokeAPIKeyHandler, adminCreateAPIKeyHandler } from './handlers/apikeys/index.js';
+import { createAPIKeyHandler, listAPIKeysHandler, deleteAPIKeyHandler, adminCreateAPIKeyHandler } from './handlers/apikeys/index.js';
 import { getAdminStats } from './handlers/admin.js';
 import { listSpaces, getSpace, getPage } from './handlers/kms.js';
 import { getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview } from './handlers/translations/index.js';
-import { getGlossary, addGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary/index.js';
+import { getGlossary, createGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary/index.js';
 import { getGitHubContent, listGitHubDirectory } from './handlers/content.js';
 import { createByocContext } from './handlers/byocContext.js';
 import { getCloudContentController } from './lms/application/cloudContent/getCloudContent/getCloudContentController.js';
 import { getCloudPitchController } from './lms/application/cloudContent/getCloudPitch/getCloudPitchController.js';
 import { listConnectionsController } from './lms/application/connections/listConnections/listConnectionsController.js';
 import { getDefaultConnectionController } from './lms/application/connections/getDefaultConnection/getDefaultConnectionController.js';
-import { shareContentController } from './lms/application/sharing/shareContent/shareContentController.js';
-import { revokeShareController } from './lms/application/sharing/revokeShare/revokeShareController.js';
+import { createShareController } from './lms/application/sharing/createShare/createShareController.js';
+import { deleteShareController } from './lms/application/sharing/deleteShare/deleteShareController.js';
 import { listPermissionsController } from './lms/application/sharing/listPermissions/listPermissionsController.js';
-import { sharedWithMeController } from './lms/application/sharing/sharedWithMeController.js';
-import { sharedByMeController } from './lms/application/sharing/sharedByMeController.js';
+import { listSharedWithMeController } from './lms/application/sharing/listSharedWithMe/index.js';
+import { listSharedByMeController } from './lms/application/sharing/listSharedByMe/index.js';
 // Content-authoring CRUD (Plan 02): create/update/delete courses + classes.
 import { createAuthoringContext } from './handlers/authoringContext.js';
 import { createCourseController } from './lms/application/courses/createCourse/index.js';
@@ -285,23 +285,20 @@ const standardRoutes = [
   { method: 'POST', path: '/api/events/batch', handler: handleBatchEvents },
   { method: 'GET', path: '/api/enrollments', handler: listEnrollments },
   { method: 'GET', path: '/api/courses', handler: listCourses },
-  { method: 'GET', path: '/api/soms', handler: listCourses },
   { method: 'GET', path: '/api/kms/spaces', handler: listSpaces },
   { method: 'GET', path: '/api/translations/review', handler: getTranslationsForReview },
   { method: 'POST', path: '/api/translations/batch', handler: batchUpsertTranslations },
   { method: 'GET', path: '/api/badges', handler: listBadges },
   { method: 'GET', path: '/api/learner', handler: getLearnerProgress },
-  { method: 'GET', path: '/api/profile', handler: getLearnerProgress },
   { method: 'GET', path: '/api/stats', handler: getUserStats },
   { method: 'GET', path: '/api/leaderboard', handler: getLeaderboard },
   { method: 'POST', path: '/api/quiz', handler: handleQuizSubmission },
   { method: 'POST', path: '/api/admin/api-keys', handler: adminCreateAPIKeyHandler },
   { method: 'GET', path: '/api/signals/:courseId/:stepId', handler: getStepSignals, params: ['courseId', 'stepId'] },
   { method: 'GET', path: '/api/signals/:courseId', handler: getCourseSignalsHandler, params: ['courseId'] },
-  { method: 'POST', path: '/api/signals/:courseId/reset', handler: resetCourseSignals, params: ['courseId'] },
+  { method: 'DELETE', path: '/api/signals/:courseId', handler: deleteCourseSignals, params: ['courseId'] },
   { method: 'PATCH', path: '/api/enrollments/:courseId/progress', handler: updateProgress, params: ['courseId'] },
   { method: 'GET', path: '/api/courses/:courseId', handler: getCourse, params: ['courseId'] },
-  { method: 'GET', path: '/api/soms/:courseId', handler: getCourse, params: ['courseId'] },
   { method: 'POST', path: '/api/courses/:courseId/enroll', handler: enrollInCourse, params: ['courseId'] },
   { method: 'POST', path: '/api/courses/:courseId/abandon', handler: abandonCourse, params: ['courseId'] },
   { method: 'POST', path: '/api/courses/:courseId/complete', handler: completeCourse, params: ['courseId'] },
@@ -312,14 +309,14 @@ const standardRoutes = [
   { method: 'PUT', path: '/api/translations/:namespace/:locale/:key', handler: upsertTranslation, params: ['namespace', 'locale', 'key'] },
   { method: 'POST', path: '/api/glossary/:locale/import', handler: importGlossaryTerms, params: ['locale'] },
   { method: 'GET', path: '/api/glossary/:locale', handler: getGlossary, params: ['locale'] },
-  { method: 'POST', path: '/api/glossary/:locale', handler: addGlossaryTerm, params: ['locale'] },
+  { method: 'POST', path: '/api/glossary/:locale', handler: createGlossaryTerm, params: ['locale'] },
   { method: 'DELETE', path: '/api/glossary/:locale/:termId', handler: deleteGlossaryTerm, params: ['locale', 'termId'] },
 ];
 
 const authKeyRoutes = [
   { method: 'POST', path: '/api/auth/api-keys', handler: createAPIKeyHandler },
   { method: 'GET', path: '/api/auth/api-keys', handler: listAPIKeysHandler },
-  { method: 'DELETE', path: '/api/auth/api-keys/:keyId', handler: revokeAPIKeyHandler, params: ['keyId'] },
+  { method: 'DELETE', path: '/api/auth/api-keys/:keyId', handler: deleteAPIKeyHandler, params: ['keyId'] },
 ];
 
 const byocRoutes = [
@@ -327,10 +324,10 @@ const byocRoutes = [
   { method: 'GET', path: '/api/content/cloud/pitch', handler: getCloudPitchController },
   { method: 'GET', path: '/api/connections', handler: listConnectionsController },
   { method: 'GET', path: '/api/connections/default', handler: getDefaultConnectionController },
-  { method: 'GET', path: '/api/content/shared-with-me', handler: sharedWithMeController },
-  { method: 'GET', path: '/api/content/shared-by-me', handler: sharedByMeController },
-  { method: 'POST', path: '/api/content/:contentId/share', handler: shareContentController, params: ['contentId'] },
-  { method: 'DELETE', path: '/api/content/:contentId/share/:shareId', handler: revokeShareController, params: ['contentId', 'shareId'] },
+  { method: 'GET', path: '/api/content/shared-with-me', handler: listSharedWithMeController },
+  { method: 'GET', path: '/api/content/shared-by-me', handler: listSharedByMeController },
+  { method: 'POST', path: '/api/content/:contentId/share', handler: createShareController, params: ['contentId'] },
+  { method: 'DELETE', path: '/api/content/:contentId/share/:shareId', handler: deleteShareController, params: ['contentId', 'shareId'] },
   { method: 'GET', path: '/api/content/:contentId/permissions', handler: listPermissionsController, params: ['contentId'] },
 ];
 

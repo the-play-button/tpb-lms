@@ -1,0 +1,14 @@
+/**
+ * Filter — Régime B : pass-through (no FLS — endpoint scope-restricted via CheckPolicies).
+ */
+import type { RevokeShareOutput } from './deleteShareExecute.js';
+
+/**
+ * Filter step: pass-through for revoke response.
+ *
+ * The revoke output (share_id, content_ref_id, revoked_at) contains
+ * no sensitive fields to strip.
+ */
+export const deleteShareFilter = (output: RevokeShareOutput): RevokeShareOutput => {
+  return output;
+};

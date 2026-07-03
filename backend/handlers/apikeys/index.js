@@ -3,5 +3,5 @@
  */
 export { createAPIKeyHandler } from './createAPIKeyHandler.js';
 export { listAPIKeysHandler } from './listAPIKeysHandler.js';
-export { revokeAPIKeyHandler } from './revokeAPIKeyHandler.js';
+export { deleteAPIKeyHandler } from './deleteAPIKeyHandler.js';
 export { adminCreateAPIKeyHandler } from './adminCreateAPIKeyHandler.js';
