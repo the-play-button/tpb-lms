@@ -42,6 +42,14 @@ import { revokeShareController } from './lms/application/sharing/revokeShare/rev
 import { listPermissionsController } from './lms/application/sharing/listPermissions/listPermissionsController.js';
 import { sharedWithMeController } from './lms/application/sharing/sharedWithMeController.js';
 import { sharedByMeController } from './lms/application/sharing/sharedByMeController.js';
+// Content-authoring CRUD (Plan 02): create/update/delete courses + classes.
+import { createAuthoringContext } from './handlers/authoringContext.js';
+import { createCourseController } from './lms/application/courses/createCourse/index.js';
+import { updateCourseController } from './lms/application/courses/updateCourse/index.js';
+import { deleteCourseController } from './lms/application/courses/deleteCourse/index.js';
+import { createClassController } from './lms/application/classes/createClass/index.js';
+import { updateClassController } from './lms/application/classes/updateClass/index.js';
+import { deleteClassController } from './lms/application/classes/deleteClass/index.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
 
@@ -326,6 +334,16 @@ const byocRoutes = [
   { method: 'GET', path: '/api/content/:contentId/permissions', handler: listPermissionsController, params: ['contentId'] },
 ];
 
+// Content-authoring CRUD (Plan 02): Tier 1 create/update/delete on courses + classes.
+const authoringRoutes = [
+  { method: 'POST',   path: '/api/courses',           handler: createCourseController },
+  { method: 'PATCH',  path: '/api/courses/:courseId', handler: updateCourseController, params: ['courseId'] },
+  { method: 'DELETE', path: '/api/courses/:courseId', handler: deleteCourseController, params: ['courseId'] },
+  { method: 'POST',   path: '/api/classes',           handler: createClassController },
+  { method: 'PATCH',  path: '/api/classes/:classId',  handler: updateClassController, params: ['classId'] },
+  { method: 'DELETE', path: '/api/classes/:classId',  handler: deleteClassController, params: ['classId'] },
+];
+
 // --- Generic route registrar: ONE function, different context builders per group ---
 
 const registerRoutes = (honoApp, routes, buildArgs) => {
@@ -357,6 +375,12 @@ registerRoutes(app, byocRoutes, async (c) => {
   const authzClient = _bastionClient || await initBastionClient(c.env);
   return [c.req.raw, await createByocContext(c.req.raw, c.env, c.var.userContext, authzClient, c.var.actor || { id: '', email: null, type: 'unknown', bastionUserId: null, scopes: [], organizationId: null, roles: [] })];
 });
+
+// Content-authoring CRUD (Plan 02): PBAC via hasScope on the actor (no ReBAC).
+registerRoutes(app, authoringRoutes, (c) => [
+  c.req.raw,
+  createAuthoringContext(c.req.raw, c.env, c.var.userContext, c.var.actor || { id: '', email: null, type: 'unknown', bastionUserId: null, scopes: [], organizationId: null, roles: [] }),
+]);
 
 export default {
   fetch: (request, env, ctx) => app.fetch(request, env, ctx),
