@@ -105,12 +105,14 @@ erDiagram
     lms_class {
         TEXT id PK
         TEXT course_id FK
+        TEXT parent_class_id FK "adjacency-list tree (migration 006)"
+        TEXT node_kind "SECTION folder | LESSON leaf"
         TEXT name
         TEXT description
-        JSON media_json "VIDEO|QUIZ objects"
+        JSON media_json "VIDEO|QUIZ objects (LESSON only)"
         JSON instructor_ids_json
         JSON student_ids_json
-        INT order_index
+        INT sys_order_index "orders siblings within a level"
         JSON languages_json
         JSON raw_json
         TEXT created_at
@@ -233,6 +235,7 @@ erDiagram
     kms_page ||--o| kms_page : "parent"
     
     lms_course ||--o{ lms_class : "contains"
+    lms_class ||--o| lms_class : "parent"
     
     gamification_badge ||--o{ gamification_award : "awarded as"
     

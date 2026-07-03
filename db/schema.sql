@@ -135,8 +135,18 @@ CREATE TABLE IF NOT EXISTS lms_course (
     updated_at TEXT DEFAULT (datetime('now'))
 );
 
--- LmsClass (lessons/modules/steps within courses)
--- Unified.to conformity: uses sys_order_index, raw_json for extensions
+-- LmsClass (nodes of a course's content tree: SECTION folders + LESSON leaves)
+-- Field naming aligned on the unified.to canonical CRUD model (reference only,
+-- no runtime dependency): uses sys_order_index, raw_json for extensions.
+--
+-- NESTED SECTIONS (migration 006): lms_class is an ARBITRARY-DEPTH adjacency-list
+-- tree, same pattern as kms_space.parent_space_id / kms_page.parent_page_id /
+-- hris_group.parent_id above. Migration 006 adds two columns to this table:
+--   parent_class_id TEXT REFERENCES lms_class(id)  -- NULL = top-level under course
+--   node_kind TEXT NOT NULL DEFAULT 'LESSON'        -- SECTION (folder) | LESSON (leaf)
+-- They are NOT inline here because SQLite has no ADD COLUMN IF NOT EXISTS and this
+-- CREATE TABLE also runs on fresh installs before migrations apply. sys_order_index
+-- (below) orders siblings within a level.
 CREATE TABLE IF NOT EXISTS lms_class (
     id TEXT PRIMARY KEY,
     course_id TEXT NOT NULL REFERENCES lms_course(id),
@@ -163,8 +173,9 @@ CREATE TABLE IF NOT EXISTS lms_class (
     
     -- Extensions TPB in raw_json:
     -- - tpb_step_type: VIDEO | QUIZ | CONTENT | MIXED
-    -- - tpb_section: Optional section grouping
     -- - tpb_content_md: Legacy inline markdown (deprecated)
+    -- (tpb_section soft-label removed by migration 006 → real SECTION nodes via
+    --  parent_class_id + node_kind; backfill promotes any legacy labels.)
     raw_json TEXT,
     
     created_at TEXT DEFAULT (datetime('now')),

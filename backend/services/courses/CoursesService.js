@@ -56,16 +56,6 @@ const enrichClass = (cls, currentStep) => {
     };
 };
 
-const processClasses = (classes) => {
-    let currentStep = 0;
-    const enrichedClasses = classes.map((cls) => {
-        const enriched = enrichClass(cls, currentStep);
-        if (enriched.step_completed) currentStep = Math.max(currentStep, enriched.order_index);
-        return enriched;
-    });
-    return enrichedClasses.map((cls) => ({ ...cls, can_access: cls.order_index <= currentStep + 1 }));
-};
-
 const queryActiveCourses = (env) =>
     env.DB.prepare(`
         SELECT id, name, description, categories_json, is_private
@@ -124,6 +114,7 @@ const queryCourseClasses = (env, userId, courseId) =>
     env.DB.prepare(`
         SELECT c.id, c.name, c.description, c.media_json,
             c.sys_order_index, c.raw_json,
+            c.parent_class_id, c.node_kind,
             COALESCE(p.video_completed, 0) as video_completed,
             COALESCE(p.quiz_passed, 0) as quiz_passed,
             p.video_max_position_sec, p.video_duration_sec
@@ -149,16 +140,99 @@ const applyClassTranslations = async (env, enrichedClasses, lang) => {
     }));
 };
 
+// ---- Nested sections (migration 006): adjacency-list tree over lms_class ----
+// Rows are grouped by parent_class_id; siblings ordered by sys_order_index.
+// SECTION nodes are folders; LESSON nodes are leaves carrying media + progress.
+const ROOT_KEY = '__root';
+
+const buildAdjacency = (rows) => {
+    const byParent = new Map();
+    for (const row of rows) {
+        const key = row.parent_class_id || ROOT_KEY;
+        if (!byParent.has(key)) byParent.set(key, []);
+        byParent.get(key).push(row);
+    }
+    for (const siblings of byParent.values()) {
+        siblings.sort((a, b) => (a.sys_order_index ?? 0) - (b.sys_order_index ?? 0));
+    }
+    return byParent;
+};
+
+// Depth-first traversal → ordered flat list of LESSON leaf rows (the global step
+// sequence used for sequential progress / can_access gating).
+const flattenLessonsDFS = (byParent, key = ROOT_KEY, acc = []) => {
+    for (const row of byParent.get(key) || []) {
+        if ((row.node_kind || 'LESSON') === 'LESSON') acc.push(row);
+        flattenLessonsDFS(byParent, row.id, acc);
+    }
+    return acc;
+};
+
+// Enrich the DFS-ordered lesson rows, assigning a GLOBAL step index by position
+// (sys_order_index is now per-sibling, so array position is the true ordinal).
+const enrichLessonSequence = (lessonRows) => {
+    let currentStep = 0;
+    const enriched = lessonRows.map((cls, i) => {
+        const e = enrichClass(cls, currentStep);
+        e.order_index = i;
+        if (e.step_completed) currentStep = Math.max(currentStep, i);
+        return e;
+    });
+    return enriched.map((e) => ({ ...e, can_access: e.order_index <= currentStep + 1 }));
+};
+
+// Build the display tree: SECTION folders + LESSON leaves (enriched/localized).
+const buildDisplayTree = (byParent, lessonById, sectionNameById, key = ROOT_KEY) =>
+    (byParent.get(key) || []).map((row) => {
+        const kind = row.node_kind || 'LESSON';
+        if (kind === 'SECTION') {
+            return {
+                id: row.id,
+                name: sectionNameById.get(row.id) ?? row.name,
+                description: row.description,
+                node_kind: 'SECTION',
+                order_index: row.sys_order_index ?? 0,
+                children: buildDisplayTree(byParent, lessonById, sectionNameById, row.id),
+            };
+        }
+        return {
+            ...(lessonById.get(row.id) || { id: row.id, name: row.name }),
+            node_kind: 'LESSON',
+            children: buildDisplayTree(byParent, lessonById, sectionNameById, row.id),
+        };
+    });
+
+const translateSectionNames = async (env, sectionRows, lang) => {
+    const map = new Map();
+    if (!lang) return map;
+    await Promise.all(sectionRows.map(async (row) => {
+        const t = await loadTranslations(env, 'class', row.id, lang);
+        if (t.name) map.set(row.id, t.name);
+    }));
+    return map;
+};
+
 export const getCourseForUser = async (env, userId, courseId, lang) => {
     const course = await queryCourseById(env, courseId);
     if (!course) return { notFound: true };
 
     const classesResult = await queryCourseClasses(env, userId, courseId);
-    const enrichedClasses = processClasses(classesResult.results || []);
-    const localizedClasses = await applyClassTranslations(env, enrichedClasses, lang);
+    const rows = classesResult.results || [];
+    const byParent = buildAdjacency(rows);
+
+    // Flat LESSON sequence (progress) + section folders (display).
+    const lessonRows = flattenLessonsDFS(byParent);
+    const enrichedLessons = enrichLessonSequence(lessonRows);
+    const localizedLessons = await applyClassTranslations(env, enrichedLessons, lang);
+    const lessonById = new Map(localizedLessons.map((l) => [l.id, l]));
+
+    const sectionRows = rows.filter((r) => (r.node_kind || 'LESSON') === 'SECTION');
+    const sectionNameById = await translateSectionNames(env, sectionRows, lang);
+
+    const nodes = buildDisplayTree(byParent, lessonById, sectionNameById);
     const localizedCourse = await applyCourseTranslations(env, courseId, lang, course.name, course.description);
 
-    const completedSteps = localizedClasses.filter(({ step_completed } = {}) => step_completed).length;
+    const completedSteps = localizedLessons.filter(({ step_completed } = {}) => step_completed).length;
     const currentStepIndex = completedSteps;
 
     return {
@@ -168,12 +242,15 @@ export const getCourseForUser = async (env, userId, courseId, lang) => {
             title: localizedCourse.title,
             description: localizedCourse.description,
             categories: course.categories_json ? JSON.parse(course.categories_json) : [],
-            classes: localizedClasses,
+            // Tree of SECTION folders + LESSON leaves (display structure).
+            nodes,
+            // Flat DFS-ordered LESSON leaves (sequential progress + back-compat).
+            classes: localizedLessons,
             progress: {
-                total_steps: localizedClasses.length,
+                total_steps: localizedLessons.length,
                 completed_steps: completedSteps,
                 current_step: currentStepIndex,
-                can_access_step: Math.min(currentStepIndex + 1, localizedClasses.length),
+                can_access_step: Math.min(currentStepIndex + 1, localizedLessons.length),
             },
         },
     };
