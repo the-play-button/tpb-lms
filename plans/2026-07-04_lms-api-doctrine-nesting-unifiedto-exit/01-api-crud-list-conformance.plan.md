@@ -29,12 +29,18 @@ Fichier routeur : `backend/index.js` (routes inline, arrays `publicRoutes` /
 
 | Endpoint | Verdict | Action |
 |---|---|---|
-| `GET /api/soms` (== `listCourses`) | alias de `/api/courses` | **Supprimer** la route `/api/soms`. |
-| `GET /api/soms/:courseId` (== `getCourse`) | alias de `/api/courses/:courseId` | **Supprimer**. |
-| `GET /api/profile` (== `getLearnerProgress`) | alias de `/api/learner` | **Supprimer** `/api/profile`. |
+| `GET /api/soms` (== `listCourses`) | alias de `/api/courses` | **Supprimer** la route `/api/soms`. ✅ confirmé user 2026-07-04. |
+| `GET /api/soms/:courseId` (== `getCourse`) | alias de `/api/courses/:courseId` | **Supprimer**. ✅ confirmé. |
+| `GET /api/profile` (== `getLearnerProgress`) | alias de `/api/learner` | **Supprimer** `/api/profile`, garder `/api/learner`. ✅ confirmé user 2026-07-04. |
 
-> Vérifier les consumers frontend (`frontend/pages`) + externes avant suppression.
-> "soms" (= Skool-Of-the-Month?) et "profile" sont des restes historiques.
+> **Décision `/api/profile` (vérifié 2026-07-04)** : le handler `getLearnerProgress`
+> (`backend/handlers/learner.js`) renvoie la **progression d'apprentissage**
+> (`fetchLearnerProgress(env, userId, email)`), PAS de l'identité user (ça =
+> tpb-bastion). Le nom "profile" est trompeur mais la capacité (progress) est du
+> domaine LMS légitime → on supprime **l'alias** `/api/profile`, on garde
+> `/api/learner`. Aucun consumer externe réel ne tape `/api/profile` (les hits
+> cross-workspace = logto account-API sans rapport + docs de spec-testing).
+> Idem `soms` (= Skool-Of-the-Month, reste historique) : alias pur, 0 consumer.
 
 ### B — State-transitions déguisées → Tier 1 `update` (Q1)
 

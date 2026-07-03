@@ -80,8 +80,10 @@ aura été stabilisé.
 
 - Migration des noms de pipeline deprecated (`Assert` → `ValidateInput`) —
   chantier orthogonal, mentionné dans `TODO.md` mais non couvert ici.
-- Ré-ingestion effective de la classroom Nick Saraev — c'est un run *data* qui
-  consommera le write-API de 02 ; hors de cette initiative *code*.
+- Ré-ingestion effective de la classroom Nick Saraev + upload des 400 MP4 vers
+  YouTube privé — run *data* qui consommera le write-API de 02. **Confirmé
+  hors-scope par l'utilisateur 2026-07-04** ("garde le focus sur le tpb-lms
+  lui-même"). Cette initiative reste 100% code tpb-lms.
 - Frontend `frontend/pages` — sera adapté au fil des plans si un endpoint
   consommé change, mais pas de refonte UI.
 
