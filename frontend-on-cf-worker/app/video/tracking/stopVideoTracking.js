@@ -1,26 +1,19 @@
 /**
- * Stop video tracking
+ * Stop video tracking — destroys the active VideoProvider tracker + resets state.
  */
 
 import { trackingState, log } from './_shared.js';
 
 export const stopVideoTracking = () => {
-    if (trackingState.streamPlayer) {
+    if (trackingState.activeTracker) {
         log.debug('Stopping video tracking');
-        trackingState.streamPlayer = null;
-        trackingState.lastPingPosition = -10;
-        trackingState.isPlaying = false;
-        trackingState.videoCompletedHandled = false;
+        try { trackingState.activeTracker.destroy?.(); } catch { /* element already gone */ }
+        trackingState.activeTracker = null;
     }
-    // YouTube IFrame API (event-driven): drop the player ref.
-    if (trackingState.youtubePlayer) {
-        if (typeof trackingState.youtubePlayer.destroy === 'function') {
-            try { trackingState.youtubePlayer.destroy(); } catch { /* iframe already gone */ }
-        }
-        trackingState.youtubePlayer = null;
-        trackingState.lastPingPosition = -10;
-        trackingState.isPlaying = false;
-    }
-    // Signal-based pings are bound to the <video> element via 'timeupdate' —
-    // they auto-stop when the video is removed from the DOM. No interval to clear.
+    // Legacy holders populated by adapters (CF Stream) — drop refs.
+    trackingState.streamPlayer = null;
+    trackingState.youtubePlayer = null;
+    trackingState.lastPingPosition = -10;
+    trackingState.isPlaying = false;
+    trackingState.videoCompletedHandled = false;
 };

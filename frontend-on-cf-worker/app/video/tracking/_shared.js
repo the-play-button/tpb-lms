@@ -8,8 +8,9 @@ import { updateUIWithoutVideoReset } from '../../course/renderer.js';
 import { log } from '../../log.js';
 
 export const trackingState = {
-    streamPlayer: null,
-    youtubePlayer: null,      // YouTube IFrame API player instance (event-driven)
+    streamPlayer: null,       // CF Stream player (populated by cloudflareProvider — pause/speed)
+    youtubePlayer: null,      // legacy holder (kept for back-compat clears)
+    activeTracker: null,      // { destroy() } returned by the active VideoProvider adapter
     lastPingPosition: -10,
     isPlaying: false,
     videoCompletedHandled: false,

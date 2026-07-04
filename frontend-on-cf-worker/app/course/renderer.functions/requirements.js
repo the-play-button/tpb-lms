@@ -5,11 +5,11 @@
 import { t } from '../../../i18n/index.js';
 
 export const renderRequirements = ctx => {
-    const { cls, hasQuiz, videoCompleted, quizPassed, stepCompleted, videoId, videoYoutubeId, videoUrl, quizMedia } = ctx;
+    const { cls, hasQuiz, videoCompleted, quizPassed, stepCompleted, quizMedia } = ctx;
 
     if (stepCompleted) return '';
 
-    const hasVideo = !!(videoId || videoYoutubeId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
+    const hasVideo = ctx.hasVideo || !!cls.content_md?.includes('cloudflarestream.com');
     const hasQuizContent = !!quizMedia;
     if (!hasVideo && !hasQuizContent) {
         return ''; // CONTENT step - no requirements

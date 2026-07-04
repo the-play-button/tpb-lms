@@ -58,7 +58,7 @@ export const initGlobals = () => {
 
     // Category 2 : YouTube IFrame API readiness bridge.
     // The YouTube API script calls window.onYouTubeIframeAPIReady when loaded ;
-    // video/tracking/youtubeTracking.js awaits window.__tpbYouTubeApiReady.
+    // video/providers/youtubeProvider.js awaits window.__tpbYouTubeApiReady.
     // Global assignment lives here (SSOT) per § global_pollution.
     const ytReady = new Promise((resolve) => {
         const onYouTubeIframeAPIReady = () => resolve(window.YT);

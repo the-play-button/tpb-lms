@@ -1,100 +1,49 @@
 /**
- * Setup video tracking for a step
+ * Setup video tracking for a step — dispatches to the resolved VideoProvider
+ * adapter (§ hexagonal video port). The provider wires its host's playback events
+ * to the shared emit hooks; the backend computes step completion from the pings.
  */
 
-import { trackingState, RESUME_THRESHOLD, setupNativeVideoTracking, sendVideoEvent, sendVideoPing, log } from './_shared.js';
+import { trackingState, sendVideoEvent, sendVideoPing, log } from './_shared.js';
 import { stopVideoTracking } from './stopVideoTracking.js';
-import { setupYoutubeTracking } from './youtubeTracking.js';
+import { resolveProviderById } from '../providers/index.js';
 
 /**
- * Setup video tracking for a step
  * @param {number} stepIndex - The step index
  * @param {number} resumePosition - Optional position to resume from (GAP-102)
  */
 export const setupVideoTracking = (stepIndex, resumePosition = null) => {
     stopVideoTracking();
 
-    const iframe = document.getElementById(`video-player-${stepIndex}`);
-    if (!iframe) {
+    const element = document.getElementById(`video-player-${stepIndex}`);
+    if (!element) {
         log.debug('video', 'No video player found for step', { stepIndex });
         return;
     }
 
-    const videoId = iframe.dataset.videoId;
-    const videoUrl = iframe.dataset.videoUrl;
-    const videoDuration = parseInt(iframe.dataset.videoDuration) || 300;
-    const courseId = iframe.dataset.courseId;
-    const classId = iframe.dataset.classId;
-
-    log.info('video', 'Setting up video tracking', { stepIndex, videoId, videoUrl, videoDuration, resumePosition });
-
-    if (videoUrl && iframe.tagName === 'VIDEO') {
-        setupNativeVideoTracking(iframe, videoDuration, courseId, classId, resumePosition);
+    const providerId = element.dataset.provider;
+    const provider = resolveProviderById(providerId);
+    if (!provider) {
+        log.error('video', 'No video provider for element', { stepIndex, providerId });
         return;
     }
 
-    // YouTube embed → track via the YouTube IFrame API (not the CF Stream SDK).
-    if (iframe.dataset.youtubeId) {
-        void setupYoutubeTracking(iframe, videoDuration, courseId, classId);
-        return;
-    }
+    const videoId = element.dataset.youtubeId || element.dataset.loomId || element.dataset.videoId || element.dataset.videoUrl || 'external';
+    const videoDuration = parseInt(element.dataset.videoDuration) || 300;
+    const courseId = element.dataset.courseId;
+    const classId = element.dataset.classId;
 
-    if (typeof Stream === 'undefined') {
-        log.error('video', 'Cloudflare Stream SDK not loaded');
-        return;
-    }
+    trackingState.lastPingPosition = -10;
+    trackingState.isPlaying = false;
+    trackingState.videoCompletedHandled = false;
 
-    try {
-        trackingState.streamPlayer = Stream(iframe);
-        trackingState.lastPingPosition = -10;
-        trackingState.isPlaying = false;
+    const hooks = {
+        videoDuration,
+        resumePosition,
+        onEvent: (type, position, duration) => sendVideoEvent(type, videoId, position, duration, courseId, classId),
+        onPing: (position, duration) => sendVideoPing(videoId, position, duration, courseId, classId),
+    };
 
-        if (resumePosition && resumePosition >= RESUME_THRESHOLD) {
-            trackingState.streamPlayer.addEventListener('loadeddata', () => {
-                log.debug(`Resuming video at ${resumePosition}s`);
-                trackingState.streamPlayer.currentTime = resumePosition;
-                trackingState.lastPingPosition = Math.floor(resumePosition / 10) * 10 - 10;
-            }, { once: true });
-        }
-
-        trackingState.streamPlayer.addEventListener('play', async () => {
-            log.debug('Video started playing');
-            trackingState.isPlaying = true;
-            const currentTime = Math.floor(trackingState.streamPlayer.currentTime || 0);
-            await sendVideoEvent('VIDEO_PLAY', videoId, currentTime, videoDuration, courseId, classId);
-        });
-
-        trackingState.streamPlayer.addEventListener('pause', async () => {
-            log.debug('Video paused');
-            trackingState.isPlaying = false;
-            const currentTime = Math.floor(trackingState.streamPlayer.currentTime || 0);
-            await sendVideoEvent('VIDEO_PAUSE', videoId, currentTime, videoDuration, courseId, classId);
-        });
-
-        trackingState.streamPlayer.addEventListener('ended', async () => {
-            log.debug('Video ended');
-            trackingState.isPlaying = false;
-
-            await sendVideoPing(videoId, videoDuration, videoDuration, courseId, classId);
-        });
-
-        trackingState.streamPlayer.addEventListener('timeupdate', async () => {
-            if (!trackingState.isPlaying) return;
-
-            const currentTime = Math.floor(trackingState.streamPlayer.currentTime);
-            const duration = Math.floor(trackingState.streamPlayer.duration) || videoDuration;
-
-            if (currentTime >= trackingState.lastPingPosition + 10) {
-                trackingState.lastPingPosition = Math.floor(currentTime / 10) * 10;
-                await sendVideoPing(videoId, currentTime, duration, courseId, classId);
-            }
-        });
-
-        log.debug('Stream SDK tracking initialized');
-        trackingState.streamSdkOk = true;
-
-    } catch (error) {
-        log.error('Failed to initialize Stream SDK:', error);
-        trackingState.streamSdkOk = false; // explicit fail marker — tracking disabled this session
-    }
+    log.info('video', 'Setting up video tracking', { stepIndex, providerId, videoId, videoDuration, resumePosition });
+    trackingState.activeTracker = provider.initTracking(element, hooks);
 };

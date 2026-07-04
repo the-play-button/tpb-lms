@@ -37,18 +37,12 @@ export const getSubtitleTracks = cls => {
 export const getVideoInfo = cls => {
     const videoMedia = getMediaByType(cls, 'VIDEO');
     if (!videoMedia) return { hasVideo: false };
-
-    // media_json entries carry `url`; older/pipeline rows may carry `video_url`.
-    const url = videoMedia.url || videoMedia.video_url || null;
-    const youtubeId = extractYoutubeId(url);
-
+    // Provider resolution lives in the VideoProvider registry (stepContext resolves
+    // it) — kept out of here to avoid a _mediaHelpers ↔ providers import cycle.
     return {
         hasVideo: true,
-        streamId: videoMedia.stream_id,
-        youtubeId,
-        // A YouTube url must NOT flow into a native <video src>; only real MP4 urls do.
-        videoUrl: youtubeId ? null : (videoMedia.video_url || (videoMedia.stream_id ? null : url)),
-        duration: videoMedia.duration_sec || 300
+        media: videoMedia,
+        duration: videoMedia.duration_sec || 300,
     };
 };
 

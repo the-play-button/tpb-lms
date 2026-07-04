@@ -4,6 +4,7 @@
  */
 import { getState } from '../../state.js';
 import { getMediaByType, getVideoInfo } from './_mediaHelpers.js';
+import { resolveProvider } from '../../video/providers/index.js';
 
 const getStepSignalData = (signals, classId) => {
     const stepSignal = signals?.steps?.find(({ class_id } = {}) => class_id === classId) || {};
@@ -25,15 +26,17 @@ export const getStepContext = () => {
     const cls = classes[stepIndex];
 
     const videoInfo = getVideoInfo(cls);
+    const resolvedVideo = videoInfo.hasVideo ? resolveProvider(videoInfo.media) : null;
     const signalData = getStepSignalData(signals, cls.id);
 
     return {
         course, cls, stepIndex,
         currentCourse: getState('currentCourse'),
         totalSteps: course.classes.length,
-        videoId: videoInfo.streamId,
-        videoYoutubeId: videoInfo.youtubeId,
-        videoUrl: videoInfo.videoUrl,
+        // Resolved VideoProvider (hexagonal port) — null when no video / unknown host.
+        hasVideo: !!resolvedVideo,
+        videoProviderId: resolvedVideo?.provider.id ?? null,
+        videoParsed: resolvedVideo?.parsed ?? null,
         videoDuration: videoInfo.duration,
         quizMedia: getMediaByType(cls, 'QUIZ', 'tally_form_id') || getMediaByType(cls, 'WEB', 'tally_form_id'),
         ...signalData

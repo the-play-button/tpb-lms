@@ -27,6 +27,10 @@ export const parseMediaUrl = media => {
         return { type: 'VIDEO', url, canFetch: false, source: 'youtube' };
     }
 
+    if (url.includes('loom.com')) {
+        return { type: 'VIDEO', url, canFetch: false, source: 'loom' };
+    }
+
     if (url.includes('tally.so')) {
         return { type: 'QUIZ', url, canFetch: false, source: 'tally' };
     }
