@@ -15,7 +15,6 @@ import { configureLogger, setLoggerWaitUntil, log, createBastionAuthMiddleware, 
 import { ALLOWED_ORIGINS, jsonResponse } from './cors.js';
 import { verifyAPIKey } from './auth/verifyAPIKey.js';
 import { getOrCreateContact } from './auth/getOrCreateContact.js';
-import { resolveRole } from './auth/resolveRole.js';
 import { getSession } from './handlers/auth.js';
 import { listCourses, getCourse } from './handlers/courses.js';
 import { listEnrollments, createEnrollment, updateEnrollment, getEnrollmentStatus, updateProgress } from './handlers/enrollment/index.js';
@@ -242,10 +241,15 @@ app.use('/api/*', async (c, next) => {
   if (!actor) return next();
 
   let contact = null;
-  let role = 'student';
+  // Derive the LMS role from the bastion-resolved actor roles (§ BASTION AUTH:
+  // consume ctx.actor, never re-call IAM). tpblms_admin/tpblms_instructor are the
+  // LMS bastion role names; absence = regular student.
+  const roleNames = actor.roles || [];
+  const role = roleNames.includes('tpblms_admin') ? 'admin'
+    : roleNames.includes('tpblms_instructor') ? 'instructor'
+    : 'student';
   if (actor.email) {
     contact = await getOrCreateContact(actor.email, c.env);
-    role = await resolveRole(actor.email, c.env);
   }
 
   c.set('auth', {
