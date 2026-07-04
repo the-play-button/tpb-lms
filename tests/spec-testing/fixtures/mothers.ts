@@ -1,11 +1,11 @@
-import { Email, ContentRefId, ShareId, ConnectionId } from '../../../backend/domain/value-objects/index';
-import { DraftContentRef } from '../../../backend/domain/entities/ContentRef/DraftContentRef';
-import { SharedContentRef } from '../../../backend/domain/entities/ContentRef/SharedContentRef';
-import { ActiveShare } from '../../../backend/domain/entities/Share/ActiveShare';
-import { RevokedShare } from '../../../backend/domain/entities/Share/RevokedShare';
-import type { ContentRefProps, ContentType, ContentUsage } from '../../../backend/domain/entities/ContentRef/types';
-import type { ShareProps, RevokedShareProps } from '../../../backend/domain/entities/Share/types';
-import type { ShareRole } from '../../../backend/domain/entities/ContentRef/SharedContentRef';
+import { Email, ContentRefId, ShareId, ConnectionId } from '../../../backend/lms/domain/value-objects/index';
+import { DraftContentRef } from '../../../backend/lms/domain/entities/ContentRef/DraftContentRef';
+import { SharedContentRef } from '../../../backend/lms/domain/entities/ContentRef/SharedContentRef';
+import { ActiveShare } from '../../../backend/lms/domain/entities/Share/ActiveShare';
+import { RevokedShare } from '../../../backend/lms/domain/entities/Share/RevokedShare';
+import type { ContentRefProps, ContentType, ContentUsage } from '../../../backend/lms/domain/entities/ContentRef/types';
+import type { ShareProps, RevokedShareProps } from '../../../backend/lms/domain/entities/Share/types';
+import type { ShareRole } from '../../../backend/lms/domain/entities/ContentRef/SharedContentRef';
 
 // ── Constants ──────────────────────────────────────────────
 

@@ -5,51 +5,51 @@ import {
   createTestContext,
 } from '../../fixtures';
 
-// ── shareContent ───────────────────────────────────────────
+// ── createShare ───────────────────────────────────────────
 
-import { shareContentValidateInput } from '../../../../backend/application/sharing/shareContent/shareContentValidateInput';
-import { shareContentHydrateContext } from '../../../../backend/application/sharing/shareContent/shareContentHydrateContext';
-import { shareContentCheckPolicies } from '../../../../backend/application/sharing/shareContent/shareContentCheckPolicies';
-import { shareContentExecute } from '../../../../backend/application/sharing/shareContent/shareContentExecute';
+import { createShareValidateInput } from '../../../../backend/lms/application/sharing/createShare/createShareValidateInput';
+import { createShareHydrateContext } from '../../../../backend/lms/application/sharing/createShare/createShareHydrateContext';
+import { createShareCheckPolicies } from '../../../../backend/lms/application/sharing/createShare/createShareCheckPolicies';
+import { createShareExecute } from '../../../../backend/lms/application/sharing/createShare/createShareExecute';
 
-// ── revokeShare ────────────────────────────────────────────
+// ── deleteShare ────────────────────────────────────────────
 
-import { revokeShareValidateInput } from '../../../../backend/application/sharing/revokeShare/revokeShareValidateInput';
-import { revokeShareHydrateContext } from '../../../../backend/application/sharing/revokeShare/revokeShareHydrateContext';
-import { revokeShareCheckPolicies } from '../../../../backend/application/sharing/revokeShare/revokeShareCheckPolicies';
-import { revokeShareExecute } from '../../../../backend/application/sharing/revokeShare/revokeShareExecute';
+import { deleteShareValidateInput } from '../../../../backend/lms/application/sharing/deleteShare/deleteShareValidateInput';
+import { deleteShareHydrateContext } from '../../../../backend/lms/application/sharing/deleteShare/deleteShareHydrateContext';
+import { deleteShareCheckPolicies } from '../../../../backend/lms/application/sharing/deleteShare/deleteShareCheckPolicies';
+import { deleteShareExecute } from '../../../../backend/lms/application/sharing/deleteShare/deleteShareExecute';
 
 // ── listPermissions ────────────────────────────────────────
 
-import { listPermissionsValidateInput } from '../../../../backend/application/sharing/listPermissions/listPermissionsValidateInput';
-import { listPermissionsHydrateContext } from '../../../../backend/application/sharing/listPermissions/listPermissionsHydrateContext';
-import { listPermissionsCheckPolicies } from '../../../../backend/application/sharing/listPermissions/listPermissionsCheckPolicies';
-import { listPermissionsExecute } from '../../../../backend/application/sharing/listPermissions/listPermissionsExecute';
+import { listPermissionsValidateInput } from '../../../../backend/lms/application/sharing/listPermissions/listPermissionsValidateInput';
+import { listPermissionsHydrateContext } from '../../../../backend/lms/application/sharing/listPermissions/listPermissionsHydrateContext';
+import { listPermissionsCheckPolicies } from '../../../../backend/lms/application/sharing/listPermissions/listPermissionsCheckPolicies';
+import { listPermissionsExecute } from '../../../../backend/lms/application/sharing/listPermissions/listPermissionsExecute';
 
-// ── sharedWithMe ───────────────────────────────────────────
+// ── listSharedWithMe ───────────────────────────────────────────
 
-import { sharedWithMeValidateInput } from '../../../../backend/application/sharing/sharedWithMeValidateInput';
-import { sharedWithMeCheckPolicies } from '../../../../backend/application/sharing/sharedWithMeCheckPolicies';
-import { sharedWithMeExecute } from '../../../../backend/application/sharing/sharedWithMeExecute';
+import { listSharedWithMeValidateInput } from '../../../../backend/lms/application/sharing/listSharedWithMe/listSharedWithMeValidateInput';
+import { listSharedWithMeCheckPolicies } from '../../../../backend/lms/application/sharing/listSharedWithMe/listSharedWithMeCheckPolicies';
+import { listSharedWithMeExecute } from '../../../../backend/lms/application/sharing/listSharedWithMe/listSharedWithMeExecute';
 
-// ── sharedByMe ─────────────────────────────────────────────
+// ── listSharedByMe ─────────────────────────────────────────────
 
-import { sharedByMeValidateInput } from '../../../../backend/application/sharing/sharedByMeValidateInput';
-import { sharedByMeCheckPolicies } from '../../../../backend/application/sharing/sharedByMeCheckPolicies';
-import { sharedByMeExecute } from '../../../../backend/application/sharing/sharedByMeExecute';
+import { listSharedByMeValidateInput } from '../../../../backend/lms/application/sharing/listSharedByMe/listSharedByMeValidateInput';
+import { listSharedByMeCheckPolicies } from '../../../../backend/lms/application/sharing/listSharedByMe/listSharedByMeCheckPolicies';
+import { listSharedByMeExecute } from '../../../../backend/lms/application/sharing/listSharedByMe/listSharedByMeExecute';
 
 // ════════════════════════════════════════════════════════════
-// shareContent
+// createShare
 // ════════════════════════════════════════════════════════════
 
-describe('shareContent', () => {
+describe('createShare', () => {
   describe('ValidateInput', () => {
     it('accepts valid input', async () => {
       const request = new Request('http://test.local', {
         method: 'POST',
         body: JSON.stringify({ email: RECIPIENT_EMAIL, role: 'READ' }),
       });
-      const result = await shareContentValidateInput(request, REF_ID);
+      const result = await createShareValidateInput(request, REF_ID);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.ref_id).toBe(REF_ID);
@@ -63,7 +63,7 @@ describe('shareContent', () => {
         method: 'POST',
         body: 'not json',
       });
-      const result = await shareContentValidateInput(request, REF_ID);
+      const result = await createShareValidateInput(request, REF_ID);
       expect(result.ok).toBe(false);
     });
 
@@ -72,7 +72,7 @@ describe('shareContent', () => {
         method: 'POST',
         body: JSON.stringify({ role: 'READ' }),
       });
-      const result = await shareContentValidateInput(request, REF_ID);
+      const result = await createShareValidateInput(request, REF_ID);
       expect(result.ok).toBe(false);
     });
 
@@ -81,7 +81,7 @@ describe('shareContent', () => {
         method: 'POST',
         body: JSON.stringify({ email: 'not-email', role: 'READ' }),
       });
-      const result = await shareContentValidateInput(request, REF_ID);
+      const result = await createShareValidateInput(request, REF_ID);
       expect(result.ok).toBe(false);
     });
 
@@ -90,7 +90,7 @@ describe('shareContent', () => {
         method: 'POST',
         body: JSON.stringify({ email: RECIPIENT_EMAIL, role: 'ADMIN' }),
       });
-      const result = await shareContentValidateInput(request, REF_ID);
+      const result = await createShareValidateInput(request, REF_ID);
       expect(result.ok).toBe(false);
     });
   });
@@ -102,7 +102,7 @@ describe('shareContent', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
 
       const input = { ref_id: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
-      const result = await shareContentHydrateContext(input, handlerContext as any);
+      const result = await createShareHydrateContext(input, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.contentRef.id.value).toBe(REF_ID);
@@ -113,7 +113,7 @@ describe('shareContent', () => {
     it('fails when contentRef not found', async () => {
       const { handlerContext } = createTestContext();
       const input = { ref_id: 'nonexistent', email: RECIPIENT_EMAIL, role: 'READ' as const };
-      const result = await shareContentHydrateContext(input, handlerContext as any);
+      const result = await createShareHydrateContext(input, handlerContext as any);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('NOT_FOUND');
     });
@@ -124,7 +124,7 @@ describe('shareContent', () => {
       const { handlerContext } = createTestContext();
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const result = await shareContentCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
+      const result = await createShareCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
       expect(result.ok).toBe(true);
     });
 
@@ -133,7 +133,7 @@ describe('shareContent', () => {
       authz.deny();
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const result = await shareContentCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
+      const result = await createShareCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('FORBIDDEN');
     });
@@ -142,7 +142,7 @@ describe('shareContent', () => {
       const { handlerContext } = createTestContext();
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const result = await shareContentCheckPolicies(context as any, OTHER_EMAIL, handlerContext as any);
+      const result = await createShareCheckPolicies(context as any, OTHER_EMAIL, handlerContext as any);
       expect(result.ok).toBe(false);
     });
 
@@ -153,7 +153,7 @@ describe('shareContent', () => {
         ShareMother.active({ id: `s_${i}`, sharedWithEmail: `u${i}@t.com` }),
       );
       const context = { contentRef: ref, existingShares: shares };
-      const result = await shareContentCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
+      const result = await createShareCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
       expect(result.ok).toBe(false);
     });
   });
@@ -165,7 +165,7 @@ describe('shareContent', () => {
       const context = { contentRef: ref, existingShares: [] as any[] };
       const input = { ref_id: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
 
-      const result = await shareContentExecute(input, context as any, handlerContext as any);
+      const result = await createShareExecute(input, context as any, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.shared_with).toBe(RECIPIENT_EMAIL);
@@ -181,7 +181,7 @@ describe('shareContent', () => {
       const context = { contentRef: ref, existingShares: [] as any[] };
       const input = { ref_id: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
 
-      await shareContentExecute(input, context as any, handlerContext as any);
+      await createShareExecute(input, context as any, handlerContext as any);
       expect(domainEvents.published).toHaveLength(1);
       expect(domainEvents.published[0].type).toBe('content.shared');
     });
@@ -192,7 +192,7 @@ describe('shareContent', () => {
       const context = { contentRef: ref, existingShares: [] as any[] };
       const input = { ref_id: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
 
-      await shareContentExecute(input, context as any, handlerContext as any);
+      await createShareExecute(input, context as any, handlerContext as any);
       const saved = [...sharesRepository.shares.values()][0];
       expect(saved.role).toBe('editor');
     });
@@ -200,19 +200,19 @@ describe('shareContent', () => {
 });
 
 // ════════════════════════════════════════════════════════════
-// revokeShare
+// deleteShare
 // ════════════════════════════════════════════════════════════
 
-describe('revokeShare', () => {
+describe('deleteShare', () => {
   describe('ValidateInput', () => {
     it('accepts valid share_id', () => {
-      const result = revokeShareValidateInput(SHARE_ID);
+      const result = deleteShareValidateInput(SHARE_ID);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.share_id).toBe(SHARE_ID);
     });
 
     it('rejects empty share_id', () => {
-      const result = revokeShareValidateInput('');
+      const result = deleteShareValidateInput('');
       expect(result.ok).toBe(false);
     });
   });
@@ -225,7 +225,7 @@ describe('revokeShare', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
       sharesRepository.shares.set(share.id.value, share);
 
-      const result = await revokeShareHydrateContext(SHARE_ID, handlerContext as any);
+      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.share.id.value).toBe(SHARE_ID);
@@ -235,7 +235,7 @@ describe('revokeShare', () => {
 
     it('fails when share not found', async () => {
       const { handlerContext } = createTestContext();
-      const result = await revokeShareHydrateContext('nonexistent', handlerContext as any);
+      const result = await deleteShareHydrateContext('nonexistent', handlerContext as any);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('NOT_FOUND');
     });
@@ -247,7 +247,7 @@ describe('revokeShare', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
       sharesRepository.shares.set(revoked.id.value, revoked);
 
-      const result = await revokeShareHydrateContext(SHARE_ID, handlerContext as any);
+      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext as any);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('NOT_FOUND');
     });
@@ -262,7 +262,7 @@ describe('revokeShare', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
       sharesRepository.shares.set(share.id.value, share);
 
-      const result = await revokeShareHydrateContext(SHARE_ID, handlerContext as any);
+      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.isOwner).toBe(false);
     });
@@ -272,7 +272,7 @@ describe('revokeShare', () => {
     it('allows owner with authz', async () => {
       const { handlerContext } = createTestContext();
       const context = { share: ShareMother.active(), contentRef: ContentRefMother.draft(), isOwner: true };
-      const result = await revokeShareCheckPolicies(context as any, handlerContext as any);
+      const result = await deleteShareCheckPolicies(context as any, handlerContext as any);
       expect(result.ok).toBe(true);
     });
 
@@ -280,14 +280,14 @@ describe('revokeShare', () => {
       const { handlerContext, authz } = createTestContext();
       authz.deny();
       const context = { share: ShareMother.active(), contentRef: ContentRefMother.draft(), isOwner: true };
-      const result = await revokeShareCheckPolicies(context as any, handlerContext as any);
+      const result = await deleteShareCheckPolicies(context as any, handlerContext as any);
       expect(result.ok).toBe(false);
     });
 
     it('denies non-owner', async () => {
       const { handlerContext } = createTestContext();
       const context = { share: ShareMother.active(), contentRef: ContentRefMother.draft(), isOwner: false };
-      const result = await revokeShareCheckPolicies(context as any, handlerContext as any);
+      const result = await deleteShareCheckPolicies(context as any, handlerContext as any);
       expect(result.ok).toBe(false);
     });
   });
@@ -299,7 +299,7 @@ describe('revokeShare', () => {
       const ref = ContentRefMother.draft();
       const context = { share, contentRef: ref, isOwner: true };
 
-      const result = await revokeShareExecute(context as any, handlerContext as any);
+      const result = await deleteShareExecute(context as any, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.share_id).toBe(SHARE_ID);
@@ -315,7 +315,7 @@ describe('revokeShare', () => {
       const ref = ContentRefMother.draft();
       const context = { share, contentRef: ref, isOwner: true };
 
-      await revokeShareExecute(context as any, handlerContext as any);
+      await deleteShareExecute(context as any, handlerContext as any);
       expect(domainEvents.published).toHaveLength(1);
       expect(domainEvents.published[0].type).toBe('share.revoked');
     });
@@ -412,18 +412,18 @@ describe('listPermissions', () => {
 });
 
 // ════════════════════════════════════════════════════════════
-// sharedWithMe
+// listSharedWithMe
 // ════════════════════════════════════════════════════════════
 
-describe('sharedWithMe', () => {
+describe('listSharedWithMe', () => {
   describe('ValidateInput', () => {
     it('accepts valid email', () => {
-      const result = sharedWithMeValidateInput(RECIPIENT_EMAIL);
+      const result = listSharedWithMeValidateInput(RECIPIENT_EMAIL);
       expect(result.ok).toBe(true);
     });
 
     it('rejects invalid email', () => {
-      const result = sharedWithMeValidateInput('not-email');
+      const result = listSharedWithMeValidateInput('not-email');
       expect(result.ok).toBe(false);
     });
   });
@@ -431,14 +431,14 @@ describe('sharedWithMe', () => {
   describe('CheckPolicies', () => {
     it('allows when authz passes', async () => {
       const { handlerContext } = createTestContext();
-      const result = await sharedWithMeCheckPolicies(handlerContext as any);
+      const result = await listSharedWithMeCheckPolicies(handlerContext as any);
       expect(result.ok).toBe(true);
     });
 
     it('denies when authz fails', async () => {
       const { handlerContext, authz } = createTestContext();
       authz.deny();
-      const result = await sharedWithMeCheckPolicies(handlerContext as any);
+      const result = await listSharedWithMeCheckPolicies(handlerContext as any);
       expect(result.ok).toBe(false);
     });
   });
@@ -452,7 +452,7 @@ describe('sharedWithMe', () => {
       sharesRepository.shares.set(share.id.value, share);
 
       const input = { userEmail: OWNER_EMAIL };
-      const result = await sharedWithMeExecute(input, handlerContext as any);
+      const result = await listSharedWithMeExecute(input, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(1);
@@ -464,7 +464,7 @@ describe('sharedWithMe', () => {
     it('returns empty array when no shares', async () => {
       const { handlerContext } = createTestContext();
       const input = { userEmail: OWNER_EMAIL };
-      const result = await sharedWithMeExecute(input, handlerContext as any);
+      const result = await listSharedWithMeExecute(input, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value).toHaveLength(0);
     });
@@ -472,18 +472,18 @@ describe('sharedWithMe', () => {
 });
 
 // ════════════════════════════════════════════════════════════
-// sharedByMe
+// listSharedByMe
 // ════════════════════════════════════════════════════════════
 
-describe('sharedByMe', () => {
+describe('listSharedByMe', () => {
   describe('ValidateInput', () => {
     it('accepts valid email', () => {
-      const result = sharedByMeValidateInput(OWNER_EMAIL);
+      const result = listSharedByMeValidateInput(OWNER_EMAIL);
       expect(result.ok).toBe(true);
     });
 
     it('rejects invalid email', () => {
-      const result = sharedByMeValidateInput('bad');
+      const result = listSharedByMeValidateInput('bad');
       expect(result.ok).toBe(false);
     });
   });
@@ -491,14 +491,14 @@ describe('sharedByMe', () => {
   describe('CheckPolicies', () => {
     it('allows when authz passes', async () => {
       const { handlerContext } = createTestContext();
-      const result = await sharedByMeCheckPolicies(handlerContext as any);
+      const result = await listSharedByMeCheckPolicies(handlerContext as any);
       expect(result.ok).toBe(true);
     });
 
     it('denies when authz fails', async () => {
       const { handlerContext, authz } = createTestContext();
       authz.deny();
-      const result = await sharedByMeCheckPolicies(handlerContext as any);
+      const result = await listSharedByMeCheckPolicies(handlerContext as any);
       expect(result.ok).toBe(false);
     });
   });
@@ -510,7 +510,7 @@ describe('sharedByMe', () => {
       sharesRepository.shares.set(share.id.value, share);
 
       const input = { userEmail: OWNER_EMAIL };
-      const result = await sharedByMeExecute(input, handlerContext as any);
+      const result = await listSharedByMeExecute(input, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(1);
@@ -522,7 +522,7 @@ describe('sharedByMe', () => {
     it('returns empty when no shares by user', async () => {
       const { handlerContext } = createTestContext();
       const input = { userEmail: OTHER_EMAIL };
-      const result = await sharedByMeExecute(input, handlerContext as any);
+      const result = await listSharedByMeExecute(input, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value).toHaveLength(0);
     });

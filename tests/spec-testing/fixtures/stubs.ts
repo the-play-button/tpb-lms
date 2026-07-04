@@ -1,9 +1,9 @@
-import type { DraftContentRef } from '../../../backend/domain/entities/ContentRef/DraftContentRef';
-import type { SharedContentRef } from '../../../backend/domain/entities/ContentRef/SharedContentRef';
-import type { ActiveShare } from '../../../backend/domain/entities/Share/ActiveShare';
-import type { RevokedShare } from '../../../backend/domain/entities/Share/RevokedShare';
-import type { ContentRefId, ShareId, Email } from '../../../backend/domain/value-objects/index';
-import type { DomainEvent } from '../../../backend/domain/events/DomainEvent';
+import type { DraftContentRef } from '../../../backend/lms/domain/entities/ContentRef/DraftContentRef';
+import type { SharedContentRef } from '../../../backend/lms/domain/entities/ContentRef/SharedContentRef';
+import type { ActiveShare } from '../../../backend/lms/domain/entities/Share/ActiveShare';
+import type { RevokedShare } from '../../../backend/lms/domain/entities/Share/RevokedShare';
+import type { ContentRefId, ShareId, Email } from '../../../backend/lms/domain/value-objects/index';
+import type { DomainEvent } from '../../../backend/lms/domain/events/DomainEvent';
 
 type ContentRef = DraftContentRef | SharedContentRef;
 type Share = ActiveShare | RevokedShare;

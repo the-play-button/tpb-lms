@@ -7,17 +7,17 @@ import {
 
 // ── getCloudContent ────────────────────────────────────────
 
-import { getCloudContentValidateInput } from '../../../../backend/application/cloudContent/getCloudContent/getCloudContentValidateInput';
-import { getCloudContentHydrateContext } from '../../../../backend/application/cloudContent/getCloudContent/getCloudContentHydrateContext';
-import { getCloudContentCheckPolicies } from '../../../../backend/application/cloudContent/getCloudContent/getCloudContentCheckPolicies';
-import { getCloudContentExecute } from '../../../../backend/application/cloudContent/getCloudContent/getCloudContentExecute';
+import { getCloudContentValidateInput } from '../../../../backend/lms/application/cloudContent/getCloudContent/getCloudContentValidateInput';
+import { getCloudContentHydrateContext } from '../../../../backend/lms/application/cloudContent/getCloudContent/getCloudContentHydrateContext';
+import { getCloudContentCheckPolicies } from '../../../../backend/lms/application/cloudContent/getCloudContent/getCloudContentCheckPolicies';
+import { getCloudContentExecute } from '../../../../backend/lms/application/cloudContent/getCloudContent/getCloudContentExecute';
 
 // ── getCloudPitch ──────────────────────────────────────────
 
-import { getCloudPitchValidateInput } from '../../../../backend/application/cloudContent/getCloudPitch/getCloudPitchValidateInput';
-import { getCloudPitchHydrateContext } from '../../../../backend/application/cloudContent/getCloudPitch/getCloudPitchHydrateContext';
-import { getCloudPitchCheckPolicies } from '../../../../backend/application/cloudContent/getCloudPitch/getCloudPitchCheckPolicies';
-import { getCloudPitchExecute } from '../../../../backend/application/cloudContent/getCloudPitch/getCloudPitchExecute';
+import { getCloudPitchValidateInput } from '../../../../backend/lms/application/cloudContent/getCloudPitch/getCloudPitchValidateInput';
+import { getCloudPitchHydrateContext } from '../../../../backend/lms/application/cloudContent/getCloudPitch/getCloudPitchHydrateContext';
+import { getCloudPitchCheckPolicies } from '../../../../backend/lms/application/cloudContent/getCloudPitch/getCloudPitchCheckPolicies';
+import { getCloudPitchExecute } from '../../../../backend/lms/application/cloudContent/getCloudPitch/getCloudPitchExecute';
 
 // ════════════════════════════════════════════════════════════
 // getCloudContent

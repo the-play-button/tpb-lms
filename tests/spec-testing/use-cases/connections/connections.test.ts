@@ -3,16 +3,16 @@ import { createTestContext } from '../../fixtures';
 
 // ── listConnections ────────────────────────────────────────
 
-import { listConnectionsValidateInput } from '../../../../backend/application/connections/listConnections/listConnectionsValidateInput';
-import { listConnectionsHydrateContext } from '../../../../backend/application/connections/listConnections/listConnectionsHydrateContext';
-import { listConnectionsCheckPolicies } from '../../../../backend/application/connections/listConnections/listConnectionsCheckPolicies';
-import { listConnectionsExecute } from '../../../../backend/application/connections/listConnections/listConnectionsExecute';
+import { listConnectionsValidateInput } from '../../../../backend/lms/application/connections/listConnections/listConnectionsValidateInput';
+import { listConnectionsHydrateContext } from '../../../../backend/lms/application/connections/listConnections/listConnectionsHydrateContext';
+import { listConnectionsCheckPolicies } from '../../../../backend/lms/application/connections/listConnections/listConnectionsCheckPolicies';
+import { listConnectionsExecute } from '../../../../backend/lms/application/connections/listConnections/listConnectionsExecute';
 
 // ── getDefaultConnection ───────────────────────────────────
 
-import { getDefaultConnectionValidateInput } from '../../../../backend/application/connections/getDefaultConnection/getDefaultConnectionValidateInput';
-import { getDefaultConnectionCheckPolicies } from '../../../../backend/application/connections/getDefaultConnection/getDefaultConnectionCheckPolicies';
-import { getDefaultConnectionExecute } from '../../../../backend/application/connections/getDefaultConnection/getDefaultConnectionExecute';
+import { getDefaultConnectionValidateInput } from '../../../../backend/lms/application/connections/getDefaultConnection/getDefaultConnectionValidateInput';
+import { getDefaultConnectionCheckPolicies } from '../../../../backend/lms/application/connections/getDefaultConnection/getDefaultConnectionCheckPolicies';
+import { getDefaultConnectionExecute } from '../../../../backend/lms/application/connections/getDefaultConnection/getDefaultConnectionExecute';
 
 // ════════════════════════════════════════════════════════════
 // listConnections
