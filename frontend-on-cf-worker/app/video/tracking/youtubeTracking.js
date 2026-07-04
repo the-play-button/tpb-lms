@@ -1,29 +1,29 @@
 /**
  * YouTube IFrame API tracking — mirrors the Cloudflare Stream / native <video>
  * tracking so a lesson video hosted on a (private/unlisted) YouTube channel emits
- * the same VIDEO_PLAY / VIDEO_PAUSE / VIDEO_PING signals used for step completion.
+ * VIDEO_PLAY / VIDEO_PAUSE / VIDEO_PING signals for step completion.
  *
- * The <iframe> is rendered by videoSection.js with `?enablejsapi=1` +
- * data-youtube-id, so the YouTube IFrame API can attach to it.
+ * Event-driven only (no polling timer): the YouTube IFrame API exposes
+ * `onStateChange` (PLAYING / PAUSED / ENDED). The API-ready global lives in
+ * init/globals.js (§ global_pollution) and is awaited here via
+ * `window.__tpbYouTubeApiReady`.
  */
 import { trackingState, sendVideoEvent, sendVideoPing, log } from './_shared.js';
 
-let ytApiPromise = null;
+const YOUTUBE_IFRAME_API_URL = 'https://www.youtube.com/iframe_api';
+
+let ytScriptInjected = false;
 
 const loadYouTubeApi = () => {
     if (window.YT && window.YT.Player) return Promise.resolve(window.YT);
-    if (ytApiPromise) return ytApiPromise;
-    ytApiPromise = new Promise((resolve) => {
-        const prev = window.onYouTubeIframeAPIReady;
-        window.onYouTubeIframeAPIReady = () => {
-            if (typeof prev === 'function') prev();
-            resolve(window.YT);
-        };
+    if (!ytScriptInjected) {
+        ytScriptInjected = true;
         const tag = document.createElement('script');
-        tag.src = 'https://www.youtube.com/iframe_api';
+        tag.src = YOUTUBE_IFRAME_API_URL;
         document.head.appendChild(tag);
-    });
-    return ytApiPromise;
+    }
+    // globals.js exposes this promise; the API script resolves it when ready.
+    return window.__tpbYouTubeApiReady ?? Promise.resolve(window.YT);
 };
 
 export const setupYoutubeTracking = async (iframe, videoDuration, courseId, classId) => {
@@ -43,6 +43,7 @@ export const setupYoutubeTracking = async (iframe, videoDuration, courseId, clas
                     } else if (e.data === YT.PlayerState.PAUSED) {
                         trackingState.isPlaying = false;
                         await sendVideoEvent('VIDEO_PAUSE', youtubeId, t, dur, courseId, classId);
+                        await sendVideoPing(youtubeId, t, dur, courseId, classId);
                     } else if (e.data === YT.PlayerState.ENDED) {
                         trackingState.isPlaying = false;
                         await sendVideoPing(youtubeId, dur, dur, courseId, classId);
@@ -51,16 +52,6 @@ export const setupYoutubeTracking = async (iframe, videoDuration, courseId, clas
             },
         });
         trackingState.youtubePlayer = player;
-        // Periodic ping while playing (one ping per crossed 10s boundary).
-        trackingState.youtubeInterval = setInterval(async () => {
-            if (!trackingState.isPlaying || typeof player.getCurrentTime !== 'function') return;
-            const t = Math.floor(player.getCurrentTime());
-            const dur = Math.floor(player.getDuration?.() || videoDuration);
-            if (t >= trackingState.lastPingPosition + 10) {
-                trackingState.lastPingPosition = Math.floor(t / 10) * 10;
-                await sendVideoPing(youtubeId, t, dur, courseId, classId);
-            }
-        }, 5000);
         trackingState.streamSdkOk = true;
         log.debug('YouTube IFrame API tracking initialized');
     } catch (error) {

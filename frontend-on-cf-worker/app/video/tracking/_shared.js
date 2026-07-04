@@ -9,8 +9,7 @@ import { log } from '../../log.js';
 
 export const trackingState = {
     streamPlayer: null,
-    youtubePlayer: null,      // YouTube IFrame API player instance
-    youtubeInterval: null,    // periodic ping interval id for YouTube tracking
+    youtubePlayer: null,      // YouTube IFrame API player instance (event-driven)
     lastPingPosition: -10,
     isPlaying: false,
     videoCompletedHandled: false,

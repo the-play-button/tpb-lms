@@ -56,6 +56,16 @@ export const initGlobals = () => {
     window.LMSLog = lmsLog;
     window.i18n = i18nApi;
 
+    // Category 2 : YouTube IFrame API readiness bridge.
+    // The YouTube API script calls window.onYouTubeIframeAPIReady when loaded ;
+    // video/tracking/youtubeTracking.js awaits window.__tpbYouTubeApiReady.
+    // Global assignment lives here (SSOT) per § global_pollution.
+    const ytReady = new Promise((resolve) => {
+        const onYouTubeIframeAPIReady = () => resolve(window.YT);
+        window.onYouTubeIframeAPIReady = onYouTubeIframeAPIReady;
+    });
+    window.__tpbYouTubeApiReady = ytReady;
+
     // Category 3 : debug collector native-global patches.
     // initDebugCollector() returns the two patch handlers ; assignment happens
     // here (SSOT) per § global_pollution. Returns null on re-entry (already

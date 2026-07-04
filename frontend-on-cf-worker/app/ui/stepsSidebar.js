@@ -49,8 +49,8 @@ export const renderStepsSidebar = (options = {}) => {
     const ctx = { course, completedSteps, currentStepIndex };
 
     // Nested sections (Plan 03): render the adjacency-list tree with SECTION
-    // folders + LESSON leaves. Falls back to the legacy flat / tpb_section
-    // grouping when the backend hasn't sent a `nodes` tree.
+    // folders + LESSON leaves. Falls back to the flat / tpb_section grouping
+    // when the backend hasn't sent a `nodes` tree.
     if (Array.isArray(course.nodes) && course.nodes.length && showSections) {
         fragments.push(renderNodesTree(course.nodes, ctx, 0));
     } else {

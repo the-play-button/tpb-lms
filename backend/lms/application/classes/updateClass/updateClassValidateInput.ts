@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
+import { NODE_KINDS } from '../_shared/nodeKind.js';
 
 const MediaSchema = z.object({ url: z.string(), type: z.string(), name: z.string().optional() });
 const Schema = z.object({
@@ -8,7 +9,7 @@ const Schema = z.object({
   mediaJson: z.array(MediaSchema).optional(),
   sysOrderIndex: z.number().int().optional(),
   parentClassId: z.string().min(1).nullable().optional(),
-  nodeKind: z.enum(['SECTION', 'LESSON']).optional(),
+  nodeKind: z.enum(NODE_KINDS).optional(),
 });
 export type UpdateClassInput = z.infer<typeof Schema> & { classId: string };
 

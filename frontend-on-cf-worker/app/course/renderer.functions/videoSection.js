@@ -5,6 +5,7 @@
 import { getSubtitleTracks } from './_mediaHelpers.js';
 
 const CLOUDFLARE_STREAM_IFRAME_BASE = 'https://iframe.cloudflarestream.com';
+const YOUTUBE_EMBED_BASE = 'https://www.youtube.com/embed';
 
 export const renderVideoSection = ctx => {
     const { cls, stepIndex, currentCourse, videoId, videoYoutubeId, videoUrl, videoDuration, quizPassed, hasQuiz } = ctx;
@@ -28,7 +29,7 @@ export const renderVideoSection = ctx => {
         const ytParams = new URLSearchParams({ rel: '0', modestbranding: '1', enablejsapi: '1' });
         return `
             <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/${videoYoutubeId}?${ytParams.toString()}"
+                <iframe src="${YOUTUBE_EMBED_BASE}/${videoYoutubeId}?${ytParams.toString()}"
                     style="border: none; width: 100%; aspect-ratio: 16/9; border-radius: 8px;"
                     allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;"
                     allowfullscreen="true" id="video-player-${stepIndex}"

@@ -12,11 +12,7 @@ export const stopVideoTracking = () => {
         trackingState.isPlaying = false;
         trackingState.videoCompletedHandled = false;
     }
-    // YouTube IFrame API: clear the polling interval + drop the player ref.
-    if (trackingState.youtubeInterval) {
-        clearInterval(trackingState.youtubeInterval);
-        trackingState.youtubeInterval = null;
-    }
+    // YouTube IFrame API (event-driven): drop the player ref.
     if (trackingState.youtubePlayer) {
         if (typeof trackingState.youtubePlayer.destroy === 'function') {
             try { trackingState.youtubePlayer.destroy(); } catch { /* iframe already gone */ }
