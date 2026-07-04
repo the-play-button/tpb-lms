@@ -96,7 +96,7 @@ export const updateUIWithoutVideoReset = () => {
     const videoLi = document.querySelector('.step-requirements ul li:first-child');
     if (videoLi) {
         videoLi.className = videoCompleted ? 'done' : 'pending';
-        setSafeHtml(videoLi, safeHtml`${videoCompleted ? '✅' : '⏳'} Regarder la vidéo à 90%+`);
+        setSafeHtml(videoLi, safeHtml`${videoCompleted ? '✅' : '⏳'} ${t('course.watchVideo90')}`);
     }
 
     // 2. Unlock quiz if video just completed
@@ -114,6 +114,6 @@ export const updateUIWithoutVideoReset = () => {
         const course = getState('courseData');
         const stepIndex = getState('currentStepIndex');
         const isLastStep = stepIndex === course.classes.length - 1;
-        nextBtn.title = isLastStep ? 'Terminer le module' : 'Étape suivante';
+        nextBtn.title = isLastStep ? t('course.finishModule') : t('nav.next');
     }
 };

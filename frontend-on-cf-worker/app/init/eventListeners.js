@@ -7,6 +7,7 @@ import { log } from '../log.js';
 
 import { loadCourse } from '../course/loader.js';
 import { renderCurrentStep } from '../course/renderer.js';
+import { t } from '../../i18n/index.js';
 import { stopVideoTracking, pauseVideo } from '../video/tracking/index.js';
 import { handleTallySubmission } from '../quiz/handler.js';
 import { loadLeaderboard } from '../leaderboard.js';
@@ -40,7 +41,7 @@ export const setupEventListeners = () => {
     });
 
     window.addEventListener('lms:badge-earned', (e) => {
-        showToast(`Badge débloqué : ${e.detail.name}`, 'achievement');
+        showToast(t('badge.earnedToast', { name: e.detail.name }), 'achievement');
         showBadgeModal(e.detail);
         refreshUserData();
     });

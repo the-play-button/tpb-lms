@@ -4,13 +4,14 @@
  */
 
 import { escapeHtml, safeHtml, raw } from '../../ui/safe-dom.js';
+import { t } from '../../../i18n/index.js';
 
 export const renderQuizSection = ctx => {
     const { cls, quizMedia, videoCompleted, quizPassed } = ctx;
 
     if (!quizMedia) return '';
 
-    const quizName = quizMedia.name || 'Quiz de validation';
+    const quizName = quizMedia.name || t('quiz.title');
 
     // SSOT-escaped JSON payload for the `onclick` JS argument. JSON.stringify
     // produces a valid JS literal (object → `{...}`, string → `"..."`,
@@ -26,7 +27,7 @@ export const renderQuizSection = ctx => {
             <div class="step-quiz quiz-passed">
                 <div class="quiz-header">
                     <h3>🎯 ${quizName}</h3>
-                    <span class="quiz-badge">✅ Quiz réussi</span>
+                    <span class="quiz-badge">✅ ${t('quiz.passed')}</span>
                 </div>
             </div>
         `;
@@ -37,9 +38,9 @@ export const renderQuizSection = ctx => {
             <div class="step-quiz quiz-locked">
                 <div class="quiz-header">
                     <h3>🎯 ${quizName}</h3>
-                    <span class="quiz-badge">🔒 Verrouillé</span>
+                    <span class="quiz-badge">🔒 ${t('quiz.locked')}</span>
                 </div>
-                <p class="quiz-locked-msg">Regardez la vidéo à 90% minimum pour débloquer le quiz.</p>
+                <p class="quiz-locked-msg">${t('quiz.unlockMessage')}</p>
             </div>
         `;
     }
@@ -48,17 +49,17 @@ export const renderQuizSection = ctx => {
         <div class="step-quiz quiz-ready">
             <div class="quiz-header">
                 <h3>🎯 ${quizName}</h3>
-                <span class="quiz-badge">✅ Débloqué</span>
+                <span class="quiz-badge">✅ ${t('quiz.unlocked')}</span>
             </div>
             <div class="quiz-warning">
                 <div class="warning-icon">⚠️</div>
                 <div class="warning-text">
-                    <strong>Attention - Une seule tentative</strong>
-                    <p>Vous n'aurez qu'<strong>une seule tentative</strong> pour ce quiz.</p>
+                    <strong>${t('quiz.warning')}</strong>
+                    <p>${t('quiz.warningDetail')}</p>
                 </div>
             </div>
             <button class="quiz-start-btn" data-testid="quiz-start-btn" onclick="${raw(onclickHandler)}">
-                Commencer le quiz
+                ${t('quiz.start')}
             </button>
             <div id="quiz-container-${cls.id}" class="quiz-container" style="display: none;"></div>
         </div>

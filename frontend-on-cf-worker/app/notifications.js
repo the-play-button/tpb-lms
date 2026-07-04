@@ -9,6 +9,7 @@ import { getState, setState } from './state.js';
 import { iconMap } from './ui/badges.js';
 import { log } from './log.js';
 import { setSafeHtml, escapeHtml , safeHtml} from './ui/safe-dom.js';
+import { t } from '../i18n/index.js';
 
 const BADGE_PARTICLE_COUNT = 12;
 
@@ -77,16 +78,16 @@ export const showBadgeModal = (badge, options = {}) => {
     }
     
     if (titleEl) {
-        titleEl.textContent = isEarned ? 'Badge Débloqué!' : 'Badge Verrouillé';
+        titleEl.textContent = isEarned ? t('badge.unlocked') : t('badge.locked');
     }
-    
+
     if (isEarned) {
         if (nameEl) nameEl.textContent = badge.name;
-        if (descEl) descEl.textContent = badge.description || 'Félicitations !';
+        if (descEl) descEl.textContent = badge.description || t('badge.earned');
         if (xpEl) xpEl.textContent = `+${badge.points_reward || 0} pts`;
     } else {
         if (nameEl) nameEl.textContent = '???';
-        if (descEl) descEl.textContent = 'Continue pour débloquer ce badge';
+        if (descEl) descEl.textContent = t('badge.continueToUnlock');
         if (xpEl) xpEl.textContent = '🔒';
     }
     
@@ -118,9 +119,9 @@ export const showError = message => {
         const escaped = escapeHtml(message);
         setSafeHtml(viewer, safeHtml`
             <div class="welcome-screen">
-                <h1>Erreur</h1>
+                <h1>${t('errors.title')}</h1>
                 <p>${escaped}</p>
-                <p>Veuillez réessayer ou contacter le support.</p>
+                <p>${t('errors.contactSupport')}</p>
             </div>
         `);
     }

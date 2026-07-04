@@ -51,7 +51,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
     setSafeHtml(viewer, safeHtml`
         <div class="course-overview loading">
             <div class="loading-spinner"></div>
-            <p>Chargement du cours...</p>
+            <p>${t('course.loadingCourse')}</p>
         </div>
     `);
     
@@ -67,7 +67,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                 introContent = marked.parse(cleanMarkdownForLms(stripFrontmatter(rawMd)));
             } catch (error) {
                 log.warn('Failed to fetch cloud intro:', error);
-                introContent = safeHtml`<p>${course.description || 'Aucune description disponible.'}</p>`;
+                introContent = safeHtml`<p>${course.description || t('course.noDescription')}</p>`;
             }
         } else if (introUrl) {
             try {
@@ -75,10 +75,10 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                 introContent = marked.parse(markdown);
             } catch (error) {
                 log.warn('Failed to fetch intro:', error);
-                introContent = safeHtml`<p>${course.description || 'Aucune description disponible.'}</p>`;
+                introContent = safeHtml`<p>${course.description || t('course.noDescription')}</p>`;
             }
         } else {
-            introContent = safeHtml`<p>${course.description || 'Aucune description disponible.'}</p>`;
+            introContent = safeHtml`<p>${course.description || t('course.noDescription')}</p>`;
         }
         
         const isEnrolled = enrollmentStatus?.enrolled && enrollmentStatus.enrollment?.status === 'active';
@@ -88,10 +88,10 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
             ? safeHtml`<div class="course-categories">${raw(course.categories.map((cat) => safeHtml`<span class="category-tag">${cat}</span>`).join(''))}</div>`
             : '';
         const progressHtml = course.progress
-            ? safeHtml`<div class="meta-item"><span class="meta-icon">📊</span><span class="meta-text">${course.progress.completed_steps}/${course.progress.total_steps} complétées</span></div>`
+            ? safeHtml`<div class="meta-item"><span class="meta-icon">📊</span><span class="meta-text">${t('course.progressCount', { done: course.progress.completed_steps, total: course.progress.total_steps })}</span></div>`
             : '';
         const enrollmentWarningHtml = !canEnroll && !isEnrolled
-            ? safeHtml`<div class="enrollment-limit-warning"><span class="warning-icon">⚠️</span><p>Vous avez atteint la limite de ${enrollmentStatus?.max_active || 3} cours actifs. Terminez ou abandonnez un cours pour en commencer un nouveau.</p></div>`
+            ? safeHtml`<div class="enrollment-limit-warning"><span class="warning-icon">⚠️</span><p>${t('course.enrollLimit', { max: enrollmentStatus?.max_active || 3 })}</p></div>`
             : '';
 
         setSafeHtml(viewer, safeHtml`
@@ -108,7 +108,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                 <div class="course-meta">
                     <div class="meta-item">
                         <span class="meta-icon">📚</span>
-                        <span class="meta-text">${course.classes?.length || 0} étapes</span>
+                        <span class="meta-text">${t('course.stepsCount', { n: course.classes?.length || 0 })}</span>
                     </div>
                     ${raw(progressHtml)}
                 </div>
@@ -130,9 +130,9 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
         log.error('Failed to render overview:', error);
         setSafeHtml(viewer, safeHtml`
             <div class="course-overview error">
-                <h2>Erreur</h2>
-                <p>Impossible de charger le cours: ${error.message}</p>
-                <button class="btn-primary" data-testid="overview-reload-btn" onclick="window.location.reload()">Réessayer</button>
+                <h2>${t('errors.title')}</h2>
+                <p>${t('course.loadError', { msg: error.message })}</p>
+                <button class="btn-primary" data-testid="overview-reload-btn" onclick="window.location.reload()">${t('course.retry')}</button>
             </div>
         `);
     }
@@ -193,7 +193,7 @@ const setupOverviewHandlers = (courseId) => {
     document.querySelector('[data-action="enroll"]')?.addEventListener('click', async (e) => {
         const btn = e.target;
         btn.disabled = true;
-        btn.textContent = 'Inscription...';
+        btn.textContent = t('course.enrolling');
 
         try {
             await apiPost('/enrollments', { courseId });
@@ -201,28 +201,28 @@ const setupOverviewHandlers = (courseId) => {
         } catch (error) {
             log.error('Enrollment failed:', error);
             btn.disabled = false;
-            btn.textContent = 'Erreur - Réessayer';
-            alert(`Erreur: ${error.message}`);
+            btn.textContent = t('course.errorRetry');
+            alert(t('course.genericError', { msg: error.message }));
         }
     });
 
     document.querySelector('[data-action="abandon"]')?.addEventListener('click', async (e) => {
-        if (!confirm('Êtes-vous sûr de vouloir abandonner ce cours ? Votre progression sera conservée.')) {
+        if (!confirm(t('course.abandonConfirm'))) {
             return;
         }
-        
+
         const btn = e.target;
         btn.disabled = true;
-        btn.textContent = 'Abandon...';
-        
+        btn.textContent = t('course.abandoning');
+
         try {
             await apiPatch(`/enrollments/${courseId}`, { status: 'abandoned' });
             await showCourseOverview(courseId);
         } catch (error) {
             log.error('Abandon failed:', error);
             btn.disabled = false;
-            btn.textContent = 'Abandonner le cours';
-            alert(`Erreur: ${error.message}`);
+            btn.textContent = t('course.removeFromActive');
+            alert(t('course.genericError', { msg: error.message }));
         }
     });
 }
@@ -251,8 +251,8 @@ export const showCourseOverview = async courseId => {
         if (viewer) {
             setSafeHtml(viewer, safeHtml`
                 <div class="error">
-                    <h2>Erreur</h2>
-                    <p>Impossible de charger le cours: ${error.message}</p>
+                    <h2>${t('errors.title')}</h2>
+                    <p>${t('course.loadError', { msg: error.message })}</p>
                 </div>
             `);
         }

@@ -11,7 +11,8 @@ import { refreshSignals } from '../course/loader.js';
 import { renderCurrentStep } from '../course/renderer.js';
 import { loadLeaderboard } from '../leaderboard.js';
 import { refreshUserData } from '../notifications.js';
-import { setSafeHtml , safeHtml} from '../ui/safe-dom.js';
+import { setSafeHtml , safeHtml, raw } from '../ui/safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 const TALLY_EMBED_BASE_URL = 'https://tally.so/embed';
 
@@ -54,19 +55,11 @@ export const showQuiz = (classId, tallyFormIds, quizName) => {
     const tallyFormId = resolveTallyFormId(tallyFormIds);
     
     if (!tallyFormId) {
-        alert('Quiz non disponible dans cette langue.');
+        alert(t('quiz.notAvailableLang'));
         return;
     }
-    
-    const confirmed = confirm(
-`⚠️ ATTENTION - UNE SEULE TENTATIVE
 
-En cliquant OK, vous acceptez :
-• Une seule tentative pour ce quiz
-• Résultats définitifs
-
-Êtes-vous prêt ?`
-    );
+    const confirmed = confirm(t('quiz.attemptWarning'));
     
     if (confirmed) {
         currentQuizInfo = {
@@ -129,14 +122,14 @@ export const handleTallySubmission = async tallyEvent => {
             if (result.wrongAnswers && result.wrongAnswers.length > 0) {
                 showCorrectionsModal(result.wrongAnswers, result.score, result.maxScore);
             } else {
-                showToast(`Quiz parfait ! ${result.score}/${result.maxScore} 🎉`, 'success');
+                showToast(`${t('quiz.perfectToast', { score: result.score, max: result.maxScore })} 🎉`, 'success');
             }
-            
+
             if (result.xpAwarded) {
-                showToast(`+${result.xpAwarded} points`, 'points', 4000);
+                showToast(t('quiz.pointsToast', { points: result.xpAwarded }), 'points', 4000);
             }
             if (result.badgeEarned) {
-                showToast(`Badge débloqué : ${result.badgeEarned.name}`, 'achievement');
+                showToast(t('badge.earnedToast', { name: result.badgeEarned.name }), 'achievement');
             }
             
             loadLeaderboard();
@@ -151,7 +144,7 @@ export const handleTallySubmission = async tallyEvent => {
         
     } catch (error) {
         log.error('❌ [DEBUG] Failed to submit quiz:', error);
-        alert('Erreur lors de la soumission du quiz. Veuillez rafraîchir la page.');
+        alert(t('quiz.submitError'));
     }
 };
 
@@ -166,24 +159,24 @@ const showCorrectionsModal = (wrongAnswers, score, maxScore) => {
         <div class="quiz-modal quiz-success">
             <div class="quiz-modal-header">
                 <span class="quiz-modal-icon">✅</span>
-                <h3>Quiz réussi ! (${score}/${maxScore})</h3>
+                <h3>${t('quiz.passedTitle', { score, max: maxScore })}</h3>
             </div>
-            <p>Voici les questions que vous avez ratées :</p>
+            <p>${t('quiz.missedQuestions')}</p>
             <ul class="corrections-list">
-                ${wrongAnswers.map(({ question, yourAnswer, correctAnswer } = {}) => `
+                ${raw(wrongAnswers.map(({ question, yourAnswer, correctAnswer } = {}) => safeHtml`
                     <li class="correction-item">
                         <div class="correction-question">${question}</div>
                         <div class="correction-wrong">
-                            <span class="label">Votre réponse :</span> ${yourAnswer}
+                            <span class="label">${t('quiz.yourAnswer')}</span> ${yourAnswer}
                         </div>
                         <div class="correction-correct">
-                            <span class="label">Bonne réponse :</span> ${correctAnswer}
+                            <span class="label">${t('quiz.correctAnswer')}</span> ${correctAnswer}
                         </div>
                     </li>
-                `).join('')}
+                `).join(''))}
             </ul>
             <button class="quiz-modal-btn" data-testid="quiz-success-continue-btn" onclick="this.closest('.quiz-modal-overlay').remove()">
-                Continuer
+                ${t('nav.continue')}
             </button>
         </div>
     `);
@@ -201,17 +194,17 @@ const showFailureModal = (score, maxScore, percentage) => {
         <div class="quiz-modal quiz-failure">
             <div class="quiz-modal-header">
                 <span class="quiz-modal-icon">❌</span>
-                <h3>Quiz non réussi (${score}/${maxScore})</h3>
+                <h3>${t('quiz.failedTitle', { score, max: maxScore })}</h3>
             </div>
-            <p class="failure-score">Score : ${percentage}%</p>
+            <p class="failure-score">${t('quiz.scoreLabel', { percentage })}</p>
             <p class="failure-message">
-                Vous n'avez pas atteint le score minimum requis.
+                ${t('quiz.belowMinimum')}
             </p>
             <p class="failure-instruction">
-                <strong>Vous devez revoir la vidéo avant de retenter le quiz.</strong>
+                <strong>${t('quiz.mustRewatch')}</strong>
             </p>
             <button class="quiz-modal-btn" data-testid="quiz-failure-dismiss-btn" onclick="this.closest('.quiz-modal-overlay').remove()">
-                Compris
+                ${t('quiz.understood')}
             </button>
         </div>
     `);
@@ -232,8 +225,8 @@ const showQuizPendingState = () => {
         setSafeHtml(quizContainer, safeHtml`
             <div class="quiz-pending-message">
                 <div class="spinner"></div>
-                <p>Validation en cours...</p>
-                <p class="pending-subtext">Veuillez patienter pendant que nous enregistrons votre résultat.</p>
+                <p>${t('quiz.validating')}</p>
+                <p class="pending-subtext">${t('quiz.submittingWait')}</p>
             </div>
         `);
     }

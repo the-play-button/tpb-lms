@@ -12,6 +12,7 @@ import { apiPost, api, apiDelete } from '../api.js';
 import { loadCourse } from '../course/loader.js';
 import { setSafeHtml , safeHtml} from '../ui/safe-dom.js';
 import { showToast } from '../../components/toast.js';
+import { t } from '../../i18n/index.js';
 
 let panelElement = null;
 let isOpen = false;
@@ -24,35 +25,35 @@ const createPanel = () => {
         <div class="debug-panel__backdrop"></div>
         <div class="debug-panel__content">
             <div class="debug-panel__header">
-                <h3>🛠️ Console de Debug</h3>
-                <button class="debug-panel__close" data-testid="debug-panel-close" aria-label="Fermer">✕</button>
+                <h3>${t('debug.title')}</h3>
+                <button class="debug-panel__close" data-testid="debug-panel-close" aria-label="${t('debug.close')}">✕</button>
             </div>
             <div class="debug-panel__body">
                 <section class="debug-panel__section">
-                    <h4>Progression</h4>
+                    <h4>${t('debug.progression')}</h4>
                     <div class="debug-panel__info" id="debug-current-course">
-                        Cours actuel: <strong>—</strong>
+                        ${t('debug.currentCourse')} <strong>—</strong>
                     </div>
                     <div class="debug-panel__actions">
                         <button id="debug-reset-current" class="debug-btn debug-btn--warning" data-testid="debug-reset-current-btn">
-                            🔄 Réinitialiser ce parcours
+                            🔄 ${t('debug.resetCurrent')}
                         </button>
                         <button id="debug-reset-all" class="debug-btn debug-btn--danger" data-testid="debug-reset-all-btn">
-                            ⚠️ Réinitialiser TOUS les parcours
+                            ⚠️ ${t('debug.resetAll')}
                         </button>
                     </div>
                 </section>
                 <section class="debug-panel__section">
-                    <h4>Navigation</h4>
+                    <h4>${t('debug.navigation')}</h4>
                     <div class="debug-panel__actions">
                         <button id="debug-goto-step" class="debug-btn" data-testid="debug-goto-step-btn">
-                            ↗️ Aller à une étape...
+                            ↗️ ${t('debug.gotoStep')}
                         </button>
                     </div>
                 </section>
                 <section class="debug-panel__section debug-panel__section--muted">
-                    <p>⚠️ Ces actions sont réservées au debug/développement.</p>
-                    <p>En production, seuls les admins y auront accès.</p>
+                    <p>${t('debug.devOnly1')}</p>
+                    <p>${t('debug.devOnly2')}</p>
                 </section>
             </div>
         </div>
@@ -68,60 +69,55 @@ const updatePanelState = () => {
     const infoEl = panelElement.querySelector('#debug-current-course');
     
     if (infoEl) {
-        setSafeHtml(infoEl, safeHtml`Cours actuel: <strong>${courseData?.title || currentCourse || '—'}</strong>`);
+        setSafeHtml(infoEl, safeHtml`${t('debug.currentCourse')} <strong>${courseData?.title || currentCourse || '—'}</strong>`);
     }
 };
 
 const handleResetCurrent = async () => {
     const currentCourse = getState('currentCourse');
     if (!currentCourse) {
-        showToast('Aucun cours sélectionné', 'error');
+        showToast(t('debug.noCourseSelected'), 'error');
         return;
     }
-    
-    const confirmed = confirm(`Réinitialiser la progression de "${currentCourse}" ?`);
+
+    const confirmed = confirm(t('debug.confirmResetCurrent', { course: currentCourse }));
     if (!confirmed) return;
-    
+
     try {
         await apiDelete(`/signals/${currentCourse}`);
-        showToast('✅ Progression réinitialisée', 'success');
+        showToast(t('debug.resetSuccess'), 'success');
         closePanel();
         loadCourse(currentCourse);
     } catch (error) {
-        showToast(`❌ Erreur: ${error.message}`, 'error');
+        showToast(`❌ ${t('course.genericError', { msg: error.message })}`, 'error');
     }
 };
 
 const handleResetAll = async () => {
     const courses = getState('courses') || [];
     if (courses.length === 0) {
-        showToast('Aucun cours trouvé', 'error');
+        showToast(t('debug.noCourseFound'), 'error');
         return;
     }
-    
-    const confirmed = confirm(
-        `⚠️ ATTENTION ⚠️\n\n` +
-        `Cela va réinitialiser la progression de ${courses.length} cours.\n` +
-        `Cette action est irréversible.\n\n` +
-        `Continuer ?`
-    );
+
+    const confirmed = confirm(t('debug.confirmResetAll', { n: courses.length }));
     if (!confirmed) return;
-    
+
     try {
         let resetCount = 0;
         for (const course of courses) {
             await apiDelete(`/signals/${course.id}`);
             resetCount++;
         }
-        showToast(`✅ ${resetCount} parcours réinitialisés`, 'success');
+        showToast(t('debug.resetAllSuccess', { n: resetCount }), 'success');
         closePanel();
-        
+
         const currentCourse = getState('currentCourse');
         if (currentCourse) {
             loadCourse(currentCourse);
         }
     } catch (error) {
-        showToast(`❌ Erreur: ${error.message}`, 'error');
+        showToast(`❌ ${t('course.genericError', { msg: error.message })}`, 'error');
     }
 };
 
@@ -129,17 +125,17 @@ const handleGotoStep = () => {
     const courseData = getState('courseData');
     const { classes = [] } = courseData ?? {};
     if (!classes.length) {
-        showToast('Aucun cours chargé', 'error');
+        showToast(t('debug.noCourseLoaded'), 'error');
         return;
     }
 
     const stepCount = classes.length;
-    const input = prompt(`Aller à quelle étape ? (1-${stepCount})`);
+    const input = prompt(t('debug.gotoPrompt', { n: stepCount }));
     if (!input) return;
-    
+
     const stepNum = parseInt(input, 10);
     if (isNaN(stepNum) || stepNum < 1 || stepNum > stepCount) {
-        showToast(`Étape invalide (1-${stepCount})`, 'error');
+        showToast(t('debug.invalidStep', { n: stepCount }), 'error');
         return;
     }
     

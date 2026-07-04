@@ -10,6 +10,7 @@ import { togglePanel } from './panel.js';
 import { log } from '../log.js';
 import { safeHtml, setSafeHtml } from '../ui/safe-dom.js';
 import { showToast } from '../../components/toast.js';
+import { t } from '../../i18n/index.js';
 
 const DOUBLE_CLICK_WINDOW_MS = 250;    // Window to detect double-click vs single-click
 const FAB_STATE_RESET_DELAY_MS = 1500; // CSS success/error state animation duration
@@ -80,7 +81,7 @@ const handleSingleClick = async () => {
             fabElement.classList.add('debug-fab--success');
             setTimeout(() => fabElement.classList.remove('debug-fab--success'), FAB_STATE_RESET_DELAY_MS);
             
-            showToast('📋 Infos copiées ! Double-clic pour console debug.', 'success');
+            showToast(t('debug.copied'), 'success');
             
             log.debug('[Debug] Info copied to clipboard:', result.data);
         } else {

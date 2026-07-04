@@ -7,6 +7,7 @@
 
 import { log } from '../log.js';
 import { safeHtml, raw, setSafeHtml } from './safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 const CF_ACCESS_LOGOUT_URL = 'https://theplaybutton.cloudflareaccess.com/cdn-cgi/access/logout';
 
@@ -22,12 +23,12 @@ export const initUserMenu = (user, profile) => {
         return;
     }
     
-    const email = user?.email || 'Utilisateur';
+    const email = user?.email || t('userMenu.userFallback');
     const role = profile?.role || 'student';
     const displayRole = getRoleDisplay(role);
-    
+
     const adminLinkHtml = role === 'admin'
-        ? safeHtml`<a href="/admin" class="admin-link" data-testid="admin-dashboard-link" title="Dashboard Admin">📊</a>`
+        ? safeHtml`<a href="/admin" class="admin-link" data-testid="admin-dashboard-link" title="${t('userMenu.adminTitle')}">📊</a>`
         : '';
     setSafeHtml(container, safeHtml`
         <div class="user-menu-content">
@@ -36,13 +37,13 @@ export const initUserMenu = (user, profile) => {
                 <span class="user-role-badge ${role}">${displayRole}</span>
             </div>
             ${raw(adminLinkHtml)}
-            <button class="logout-btn" data-testid="logout-btn" onclick="window.location.href='${raw(CF_ACCESS_LOGOUT_URL)}'" title="Se déconnecter">
+            <button class="logout-btn" data-testid="logout-btn" onclick="window.location.href='${raw(CF_ACCESS_LOGOUT_URL)}'" title="${t('userMenu.logout')}">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                     <polyline points="16 17 21 12 16 7"></polyline>
                     <line x1="21" y1="12" x2="9" y2="12"></line>
                 </svg>
-                <span class="logout-text">Déconnexion</span>
+                <span class="logout-text">${t('userMenu.logout')}</span>
             </button>
         </div>
     `);
@@ -53,9 +54,9 @@ export const initUserMenu = (user, profile) => {
  */
 const getRoleDisplay = (role) => {
     const roles = {
-        'admin': 'Admin',
-        'instructor': 'Instructeur',
-        'student': 'Étudiant'
+        'admin': t('userMenu.admin'),
+        'instructor': t('userMenu.roleInstructor'),
+        'student': t('userMenu.roleStudent')
     };
     return roles[role] || role;
 }

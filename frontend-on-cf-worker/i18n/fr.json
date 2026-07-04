@@ -43,7 +43,24 @@
     "curriculum": "Programme",
     "freeNavigation": "Revenir en arrière",
     "addToActive": "Ajouter à mes cours actifs",
-    "removeFromActive": "Retirer de mes cours actifs"
+    "removeFromActive": "Retirer de mes cours actifs",
+    "mustCompleteStep": "Vous devez compléter cette étape avant de continuer.",
+    "cannotGoBack": "⚠️ Progression linéaire : impossible de revenir en arrière.",
+    "restartConfirm": "⚠️ RECOMMENCER LE MODULE\n\nToute votre progression sera effacée.\nÊtes-vous sûr ?",
+    "genericError": "Erreur : {msg}",
+    "watchVideo90": "Regarder la vidéo à 90%+",
+    "finishModule": "Terminer le module",
+    "loadingCourse": "Chargement du cours...",
+    "noDescription": "Aucune description disponible.",
+    "progressCount": "{done}/{total} complétées",
+    "stepsCount": "{n} étapes",
+    "enrollLimit": "Vous avez atteint la limite de {max} cours actifs. Terminez ou abandonnez un cours pour en commencer un nouveau.",
+    "loadError": "Impossible de charger le cours : {msg}",
+    "enrolling": "Inscription...",
+    "errorRetry": "Erreur - Réessayer",
+    "abandonConfirm": "Êtes-vous sûr de vouloir abandonner ce cours ? Votre progression sera conservée.",
+    "abandoning": "Abandon...",
+    "nextStep": "Étape suivante"
   },
   "quiz": {
     "title": "Quiz de validation",
@@ -54,7 +71,23 @@
     "unlockMessage": "Regardez la vidéo à 90% minimum pour débloquer le quiz.",
     "warning": "Attention - Une seule tentative",
     "warningDetail": "Vous n'aurez qu'une seule tentative pour ce quiz.",
-    "passQuiz": "Passer le quiz"
+    "passQuiz": "Passer le quiz",
+    "notAvailableLang": "Quiz non disponible dans cette langue.",
+    "attemptWarning": "⚠️ ATTENTION - UNE SEULE TENTATIVE\n\nEn cliquant OK, vous acceptez :\n• Une seule tentative pour ce quiz\n• Résultats définitifs\n\nÊtes-vous prêt ?",
+    "perfectToast": "Quiz parfait ! {score}/{max}",
+    "pointsToast": "+{points} points",
+    "submitError": "Erreur lors de la soumission du quiz. Veuillez rafraîchir la page.",
+    "passedTitle": "Quiz réussi ! ({score}/{max})",
+    "missedQuestions": "Voici les questions que vous avez ratées :",
+    "yourAnswer": "Votre réponse :",
+    "correctAnswer": "Bonne réponse :",
+    "failedTitle": "Quiz non réussi ({score}/{max})",
+    "scoreLabel": "Score : {percentage}%",
+    "belowMinimum": "Vous n’avez pas atteint le score minimum requis.",
+    "mustRewatch": "Vous devez revoir la vidéo avant de retenter le quiz.",
+    "understood": "Compris",
+    "validating": "Validation en cours...",
+    "submittingWait": "Veuillez patienter pendant que nous enregistrons votre résultat."
   },
   "requirements": {
     "title": "Pour débloquer \"Suivant\" :",
@@ -64,7 +97,9 @@
     "unlocked": "Badge Débloqué!",
     "earned": "Félicitations!",
     "continue": "Continuer",
-    "locked": "Badge verrouillé"
+    "locked": "Badge verrouillé",
+    "continueToUnlock": "Continue pour débloquer ce badge",
+    "earnedToast": "Badge débloqué : {name}"
   },
   "leaderboard": {
     "title": "Classement",
@@ -79,30 +114,61 @@
     "earnedXP": "Vous avez gagné",
     "xpPoints": "XP",
     "nextModule": "Module suivant",
-    "backToHome": "Retour à l'accueil"
+    "backToHome": "Retour à l'accueil",
+    "completedModule": "Vous avez terminé le module « {title} ».",
+    "pointsEarned": "+{points} pts gagnés",
+    "moreBadges": "Continuez pour débloquer plus de badges !"
   },
   "mobile": {
     "parcours": "Parcours",
     "content": "Cours",
-    "badges": "Badges"
+    "badges": "Badges",
+    "done": "Terminé",
+    "inProgress": "En cours",
+    "notStarted": "Non commencé",
+    "badgeHint": "Appuie sur un badge pour voir les détails"
   },
   "debug": {
     "title": "Console Debug",
     "resetProgress": "Réinitialiser progression",
     "confirmReset": "Êtes-vous sûr de vouloir réinitialiser toute votre progression?",
-    "resetSuccess": "Progression réinitialisée"
+    "resetSuccess": "Progression réinitialisée",
+    "copied": "📋 Infos copiées ! Double-clic pour console debug.",
+    "progression": "Progression",
+    "close": "Fermer",
+    "currentCourse": "Cours actuel :",
+    "resetCurrent": "Réinitialiser ce parcours",
+    "resetAll": "Réinitialiser TOUS les parcours",
+    "navigation": "Navigation",
+    "gotoStep": "Aller à une étape...",
+    "devOnly1": "⚠️ Ces actions sont réservées au debug/développement.",
+    "devOnly2": "En production, seuls les admins y auront accès.",
+    "noCourseSelected": "Aucun cours sélectionné",
+    "confirmResetCurrent": "Réinitialiser la progression de « {course} » ?",
+    "noCourseFound": "Aucun cours trouvé",
+    "confirmResetAll": "⚠️ ATTENTION ⚠️\n\nCela va réinitialiser la progression de {n} cours.\nCette action est irréversible.\n\nContinuer ?",
+    "resetAllSuccess": "✅ {n} parcours réinitialisés",
+    "noCourseLoaded": "Aucun cours chargé",
+    "gotoPrompt": "Aller à quelle étape ? (1-{n})",
+    "invalidStep": "Étape invalide (1-{n})"
   },
   "userMenu": {
     "logout": "Déconnexion",
     "admin": "Admin",
-    "settings": "Paramètres"
+    "settings": "Paramètres",
+    "userFallback": "Utilisateur",
+    "adminTitle": "Dashboard Admin",
+    "roleInstructor": "Instructeur",
+    "roleStudent": "Étudiant"
   },
   "errors": {
     "loadFailed": "Échec du chargement",
     "saveFailed": "Échec de la sauvegarde",
     "networkError": "Erreur réseau",
     "unauthorized": "Non autorisé",
-    "notFound": "Non trouvé"
+    "notFound": "Non trouvé",
+    "title": "Erreur",
+    "contactSupport": "Veuillez réessayer ou contacter le support."
   },
   "sidebar": {
     "toggleSection": "Replier / déplier la section",
@@ -113,5 +179,73 @@
   },
   "classroom": {
     "title": "Classroom"
+  },
+  "mastery": {
+    "none": "Non commencé",
+    "bronze": "Bronze (25%)",
+    "silver": "Argent (50%)",
+    "gold": "Or (75%)",
+    "master": "Maître (100%)"
+  },
+  "rarity": {
+    "common": "Commun",
+    "rare": "Rare",
+    "epic": "Épique",
+    "legendary": "Légendaire"
+  },
+  "sharing": {
+    "loading": "Chargement des fichiers partagés...",
+    "empty": "Aucun fichier partagé avec vous.",
+    "downloadPitch": "Télécharger .pitch",
+    "fileFallback": "Fichier",
+    "by": "par {name}",
+    "title": "Fichiers partagés avec moi",
+    "loadError": "Erreur lors du chargement : {msg}",
+    "shareTitle": "Partager « {name} »",
+    "recipientEmail": "Email du destinataire",
+    "permission": "Permission",
+    "readOnly": "Lecture seule",
+    "readWrite": "Lecture et modification",
+    "share": "Partager",
+    "withAccess": "Personnes avec accès",
+    "sharing": "Partage en cours...",
+    "sharedWith": "Partagé avec {email}",
+    "noActive": "Aucun partage actif.",
+    "roleWrite": "Modification",
+    "roleRead": "Lecture",
+    "revoke": "Révoquer",
+    "revokeConfirm": "Révoquer cet accès ?",
+    "revokeError": "Impossible de révoquer cet accès — veuillez réessayer.",
+    "permissionsError": "Erreur lors du chargement des permissions."
+  },
+  "confirmModal": {
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "defaultMessage": "Êtes-vous sûr de vouloir continuer ?",
+    "thisStep": "cette étape",
+    "nextStepTitle": "Passer à l’étape suivante ?",
+    "nextStepMessage": "Attention : une fois que vous passez à l’étape suivante, vous ne pourrez plus revenir à « {step} ». Assurez-vous d’avoir bien lu et compris le contenu avant de continuer.",
+    "understoodContinue": "J’ai compris, continuer →",
+    "stayHere": "Rester sur cette étape"
+  },
+  "admin": {
+    "accessDenied": "Accès refusé",
+    "adminOnly": "Cette page est réservée aux administrateurs.",
+    "title": "Dashboard Admin",
+    "subtitle": "Vue d’ensemble du système LMS",
+    "users": "Utilisateurs",
+    "courses": "Cours",
+    "events": "Événements trackés",
+    "completions": "Cours complétés",
+    "badges": "Badges débloqués",
+    "xpTotal": "XP Total distribué",
+    "recentActivity": "Activité récente",
+    "loadingStats": "Chargement des statistiques...",
+    "anonymous": "Anonyme",
+    "backToLms": "Retour au LMS",
+    "timeNow": "À l’instant",
+    "timeMinutes": "Il y a {n} min",
+    "timeHours": "Il y a {n} h",
+    "timeDays": "Il y a {n} j"
   }
 }

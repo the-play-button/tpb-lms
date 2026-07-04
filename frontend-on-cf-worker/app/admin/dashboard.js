@@ -7,6 +7,7 @@
 import { api } from '../api.js';
 import { getState } from '../state.js';
 import { setSafeHtml, safeHtml, raw } from '../ui/safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 const loadAdminStats = async () => {
     try {
@@ -28,9 +29,9 @@ export const renderAdminDashboard = async container => {
             <div class="admin-dashboard">
                 <div class="admin-error">
                     <span class="error-icon">🔒</span>
-                    <h2>Accès refusé</h2>
-                    <p>Cette page est réservée aux administrateurs.</p>
-                    <a href="/" class="back-btn" data-testid="admin-back-home-link">← Retour à l'accueil</a>
+                    <h2>${t('admin.accessDenied')}</h2>
+                    <p>${t('admin.adminOnly')}</p>
+                    <a href="/" class="back-btn" data-testid="admin-back-home-link">← ${t('endScreen.backToHome')}</a>
                 </div>
             </div>
         `);
@@ -42,8 +43,8 @@ export const renderAdminDashboard = async container => {
     setSafeHtml(container, safeHtml`
         <div class="admin-dashboard">
             <header class="admin-header">
-                <h1>📊 Dashboard Admin</h1>
-                <p class="admin-subtitle">Vue d'ensemble du système LMS</p>
+                <h1>📊 ${t('admin.title')}</h1>
+                <p class="admin-subtitle">${t('admin.subtitle')}</p>
             </header>
             
             <div class="stats-grid">
@@ -51,7 +52,7 @@ export const renderAdminDashboard = async container => {
                     <div class="stat-icon">👥</div>
                     <div class="stat-content">
                         <span class="stat-value">${data.total_users || 0}</span>
-                        <span class="stat-label">Utilisateurs</span>
+                        <span class="stat-label">${t('admin.users')}</span>
                     </div>
                 </div>
                 
@@ -59,7 +60,7 @@ export const renderAdminDashboard = async container => {
                     <div class="stat-icon">📚</div>
                     <div class="stat-content">
                         <span class="stat-value">${data.total_courses || 0}</span>
-                        <span class="stat-label">Cours</span>
+                        <span class="stat-label">${t('admin.courses')}</span>
                     </div>
                 </div>
                 
@@ -67,7 +68,7 @@ export const renderAdminDashboard = async container => {
                     <div class="stat-icon">📈</div>
                     <div class="stat-content">
                         <span class="stat-value">${data.total_events || 0}</span>
-                        <span class="stat-label">Événements trackés</span>
+                        <span class="stat-label">${t('admin.events')}</span>
                     </div>
                 </div>
                 
@@ -75,7 +76,7 @@ export const renderAdminDashboard = async container => {
                     <div class="stat-icon">✅</div>
                     <div class="stat-content">
                         <span class="stat-value">${data.total_completions || 0}</span>
-                        <span class="stat-label">Cours complétés</span>
+                        <span class="stat-label">${t('admin.completions')}</span>
                     </div>
                 </div>
                 
@@ -83,7 +84,7 @@ export const renderAdminDashboard = async container => {
                     <div class="stat-icon">🏆</div>
                     <div class="stat-content">
                         <span class="stat-value">${data.total_badges_earned || 0}</span>
-                        <span class="stat-label">Badges débloqués</span>
+                        <span class="stat-label">${t('admin.badges')}</span>
                     </div>
                 </div>
                 
@@ -91,19 +92,19 @@ export const renderAdminDashboard = async container => {
                     <div class="stat-icon">⚡</div>
                     <div class="stat-content">
                         <span class="stat-value">${(data.total_xp || 0).toLocaleString()}</span>
-                        <span class="stat-label">XP Total distribué</span>
+                        <span class="stat-label">${t('admin.xpTotal')}</span>
                     </div>
                 </div>
             </div>
             
             ${data.recent_activity ? raw(safeHtml`
             <section class="admin-section">
-                <h2>📋 Activité récente</h2>
+                <h2>📋 ${t('admin.recentActivity')}</h2>
                 <div class="activity-list">
                     ${raw(data.recent_activity.map(({ type, user_email, action, created_at } = {}) => safeHtml`
                         <div class="activity-item">
                             <span class="activity-icon">${getActivityIcon(type)}</span>
-                            <span class="activity-user">${user_email || 'Anonyme'}</span>
+                            <span class="activity-user">${user_email || t('admin.anonymous')}</span>
                             <span class="activity-action">${action || type}</span>
                             <span class="activity-time">${formatRelativeTime(created_at)}</span>
                         </div>
@@ -113,7 +114,7 @@ export const renderAdminDashboard = async container => {
             `) : ''}
             
             <footer class="admin-footer">
-                <a href="/" class="back-btn" data-testid="admin-back-lms-link">← Retour au LMS</a>
+                <a href="/" class="back-btn" data-testid="admin-back-lms-link">← ${t('admin.backToLms')}</a>
             </footer>
         </div>
     `);
@@ -144,12 +145,12 @@ const formatRelativeTime = (timestamp) => {
     const date = new Date(timestamp);
     const diff = Math.floor((now - date) / 1000); // seconds
     
-    if (diff < 60) return 'À l\'instant';
-    if (diff < 3600) return `Il y a ${Math.floor(diff / 60)} min`;
-    if (diff < 86400) return `Il y a ${Math.floor(diff / 3600)} h`;
-    if (diff < 604800) return `Il y a ${Math.floor(diff / 86400)} j`;
-    
-    return date.toLocaleDateString('fr-FR');
+    if (diff < 60) return t('admin.timeNow');
+    if (diff < 3600) return t('admin.timeMinutes', { n: Math.floor(diff / 60) });
+    if (diff < 86400) return t('admin.timeHours', { n: Math.floor(diff / 3600) });
+    if (diff < 604800) return t('admin.timeDays', { n: Math.floor(diff / 86400) });
+
+    return date.toLocaleDateString();
 }
 
 /**
@@ -164,7 +165,7 @@ export const initAdminDashboard = async () => {
         <div class="admin-dashboard">
             <div class="admin-loading">
                 <div class="spinner"></div>
-                <p>Chargement des statistiques...</p>
+                <p>${t('admin.loadingStats')}</p>
             </div>
         </div>
     `);

@@ -43,7 +43,24 @@
     "curriculum": "Curriculum",
     "freeNavigation": "Go back",
     "addToActive": "Add to my active courses",
-    "removeFromActive": "Remove from my active courses"
+    "removeFromActive": "Remove from my active courses",
+    "mustCompleteStep": "You must complete this step before continuing.",
+    "cannotGoBack": "⚠️ Linear progression: you can’t go back.",
+    "restartConfirm": "⚠️ RESTART THE MODULE\n\nAll your progress will be erased.\nAre you sure?",
+    "genericError": "Error: {msg}",
+    "watchVideo90": "Watch the video to 90%+",
+    "finishModule": "Finish the module",
+    "loadingCourse": "Loading course...",
+    "noDescription": "No description available.",
+    "progressCount": "{done}/{total} completed",
+    "stepsCount": "{n} steps",
+    "enrollLimit": "You’ve reached the limit of {max} active courses. Finish or drop a course to start a new one.",
+    "loadError": "Unable to load the course: {msg}",
+    "enrolling": "Enrolling...",
+    "errorRetry": "Error - Retry",
+    "abandonConfirm": "Are you sure you want to drop this course? Your progress will be kept.",
+    "abandoning": "Dropping...",
+    "nextStep": "Next step"
   },
   "quiz": {
     "title": "Validation Quiz",
@@ -54,7 +71,23 @@
     "unlockMessage": "Watch the video to at least 90% to unlock the quiz.",
     "warning": "Warning - One attempt only",
     "warningDetail": "You will only have one attempt for this quiz.",
-    "passQuiz": "Pass the quiz"
+    "passQuiz": "Pass the quiz",
+    "notAvailableLang": "Quiz not available in this language.",
+    "attemptWarning": "⚠️ WARNING - ONE ATTEMPT ONLY\n\nBy clicking OK, you accept:\n• One attempt for this quiz\n• Final results\n\nAre you ready?",
+    "perfectToast": "Perfect quiz! {score}/{max}",
+    "pointsToast": "+{points} points",
+    "submitError": "Error submitting the quiz. Please refresh the page.",
+    "passedTitle": "Quiz passed! ({score}/{max})",
+    "missedQuestions": "Here are the questions you missed:",
+    "yourAnswer": "Your answer:",
+    "correctAnswer": "Correct answer:",
+    "failedTitle": "Quiz failed ({score}/{max})",
+    "scoreLabel": "Score: {percentage}%",
+    "belowMinimum": "You did not reach the required minimum score.",
+    "mustRewatch": "You must rewatch the video before retrying the quiz.",
+    "understood": "Got it",
+    "validating": "Validating...",
+    "submittingWait": "Please wait while we save your result."
   },
   "requirements": {
     "title": "To unlock \"Next\":",
@@ -64,7 +97,9 @@
     "unlocked": "Badge Unlocked!",
     "earned": "Congratulations!",
     "continue": "Continue",
-    "locked": "Badge locked"
+    "locked": "Badge locked",
+    "continueToUnlock": "Keep going to unlock this badge",
+    "earnedToast": "Badge unlocked: {name}"
   },
   "leaderboard": {
     "title": "Leaderboard",
@@ -79,30 +114,61 @@
     "earnedXP": "You earned",
     "xpPoints": "XP",
     "nextModule": "Next module",
-    "backToHome": "Back to home"
+    "backToHome": "Back to home",
+    "completedModule": "You completed the module \"{title}\".",
+    "pointsEarned": "+{points} pts earned",
+    "moreBadges": "Keep going to unlock more badges!"
   },
   "mobile": {
     "parcours": "Courses",
     "content": "Lesson",
-    "badges": "Badges"
+    "badges": "Badges",
+    "done": "Completed",
+    "inProgress": "In progress",
+    "notStarted": "Not started",
+    "badgeHint": "Tap a badge to see details"
   },
   "debug": {
     "title": "Debug Console",
     "resetProgress": "Reset progress",
     "confirmReset": "Are you sure you want to reset all your progress?",
-    "resetSuccess": "Progress reset"
+    "resetSuccess": "Progress reset",
+    "copied": "📋 Info copied! Double-click for debug console.",
+    "progression": "Progress",
+    "close": "Close",
+    "currentCourse": "Current course:",
+    "resetCurrent": "Reset this course",
+    "resetAll": "Reset ALL courses",
+    "navigation": "Navigation",
+    "gotoStep": "Go to a step...",
+    "devOnly1": "⚠️ These actions are reserved for debug/development.",
+    "devOnly2": "In production, only admins will have access.",
+    "noCourseSelected": "No course selected",
+    "confirmResetCurrent": "Reset progress for \"{course}\"?",
+    "noCourseFound": "No course found",
+    "confirmResetAll": "⚠️ WARNING ⚠️\n\nThis will reset progress for {n} courses.\nThis action is irreversible.\n\nContinue?",
+    "resetAllSuccess": "✅ {n} courses reset",
+    "noCourseLoaded": "No course loaded",
+    "gotoPrompt": "Go to which step? (1-{n})",
+    "invalidStep": "Invalid step (1-{n})"
   },
   "userMenu": {
     "logout": "Logout",
     "admin": "Admin",
-    "settings": "Settings"
+    "settings": "Settings",
+    "userFallback": "User",
+    "adminTitle": "Admin dashboard",
+    "roleInstructor": "Instructor",
+    "roleStudent": "Student"
   },
   "errors": {
     "loadFailed": "Failed to load",
     "saveFailed": "Failed to save",
     "networkError": "Network error",
     "unauthorized": "Unauthorized",
-    "notFound": "Not found"
+    "notFound": "Not found",
+    "title": "Error",
+    "contactSupport": "Please try again or contact support."
   },
   "sidebar": {
     "toggleSection": "Toggle section",
@@ -113,5 +179,73 @@
   },
   "classroom": {
     "title": "Classroom"
+  },
+  "mastery": {
+    "none": "Not started",
+    "bronze": "Bronze (25%)",
+    "silver": "Silver (50%)",
+    "gold": "Gold (75%)",
+    "master": "Master (100%)"
+  },
+  "rarity": {
+    "common": "Common",
+    "rare": "Rare",
+    "epic": "Epic",
+    "legendary": "Legendary"
+  },
+  "sharing": {
+    "loading": "Loading shared files...",
+    "empty": "No files shared with you.",
+    "downloadPitch": "Download .pitch",
+    "fileFallback": "File",
+    "by": "by {name}",
+    "title": "Files shared with me",
+    "loadError": "Loading error: {msg}",
+    "shareTitle": "Share \"{name}\"",
+    "recipientEmail": "Recipient email",
+    "permission": "Permission",
+    "readOnly": "Read only",
+    "readWrite": "Read and write",
+    "share": "Share",
+    "withAccess": "People with access",
+    "sharing": "Sharing...",
+    "sharedWith": "Shared with {email}",
+    "noActive": "No active shares.",
+    "roleWrite": "Write",
+    "roleRead": "Read",
+    "revoke": "Revoke",
+    "revokeConfirm": "Revoke this access?",
+    "revokeError": "Unable to revoke this access — please try again.",
+    "permissionsError": "Error loading permissions."
+  },
+  "confirmModal": {
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "defaultMessage": "Are you sure you want to continue?",
+    "thisStep": "this step",
+    "nextStepTitle": "Move to the next step?",
+    "nextStepMessage": "Warning: once you move to the next step, you won’t be able to go back to \"{step}\". Make sure you have read and understood the content before continuing.",
+    "understoodContinue": "Got it, continue →",
+    "stayHere": "Stay on this step"
+  },
+  "admin": {
+    "accessDenied": "Access denied",
+    "adminOnly": "This page is reserved for administrators.",
+    "title": "Admin dashboard",
+    "subtitle": "LMS system overview",
+    "users": "Users",
+    "courses": "Courses",
+    "events": "Tracked events",
+    "completions": "Completed courses",
+    "badges": "Unlocked badges",
+    "xpTotal": "Total XP distributed",
+    "recentActivity": "Recent activity",
+    "loadingStats": "Loading statistics...",
+    "anonymous": "Anonymous",
+    "backToLms": "Back to LMS",
+    "timeNow": "Just now",
+    "timeMinutes": "{n} min ago",
+    "timeHours": "{n} h ago",
+    "timeDays": "{n} d ago"
   }
 }

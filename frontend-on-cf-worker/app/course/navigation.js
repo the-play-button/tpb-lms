@@ -10,6 +10,7 @@ import { stopVideoTracking, cyclePlaybackSpeed } from '../video/tracking/index.j
 import { refreshSignals, updateURL } from './loader.js';
 import { renderCurrentStep } from './renderer.js';
 import { renderModuleEndScreen } from './endScreen.js';
+import { t } from '../../i18n/index.js';
 
 /**
  * Navigate to a specific step (GAP-203)
@@ -58,7 +59,7 @@ export const nextStep = async () => {
     // Free-navigation courses skip the complete-to-proceed gate.
     const isLinear = (courseData?.progression_mode || 'linear') !== 'free';
     if (isLinear && !isContentStep && !stepSignal?.step_completed) {
-        alert("Vous devez compléter cette étape avant de continuer.");
+        alert(t('course.mustCompleteStep'));
         return;
     }
 
@@ -96,7 +97,7 @@ export const nextStep = async () => {
 export const prevStep = () => {
     const courseData = getState('courseData');
     if ((courseData?.progression_mode || 'linear') !== 'free') {
-        alert("⚠️ Progression linéaire : impossible de revenir en arrière.");
+        alert(t('course.cannotGoBack'));
         return;
     }
     const stepIndex = getState('currentStepIndex');
@@ -107,12 +108,8 @@ export const prevStep = () => {
  * Restart module (reset all progress)
  */
 export const restartModule = async () => {
-    const confirmed = confirm(
-        "⚠️ RECOMMENCER LE MODULE\n\n" +
-        "Toute votre progression sera effacée.\n" +
-        "Êtes-vous sûr ?"
-    );
-    
+    const confirmed = confirm(t('course.restartConfirm'));
+
     if (confirmed) {
         const currentCourse = getState('currentCourse');
         try {
@@ -120,7 +117,7 @@ export const restartModule = async () => {
             const { loadCourse } = await import('./loader.js');
             loadCourse(currentCourse);
         } catch (error) {
-            alert(`Erreur: ${error.message}`);
+            alert(t('course.genericError', { msg: error.message }));
         }
     }
 };

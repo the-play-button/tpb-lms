@@ -8,6 +8,7 @@ import { api } from './api.js';
 import { formatNumber } from './utils.js';
 import { log } from './log.js';
 import { setSafeHtml, safeHtml } from './ui/safe-dom.js';
+import { t } from '../i18n/index.js';
 
 /**
  * Load leaderboard from API
@@ -30,14 +31,14 @@ const renderLeaderboard = (entries, currentUser) => {
     if (!list) return;
     
     if (entries.length === 0) {
-        setSafeHtml(list, '<li class="empty">Pas encore de données</li>');
+        setSafeHtml(list, safeHtml`<li class="empty">${t('leaderboard.empty')}</li>`);
         return;
     }
     
     setSafeHtml(list, entries.map((entry = {}) => safeHtml`
         <li ${entry.user_id === currentUser?.id ? 'class="current-user"' : ''}>
             <span class="rank">#${entry.rank}</span>
-            <span class="leaderboard-name">${entry.user?.email || entry.user?.name || 'Anonyme'}</span>
+            <span class="leaderboard-name">${entry.user?.email || entry.user?.name || t('admin.anonymous')}</span>
             <span class="leaderboard-xp">${formatNumber(entry.total_points)} pts</span>
         </li>
     `).join(''));

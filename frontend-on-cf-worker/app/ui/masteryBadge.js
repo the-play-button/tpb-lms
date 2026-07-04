@@ -10,13 +10,15 @@
  */
 
 import { safeHtml, raw } from './safe-dom.js';
+import { t } from '../../i18n/index.js';
 
+// labelKey resolved at render (t() must run after initLanguage, not at module load).
 const BADGES = {
-  none:   { icon: '⚪', label: 'Non commencé', color: '#666' },
-  bronze: { icon: '🥉', label: 'Bronze (25%)', color: '#cd7f32' },
-  silver: { icon: '🥈', label: 'Argent (50%)', color: '#c0c0c0' },
-  gold:   { icon: '🥇', label: 'Or (75%)', color: '#ffd700' },
-  master: { icon: '👑', label: 'Maître (100%)', color: '#9b59b6' }
+  none:   { icon: '⚪', labelKey: 'mastery.none',   color: '#666' },
+  bronze: { icon: '🥉', labelKey: 'mastery.bronze', color: '#cd7f32' },
+  silver: { icon: '🥈', labelKey: 'mastery.silver', color: '#c0c0c0' },
+  gold:   { icon: '🥇', labelKey: 'mastery.gold',   color: '#ffd700' },
+  master: { icon: '👑', labelKey: 'mastery.master', color: '#9b59b6' }
 };
 
 /**
@@ -29,18 +31,19 @@ const BADGES = {
  */
 export const renderMasteryBadge = (level, options = {}) => {
   const badge = BADGES[level] || BADGES.none;
+  const label = t(badge.labelKey);
   const showLabel = options.showLabel || false;
   const size = options.size || 'medium';
-  
+
   const sizeClass = `mastery-badge-${size}`;
-  
+
   return safeHtml`
     <span class="mastery-badge ${sizeClass}"
           style="color: ${badge.color}"
-          title="${badge.label}"
+          title="${label}"
           data-mastery-level="${level}">
       <span class="mastery-icon">${badge.icon}</span>
-      ${showLabel ? raw(safeHtml`<span class="mastery-label">${badge.label}</span>`) : ''}
+      ${showLabel ? raw(safeHtml`<span class="mastery-label">${label}</span>`) : ''}
     </span>
   `;
 };

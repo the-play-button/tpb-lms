@@ -8,6 +8,7 @@ import { loadCourse } from '../course/loader.js';
 import { iconMap } from './badges.js';
 import { showBadgeModal } from '../notifications.js';
 import { setSafeHtml, safeHtml } from './safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 /**
  * Populate mobile course list from state
@@ -25,13 +26,13 @@ const populateMobileCourseList = () => {
         const isCurrentCourse = course.id === currentCourse;
         let statusText;
         if (isCompleted) {
-            statusText = '✅ Terminé';
+            statusText = `✅ ${t('mobile.done')}`;
         } else if (isCurrentCourse) {
-            statusText = '▶️ En cours';
+            statusText = `▶️ ${t('mobile.inProgress')}`;
         } else if (stepsCompleted > 0) {
-            statusText = `${stepsCompleted} étapes`;
+            statusText = t('course.stepsCount', { n: stepsCompleted });
         } else {
-            statusText = 'Non commencé';
+            statusText = t('mobile.notStarted');
         }
 
         return safeHtml`
@@ -84,7 +85,7 @@ const populateMobileBadgesGrid = () => {
     if (!hintEl) {
         const hint = document.createElement('p');
         hint.className = 'badge-hint';
-        hint.textContent = 'Appuie sur un badge pour voir les détails';
+        hint.textContent = t('mobile.badgeHint');
         container.parentElement?.appendChild(hint);
     }
 

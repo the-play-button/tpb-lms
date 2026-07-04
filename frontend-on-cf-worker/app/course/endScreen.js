@@ -6,6 +6,7 @@
 
 import { getState } from '../state.js';
 import { setSafeHtml, safeHtml, raw } from '../ui/safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 /**
  * Render module end screen
@@ -38,14 +39,14 @@ export const renderModuleEndScreen = () => {
         <div class="module-end-screen">
             <div class="module-success">
                 <div class="success-icon">🎉</div>
-                <h1>Félicitations !</h1>
-                <p>Vous avez terminé le module "${course.title}".</p>
+                <h1>${t('endScreen.congrats')}</h1>
+                <p>${t('endScreen.completedModule', { title: course.title })}</p>
                 <div class="rewards">
-                    <p>🏆 +${totalPoints} pts gagnés</p>
-                    ${raw(badgesHtml) || raw('<p class="no-new-badge">Continuez pour débloquer plus de badges !</p>')}
+                    <p>🏆 ${t('endScreen.pointsEarned', { points: totalPoints })}</p>
+                    ${raw(badgesHtml) || safeHtml`<p class="no-new-badge">${t('endScreen.moreBadges')}</p>`}
                 </div>
                 <button class="btn-primary" data-testid="end-screen-home-btn" onclick="window.location.href='/'">
-                    Retour à l'accueil
+                    ${t('endScreen.backToHome')}
                 </button>
             </div>
         </div>

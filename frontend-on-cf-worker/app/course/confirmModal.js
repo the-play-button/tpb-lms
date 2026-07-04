@@ -17,12 +17,13 @@
  * @param {Function} options.onCancel - Callback on cancel
  */
 import { setSafeHtml, safeHtml } from '../ui/safe-dom.js';
+import { t } from '../../i18n/index.js';
 export const showConfirmModal = options => {
     const {
-        title = 'Confirmer',
-        message = 'Êtes-vous sûr de vouloir continuer ?',
-        confirmText = 'Confirmer',
-        cancelText = 'Annuler',
+        title = t('confirmModal.confirm'),
+        message = t('confirmModal.defaultMessage'),
+        confirmText = t('confirmModal.confirm'),
+        cancelText = t('confirmModal.cancel'),
         onConfirm = () => {},
         onCancel = () => {},
         type = 'warning' // 'warning', 'info', 'danger'
@@ -112,17 +113,13 @@ export const closeConfirmModal = () => {
  * @param {Function} options.onCancel - Callback on cancel
  */
 export const showContentStepConfirmation = options => {
-    const { stepName = 'cette étape', onConfirm, onCancel } = options;
-    
+    const { stepName = t('confirmModal.thisStep'), onConfirm, onCancel } = options;
+
     return showConfirmModal({
-        title: 'Passer à l\'étape suivante ?',
-        message: safeHtml`
-            <strong>Attention :</strong> Une fois que vous passez à l'étape suivante,
-            vous ne pourrez plus revenir à "${stepName}".<br><br>
-            Assurez-vous d'avoir bien lu et compris le contenu avant de continuer.
-        `,
-        confirmText: 'J\'ai compris, continuer →',
-        cancelText: 'Rester sur cette étape',
+        title: t('confirmModal.nextStepTitle'),
+        message: t('confirmModal.nextStepMessage', { step: stepName }),
+        confirmText: t('confirmModal.understoodContinue'),
+        cancelText: t('confirmModal.stayHere'),
         type: 'warning',
         onConfirm,
         onCancel

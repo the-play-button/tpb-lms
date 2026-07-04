@@ -6,6 +6,7 @@
 
 import { getState, subscribe } from '../state.js';
 import { safeHtml, setSafeHtml } from './safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 export const iconMap = {
     'first_video': '🎬',
@@ -20,11 +21,12 @@ export const iconMap = {
     'course_5': '🎓'
 };
 
-const rarityLabels = {
-    'common': 'Commun',
-    'rare': 'Rare',
-    'epic': 'Épique',
-    'legendary': 'Légendaire'
+// rarity → i18n key (resolved at render, not module load).
+const rarityLabelKeys = {
+    'common': 'rarity.common',
+    'rare': 'rarity.rare',
+    'epic': 'rarity.epic',
+    'legendary': 'rarity.legendary'
 };
 
 /**
@@ -38,14 +40,14 @@ export const updateBadgesGrid = () => {
     const allBadges = getState('allBadges') || [];
     
     if (allBadges.length === 0) {
-        setSafeHtml(grid, safeHtml`<p class="no-badges">Chargement...</p>`);
+        setSafeHtml(grid, safeHtml`<p class="no-badges">${t('app.loading')}</p>`);
         return;
     }
 
     const html = allBadges.map((badge) => {
         const icon = iconMap[badge.id] || '🏆';
         const rarityClass = badge.rarity ? badge.rarity.toLowerCase() : 'common';
-        const rarityLabel = rarityLabels[rarityClass] || 'Commun';
+        const rarityLabel = t(rarityLabelKeys[rarityClass] || 'rarity.common');
         const points = badge.points_reward || 50;
         const isEarned = badge.earned;
 

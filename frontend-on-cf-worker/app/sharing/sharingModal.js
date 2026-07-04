@@ -8,6 +8,7 @@
 import { api, apiPost, apiDelete } from '../api.js';
 import { log } from '../log.js';
 import { setSafeHtml , safeHtml} from '../ui/safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 /**
  * Show sharing modal for a content reference
@@ -24,26 +25,26 @@ export const showSharingModal = (contentRefId, contentName) => {
     setSafeHtml(modal, safeHtml`
         <div class="modal-content sharing-modal">
             <div class="modal-header">
-                <h3>Partager "${contentName}"</h3>
+                <h3>${t('sharing.shareTitle', { name: contentName })}</h3>
                 <button class="modal-close" data-testid="sharing-modal-close" data-action="close">&times;</button>
             </div>
             <div class="modal-body">
                 <div class="share-form">
-                    <label for="share-email">Email du destinataire</label>
+                    <label for="share-email">${t('sharing.recipientEmail')}</label>
                     <input type="email" id="share-email" data-testid="sharing-email-input" placeholder="nom@exemple.com" required />
 
-                    <label for="share-role">Permission</label>
+                    <label for="share-role">${t('sharing.permission')}</label>
                     <select id="share-role" data-testid="sharing-role-select">
-                        <option value="READ">Lecture seule</option>
-                        <option value="WRITE">Lecture et modification</option>
+                        <option value="READ">${t('sharing.readOnly')}</option>
+                        <option value="WRITE">${t('sharing.readWrite')}</option>
                     </select>
 
-                    <button class="btn-primary" id="share-submit" data-testid="sharing-submit-btn">Partager</button>
+                    <button class="btn-primary" id="share-submit" data-testid="sharing-submit-btn">${t('sharing.share')}</button>
                 </div>
                 <div id="share-status" class="share-status"></div>
 
                 <div class="share-existing">
-                    <h4>Personnes avec accès</h4>
+                    <h4>${t('sharing.withAccess')}</h4>
                     <div id="permissions-list" class="permissions-list">
                         <div class="loading-spinner"></div>
                     </div>
@@ -71,19 +72,19 @@ export const showSharingModal = (contentRefId, contentName) => {
         }
 
         try {
-            statusEl.textContent = 'Partage en cours...';
+            statusEl.textContent = t('sharing.sharing');
             statusEl.className = 'share-status loading';
 
             await apiPost(`/content/${contentRefId}/share`, { email, role });
 
-            statusEl.textContent = `Partagé avec ${email}`;
+            statusEl.textContent = t('sharing.sharedWith', { email });
             statusEl.className = 'share-status success';
             document.getElementById('share-email').value = '';
 
             loadPermissions(contentRefId);
         } catch (error) {
             log.error('Share failed:', error);
-            statusEl.textContent = `Erreur: ${error.message}`;
+            statusEl.textContent = t('course.genericError', { msg: error.message });
             statusEl.className = 'share-status error';
         }
     });
@@ -103,18 +104,18 @@ const loadPermissions = async (contentRefId) => {
         const permissions = data.permissions || [];
 
         if (permissions.length === 0) {
-            setSafeHtml(container, '<p class="no-permissions">Aucun partage actif.</p>');
+            setSafeHtml(container, safeHtml`<p class="no-permissions">${t('sharing.noActive')}</p>`);
             return;
         }
 
-        setSafeHtml(container, permissions.map(({ id, shared_with, role } = {}) => `
+        setSafeHtml(container, permissions.map(({ id, shared_with, role } = {}) => safeHtml`
             <div class="permission-item" data-share-id="${id}">
                 <div class="permission-info">
                     <span class="permission-email">${shared_with}</span>
-                    <span class="permission-role">${role === 'WRITE' ? 'Modification' : 'Lecture'}</span>
+                    <span class="permission-role">${role === 'WRITE' ? t('sharing.roleWrite') : t('sharing.roleRead')}</span>
                 </div>
                 <button class="btn-danger-sm" data-testid="sharing-revoke-btn" data-action="revoke" data-ref="${contentRefId}" data-share="${id}">
-                    Révoquer
+                    ${t('sharing.revoke')}
                 </button>
             </div>
         `).join(''));
@@ -125,16 +126,16 @@ const loadPermissions = async (contentRefId) => {
             if (!btn || !container.contains(btn)) return;
             const refId = btn.dataset.ref;
             const shareId = btn.dataset.share;
-            if (!confirm('Révoquer cet accès ?')) return;
+            if (!confirm(t('sharing.revokeConfirm'))) return;
             try {
                 await apiDelete(`/content/${refId}/share/${shareId}`);
                 loadPermissions(refId);
             } catch (error) {
                 log.error('Revoke failed:', error);
-                alert('Impossible de révoquer cet accès — veuillez réessayer.'); // explicit user feedback
+                alert(t('sharing.revokeError')); // explicit user feedback
             }
         };
     } catch (error) {
-        setSafeHtml(container, '<p class="error">Erreur lors du chargement des permissions.</p>');
+        setSafeHtml(container, safeHtml`<p class="error">${t('sharing.permissionsError')}</p>`);
     }
 }

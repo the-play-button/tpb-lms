@@ -6,6 +6,7 @@ import { api } from '../api.js';
 import { log } from '../log.js';
 import { buildCloudPitchUrl } from '../content/loader/_shared.js';
 import { safeHtml, raw, setSafeHtml } from '../ui/safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 /**
  * Render "shared with me" view
@@ -17,7 +18,7 @@ export const renderSharedWithMe = async (container) => {
     setSafeHtml(container, safeHtml`
         <div class="shared-with-me loading">
             <div class="loading-spinner"></div>
-            <p>Chargement des fichiers partagés...</p>
+            <p>${t('sharing.loading')}</p>
         </div>
     `);
 
@@ -28,7 +29,7 @@ export const renderSharedWithMe = async (container) => {
         if (shares.length === 0) {
             setSafeHtml(container, safeHtml`
                 <div class="shared-with-me empty">
-                    <p>Aucun fichier partagé avec vous.</p>
+                    <p>${t('sharing.empty')}</p>
                 </div>
             `);
             return;
@@ -36,14 +37,14 @@ export const renderSharedWithMe = async (container) => {
 
         const itemsHtml = shares.map(({ name, shared_by, content_type, content_ref_id } = {}) => {
             const downloadHtml = content_type === 'pitch'
-                ? safeHtml`<a href="${buildCloudPitchUrl(content_ref_id)}" class="btn-primary-sm" data-testid="shared-download-pitch-btn" download>Télécharger .pitch</a>`
+                ? safeHtml`<a href="${buildCloudPitchUrl(content_ref_id)}" class="btn-primary-sm" data-testid="shared-download-pitch-btn" download>${t('sharing.downloadPitch')}</a>`
                 : '';
             return safeHtml`
                 <div class="shared-item">
                     <div class="shared-info">
-                        <span class="shared-name">${name || 'Fichier'}</span>
-                        <span class="shared-by">par ${shared_by}</span>
-                        <span class="shared-type">${content_type || 'fichier'}</span>
+                        <span class="shared-name">${name || t('sharing.fileFallback')}</span>
+                        <span class="shared-by">${t('sharing.by', { name: shared_by })}</span>
+                        <span class="shared-type">${content_type || t('sharing.fileFallback')}</span>
                     </div>
                     <div class="shared-actions">${raw(downloadHtml)}</div>
                 </div>
@@ -51,7 +52,7 @@ export const renderSharedWithMe = async (container) => {
         }).join('');
         setSafeHtml(container, safeHtml`
             <div class="shared-with-me">
-                <h3>Fichiers partagés avec moi</h3>
+                <h3>${t('sharing.title')}</h3>
                 <div class="shared-list">${raw(itemsHtml)}</div>
             </div>
         `);
@@ -59,7 +60,7 @@ export const renderSharedWithMe = async (container) => {
         log.error('Failed to load shared files:', error);
         setSafeHtml(container, safeHtml`
             <div class="shared-with-me error">
-                <p>Erreur lors du chargement: ${error.message}</p>
+                <p>${t('sharing.loadError', { msg: error.message })}</p>
             </div>
         `);
     }
