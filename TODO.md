@@ -10,14 +10,16 @@
 **INITIATIVE (2026-07-04, EXÉCUTÉE)** — `plans/2026-07-04_lms-api-doctrine-nesting-unifiedto-exit/` : revue API vs doctrines CRUD/api-only + write-API + sections imbriquées + exit sémantique Unified.to + vidéo YouTube. **Supersède le stub `2026-03_crud-list-endpoint-refactor`**. Validation : tsc 0 err, 17/17 vitest, 4/4 sidecars.
 - [x] Plan 03 DONE — nested sections ERD (`lms_class.parent_class_id` + `node_kind`, adjacency-list, backfill idempotent, getCourse tree) {tags:erd+lms+nesting}
 - [x] Plan 02 DONE — content-authoring CRUD API (6 use-cases 9-step, repos, PBAC hasScope, tree invariants + cascade) {tags:ddd+crud+lms}
-- [~] Plan 01 PARTIAL — aliases supprimés + sharing renommé (CRUD prefixes) + safe handler renames. **DEFER RDD-gated** : enroll/abandon/complete→enrollments, batch→bulk, quiz→entity (couche `handlers/` legacy, gate RDD per ce TODO). {tags:entropy+ddd+crud-list}
-- [x] Plan 04 DONE — exit sémantique Unified.to (commentaires, alignement nommage conservé) + capacité vidéo YouTube {tags:unifiedto+lms+video}
+- [x] Plan 01 DONE — conformité CRUD/list **complète** (zéro defer, directive « au bout du bout »). Aliases supprimés + sharing renommé + enrollment CRUD + events bulk + quiz→quiz-submissions + translations + glossary bulk + dispatchers cloud/connections + signals reset. Tous les consumers `lms-viewer` mis à jour. {tags:entropy+ddd+crud-list}
+- [x] Plan 04 DONE — exit sémantique Unified.to + **support YouTube réel dans lms-viewer** (embed + IFrame API tracking) {tags:unifiedto+lms+video}
+- [x] Nesting UI DONE — `stepsSidebar.js` rend l'arbre `course.nodes[]` (SECTION folders + LESSON leaves multi-niveau) {tags:lms+frontend+nesting}
 
-**FRONTEND = `frontend-on-cf-worker/`** (worker déployé `lms-viewer`, PAS le dossier `frontend/` vide). Support YouTube ajouté 2026-07-04 (embed + IFrame API tracking, commit `8a6b095`). ⚠️ **Déploiement `lms-viewer` requis** pour activer : `cd frontend-on-cf-worker && npx wrangler deploy` (op prod, à déclencher par l'utilisateur).
+**FRONTEND = `frontend-on-cf-worker/`** (worker déployé `lms-viewer`, PAS le dossier `frontend/` vide).
 
-**FOLLOW-UPS à ouvrir** :
-- Initiative RDD dédiée `handlers/` pour les restructures sémantiques deferred de Plan 01 (enroll/abandon/complete CRUD, batch bulk unification, quiz-submissions entity, filtered-list query params). Gate déjà documenté ci-dessous § "40 JS handler routes".
-- **UX nesting viewer** : la sidebar `frontend-on-cf-worker/app/ui/stepsSidebar.js` rend la liste plate `course.classes` (leçons en ordre DFS — navigable, zéro régression) mais n'affiche PAS encore les SECTION comme dossiers pliables. Le backend expose déjà `nodes[]` (arbre). À câbler pour visualiser les niveaux imbriqués. {priority:medium} {tags:lms+frontend+nesting}
+⚠️ **DÉPLOIEMENT REQUIS (op prod, à déclencher par l'utilisateur)** pour activer tout le travail de cette initiative en live :
+- `cd Apps/the-play-button/tpb-lms && npm run deploy` (déploie `lms-api` : migration 006 + write-API + routes CRUD)
+- `cd frontend-on-cf-worker && npx wrangler deploy` (déploie `lms-viewer` : YouTube + nesting UI + consumers CRUD)
+- Preuve live tpb-browser (§ PLAN FRONTEND DONE) = après ces 2 deploys + un cours de test.
 
 ---
 

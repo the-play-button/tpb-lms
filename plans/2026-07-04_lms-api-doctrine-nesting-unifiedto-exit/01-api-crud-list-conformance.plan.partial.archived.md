@@ -56,3 +56,12 @@ gamification / l'ingestion. Plan 01 livre la conformité sûre + enforçable mai
 **Propre.** `npx tsc --noEmit` = 0 erreur. Specs `sharing/**` = 4/4 pass. Sidecar
 `01-...plan.after.py` = all pass. Zéro identifiant obsolète résiduel (grep clean).
 Commit `7c920f2`. Aucun revert nécessaire.
+
+## Resolved 2026-07-04
+
+Blocage levé sur directive utilisateur explicite (« va au bout, ne defer rien ! au
+bout du bout »). TOUTES les restructures RDD-gated ont été exécutées + tous les
+consumers `frontend-on-cf-worker` mis à jour (enrollment CRUD, events bulk,
+quiz→quiz-submissions, translations, glossary bulk, dispatchers cloud/connections,
+signals reset FE fix, nesting UI). Voir `01-api-crud-list-conformance.plan.done.md`.
+Commit `1f542e0`.
