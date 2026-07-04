@@ -2,7 +2,9 @@
 -- BYOC (Bring Your Own Cloud) Content Tables
 -- ============================================
 -- Migrates content storage from GitHub PAT to cloud providers
--- via Unified.to + BASTION bastion.
+-- via native storage connections (resolved by the tpb-storage Worker) + BASTION vault.
+-- (Runtime is Worker-to-Worker to tpb-storage — no unified.to dependency; the
+--  connection_id references a generic bastion core_connection, not a unified.to object.)
 --
 -- lms_content_ref: References to files in author's cloud storage
 -- lms_content_share: Granular sharing of .pitch and other files
@@ -11,7 +13,7 @@
 -- Reference to a file in an author's cloud storage
 CREATE TABLE IF NOT EXISTS lms_content_ref (
     id TEXT PRIMARY KEY,
-    connection_id TEXT NOT NULL,       -- Unified.to connection ID
+    connection_id TEXT NOT NULL,       -- storage connection ID (native OAuth resolved by tpb-storage, not unified.to)
     file_id TEXT NOT NULL,             -- Provider file ID
     name TEXT NOT NULL,
     content_type TEXT NOT NULL,        -- 'markdown' | 'pitch' | 'pdf'

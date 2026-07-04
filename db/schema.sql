@@ -1,15 +1,16 @@
 -- ============================================
--- TPB LMS D1 Schema - Unified.to Aligned
+-- TPB LMS D1 Schema — CRUD-shaped (field naming aligned on the unified.to
+-- canonical CRUD model — REFERENCE ONLY, no runtime dependency on unified.to)
 -- ============================================
 -- Architecture:
--- - Tables alignées sur Unified.to (CRM, KMS, LMS, HRIS, REPOSITORY)
+-- - Tables field-aligned on the canonical CRUD model (CRM, KMS, LMS, HRIS, REPOSITORY)
 -- - Extension gamification (2 tables: badge, award)
 -- - Extension event-sourcing (2 tables: lms_event, lms_signal)
 -- - Extension enrollment (1 table: lms_enrollment)
 -- - Vues monitoring (observabilité uniquement)
 --
--- Unified.to Conformity (v2.0):
--- - Colonnes sans préfixe = exactement unified.to
+-- Naming conventions (v2.0):
+-- - Colonnes sans préfixe = shape canonique CRUD (unified.to reference, pas de dépendance)
 -- - sys_* = colonnes techniques internes (ex: sys_order_index)
 -- - v_* = vues/tables dérivées (recalculables)
 -- - raw_json.tpb_* = extensions TPB documentées

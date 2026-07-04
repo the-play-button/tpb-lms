@@ -1,7 +1,7 @@
 /**
  * StorageFile - Represents a file in cloud storage
  *
- * Normalized from Unified.to storage file response.
+ * Normalized from the tpb-storage file response.
  */
 export interface StorageFile {
   id: string;
