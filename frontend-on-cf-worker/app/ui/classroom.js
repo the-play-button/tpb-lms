@@ -28,7 +28,7 @@ export const renderCard = (course, courseProgress = null) => {
             </span>
             <span class="course-card-body">
                 <span class="course-card-title">${course.title || course.name}</span>
-                ${course.description ? safeHtml`<span class="course-card-desc">${course.description}</span>` : ''}
+                ${course.description ? raw(safeHtml`<span class="course-card-desc">${course.description}</span>`) : ''}
                 <span class="course-card-progress">
                     <span class="course-card-progress-bar"><span class="course-card-progress-fill" style="width: ${percent}%"></span></span>
                     <span class="course-card-progress-text">${percent}%</span>
