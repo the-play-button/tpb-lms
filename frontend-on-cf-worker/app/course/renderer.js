@@ -57,7 +57,7 @@ export const renderCurrentStep = () => {
                 ${raw(renderVideoContent(ctx, videoHtml))}
             </div>
 
-            ${renderQuizSection(ctx)}
+            ${raw(renderQuizSection(ctx))}
 
             <div class="step-navigation">
                 <button class="nav-btn prev" data-testid="nav-prev-btn" disabled title="${t('course.linearProgression')}">← ${t('nav.prev')}</button>
@@ -67,7 +67,7 @@ export const renderCurrentStep = () => {
                 </button>
             </div>
 
-            ${renderRequirements(ctx)}
+            ${raw(renderRequirements(ctx))}
         </div>
     `);
 
