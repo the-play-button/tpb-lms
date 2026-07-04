@@ -25,12 +25,7 @@ const buildCtx = (course, signals, currentStepIndex) => {
             .filter(({ step_completed } = {}) => step_completed)
             .map(({ class_id } = {}) => class_id),
     );
-    // A lesson is reachable up to the furthest unlocked step (progress-gated).
-    const maxAccessibleIndex = Math.max(
-        currentStepIndex ?? 0,
-        (signals?.can_access_step ?? 1) - 1,
-    );
-    return { course, completedSteps, currentStepIndex, maxAccessibleIndex };
+    return { course, completedSteps, currentStepIndex };
 };
 
 /**
@@ -116,12 +111,15 @@ export const renderNodesTree = (nodes, ctx, depth) => {
  * Accessible lessons carry `.clickable` ; locked ones do not (non-interactive).
  */
 export const renderLessonItem = (step, ctx, depth) => {
-    const { course, completedSteps, currentStepIndex, maxAccessibleIndex } = ctx;
+    const { course, completedSteps, currentStepIndex } = ctx;
     const index = course.classes.findIndex(({ id } = {}) => id === step.id);
     const isCompleted = completedSteps.has(step.id);
     const isCurrent = index === currentStepIndex;
-    const accessCeiling = maxAccessibleIndex ?? (currentStepIndex ?? 0) + 1;
-    const isAccessible = index <= accessCeiling;
+    // `can_access` is the backend SSOT (order_index <= currentStep + 1). Fall back
+    // to the same rule locally when a caller passes a lesson without the flag.
+    const isAccessible = typeof step.can_access === 'boolean'
+        ? step.can_access
+        : index <= (currentStepIndex ?? 0) + 1;
     const isLocked = !isAccessible;
 
     const statusClass = isCurrent ? 'current' : isCompleted ? 'completed' : isLocked ? 'locked' : 'pending';
