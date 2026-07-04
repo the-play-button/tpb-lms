@@ -1,51 +1,18 @@
 /**
- * LmsClassRepository — D1 CRUD for lms_class (content-authoring write layer).
- *
- * lms_class is an adjacency-list tree (migration 006): parent_class_id self-FK +
+ * LmsClassDatabaseRepository — D1 implementation of the LmsClassRepository port.
+ * lms_class is an adjacency-list tree (Plan 03): parent_class_id self-FK +
  * node_kind (SECTION | LESSON). deleteSubtree uses a recursive CTE.
  */
-
-export type NodeKind = 'SECTION' | 'LESSON';
-
-export interface ClassRow {
-  id: string;
-  course_id: string;
-  parent_class_id: string | null;
-  node_kind: NodeKind;
-  name: string;
-  description: string | null;
-  media_json: string | null;
-  sys_order_index: number;
-  raw_json: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface CreateClassData {
-  id: string;
-  courseId: string;
-  parentClassId?: string | null;
-  nodeKind: NodeKind;
-  name: string;
-  description?: string | null;
-  mediaJson?: unknown;
-  sysOrderIndex?: number;
-  rawJson?: unknown;
-}
-
-export interface UpdateClassPatch {
-  name?: string;
-  description?: string | null;
-  mediaJson?: unknown;
-  sysOrderIndex?: number;
-  parentClassId?: string | null;
-  nodeKind?: NodeKind;
-  rawJson?: unknown;
-}
+import type {
+  LmsClassRepository,
+  ClassRow,
+  CreateClassData,
+  UpdateClassPatch,
+} from '../../domain/repositories/LmsClassRepository.js';
 
 const j = (v: unknown): string | null => (v === undefined || v === null ? null : JSON.stringify(v));
 
-export class LmsClassRepository {
+export class LmsClassDatabaseRepository implements LmsClassRepository {
   constructor(private readonly db: D1Database) {}
 
   async findById(id: string): Promise<ClassRow | null> {
@@ -63,7 +30,6 @@ export class LmsClassRepository {
     return res.results ?? [];
   }
 
-  /** Idempotent by id: INSERT OR IGNORE then return the row. */
   async insert(data: CreateClassData): Promise<ClassRow> {
     await this.db
       .prepare(
@@ -84,7 +50,7 @@ export class LmsClassRepository {
       )
       .run();
     const row = await this.findById(data.id);
-    if (!row) throw new Error(`LmsClassRepository.insert: row ${data.id} not found after insert`);
+    if (!row) throw new Error(`LmsClassDatabaseRepository.insert: row ${data.id} not found after insert`);
     return row;
   }
 
@@ -105,7 +71,6 @@ export class LmsClassRepository {
     await this.db.prepare(`UPDATE lms_class SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run();
   }
 
-  /** Collect a node + all its descendants (adjacency-list) via recursive CTE. */
   async collectSubtreeIds(id: string): Promise<string[]> {
     const res = await this.db
       .prepare(
@@ -121,12 +86,13 @@ export class LmsClassRepository {
     return (res.results ?? []).map((r) => r.id);
   }
 
-  /** Delete a node and its entire subtree. Returns the number of rows deleted. */
   async deleteSubtree(id: string): Promise<number> {
     const ids = await this.collectSubtreeIds(id);
     if (ids.length === 0) return 0;
-    const placeholders = ids.map(() => '?').join(',');
-    await this.db.prepare(`DELETE FROM lms_class WHERE id IN (${placeholders})`).bind(...ids).run();
+    await this.db
+      .prepare(`DELETE FROM lms_class WHERE id IN (${ids.map(() => '?').join(',')})`)
+      .bind(...ids)
+      .run();
     return ids.length;
   }
 

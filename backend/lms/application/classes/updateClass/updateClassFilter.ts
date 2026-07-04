@@ -1,4 +1,4 @@
-import type { ClassRow } from '../../../infrastructure/repositories/LmsClassRepository.js';
+import type { ClassRow } from '../../../domain/repositories/LmsClassRepository.js';
 
 export interface ClassView {
   id: string; course_id: string; parent_class_id: string | null;

@@ -1,6 +1,6 @@
 import { succeed, type Result } from '../../../domain/core/Result.js';
 import type { AuthoringContext } from '../../../types/AuthoringContext.js';
-import type { ClassRow } from '../../../infrastructure/repositories/LmsClassRepository.js';
+import type { ClassRow } from '../../../domain/repositories/LmsClassRepository.js';
 import type { CreateClassContext } from './createClassHydrateContext.js';
 
 export const createClassExecute = async (context: CreateClassContext, ctx: AuthoringContext): Promise<Result<string, ClassRow>> => {

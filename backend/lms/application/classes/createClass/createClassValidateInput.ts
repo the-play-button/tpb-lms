@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
-import { NODE_KINDS } from '../_shared/nodeKind.js';
+import { NODE_KINDS } from '../../../domain/NodeKind.js';
 
 const MediaSchema = z.object({ url: z.string(), type: z.string(), name: z.string().optional() });
 const Schema = z.object({

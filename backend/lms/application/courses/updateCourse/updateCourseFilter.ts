@@ -1,4 +1,4 @@
-import type { CourseRow } from '../../../infrastructure/repositories/LmsCourseRepository.js';
+import type { CourseRow } from '../../../domain/repositories/LmsCourseRepository.js';
 
 export interface CourseView {
   id: string; name: string; description: string | null;

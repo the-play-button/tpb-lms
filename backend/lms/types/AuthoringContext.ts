@@ -7,8 +7,8 @@
  * § AUTHZ — PBAC FIRST). No storage/pam/connection ports needed.
  */
 import type { LmsActor } from './HandlerContext.js';
-import type { LmsCourseRepository } from '../infrastructure/repositories/LmsCourseRepository.js';
-import type { LmsClassRepository } from '../infrastructure/repositories/LmsClassRepository.js';
+import type { LmsCourseRepository } from '../domain/repositories/LmsCourseRepository.js';
+import type { LmsClassRepository } from '../domain/repositories/LmsClassRepository.js';
 
 export interface AuthoringContext {
   db: D1Database;

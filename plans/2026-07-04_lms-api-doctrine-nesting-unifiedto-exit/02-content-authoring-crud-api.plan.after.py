@@ -43,8 +43,11 @@ for rel, name in USECASES.items():
         check(f.exists(), f"{rel}/{name}{step}.ts missing")
 
 # 2. Repositories + context + shared helper exist.
-check((LMS / "backend/lms/infrastructure/repositories/LmsCourseRepository.ts").exists(), "LmsCourseRepository missing")
-check((LMS / "backend/lms/infrastructure/repositories/LmsClassRepository.ts").exists(), "LmsClassRepository missing")
+# Domain ports (Plan 05) + their D1 implementations.
+check((LMS / "backend/lms/domain/repositories/LmsCourseRepository.ts").exists(), "LmsCourseRepository port missing")
+check((LMS / "backend/lms/domain/repositories/LmsClassRepository.ts").exists(), "LmsClassRepository port missing")
+check((LMS / "backend/lms/infrastructure/repositories/LmsCourseDatabaseRepository.ts").exists(), "LmsCourseDatabaseRepository missing")
+check((LMS / "backend/lms/infrastructure/repositories/LmsClassDatabaseRepository.ts").exists(), "LmsClassDatabaseRepository missing")
 check((LMS / "backend/lms/types/AuthoringContext.ts").exists(), "AuthoringContext type missing")
 check((LMS / "backend/handlers/authoringContext.ts").exists(), "createAuthoringContext bridge missing")
 check((APP / "_shared/httpStatus.ts").exists(), "_shared/httpStatus.ts missing")

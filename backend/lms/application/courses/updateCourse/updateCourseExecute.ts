@@ -1,6 +1,6 @@
 import { succeed, fail, type Result } from '../../../domain/core/Result.js';
 import type { AuthoringContext } from '../../../types/AuthoringContext.js';
-import type { CourseRow } from '../../../infrastructure/repositories/LmsCourseRepository.js';
+import type { CourseRow } from '../../../domain/repositories/LmsCourseRepository.js';
 import type { UpdateCourseContext } from './updateCourseHydrateContext.js';
 
 export const updateCourseExecute = async (context: UpdateCourseContext, ctx: AuthoringContext): Promise<Result<string, CourseRow>> => {
