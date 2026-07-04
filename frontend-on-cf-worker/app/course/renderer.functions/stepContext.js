@@ -32,6 +32,7 @@ export const getStepContext = () => {
         currentCourse: getState('currentCourse'),
         totalSteps: course.classes.length,
         videoId: videoInfo.streamId,
+        videoYoutubeId: videoInfo.youtubeId,
         videoUrl: videoInfo.videoUrl,
         videoDuration: videoInfo.duration,
         quizMedia: getMediaByType(cls, 'QUIZ', 'tally_form_id') || getMediaByType(cls, 'WEB', 'tally_form_id'),

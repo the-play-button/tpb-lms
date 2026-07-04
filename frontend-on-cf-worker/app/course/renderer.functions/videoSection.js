@@ -7,7 +7,7 @@ import { getSubtitleTracks } from './_mediaHelpers.js';
 const CLOUDFLARE_STREAM_IFRAME_BASE = 'https://iframe.cloudflarestream.com';
 
 export const renderVideoSection = ctx => {
-    const { cls, stepIndex, currentCourse, videoId, videoUrl, videoDuration, quizPassed, hasQuiz } = ctx;
+    const { cls, stepIndex, currentCourse, videoId, videoYoutubeId, videoUrl, videoDuration, quizPassed, hasQuiz } = ctx;
 
     if (quizPassed && hasQuiz) {
         return `
@@ -18,8 +18,25 @@ export const renderVideoSection = ctx => {
         `;
     }
 
-    if (!videoId && !videoUrl) {
+    if (!videoId && !videoYoutubeId && !videoUrl) {
         return '';
+    }
+
+    // YouTube embed (e.g. private/unlisted channel hosting the classroom videos).
+    // enablejsapi=1 lets the YouTube IFrame API drive progress tracking.
+    if (videoYoutubeId) {
+        const ytParams = new URLSearchParams({ rel: '0', modestbranding: '1', enablejsapi: '1' });
+        return `
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/${videoYoutubeId}?${ytParams.toString()}"
+                    style="border: none; width: 100%; aspect-ratio: 16/9; border-radius: 8px;"
+                    allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture;"
+                    allowfullscreen="true" id="video-player-${stepIndex}"
+                    data-youtube-id="${videoYoutubeId}" data-video-duration="${videoDuration}"
+                    data-course-id="${currentCourse}" data-class-id="${cls.id}">
+                </iframe>
+            </div>
+        `;
     }
 
     const speedControl = `

@@ -4,6 +4,7 @@
 
 import { trackingState, RESUME_THRESHOLD, setupNativeVideoTracking, sendVideoEvent, sendVideoPing, log } from './_shared.js';
 import { stopVideoTracking } from './stopVideoTracking.js';
+import { setupYoutubeTracking } from './youtubeTracking.js';
 
 /**
  * Setup video tracking for a step
@@ -29,6 +30,12 @@ export const setupVideoTracking = (stepIndex, resumePosition = null) => {
 
     if (videoUrl && iframe.tagName === 'VIDEO') {
         setupNativeVideoTracking(iframe, videoDuration, courseId, classId, resumePosition);
+        return;
+    }
+
+    // YouTube embed → track via the YouTube IFrame API (not the CF Stream SDK).
+    if (iframe.dataset.youtubeId) {
+        void setupYoutubeTracking(iframe, videoDuration, courseId, classId);
         return;
     }
 

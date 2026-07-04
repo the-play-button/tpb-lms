@@ -23,6 +23,10 @@ export const parseMediaUrl = media => {
         return { type: 'VIDEO', url, canFetch: false, source: 'cloudflare' };
     }
 
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        return { type: 'VIDEO', url, canFetch: false, source: 'youtube' };
+    }
+
     if (url.includes('tally.so')) {
         return { type: 'QUIZ', url, canFetch: false, source: 'tally' };
     }

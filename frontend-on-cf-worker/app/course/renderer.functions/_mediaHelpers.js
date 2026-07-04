@@ -38,10 +38,26 @@ export const getVideoInfo = cls => {
     const videoMedia = getMediaByType(cls, 'VIDEO');
     if (!videoMedia) return { hasVideo: false };
 
+    // media_json entries carry `url`; older/pipeline rows may carry `video_url`.
+    const url = videoMedia.url || videoMedia.video_url || null;
+    const youtubeId = extractYoutubeId(url);
+
     return {
         hasVideo: true,
         streamId: videoMedia.stream_id,
-        videoUrl: videoMedia.video_url,
+        youtubeId,
+        // A YouTube url must NOT flow into a native <video src>; only real MP4 urls do.
+        videoUrl: youtubeId ? null : (videoMedia.video_url || (videoMedia.stream_id ? null : url)),
         duration: videoMedia.duration_sec || 300
     };
+};
+
+/**
+ * Extract the 11-char YouTube video id from a watch / youtu.be / embed / shorts url.
+ * Returns null for non-YouTube urls.
+ */
+export const extractYoutubeId = url => {
+    if (!url) return null;
+    const m = url.match(/(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : null;
 };

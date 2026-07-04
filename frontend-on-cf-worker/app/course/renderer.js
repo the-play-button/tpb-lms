@@ -27,10 +27,10 @@ export const renderCurrentStep = () => {
     const ctx = getStepContext();
     if (!ctx) return;
 
-    const { cls, stepIndex, totalSteps, stepCompleted, videoId, videoUrl, quizMedia } = ctx;
+    const { cls, stepIndex, totalSteps, stepCompleted, videoId, videoYoutubeId, videoUrl, quizMedia } = ctx;
     const isLastStep = stepIndex === totalSteps - 1;
 
-    const hasVideo = !!(videoId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
+    const hasVideo = !!(videoId || videoYoutubeId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
     const hasQuiz = !!quizMedia;
     const isContentStep = !hasVideo && !hasQuiz;
 

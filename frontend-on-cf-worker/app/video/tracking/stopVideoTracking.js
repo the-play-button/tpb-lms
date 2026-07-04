@@ -12,6 +12,19 @@ export const stopVideoTracking = () => {
         trackingState.isPlaying = false;
         trackingState.videoCompletedHandled = false;
     }
+    // YouTube IFrame API: clear the polling interval + drop the player ref.
+    if (trackingState.youtubeInterval) {
+        clearInterval(trackingState.youtubeInterval);
+        trackingState.youtubeInterval = null;
+    }
+    if (trackingState.youtubePlayer) {
+        if (typeof trackingState.youtubePlayer.destroy === 'function') {
+            try { trackingState.youtubePlayer.destroy(); } catch { /* iframe already gone */ }
+        }
+        trackingState.youtubePlayer = null;
+        trackingState.lastPingPosition = -10;
+        trackingState.isPlaying = false;
+    }
     // Signal-based pings are bound to the <video> element via 'timeupdate' —
     // they auto-stop when the video is removed from the DOM. No interval to clear.
 };
