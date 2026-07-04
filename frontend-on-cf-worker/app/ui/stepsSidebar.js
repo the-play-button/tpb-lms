@@ -56,6 +56,7 @@ export const renderStepsSidebar = (options = {}) => {
 
     const fragments = [safeHtml`
         <div class="sidebar-header">
+            <button type="button" class="back-to-classroom" data-testid="back-to-classroom">← ${t('nav.allCourses')}</button>
             <h3 class="sidebar-title">${course.title || course.name}</h3>
             <div class="sidebar-progress">
                 <span class="progress-text">${ctx.completedSteps.size}/${classes.length}</span>
@@ -155,6 +156,11 @@ export const initStepsSidebar = () => {
     sidebar.dataset.wired = '1';
 
     sidebar.addEventListener('click', async (event) => {
+        if (event.target.closest('.back-to-classroom')) {
+            const { renderClassroom } = await import('./classroom.js');
+            renderClassroom();
+            return;
+        }
         const header = event.target.closest('.section-header');
         if (header && !header.classList.contains('static')) {
             toggleSection(header);

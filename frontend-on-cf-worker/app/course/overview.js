@@ -12,6 +12,32 @@ import { fetchMarkdown, fetchCloudContent } from '../content/loader/index.js';
 import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
 import { loadCourse } from './loader.js';
 import { setSafeHtml, safeHtml, raw } from '../ui/safe-dom.js';
+import { t } from '../../i18n/index.js';
+
+/**
+ * Read-only section/lesson outline for the overview (curriculum preview). Uses the
+ * SECTION → LESSON tree when present, else the flat lesson list.
+ */
+const renderCourseOutline = (course) => {
+    const renderNodes = (list) => list.map((node) => {
+        if (node.node_kind === 'SECTION') {
+            return safeHtml`<li class="outline-section"><span class="outline-section-name">${node.name}</span><ul class="outline-lessons">${raw(renderNodes(node.children || []))}</ul></li>`;
+        }
+        return safeHtml`<li class="outline-lesson">${node.name}</li>`;
+    }).join('');
+
+    const nodes = Array.isArray(course.nodes) && course.nodes.length ? course.nodes : null;
+    const inner = nodes
+        ? renderNodes(nodes)
+        : (course.classes || []).map((c) => safeHtml`<li class="outline-lesson">${c.name}</li>`).join('');
+    if (!inner) return '';
+    return safeHtml`
+        <section class="course-outline-wrap">
+            <h2 class="course-outline-title">${t('course.curriculum')}</h2>
+            <ul class="course-outline">${raw(inner)}</ul>
+        </section>
+    `;
+};
 
 /**
  * Render course overview screen
@@ -86,6 +112,8 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                     </div>
                     ${raw(progressHtml)}
                 </div>
+
+                ${raw(renderCourseOutline(course))}
 
                 <div class="overview-actions">
                     ${raw(renderEnrollmentButton(course, isEnrolled, canEnroll, enrollmentStatus))}

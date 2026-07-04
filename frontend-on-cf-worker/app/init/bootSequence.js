@@ -15,6 +15,7 @@ import { initFeatures } from './initFeatures.js';
 
 import { initAllUI } from '../ui/initAllUI.js';
 import { loadCourse } from '../course/loader.js';
+import { renderClassroom } from '../ui/classroom.js';
 import { initAdminDashboard } from '../admin/dashboard.js';
 
 export const runBootSequence = async () => {
@@ -52,8 +53,9 @@ export const runBootSequence = async () => {
 
         if (courseId) {
             loadCourse(courseId, initialStep);
-        } else if (courses.length > 0) {
-            loadCourse(courses[0].id, initialStep);
+        } else {
+            // No deep-link → Skool-style Classroom landing (grid of course cards).
+            renderClassroom();
         }
 
     } catch (error) {

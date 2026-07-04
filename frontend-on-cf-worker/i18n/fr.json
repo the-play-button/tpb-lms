@@ -9,7 +9,8 @@
     "prev": "Précédent",
     "finish": "Terminer",
     "continue": "Continuer",
-    "restart": "Recommencer"
+    "restart": "Recommencer",
+    "allCourses": "Tous les cours"
   },
   "header": {
     "myProgress": "Mon Parcours",
@@ -35,7 +36,11 @@
     "watchVideo": "Regarder la vidéo à 90%+",
     "loading": "Chargement du contenu...",
     "contentLoadError": "Erreur lors du chargement du contenu.",
-    "retry": "Réessayer"
+    "retry": "Réessayer",
+    "start": "Commencer",
+    "continue": "Continuer",
+    "review": "Revoir",
+    "curriculum": "Programme"
   },
   "quiz": {
     "title": "Quiz de validation",
@@ -102,5 +107,8 @@
     "stepCompleted": "Étape terminée",
     "stepLocked": "Verrouillée — terminez les étapes précédentes",
     "stepPending": "Prochaine étape"
+  },
+  "classroom": {
+    "title": "Classroom"
   }
 }

@@ -8,6 +8,7 @@ import { updateUserStats, initUserStats } from './userStats.js';
 import { updateBadgesGrid, initBadges } from './badges.js';
 import { renderCourseList, initCourseList } from './courseList.js';
 import { initStepsSidebar } from './stepsSidebar.js';
+import { initClassroom } from './classroom.js';
 import { initUserMenu } from './userMenu.js';
 import { renderLangSelector, initLangSelector } from './langSelector.js';
 import { setSafeHtml } from './safe-dom.js';
@@ -33,6 +34,7 @@ export const initAllUI = (session) => {
     initBadges();
     initCourseList();
     initStepsSidebar();
+    initClassroom();
 
     // Initial render
     updateUserStats();
