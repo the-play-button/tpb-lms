@@ -1,79 +1,73 @@
-# Plan 06 — lms-viewer live bugfixes — DONE
+# Plan 06 — lms-viewer live bugfixes — DONE (v2, corrigé)
+
+> **Correction v2** : la v1 de ce rapport affirmait que « Erreur lors du chargement
+> du contenu » était du *run-data hors scope* (media vers un repo GitHub privé
+> inatteignable). **C'était faux.** Après avoir vraiment regardé via tpb-browser
+> (à la demande explicite de l'utilisateur), la vraie cause est un **bug de code
+> lms-api** (mauvais endpoint vault). De plus, la v1 n'avait fixé qu'une partie de
+> #1 → j'ai **shippé une régression** (quiz + requirements échappés). Les deux sont
+> maintenant corrigés at-source et vérifiés live.
 
 ## Ce qui a été fait
 
-Les 3 bugs pré-existants trouvés au tour tpb-browser, fixés at-source (§ ALWAYS
-FAIL HARD, § I18N, safe-dom), redéployés, re-vérifiés live (fresh + reload, EN + FR).
+### #1 [CRITIQUE] Contenu échappé — fix COMPLET (v1 incomplet)
+`renderer.js` interpolait 3 sous-rendus dans un `safeHtml` parent : `renderVideoContent`,
+`renderQuizSection`, `renderRequirements`. `safeHtml` **ré-échappe** toute string
+interpolée sans `raw()`. La v1 n'avait `raw()` que le premier → **quiz + requirements
+restaient double-échappés** → affichés en tags littéraux (`<div class="step-quiz…">`
+visible à l'écran — la régression que l'utilisateur a vue sur pw05-2). Fix v2 :
+`${raw(renderQuizSection(ctx))}` + `${raw(renderRequirements(ctx))}`. Les deux
+sous-rendus échappent leurs propres valeurs user en interne (quiz via `safeHtml`,
+requirements via `t()`-only), donc `raw()` au parent est sûr. Audit complet du
+codebase pour cette classe (fonctions retournant `safeHtml` ré-interpolées) : plus
+aucun autre site (sidebar utilise `+=` concat, pas d'interpolation).
 
-### #1 [CRITIQUE] Contenu des leçons jamais rendu
-Root cause : `renderer.js` interpolait `renderVideoContent(ctx, videoHtml)` dans un
-template `safeHtml` **sans** `raw()` → tout le HTML de l'étape (iframe vidéo +
-placeholder document) était échappé → le `<div id="document-content-${id}">` n'était
-plus un vrai nœud DOM → `loadDocumentContent` faisait `if (!container) return;` →
-le fetch markdown n'était **jamais** émis (régression du commit 40fa29d durcissement
-safe-dom). Fix : `import { raw }` + `${raw(renderVideoContent(ctx, videoHtml))}`. Les
-valeurs user (`cls.description`) restent échappées dans leur propre `safeHtml`.
+### Contenu qui ne chargeait pas — VRAIE cause : endpoint vault mort (lms-api)
+`GithubContentService.fetchVaultToken` lisait le PAT GitHub à
+`${BASTION_URL}/secret/data/tpb/infra/github_pat_tpb_repos` — **route inexistante
+sur le bastion live, 404 pour tout appelant** (vérifié : admin ET PAT `app_lms`
+reçoivent 404 sur `/secret/data`, 200 sur `/vault/secrets/by-path`). Le 404 remontait
+en `Vault fetch failed (404): NOT_FOUND` → handler 500 → viewer « content load error ».
+Le secret existe et le PAT `app_lms` peut le lire via l'endpoint canonique (celui que
+le SDK `BastionCloudflareAdapter.getSecret` utilise déjà). Fix : `/secret/data/` →
+`/vault/secrets/by-path/` + constante `GITHUB_PAT_VAULT_PATH` (pas de magic-string
+drift avec le message d'erreur). **Live : le proxy renvoie 200 + markdown, le viewer
+rend H1/H2/listes.** Ni secret manquant, ni rotation, ni grant — pur bug d'endpoint.
 
-**Vérification live** : après fix, `loadDocumentContent` fire bien (le placeholder est
-un vrai node). Le contenu de `pa06-2` reste non-rendu car sa media DOCUMENT pointe
-vers un **repo GitHub privé** (`raw.githubusercontent.com/the-play-button/pa06-kms-setup`)
-qui renvoie 404 → **run-data hors scope tpb-lms** (« garde le focus sur le tpb-lms
-lui-même »). L'error path a donc été durci (voir extension ci-dessous).
+### #2 [HIGH] Classement vide
+`leaderboard.js` déstructurait le param mais référençait `entry` non défini →
+`ReferenceError`. Fix : param `entry` nommé. **Live : 2 entrées** (#1 …@theplaybutton.ai
+935 pts, #2 alex@mnp-corp… 735 pts).
 
-### #2 [HIGH] Classement toujours vide
-Root cause : `leaderboard.js` faisait `.map(({ user_id, rank, total_points }) => …
-entry.user…)` — le param était déstructuré mais le corps référençait `entry` non
-défini → `ReferenceError` → 0 entrée rendue. Fix : nommer le param `entry` (défaut
-`{}`) + consommer `entry.user_id/rank/total_points/user`. **Live** : 2 entrées rendues
-(`#1 matthieu.marielouise@theplaybutton.ai 935 pts`).
+### #3 [MEDIUM] Labels FR hardcodés
+Routés via `t()` (renderer, documentSection, requirements, videoSection). Clés ajoutées :
+`course.loading`, `requirements.passQuiz`, `course.contentLoadError`, `course.retry`.
+**Live : EN « Step 1 / 15 · Next → » ↔ FR « Étape 1 / 15 · Suivant → ».**
 
-### #3 [MEDIUM] Labels hardcodés FR (bypass i18n)
-Root cause : le flux étape utilisait des labels FR en dur alors que le sélecteur
-expose la vraie locale → mismatch quand EN sélectionné. Fix : router via `t()` (clés
-déjà présentes) dans `renderer.js` (`course.step`/`of`, `nav.prev/next/finish`,
-`course.linearProgression`/`completeStep`), `documentSection.js` (`course.loading`/
-`noContent`), `requirements.js` (`requirements.title`/`passQuiz`, + `videoYoutubeId`
-dans `hasVideo`), `videoSection.js` (`course.videoLocked`). Clés ajoutées : `course.loading`,
-`requirements.passQuiz` (en+fr). **Live** : EN → « Step 1 / 15 », « Next → » ; FR →
-« Étape 1 / 15 », « Suivant → ».
-
-### Extension (découverte au re-verify) — error path document i18n + fail-loud
-Une fois #1 fixé, `loadDocumentContent` fire et échoue sur le 404 GitHub privé. Le
-catch loguait `{ error }` qui sérialisait en `{}` vide (masquait la vraie cause,
-viole § ALWAYS FAIL HARD) et affichait des labels FR en dur. Durci : log
-`{ url, message }` (fail-loud avec la vraie URL + `error.message`) + message/bouton
-routés via `t('course.contentLoadError')` / `t('course.retry')` (clés ajoutées en+fr).
-**Live** : console montre `{ message: "Failed to fetch content: 500", url: "…pa06-kms-setup…" }` ;
-UI EN « Failed to load content. » / « Retry », FR « Erreur lors du chargement du
-contenu. » / « Réessayer ».
-
-### Régression test suite (156→162)
-`videoSection.js` importe désormais `i18n/index.js`, qui appelle `initLanguage()` au
-module-load → touche `localStorage` → l'import cassait `videoYoutube.test.js` en node
-(6 tests non collectés). Fix : `vi.mock('../../../i18n/index.js', () => ({ t: (k) => k }))`
-dans le test (le test ne concerne pas i18n). Retour à 162/162.
+### Durcissements
+- Error path document : log fail-loud `{ url, message }` (au lieu de `{}` vide, § ALWAYS FAIL HARD) + labels via `t()`.
+- Test : mock i18n dans `videoYoutube.test.js` (i18n `initLanguage()` touche `localStorage` au load → cassait l'import node). 162/162.
 
 ## Fichiers modifiés
 
-- `frontend-on-cf-worker/app/course/renderer.js` — `import { raw }` + `${raw(renderVideoContent(...))}` (#1) ; labels flux étape via `t()` (#3).
-- `frontend-on-cf-worker/app/leaderboard.js` — param `entry` nommé (#2).
-- `frontend-on-cf-worker/app/course/renderer.functions/documentSection.js` — `import { t }` ; `course.loading`/`noContent` ; error path i18n + fail-loud log `{ url, message }`.
-- `frontend-on-cf-worker/app/course/renderer.functions/requirements.js` — `import { t }` ; `requirements.title`/`passQuiz` ; `videoYoutubeId` dans `hasVideo`.
-- `frontend-on-cf-worker/app/course/renderer.functions/videoSection.js` — `import { t }` ; `course.videoLocked`.
-- `frontend-on-cf-worker/i18n/en.json` + `i18n/fr.json` — `course.loading`, `requirements.passQuiz`, `course.contentLoadError`, `course.retry`.
-- `frontend-on-cf-worker/app/course/renderer.functions/videoYoutube.test.js` — mock i18n (restaure les 6 tests youtube en node).
+- `frontend-on-cf-worker/app/course/renderer.js` — `raw()` sur les **3** sous-rendus (video + quiz + requirements) ; labels via `t()`.
+- `frontend-on-cf-worker/app/leaderboard.js` — param `entry` nommé.
+- `frontend-on-cf-worker/app/course/renderer.functions/documentSection.js` — `t()` + error path i18n + fail-loud log.
+- `frontend-on-cf-worker/app/course/renderer.functions/requirements.js` — `t()` + `videoYoutubeId` dans `hasVideo`.
+- `frontend-on-cf-worker/app/course/renderer.functions/videoSection.js` — `t()`.
+- `frontend-on-cf-worker/i18n/en.json` + `fr.json` — 4 clés ajoutées.
+- `frontend-on-cf-worker/app/course/renderer.functions/videoYoutube.test.js` — mock i18n.
+- `backend/services/content/GithubContentService.js` — endpoint vault `/secret/data` → `/vault/secrets/by-path` + const `GITHUB_PAT_VAULT_PATH`.
 
-Commits : `cc01fb4` (3 fixes + test mock), `046333f` (error path i18n + fail-loud).
-Déploiements lms-viewer : `3d8ee326`, puis `d00521e1`.
+Commits : `cc01fb4` (3 fixes + test mock), `046333f` (error path), `0181163` (raw quiz+req regression fix), `da1480c` (vault endpoint), `4bf208c` (done v1).
+Déploiements : lms-viewer `3d8ee326`→`ddc349d9` ; lms-api `e082c22e`.
 
 ## Résultat de validation
 
-- ✅ **#1** placeholder = vrai nœud DOM → `loadDocumentContent` fire (vérifié : le fetch est émis). Le no-content résiduel de pa06-2 = 404 GitHub privé = run-data hors scope.
-- ✅ **#2** classement : 2 entrées rendues live (`#1 …@theplaybutton.ai 935 pts`).
-- ✅ **#3** bascule EN↔FR change compteur d'étape, boutons nav, erreur/retry, requirements — les deux locales vérifiées live.
-- ✅ **fail-loud** : le log document expose `{ url, message: "…500" }` au lieu de `{}` vide.
-- ✅ Console : **0 erreur JS inattendue**. Seul log = le fail-loud document 404 (run-data hors scope, attendu).
-- ✅ `npx tsc --noEmit` : 0 erreur.
-- ✅ `npm test` : **162/162** (17 fichiers).
-- ✅ `python3 -m tpb_entropy --last-status check` : **RATCHET OK** (aucune régression, aucun ACK).
-- ✅ tpb-browser : fresh load + reload OK, EN et FR vérifiés (§ PLAN FRONTEND DONE).
+- ✅ **#1 complet** : `.step-quiz` + `.step-requirements` rendent comme vraies cartes ; `leaksLiteralTags: false` sur pa06-2 ET pw05-2. Plus aucun tag littéral.
+- ✅ **Contenu** : proxy `/api/content/github` → 200 + markdown ; viewer rend `.markdown-body` (H1/H2/UL/LI) ; **plus d'error box**. Vérifié pa06-2 step 1 + pw05-2 step 2.
+- ✅ **#2** : classement 2 entrées live.
+- ✅ **#3** : bascule EN↔FR change tous les labels du flux étape (live).
+- ✅ **Console** : **0 erreur** sur pa06-2 step 1 ET pw05-2 step 2 (screenshots + `tpb_console_messages` vides).
+- ✅ `npx tsc --noEmit` 0 · `npm test` **162/162** · entropy `--last-status check` **RATCHET OK** (zéro ACK).
+- ✅ tpb-browser : re-vérifié fresh + reload, screenshots visuels des 2 cours (§ PLAN FRONTEND DONE).
