@@ -6,6 +6,10 @@
 
 const GITHUB_API_BASE = 'https://api.github.com';
 const TOKEN_TTL_MS = 5 * 60 * 1000;
+// Canonical bastion vault read endpoint (§ VAULT). `/secret/data/*` is not a
+// live route and 404s for every caller (incl. admin) — the by-path endpoint is
+// the one the SDK + all Workers consume.
+const GITHUB_PAT_VAULT_PATH = 'tpb/infra/github_pat_tpb_repos';
 
 let cachedToken = null;
 let tokenExpiry = 0;
@@ -19,7 +23,7 @@ const fetchVaultToken = async (env, debug) => {
         'Authorization': `Bearer ${env.BASTION_TOKEN}`,
     };
     const response = await fetch(
-        `${env.BASTION_URL}/secret/data/tpb/infra/github_pat_tpb_repos`,
+        `${env.BASTION_URL}/vault/secrets/by-path/${GITHUB_PAT_VAULT_PATH}`,
         { headers },
     );
     debug.vaultStatus = response.status;
@@ -30,7 +34,7 @@ const fetchVaultToken = async (env, debug) => {
     const result = await response.json();
     const token = result.value ?? result.data?.value ?? null;
     if (!token) {
-        throw new Error('Vault response missing value for tpb/infra/github_pat_tpb_repos');
+        throw new Error(`Vault response missing value for ${GITHUB_PAT_VAULT_PATH}`);
     }
     return token;
 };
