@@ -25,9 +25,20 @@ de service live**.
   (`enrichMedia` ne réécrit pas l'url). C'est ce qui permet d'héberger les 400 MP4
   Loom sur YouTube privé (zéro R2, zéro coût storage). Verrouillé par
   `videoHosting.test.js`.
-  - **Note** : le frontend tpb-lms est **vide** (`.gitkeep` seulement) — API
-    headless. Il n'y a pas de renderer à modifier ici ; l'embed YouTube est la
-    responsabilité du consumer (viewer skool-scraping, futur player).
+  - **CORRECTION (post-review user 2026-07-04)** : mon affirmation initiale « le
+    frontend tpb-lms est vide » était **FAUSSE**. `frontend/` est vide, mais
+    `frontend-on-cf-worker/` est le vrai frontend déployé (worker `lms-viewer`,
+    https://lms-viewer.matthieu-marielouise.workers.dev/). Son renderer vidéo ne
+    gérait que Cloudflare Stream + MP4 natif — une URL YouTube tombait dans
+    `<video src>` (cassé). **Corrigé** : support YouTube end-to-end
+    (embed `/embed/` + tracking via YouTube IFrame API). Commit `8a6b095` :
+    `parseMediaUrl` (source youtube), `_mediaHelpers.extractYoutubeId` +
+    `getVideoInfo.youtubeId`, `stepContext`/`renderer` (videoYoutubeId),
+    `videoSection` (iframe /embed/), `youtubeTracking.js` (VIDEO_PLAY/PAUSE/PING),
+    `videoYoutube.test.js` (6/6). Le pipeline data (Loom → YouTube privé →
+    media_json url) rendra donc bien la vidéo dans le viewer.
+    **Preuve live tpb-browser** = requiert un déploiement de `lms-viewer` (op prod,
+    déclenchée par l'utilisateur) + un cours avec vidéo YouTube.
 
 ## Fichiers modifiés
 

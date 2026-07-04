@@ -13,7 +13,11 @@
 - [~] Plan 01 PARTIAL — aliases supprimés + sharing renommé (CRUD prefixes) + safe handler renames. **DEFER RDD-gated** : enroll/abandon/complete→enrollments, batch→bulk, quiz→entity (couche `handlers/` legacy, gate RDD per ce TODO). {tags:entropy+ddd+crud-list}
 - [x] Plan 04 DONE — exit sémantique Unified.to (commentaires, alignement nommage conservé) + capacité vidéo YouTube {tags:unifiedto+lms+video}
 
-**FOLLOW-UP à ouvrir** : initiative RDD dédiée `handlers/` pour les restructures sémantiques deferred de Plan 01 (enroll/abandon/complete CRUD, batch bulk unification, quiz-submissions entity, filtered-list query params). Gate déjà documenté ci-dessous § "40 JS handler routes".
+**FRONTEND = `frontend-on-cf-worker/`** (worker déployé `lms-viewer`, PAS le dossier `frontend/` vide). Support YouTube ajouté 2026-07-04 (embed + IFrame API tracking, commit `8a6b095`). ⚠️ **Déploiement `lms-viewer` requis** pour activer : `cd frontend-on-cf-worker && npx wrangler deploy` (op prod, à déclencher par l'utilisateur).
+
+**FOLLOW-UPS à ouvrir** :
+- Initiative RDD dédiée `handlers/` pour les restructures sémantiques deferred de Plan 01 (enroll/abandon/complete CRUD, batch bulk unification, quiz-submissions entity, filtered-list query params). Gate déjà documenté ci-dessous § "40 JS handler routes".
+- **UX nesting viewer** : la sidebar `frontend-on-cf-worker/app/ui/stepsSidebar.js` rend la liste plate `course.classes` (leçons en ordre DFS — navigable, zéro régression) mais n'affiche PAS encore les SECTION comme dossiers pliables. Le backend expose déjà `nodes[]` (arbre). À câbler pour visualiser les niveaux imbriqués. {priority:medium} {tags:lms+frontend+nesting}
 
 ---
 
