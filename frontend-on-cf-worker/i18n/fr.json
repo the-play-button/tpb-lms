@@ -33,7 +33,9 @@
     "completeStep": "Vous devez compléter cette étape avant de continuer.",
     "videoLocked": "La vidéo n'est plus accessible après le quiz.",
     "watchVideo": "Regarder la vidéo à 90%+",
-    "loading": "Chargement du contenu..."
+    "loading": "Chargement du contenu...",
+    "contentLoadError": "Erreur lors du chargement du contenu.",
+    "retry": "Réessayer"
   },
   "quiz": {
     "title": "Quiz de validation",

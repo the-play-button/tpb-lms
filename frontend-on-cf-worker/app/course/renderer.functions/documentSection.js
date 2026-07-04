@@ -57,13 +57,14 @@ export const loadDocumentContent = async cls => {
         container.classList.remove('loading');
         setSafeHtml(container, safeHtml`<div class="markdown-body">${raw(html)}</div>`);
     } catch (error) {
-        console.error('Failed to load document content', { error });
+        const url = isCloudRef(documentMedia) ? documentMedia.content_ref_id : documentMedia.url;
+        console.error('Failed to load document content', { url, message: error?.message ?? String(error) });
         container.classList.remove('loading');
         container.classList.add('error');
         setSafeHtml(container, safeHtml`
             <div class="error-message">
-                <p>Erreur lors du chargement du contenu.</p>
-                <button data-testid="content-reload-btn" onclick="window.location.reload()">Réessayer</button>
+                <p>${t('course.contentLoadError')}</p>
+                <button data-testid="content-reload-btn" onclick="window.location.reload()">${t('course.retry')}</button>
             </div>
         `);
     }

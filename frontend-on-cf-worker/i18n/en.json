@@ -33,7 +33,9 @@
     "completeStep": "You must complete this step before continuing.",
     "videoLocked": "Video is no longer accessible after the quiz.",
     "watchVideo": "Watch video to 90%+",
-    "loading": "Loading content..."
+    "loading": "Loading content...",
+    "contentLoadError": "Failed to load content.",
+    "retry": "Retry"
   },
   "quiz": {
     "title": "Validation Quiz",
