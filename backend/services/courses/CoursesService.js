@@ -63,7 +63,7 @@ const queryActiveCourses = (env) =>
     `).all();
 
 const queryCourseStepCount = (env, courseId) =>
-    env.DB.prepare('SELECT COUNT(*) as count FROM lms_class WHERE course_id = ?').bind(courseId).first();
+    env.DB.prepare("SELECT COUNT(*) as count FROM lms_class WHERE course_id = ? AND node_kind = 'LESSON'").bind(courseId).first();
 
 const queryCourseProgress = (env, userId, courseId) =>
     env.DB.prepare(`

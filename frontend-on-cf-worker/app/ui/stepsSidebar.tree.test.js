@@ -27,9 +27,9 @@ const nodes = [
   { node_kind: 'LESSON', id: 'les3', name: 'Wrap up' },
 ];
 
-// No can_access flag on these fixtures → local fallback (index <= currentStepIndex+1):
-// currentStepIndex 0 → les1 current, les2 accessible/pending, les3 locked.
-const ctx = { course, completedSteps: new Set(), currentStepIndex: 0 };
+// maxAccessibleIndex 1 = navigateToStep ceiling (signals.can_access_step - 1):
+// currentStepIndex 0 → les1 current, les2 reachable/pending, les3 locked.
+const ctx = { course, completedSteps: new Set(), currentStepIndex: 0, maxAccessibleIndex: 1 };
 
 describe('renderNodesTree — nested sections sidebar', () => {
   const html = renderNodesTree(nodes, ctx, 0);
@@ -68,18 +68,11 @@ describe('renderNodesTree — nested sections sidebar', () => {
 });
 
 describe('renderLessonItem — accessibility gating', () => {
-  it('marks accessible non-current lessons clickable', () => {
-    // les2 = index 1, accessible (index <= currentStepIndex+1), not current
+  it('marks reachable non-current lessons clickable', () => {
+    // les2 = index 1 <= maxAccessibleIndex 1, not current
     const html = renderLessonItem({ id: 'les2', name: 'Deep dive' }, ctx, 0);
     expect(html).toContain('clickable');
     expect(html).toContain('data-step="1"');
-  });
-
-  it('honours the backend can_access flag when present', () => {
-    // les3 = index 2 but explicitly accessible via backend SSOT → clickable
-    const html = renderLessonItem({ id: 'les3', name: 'Wrap up', can_access: true }, ctx, 0);
-    expect(html).toContain('clickable');
-    expect(html).not.toContain('locked');
   });
 
   it('does not mark the current lesson clickable', () => {

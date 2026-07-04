@@ -25,7 +25,11 @@ const buildCtx = (course, signals, currentStepIndex) => {
             .filter(({ step_completed } = {}) => step_completed)
             .map(({ class_id } = {}) => class_id),
     );
-    return { course, completedSteps, currentStepIndex };
+    // Reachable ceiling = exactly what navigateToStep() clamps to, so a lesson we
+    // mark clickable always actually navigates (no silent clamp). Hyper-linear:
+    // only completed + current steps are reachable until the current one is done.
+    const maxAccessibleIndex = (signals?.can_access_step ?? 1) - 1;
+    return { course, completedSteps, currentStepIndex, maxAccessibleIndex };
 };
 
 /**
@@ -115,11 +119,9 @@ export const renderLessonItem = (step, ctx, depth) => {
     const index = course.classes.findIndex(({ id } = {}) => id === step.id);
     const isCompleted = completedSteps.has(step.id);
     const isCurrent = index === currentStepIndex;
-    // `can_access` is the backend SSOT (order_index <= currentStep + 1). Fall back
-    // to the same rule locally when a caller passes a lesson without the flag.
-    const isAccessible = typeof step.can_access === 'boolean'
-        ? step.can_access
-        : index <= (currentStepIndex ?? 0) + 1;
+    // Reachable iff at/below the ceiling navigateToStep() enforces (progress-gated).
+    const ceiling = ctx.maxAccessibleIndex ?? (currentStepIndex ?? 0);
+    const isAccessible = index <= ceiling;
     const isLocked = !isAccessible;
 
     const statusClass = isCurrent ? 'current' : isCompleted ? 'completed' : isLocked ? 'locked' : 'pending';

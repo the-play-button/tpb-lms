@@ -78,7 +78,7 @@ const updateEnrollmentProgressFields = (env, enrollmentId, fields) => {
 const findEnrollmentDetailsByCourse = (env, userId, courseId) =>
     env.DB.prepare(`
         SELECT e.*,
-               (SELECT COUNT(*) FROM lms_class WHERE course_id = e.course_id) as total_classes
+               (SELECT COUNT(*) FROM lms_class WHERE course_id = e.course_id AND node_kind = 'LESSON') as total_classes
         FROM lms_enrollment e
         WHERE e.user_id = ? AND e.course_id = ?
     `).bind(userId, courseId).first();
@@ -86,7 +86,7 @@ const findEnrollmentDetailsByCourse = (env, userId, courseId) =>
 const queryUserEnrollments = (env, userId, status) => {
     let query = `
         SELECT e.*, c.name as course_name, c.description as course_description,
-               (SELECT COUNT(*) FROM lms_class WHERE course_id = e.course_id) as total_classes
+               (SELECT COUNT(*) FROM lms_class WHERE course_id = e.course_id AND node_kind = 'LESSON') as total_classes
         FROM lms_enrollment e
         JOIN lms_course c ON c.id = e.course_id
         WHERE e.user_id = ?

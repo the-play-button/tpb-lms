@@ -12,7 +12,7 @@ const queryCourseSteps = (env, userId, courseId) =>
             p.video_max_position_sec, p.video_duration_sec
         FROM lms_class c
         LEFT JOIN v_user_progress p ON p.class_id = c.id AND p.user_id = ?
-        WHERE c.course_id = ? ORDER BY c.sys_order_index
+        WHERE c.course_id = ? AND c.node_kind = 'LESSON' ORDER BY c.sys_order_index
     `).bind(userId, courseId).all();
 
 const queryClassMeta = (env, classId, courseId) =>
