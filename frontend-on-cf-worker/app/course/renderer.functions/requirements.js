@@ -1,14 +1,15 @@
 /**
  * Step requirements renderer — checklist of what must be completed to
- * unlock the « Suivant » button (video 90% + quiz pass).
+ * unlock the Next button (video 90% + quiz pass).
  */
+import { t } from '../../../i18n/index.js';
 
 export const renderRequirements = ctx => {
-    const { cls, hasQuiz, videoCompleted, quizPassed, stepCompleted, videoId, videoUrl, quizMedia } = ctx;
+    const { cls, hasQuiz, videoCompleted, quizPassed, stepCompleted, videoId, videoYoutubeId, videoUrl, quizMedia } = ctx;
 
     if (stepCompleted) return '';
 
-    const hasVideo = !!(videoId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
+    const hasVideo = !!(videoId || videoYoutubeId || videoUrl || cls.content_md?.includes('cloudflarestream.com'));
     const hasQuizContent = !!quizMedia;
     if (!hasVideo && !hasQuizContent) {
         return ''; // CONTENT step - no requirements
@@ -16,16 +17,16 @@ export const renderRequirements = ctx => {
 
     return `
         <div class="step-requirements">
-            <h4>Pour débloquer "Suivant" :</h4>
+            <h4>${t('requirements.title')}</h4>
             <ul>
                 ${hasVideo ? `
                     <li class="${videoCompleted ? 'done' : 'pending'}">
-                        ${videoCompleted ? '✅' : '⏳'} Regarder la vidéo à 90%+
+                        ${videoCompleted ? '✅' : '⏳'} ${t('course.watchVideo')}
                     </li>
                 ` : ''}
                 ${hasQuiz ? `
                     <li class="${quizPassed ? 'done' : 'pending'}">
-                        ${quizPassed ? '✅' : '⏳'} Passer le quiz
+                        ${quizPassed ? '✅' : '⏳'} ${t('requirements.passQuiz')}
                     </li>
                 ` : ''}
             </ul>

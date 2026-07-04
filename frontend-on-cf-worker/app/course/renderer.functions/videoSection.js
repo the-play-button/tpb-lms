@@ -3,6 +3,7 @@
  * element (= covers BYO-stream + external video URLs).
  */
 import { getSubtitleTracks } from './_mediaHelpers.js';
+import { t } from '../../../i18n/index.js';
 
 const CLOUDFLARE_STREAM_IFRAME_BASE = 'https://iframe.cloudflarestream.com';
 const YOUTUBE_EMBED_BASE = 'https://www.youtube.com/embed';
@@ -14,7 +15,7 @@ export const renderVideoSection = ctx => {
         return `
             <div class="video-locked">
                 <div class="locked-icon">🔒</div>
-                <p>La vidéo n'est plus accessible après le quiz.</p>
+                <p>${t('course.videoLocked')}</p>
             </div>
         `;
     }

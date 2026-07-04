@@ -18,7 +18,8 @@ import { renderVideoSection } from './renderer.functions/videoSection.js';
 import { renderVideoContent, loadDocumentContent } from './renderer.functions/documentSection.js';
 import { renderQuizSection } from './renderer.functions/quizSection.js';
 import { renderRequirements } from './renderer.functions/requirements.js';
-import { setSafeHtml, setSafeOuterHtml , safeHtml} from '../ui/safe-dom.js';
+import { setSafeHtml, setSafeOuterHtml, safeHtml, raw } from '../ui/safe-dom.js';
+import { t } from '../../i18n/index.js';
 
 /**
  * Render current step (main orchestrator)
@@ -44,7 +45,7 @@ export const renderCurrentStep = () => {
         <div class="step-viewer">
             <div class="step-header">
                 <div class="step-progress">
-                    <span class="step-counter">Étape ${stepIndex + 1} / ${totalSteps}</span>
+                    <span class="step-counter">${t('course.step')} ${stepIndex + 1} ${t('course.of')} ${totalSteps}</span>
                     <div class="progress-bar">
                         <div class="progress-fill" style="width: ${((stepIndex + 1) / totalSteps) * 100}%"></div>
                     </div>
@@ -53,16 +54,16 @@ export const renderCurrentStep = () => {
             </div>
 
             <div class="step-content markdown-body">
-                ${renderVideoContent(ctx, videoHtml)}
+                ${raw(renderVideoContent(ctx, videoHtml))}
             </div>
 
             ${renderQuizSection(ctx)}
 
             <div class="step-navigation">
-                <button class="nav-btn prev" data-testid="nav-prev-btn" disabled title="Progression linéaire - pas de retour">← Précédent</button>
+                <button class="nav-btn prev" data-testid="nav-prev-btn" disabled title="${t('course.linearProgression')}">← ${t('nav.prev')}</button>
                 <button class="nav-btn next" data-testid="nav-next-btn" ${canProceed ? '' : 'disabled'} onclick="window.nextStep()"
-                    title="${!canProceed ? 'Complétez la vidéo et le quiz pour continuer' : (isLastStep ? 'Terminer le module' : 'Étape suivante')}">
-                    ${isLastStep ? 'Terminer 🎉' : 'Suivant →'}
+                    title="${!canProceed ? t('course.completeStep') : (isLastStep ? t('nav.finish') : t('nav.next'))}">
+                    ${isLastStep ? `${t('nav.finish')} 🎉` : `${t('nav.next')} →`}
                 </button>
             </div>
 

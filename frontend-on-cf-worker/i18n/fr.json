@@ -32,7 +32,8 @@
     "linearProgression": "Progression linéaire : impossible de revenir en arrière.",
     "completeStep": "Vous devez compléter cette étape avant de continuer.",
     "videoLocked": "La vidéo n'est plus accessible après le quiz.",
-    "watchVideo": "Regarder la vidéo à 90%+"
+    "watchVideo": "Regarder la vidéo à 90%+",
+    "loading": "Chargement du contenu..."
   },
   "quiz": {
     "title": "Quiz de validation",
@@ -46,7 +47,8 @@
     "passQuiz": "Passer le quiz"
   },
   "requirements": {
-    "title": "Pour débloquer \"Suivant\" :"
+    "title": "Pour débloquer \"Suivant\" :",
+    "passQuiz": "Passer le quiz"
   },
   "badge": {
     "unlocked": "Badge Débloqué!",

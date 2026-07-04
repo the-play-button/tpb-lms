@@ -6,6 +6,7 @@ import { fetchMarkdown, isCloudRef, fetchCloudContent } from '../../content/load
 import { stripFrontmatter, cleanMarkdownForLms } from '../../content/loader/_shared.js';
 import { getDocumentMedia } from './_mediaHelpers.js';
 import { setSafeHtml, safeHtml, raw } from '../../ui/safe-dom.js';
+import { t } from '../../../i18n/index.js';
 
 export const renderDocumentSection = cls => {
     const documentMedia = getDocumentMedia(cls);
@@ -18,7 +19,7 @@ export const renderDocumentSection = cls => {
     return safeHtml`
         <div id="document-content-${cls.id}" class="document-content loading">
             <div class="loading-spinner"></div>
-            <p>Chargement du contenu...</p>
+            <p>${t('course.loading')}</p>
         </div>
     `;
 };
@@ -30,7 +31,7 @@ export const renderVideoContent = (ctx, videoHtml) => {
         return videoHtml + '<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">' + documentHtml;
     }
 
-    return videoHtml || documentHtml || safeHtml`<p>Aucun contenu disponible pour cette étape.</p>`;
+    return videoHtml || documentHtml || safeHtml`<p>${t('course.noContent')}</p>`;
 };
 
 export const loadDocumentContent = async cls => {

@@ -3,6 +3,9 @@ import { describe, it, expect, vi } from 'vitest';
 // _mediaHelpers imports isCloudRef from the loader barrel, which pulls
 // browser-only modules (fetch/DOM). Mock it so the pure helpers load in node.
 vi.mock('../../content/loader/index.js', () => ({ isCloudRef: () => false }));
+// videoSection imports i18n, which calls initLanguage() at module load (touches
+// localStorage). Stub it so the render helpers load in node.
+vi.mock('../../../i18n/index.js', () => ({ t: (k) => k }));
 
 import { extractYoutubeId, getVideoInfo } from './_mediaHelpers.js';
 import { renderVideoSection } from './videoSection.js';

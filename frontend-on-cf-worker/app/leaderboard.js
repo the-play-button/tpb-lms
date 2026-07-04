@@ -34,11 +34,11 @@ const renderLeaderboard = (entries, currentUser) => {
         return;
     }
     
-    setSafeHtml(list, entries.map(({ user_id, rank, total_points } = {}) => safeHtml`
-        <li ${user_id === currentUser?.id ? 'class="current-user"' : ''}>
-            <span class="rank">#${rank}</span>
+    setSafeHtml(list, entries.map((entry = {}) => safeHtml`
+        <li ${entry.user_id === currentUser?.id ? 'class="current-user"' : ''}>
+            <span class="rank">#${entry.rank}</span>
             <span class="leaderboard-name">${entry.user?.email || entry.user?.name || 'Anonyme'}</span>
-            <span class="leaderboard-xp">${formatNumber(total_points)} pts</span>
+            <span class="leaderboard-xp">${formatNumber(entry.total_points)} pts</span>
         </li>
     `).join(''));
 }
