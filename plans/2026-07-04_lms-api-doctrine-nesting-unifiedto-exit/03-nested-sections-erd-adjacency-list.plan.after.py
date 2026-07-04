@@ -14,13 +14,22 @@ FAILS: list[str] = []
 
 
 def check(cond: bool, msg: str) -> None:
-    """Record a failure message when the assertion condition is false."""
+    """Record a failure message when the assertion condition is false.
+
+    Args:
+        cond: The assertion that must hold true.
+        msg: The message recorded when ``cond`` is false.
+    """
     if not cond:
         FAILS.append(msg)
 
 
 def read(p: pathlib.Path) -> str:
-    """Return the file text, or an empty string when the file does not exist."""
+    """Return the file text, or an empty string when the file is absent.
+
+    Args:
+        p: Path to the file to read.
+    """
     return p.read_text(encoding="utf-8") if p.exists() else ""
 
 
