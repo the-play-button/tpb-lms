@@ -63,7 +63,7 @@ export const renderCurrentStep = () => {
             ${raw(renderQuizSection(ctx))}
 
             <div class="step-navigation">
-                <button class="nav-btn prev" data-testid="nav-prev-btn" ${canGoBack ? 'onclick="window.prevStep()"' : 'disabled'} title="${canGoBack ? t('course.freeNavigation') : t('course.linearProgression')}">← ${t('nav.prev')}</button>
+                <button class="nav-btn prev" data-testid="nav-prev-btn" ${canGoBack ? '' : 'disabled'} onclick="window.prevStep()" title="${canGoBack ? t('course.freeNavigation') : t('course.linearProgression')}">← ${t('nav.prev')}</button>
                 <button class="nav-btn next" data-testid="nav-next-btn" ${canProceed ? '' : 'disabled'} onclick="window.nextStep()"
                     title="${!canProceed ? t('course.completeStep') : (isLastStep ? t('nav.finish') : t('nav.next'))}">
                     ${isLastStep ? `${t('nav.finish')} 🎉` : `${t('nav.next')} →`}
