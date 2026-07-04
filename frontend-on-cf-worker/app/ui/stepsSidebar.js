@@ -147,9 +147,12 @@ export const renderLessonItem = (step, ctx, depth) => {
  * delegate clicks (lesson jump + section collapse toggle).
  */
 export const initStepsSidebar = () => {
-    subscribe('courseData', renderStepsSidebar);
-    subscribe('signals', renderStepsSidebar);
-    subscribe('currentStepIndex', renderStepsSidebar);
+    // Wrap in arrows: subscribe() passes (value, oldValue) which would land as
+    // renderStepsSidebar's `options` (destructuring a null courseData would throw
+    // and mark the subscriber broken). renderStepsSidebar reads state itself.
+    subscribe('courseData', () => renderStepsSidebar());
+    subscribe('signals', () => renderStepsSidebar());
+    subscribe('currentStepIndex', () => renderStepsSidebar());
 
     const sidebar = document.getElementById('stepsSidebar');
     if (!sidebar || sidebar.dataset.wired) return;
