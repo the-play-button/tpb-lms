@@ -12,6 +12,9 @@ const Schema = z.object({
   description: z.string().optional(),
   mediaJson: z.array(MediaSchema).optional(),
   sysOrderIndex: z.number().int().optional(),
+  contentMd: z.string().optional(),
+  stepType: z.string().optional(),
+  rawJson: z.record(z.string(), z.unknown()).optional(),
 });
 export type CreateClassInput = z.infer<typeof Schema>;
 

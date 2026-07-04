@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
+import { PROGRESSION_MODES } from '../../../domain/ProgressionMode.js';
 
 const MediaSchema = z.object({ url: z.string(), type: z.string(), name: z.string().optional() });
 const Schema = z.object({
@@ -10,6 +11,8 @@ const Schema = z.object({
   mediaJson: z.array(MediaSchema).optional(),
   isPrivate: z.boolean().optional(),
   languagesJson: z.array(z.string()).optional(),
+  progressionMode: z.enum(PROGRESSION_MODES).optional(),
+  rawJson: z.record(z.string(), z.unknown()).optional(),
 });
 export type CreateCourseInput = z.infer<typeof Schema>;
 
