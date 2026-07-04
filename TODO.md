@@ -7,11 +7,13 @@
 
 ## Now
 
-**INITIATIVE (2026-07-04, en attente de validation)** — `plans/2026-07-04_lms-api-doctrine-nesting-unifiedto-exit/` : revue complète de l'API vs doctrines CRUD/api-only + write-API manquant + sections imbriquées (adjacency-list) + exit sémantique Unified.to + hébergement vidéo YouTube privé. **Supersède le stub `2026-03_crud-list-endpoint-refactor`** (jamais exécuté, ne couvrait que 4 endpoints sharing).
-- [ ] Plan 03 — nested sections ERD (`lms_class.parent_class_id` + `node_kind`) {priority:high} {tags:erd+lms+nesting}
-- [ ] Plan 02 — content-authoring CRUD API (POST/PATCH/DELETE courses+classes) {priority:high} {tags:ddd+crud+lms}
-- [ ] Plan 01 — API CRUD/list conformance (renames, aliases, bulk, filtered-lists) {priority:high} {tags:entropy+ddd+crud-list}
-- [ ] Plan 04 — exit sémantique Unified.to + vidéo YouTube privé {priority:medium} {tags:unifiedto+lms+video}
+**INITIATIVE (2026-07-04, EXÉCUTÉE)** — `plans/2026-07-04_lms-api-doctrine-nesting-unifiedto-exit/` : revue API vs doctrines CRUD/api-only + write-API + sections imbriquées + exit sémantique Unified.to + vidéo YouTube. **Supersède le stub `2026-03_crud-list-endpoint-refactor`**. Validation : tsc 0 err, 17/17 vitest, 4/4 sidecars.
+- [x] Plan 03 DONE — nested sections ERD (`lms_class.parent_class_id` + `node_kind`, adjacency-list, backfill idempotent, getCourse tree) {tags:erd+lms+nesting}
+- [x] Plan 02 DONE — content-authoring CRUD API (6 use-cases 9-step, repos, PBAC hasScope, tree invariants + cascade) {tags:ddd+crud+lms}
+- [~] Plan 01 PARTIAL — aliases supprimés + sharing renommé (CRUD prefixes) + safe handler renames. **DEFER RDD-gated** : enroll/abandon/complete→enrollments, batch→bulk, quiz→entity (couche `handlers/` legacy, gate RDD per ce TODO). {tags:entropy+ddd+crud-list}
+- [x] Plan 04 DONE — exit sémantique Unified.to (commentaires, alignement nommage conservé) + capacité vidéo YouTube {tags:unifiedto+lms+video}
+
+**FOLLOW-UP à ouvrir** : initiative RDD dédiée `handlers/` pour les restructures sémantiques deferred de Plan 01 (enroll/abandon/complete CRUD, batch bulk unification, quiz-submissions entity, filtered-list query params). Gate déjà documenté ci-dessous § "40 JS handler routes".
 
 ---
 
