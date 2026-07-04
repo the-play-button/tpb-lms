@@ -8,7 +8,7 @@
  */
 
 import { getState } from '../state.js';
-import { apiPost, api } from '../api.js';
+import { apiPost, api, apiDelete } from '../api.js';
 import { loadCourse } from '../course/loader.js';
 import { setSafeHtml , safeHtml} from '../ui/safe-dom.js';
 import { showToast } from '../../components/toast.js';
@@ -83,7 +83,7 @@ const handleResetCurrent = async () => {
     if (!confirmed) return;
     
     try {
-        await apiPost(`/signals/${currentCourse}/reset`, {});
+        await apiDelete(`/signals/${currentCourse}`);
         showToast('✅ Progression réinitialisée', 'success');
         closePanel();
         loadCourse(currentCourse);
@@ -110,7 +110,7 @@ const handleResetAll = async () => {
     try {
         let resetCount = 0;
         for (const course of courses) {
-            await apiPost(`/signals/${course.id}/reset`, {});
+            await apiDelete(`/signals/${course.id}`);
             resetCount++;
         }
         showToast(`✅ ${resetCount} parcours réinitialisés`, 'success');

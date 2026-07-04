@@ -10,9 +10,8 @@
 import { getCorsHeaders } from '../cors.js';
 
 const LIMITS = {
-    'POST:/api/events': { requests: 60, window: 60 },     // 60 req/min
-    'POST:/api/events/batch': { requests: 30, window: 60 }, // 30 req/min
-    'POST:/api/quiz': { requests: 20, window: 60 },        // 20 req/min
+    'POST:/api/events': { requests: 60, window: 60 },     // 60 req/min (single + bulk)
+    'POST:/api/quiz-submissions': { requests: 20, window: 60 }, // 20 req/min
     'POST:/api/tally-webhook': { requests: 100, window: 60 }, // 100 req/min (webhooks)
     'default': { requests: 100, window: 60 }               // 100 req/min default
 };

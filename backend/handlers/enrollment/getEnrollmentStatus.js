@@ -1,5 +1,5 @@
 /**
- * GET /api/courses/:id/enrollment
+ * GET /api/enrollments/:courseId
  * Get enrollment status for a specific course
  */
 

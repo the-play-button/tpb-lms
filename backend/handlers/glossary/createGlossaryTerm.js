@@ -7,6 +7,7 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { upsertTerm } from '../../services/glossary/GlossaryService.js';
+import { bulkImportTerms } from '../../services/glossary/GlossaryImportService.js';
 import { extractOrgIdFromUrl, isValidTermPayload } from './_glossaryShared.js';
 
 export const createGlossaryTerm = async (request, env, ctx) => {
@@ -18,6 +19,14 @@ export const createGlossaryTerm = async (request, env, ctx) => {
         body = await request.json();
     } catch {
         return errorResponse('Invalid JSON body', 400);
+    }
+
+    // Bulk create: body { terms: [...] } (Tier 1 create accepting single-or-array;
+    // no separate /import endpoint — cf. crud_list_only_endpoint_design § Q3).
+    if (Array.isArray(body?.terms)) {
+        if (body.terms.length === 0) return errorResponse('terms must be a non-empty array', 400);
+        const { successCount, errorCount } = await bulkImportTerms(env, orgId, body.terms);
+        return jsonResponse({ success: true, imported: successCount, errors: errorCount });
     }
 
     if (!isValidTermPayload(body)) {

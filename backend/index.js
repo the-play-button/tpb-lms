@@ -18,19 +18,19 @@ import { getOrCreateContact } from './auth/getOrCreateContact.js';
 import { resolveRole } from './auth/resolveRole.js';
 import { getSession } from './handlers/auth.js';
 import { listCourses, getCourse } from './handlers/courses.js';
-import { listEnrollments, enrollInCourse, abandonCourse, completeCourse, getEnrollmentStatus, updateProgress } from './handlers/enrollment/index.js';
+import { listEnrollments, createEnrollment, updateEnrollment, getEnrollmentStatus, updateProgress } from './handlers/enrollment/index.js';
 import { listBadges } from './handlers/badges.js';
-import { handleEvent, handleBatchEvents } from './handlers/events.js';
+import { createEvents } from './handlers/events.js';
 import { getStepSignals, getCourseSignalsHandler, deleteCourseSignals } from './handlers/signals.js';
-import { handleQuizSubmission, handleTallyWebhook, handleTallyWebhookWithBody, verifyTallySignature } from './handlers/quiz/index.js';
+import { createQuizSubmission, handleTallyWebhook, handleTallyWebhookWithBody, verifyTallySignature } from './handlers/quiz/index.js';
 import { getLearnerProgress } from './handlers/learner.js';
 import { getLeaderboard, getUserStats } from './handlers/leaderboard.js';
 import { handleTestSeed } from './handlers/test.js';
 import { createAPIKeyHandler, listAPIKeysHandler, deleteAPIKeyHandler, adminCreateAPIKeyHandler } from './handlers/apikeys/index.js';
 import { getAdminStats } from './handlers/admin.js';
 import { listSpaces, getSpace, getPage } from './handlers/kms.js';
-import { getTranslations, upsertTranslation, batchUpsertTranslations, getTranslationsForReview } from './handlers/translations/index.js';
-import { getGlossary, createGlossaryTerm, deleteGlossaryTerm, importGlossaryTerms } from './handlers/glossary/index.js';
+import { getTranslations, upsertTranslation, upsertTranslations, getTranslationsForReview } from './handlers/translations/index.js';
+import { getGlossary, createGlossaryTerm, deleteGlossaryTerm } from './handlers/glossary/index.js';
 import { getGitHubContent, listGitHubDirectory } from './handlers/content.js';
 import { createByocContext } from './handlers/byocContext.js';
 import { getCloudContentController } from './lms/application/cloudContent/getCloudContent/getCloudContentController.js';
@@ -282,32 +282,29 @@ app.use('/api/*', async (c, next) => {
 const standardRoutes = [
   { method: 'GET', path: '/api/auth/session', handler: getSession },
   { method: 'GET', path: '/api/admin/stats', handler: getAdminStats },
-  { method: 'POST', path: '/api/events/batch', handler: handleBatchEvents },
   { method: 'GET', path: '/api/enrollments', handler: listEnrollments },
   { method: 'GET', path: '/api/courses', handler: listCourses },
   { method: 'GET', path: '/api/kms/spaces', handler: listSpaces },
-  { method: 'GET', path: '/api/translations/review', handler: getTranslationsForReview },
-  { method: 'POST', path: '/api/translations/batch', handler: batchUpsertTranslations },
+  { method: 'GET', path: '/api/translations', handler: getTranslationsForReview },
+  { method: 'PUT', path: '/api/translations', handler: upsertTranslations },
   { method: 'GET', path: '/api/badges', handler: listBadges },
   { method: 'GET', path: '/api/learner', handler: getLearnerProgress },
   { method: 'GET', path: '/api/stats', handler: getUserStats },
   { method: 'GET', path: '/api/leaderboard', handler: getLeaderboard },
-  { method: 'POST', path: '/api/quiz', handler: handleQuizSubmission },
+  { method: 'POST', path: '/api/quiz-submissions', handler: createQuizSubmission },
   { method: 'POST', path: '/api/admin/api-keys', handler: adminCreateAPIKeyHandler },
   { method: 'GET', path: '/api/signals/:courseId/:stepId', handler: getStepSignals, params: ['courseId', 'stepId'] },
   { method: 'GET', path: '/api/signals/:courseId', handler: getCourseSignalsHandler, params: ['courseId'] },
   { method: 'DELETE', path: '/api/signals/:courseId', handler: deleteCourseSignals, params: ['courseId'] },
   { method: 'PATCH', path: '/api/enrollments/:courseId/progress', handler: updateProgress, params: ['courseId'] },
+  { method: 'POST', path: '/api/enrollments', handler: createEnrollment },
+  { method: 'PATCH', path: '/api/enrollments/:courseId', handler: updateEnrollment, params: ['courseId'] },
+  { method: 'GET', path: '/api/enrollments/:courseId', handler: getEnrollmentStatus, params: ['courseId'] },
   { method: 'GET', path: '/api/courses/:courseId', handler: getCourse, params: ['courseId'] },
-  { method: 'POST', path: '/api/courses/:courseId/enroll', handler: enrollInCourse, params: ['courseId'] },
-  { method: 'POST', path: '/api/courses/:courseId/abandon', handler: abandonCourse, params: ['courseId'] },
-  { method: 'POST', path: '/api/courses/:courseId/complete', handler: completeCourse, params: ['courseId'] },
-  { method: 'GET', path: '/api/courses/:courseId/enrollment', handler: getEnrollmentStatus, params: ['courseId'] },
   { method: 'GET', path: '/api/kms/spaces/:spaceId', handler: getSpace, params: ['spaceId'] },
   { method: 'GET', path: '/api/kms/pages/:pageId', handler: getPage, params: ['pageId'] },
   { method: 'GET', path: '/api/translations/:namespace/:locale', handler: getTranslations, params: ['namespace', 'locale'] },
   { method: 'PUT', path: '/api/translations/:namespace/:locale/:key', handler: upsertTranslation, params: ['namespace', 'locale', 'key'] },
-  { method: 'POST', path: '/api/glossary/:locale/import', handler: importGlossaryTerms, params: ['locale'] },
   { method: 'GET', path: '/api/glossary/:locale', handler: getGlossary, params: ['locale'] },
   { method: 'POST', path: '/api/glossary/:locale', handler: createGlossaryTerm, params: ['locale'] },
   { method: 'DELETE', path: '/api/glossary/:locale/:termId', handler: deleteGlossaryTerm, params: ['locale', 'termId'] },
@@ -319,11 +316,21 @@ const authKeyRoutes = [
   { method: 'DELETE', path: '/api/auth/api-keys/:keyId', handler: deleteAPIKeyHandler, params: ['keyId'] },
 ];
 
+// Filtered-read dispatchers (§ crud_list_only_endpoint_design § 2 Filter): one URL,
+// variant selected by query param — instead of a disguised sub-resource URL.
+const cloudContentDispatch = (request, ctx) =>
+  new URL(request.url).searchParams.get('usage') === 'pitch'
+    ? getCloudPitchController(request, ctx)
+    : getCloudContentController(request, ctx);
+
+const connectionsDispatch = (request, ctx) =>
+  new URL(request.url).searchParams.get('default') === 'true'
+    ? getDefaultConnectionController(request, ctx)
+    : listConnectionsController(request, ctx);
+
 const byocRoutes = [
-  { method: 'GET', path: '/api/content/cloud', handler: getCloudContentController },
-  { method: 'GET', path: '/api/content/cloud/pitch', handler: getCloudPitchController },
-  { method: 'GET', path: '/api/connections', handler: listConnectionsController },
-  { method: 'GET', path: '/api/connections/default', handler: getDefaultConnectionController },
+  { method: 'GET', path: '/api/content/cloud', handler: cloudContentDispatch },
+  { method: 'GET', path: '/api/connections', handler: connectionsDispatch },
   { method: 'GET', path: '/api/content/shared-with-me', handler: listSharedWithMeController },
   { method: 'GET', path: '/api/content/shared-by-me', handler: listSharedByMeController },
   { method: 'POST', path: '/api/content/:contentId/share', handler: createShareController, params: ['contentId'] },
@@ -360,7 +367,7 @@ const registerRoutes = (honoApp, routes, buildArgs) => {
 };
 
 const idempotentStandardRoutes = [
-  { method: 'POST', path: '/api/events', handler: handleEvent, idempotent: true },
+  { method: 'POST', path: '/api/events', handler: createEvents, idempotent: true },
 ];
 
 registerRoutes(app, publicRoutes, (c) => [c.req.raw, c.env]);

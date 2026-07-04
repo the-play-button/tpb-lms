@@ -119,6 +119,32 @@ export const apiPost = async (path, data, options = {}) => {
 };
 
 /**
+ * PATCH request to API with auto-retry on auth failure
+ * @param {string} path - API path
+ * @param {Object} data - JSON body
+ */
+export const apiPatch = async (path, data) => {
+    const additionalHeaders = { 'Content-Type': 'application/json' };
+    const headers = await buildHeaders(additionalHeaders);
+    const body = JSON.stringify(data);
+
+    let response = await fetch(`${API_BASE}${path}`, { method: 'PATCH', headers, body });
+
+    if (isAuthError(response.status)) {
+        clearAuthToken();
+        const freshHeaders = await buildHeaders(additionalHeaders);
+        response = await fetch(`${API_BASE}${path}`, { method: 'PATCH', headers: freshHeaders, body });
+    }
+
+    if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Request failed' }));
+        throw new Error(error.error || `HTTP ${response.status}`);
+    }
+
+    return response.json();
+};
+
+/**
  * DELETE request to API with auto-retry on auth failure
  * @param {string} path - API path
  */

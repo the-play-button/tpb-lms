@@ -32,8 +32,6 @@ export const renderStepsSidebar = (options = {}) => {
             .map(({ class_id } = {}) => class_id)
     );
     
-    const grouped = showSections ? groupBySection(classes) : { '': classes };
-    
     const widthPercent = `${(completedSteps.size / course.classes.length) * 100}%`;
     const fragments = [safeHtml`
         <div class="sidebar-header">
@@ -48,35 +46,72 @@ export const renderStepsSidebar = (options = {}) => {
         <nav class="steps-list">
     `];
 
-    for (const [section, steps] of Object.entries(grouped)) {
-        if (section && showSections) {
-            fragments.push(safeHtml`<div class="section-header">${section}</div>`);
-        }
+    const ctx = { course, completedSteps, currentStepIndex };
 
-        for (const step of steps) {
-            const index = course.classes.findIndex(({ id } = {}) => id === step.id);
-            const isCompleted = completedSteps.has(step.id);
-            const isCurrent = index === currentStepIndex;
-            const isLocked = index > currentStepIndex + 1;
-
-            const statusClass = isCurrent ? 'current' : isCompleted ? 'completed' : isLocked ? 'locked' : 'pending';
-            const statusIcon = isCurrent ? '▶' : isCompleted ? '✓' : isLocked ? '🔒' : '○';
-
-            const stepType = (step.raw_json ? JSON.parse(step.raw_json) : {}).tpb_step_type || step.step_type || 'CONTENT';
-            const typeIcon = getStepTypeIcon(stepType);
-
-            fragments.push(safeHtml`
-                <div class="step-item ${statusClass}" data-step="${index}" title="${getStepTooltip(statusClass)}">
-                    <span class="step-status">${statusIcon}</span>
-                    <span class="step-name">${step.name}</span>
-                    <span class="step-type-icon">${typeIcon}</span>
-                </div>
-            `);
+    // Nested sections (Plan 03): render the adjacency-list tree with SECTION
+    // folders + LESSON leaves. Falls back to the legacy flat / tpb_section
+    // grouping when the backend hasn't sent a `nodes` tree.
+    if (Array.isArray(course.nodes) && course.nodes.length && showSections) {
+        fragments.push(renderNodesTree(course.nodes, ctx, 0));
+    } else {
+        const grouped = showSections ? groupBySection(classes) : { '': classes };
+        for (const [section, steps] of Object.entries(grouped)) {
+            if (section && showSections) {
+                fragments.push(safeHtml`<div class="section-header">${section}</div>`);
+            }
+            for (const step of steps) fragments.push(renderLessonItem(step, ctx, 0));
         }
     }
 
     fragments.push(`</nav>`);
     setSafeHtml(sidebar, fragments.join(''));
+};
+
+/**
+ * Render an adjacency-list node tree: SECTION headers (indented by depth) +
+ * LESSON step-items. Returns a safe HTML string.
+ */
+export const renderNodesTree = (nodes, ctx, depth) => {
+    let out = '';
+    for (const node of nodes) {
+        if (node.node_kind === 'SECTION') {
+            const indent = raw(`style="padding-left:${8 + depth * 14}px"`);
+            out += safeHtml`<div class="section-header" ${indent}>${node.name}</div>`;
+            if (Array.isArray(node.children) && node.children.length) {
+                out += renderNodesTree(node.children, ctx, depth + 1);
+            }
+        } else {
+            out += renderLessonItem(node, ctx, depth);
+        }
+    }
+    return out;
+};
+
+/**
+ * Render one LESSON as a sidebar step-item. `data-step` is the lesson's index in
+ * the flat `course.classes` sequence (what the navigation click handler expects).
+ */
+export const renderLessonItem = (step, ctx, depth) => {
+    const { course, completedSteps, currentStepIndex } = ctx;
+    const index = course.classes.findIndex(({ id } = {}) => id === step.id);
+    const isCompleted = completedSteps.has(step.id);
+    const isCurrent = index === currentStepIndex;
+    const isLocked = index > currentStepIndex + 1;
+
+    const statusClass = isCurrent ? 'current' : isCompleted ? 'completed' : isLocked ? 'locked' : 'pending';
+    const statusIcon = isCurrent ? '▶' : isCompleted ? '✓' : isLocked ? '🔒' : '○';
+
+    const stepType = (step.raw_json ? JSON.parse(step.raw_json) : {}).tpb_step_type || step.step_type || 'CONTENT';
+    const typeIcon = getStepTypeIcon(stepType);
+    const indent = raw(`style="padding-left:${8 + depth * 14}px"`);
+
+    return safeHtml`
+        <div class="step-item ${statusClass}" data-step="${index}" ${indent} title="${getStepTooltip(statusClass)}">
+            <span class="step-status">${statusIcon}</span>
+            <span class="step-name">${step.name}</span>
+            <span class="step-type-icon">${typeIcon}</span>
+        </div>
+    `;
 };
 
 /**

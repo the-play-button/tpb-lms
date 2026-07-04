@@ -5,7 +5,7 @@
  * Fetches intro content from tpb_intro_url in course.raw.
  */
 
-import { api } from '../api.js';
+import { api, apiPost, apiPatch } from '../api.js';
 import { getState, setState } from '../state.js';
 import { log } from '../log.js';
 import { fetchMarkdown, fetchCloudContent } from '../content/loader/index.js';
@@ -151,7 +151,7 @@ const setupOverviewHandlers = (courseId) => {
         btn.textContent = 'Inscription...';
         
         try {
-            await api(`/courses/${courseId}/enroll`, { method: 'POST' });
+            await apiPost('/enrollments', { courseId });
             await loadCourse(courseId);
         } catch (error) {
             log.error('Enrollment failed:', error);
@@ -175,7 +175,7 @@ const setupOverviewHandlers = (courseId) => {
         btn.textContent = 'Abandon...';
         
         try {
-            await api(`/courses/${courseId}/abandon`, { method: 'POST' });
+            await apiPatch(`/enrollments/${courseId}`, { status: 'abandoned' });
             window.location.href = '/';
         } catch (error) {
             log.error('Abandon failed:', error);
@@ -194,7 +194,7 @@ export const showCourseOverview = async courseId => {
     try {
         const [course, enrollmentStatus] = await Promise.all([
             api(`/courses/${courseId}`),
-            api(`/courses/${courseId}/enrollment`).catch(err => {
+            api(`/enrollments/${courseId}`).catch(err => {
                 // Log the failure so operators can see broken enrollment APIs
                 // ; default to non-enrolled+can-enroll so the course overview
                 // still loads (enrollment status is non-blocking for view).

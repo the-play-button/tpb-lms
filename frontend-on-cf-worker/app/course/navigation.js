@@ -5,7 +5,7 @@
  */
 
 import { getState, setState } from '../state.js';
-import { apiPost } from '../api.js';
+import { apiPost, apiDelete } from '../api.js';
 import { stopVideoTracking, cyclePlaybackSpeed } from '../video/tracking/index.js';
 import { refreshSignals, updateURL } from './loader.js';
 import { renderCurrentStep } from './renderer.js';
@@ -108,7 +108,7 @@ export const restartModule = async () => {
     if (confirmed) {
         const currentCourse = getState('currentCourse');
         try {
-            await apiPost(`/signals/${currentCourse}/reset`, {});
+            await apiDelete(`/signals/${currentCourse}`);
             const { loadCourse } = await import('./loader.js');
             loadCourse(currentCourse);
         } catch (error) {

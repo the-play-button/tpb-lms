@@ -2,8 +2,7 @@
  * Enrollment Handler - barrel export
  */
 export { listEnrollments } from './listEnrollments.js';
-export { enrollInCourse } from './enrollInCourse.js';
-export { abandonCourse } from './abandonCourse.js';
-export { completeCourse } from './completeCourse.js';
+export { createEnrollment } from './createEnrollment.js';
+export { updateEnrollment } from './updateEnrollment.js';
 export { updateProgress } from './updateProgress.js';
 export { getEnrollmentStatus } from './getEnrollmentStatus.js';

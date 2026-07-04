@@ -177,7 +177,7 @@ export const buildCloudContentUrl = (contentRefId, lang) => {
  * Build API URL for cloud pitch file
  */
 export const buildCloudPitchUrl = contentRefId => {
-    return `${API_BASE}/content/cloud/pitch?ref_id=${contentRefId}`;
+    return `${API_BASE}/content/cloud?usage=pitch&ref_id=${contentRefId}`;
 };
 
 /**

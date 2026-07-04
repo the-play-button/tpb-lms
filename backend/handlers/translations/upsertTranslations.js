@@ -7,7 +7,7 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { bulkUpsert } from '../../services/translations/TranslationsService.js';
 
-export const batchUpsertTranslations = async (request, env, ctx) => {
+export const upsertTranslations = async (request, env, ctx) => {
     let body;
     try {
         body = await request.json();

@@ -118,8 +118,8 @@ export const handleTallySubmission = async tallyEvent => {
     };
     
     try {
-        log.debug('📤 [DEBUG] Calling /api/quiz with payload:', payload);
-        const result = await apiPost('/quiz', payload);
+        log.debug('📤 [DEBUG] Calling /api/quiz-submissions with payload:', payload);
+        const result = await apiPost('/quiz-submissions', payload);
         
         log.debug('📥 [DEBUG] Quiz API response:', result);
         

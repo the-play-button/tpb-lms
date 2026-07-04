@@ -24,11 +24,7 @@ const resolveAuthedJsonBody = async (request, userContext) => {
     }
 };
 
-export const handleEvent = async (request, env, userContext) => {
-    const authed = await resolveAuthedJsonBody(request, userContext);
-    if (authed.errorResponse) return authed.errorResponse;
-    const { userId, body } = authed;
-
+const createSingleEvent = async (request, env, userId, body) => {
     const validation = validateEvent(body);
     if (!validation.success) return jsonResponse({ error: validation.error }, 400, request);
 
@@ -45,22 +41,27 @@ export const handleEvent = async (request, env, userContext) => {
     return jsonResponse({ success: true, event_id: eventId, ...completion }, 201, request);
 };
 
-export const handleBatchEvents = async (request, env, userContext) => {
+const createBatchEvents = async (request, env, userId, events) => {
+    if (!Array.isArray(events) || events.length === 0) {
+        return jsonResponse({ error: 'events must be a non-empty array' }, 400, request);
+    }
+    const validatedEntries = validateBatch(events, validateEvent);
+    const { results, succeeded } = await persistBatch(env, userId, validatedEntries);
+    return jsonResponse({ success: true, total: events.length, succeeded, results }, 201, request);
+};
+
+/**
+ * POST /api/events — create one event (single object body) OR a bulk of events
+ * (body { events: [...] }). Tier 1 create accepting single-or-array — no separate
+ * /batch endpoint (cf. crud_list_only_endpoint_design § Q3 bulk-create).
+ */
+export const createEvents = async (request, env, userContext) => {
     const authed = await resolveAuthedJsonBody(request, userContext);
     if (authed.errorResponse) return authed.errorResponse;
     const { userId, body } = authed;
 
-    const { events } = body;
-    if (!Array.isArray(events) || events.length === 0) {
-        return jsonResponse({ error: 'events must be a non-empty array' }, 400, request);
+    if (Array.isArray(body?.events)) {
+        return createBatchEvents(request, env, userId, body.events);
     }
-
-    const validatedEntries = validateBatch(events, validateEvent);
-    const { results, succeeded } = await persistBatch(env, userId, validatedEntries);
-    return jsonResponse({
-        success: true,
-        total: events.length,
-        succeeded,
-        results,
-    }, 201, request);
+    return createSingleEvent(request, env, userId, body);
 };

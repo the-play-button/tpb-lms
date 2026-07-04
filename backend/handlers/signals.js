@@ -37,7 +37,7 @@ export const getStepSignals = async (request, env, userContext, courseId, classI
 };
 
 /**
- * POST /api/signals/:courseId/reset
+ * DELETE /api/signals/:courseId
  */
 export const deleteCourseSignals = async (request, env, userContext, courseId) => {
     const userId = resolveUserId(userContext);

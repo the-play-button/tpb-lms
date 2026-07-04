@@ -4,5 +4,4 @@
 export { getGlossary } from './getGlossary.js';
 export { createGlossaryTerm } from './createGlossaryTerm.js';
 export { deleteGlossaryTerm } from './deleteGlossaryTerm.js';
-export { importGlossaryTerms } from './importGlossaryTerms.js';
 export { getGlossaryMap } from './getGlossaryMap.js';
