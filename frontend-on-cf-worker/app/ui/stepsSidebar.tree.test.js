@@ -2,9 +2,12 @@ import { describe, it, expect, vi } from 'vitest';
 
 // state.js may touch browser globals at import; stub it (the render helpers take
 // ctx explicitly and never call getState).
-vi.mock('../state.js', () => ({ getState: () => null, setState: () => {} }));
+vi.mock('../state.js', () => ({ getState: () => null, setState: () => {}, subscribe: () => () => {} }));
+// i18n calls initLanguage() (localStorage) at module load — stub so the module
+// imports in node. Tooltips/aria return their key, which is fine for assertions.
+vi.mock('../../i18n/index.js', () => ({ t: (k) => k }));
 
-import { renderNodesTree } from './stepsSidebar.js';
+import { renderNodesTree, renderLessonItem } from './stepsSidebar.js';
 
 // course.classes = flat DFS-ordered LESSON leaves (what navigation clicks use).
 const course = {
@@ -14,8 +17,8 @@ const course = {
 // nodes = SECTION "Month 1" > [ SECTION "Week 1" > les1, les2 ], les3 (top-level)
 const nodes = [
   {
-    node_kind: 'SECTION', name: 'Month 1', children: [
-      { node_kind: 'SECTION', name: 'Week 1', children: [
+    node_kind: 'SECTION', id: 'sec-m1', name: 'Month 1', children: [
+      { node_kind: 'SECTION', id: 'sec-w1', name: 'Week 1', children: [
         { node_kind: 'LESSON', id: 'les1', name: 'Intro' },
       ] },
       { node_kind: 'LESSON', id: 'les2', name: 'Deep dive' },
@@ -24,13 +27,18 @@ const nodes = [
   { node_kind: 'LESSON', id: 'les3', name: 'Wrap up' },
 ];
 
-const ctx = { course, completedSteps: new Set(), currentStepIndex: 0 };
+// currentStepIndex 0 + maxAccessibleIndex 1 → les1/les2 accessible, les3 locked.
+const ctx = { course, completedSteps: new Set(), currentStepIndex: 0, maxAccessibleIndex: 1 };
 
 describe('renderNodesTree — nested sections sidebar', () => {
   const html = renderNodesTree(nodes, ctx, 0);
 
-  it('renders SECTION folders at each depth', () => {
+  it('renders collapsible SECTION folders at each depth', () => {
     expect(html).toContain('class="section-header"');
+    expect(html).toContain('class="section-group"');
+    expect(html).toContain('class="section-children"');
+    expect(html).toContain('aria-expanded="true"');
+    expect(html).toContain('data-section-id="sec-m1"');
     expect(html).toContain('Month 1');
     expect(html).toContain('Week 1');
   });
@@ -51,10 +59,32 @@ describe('renderNodesTree — nested sections sidebar', () => {
   });
 
   it('renders SECTION nodes as headers, not clickable steps', () => {
-    // "Month 1"/"Week 1" must not appear inside a step-item (they are folders)
     const stepItems = html.match(/step-item[^>]*>[\s\S]*?<\/div>/g) || [];
     const joined = stepItems.join('');
     expect(joined).not.toContain('Month 1');
     expect(joined).not.toContain('Week 1');
+  });
+});
+
+describe('renderLessonItem — accessibility gating', () => {
+  it('marks accessible non-current lessons clickable', () => {
+    // les2 = index 1, accessible (<= maxAccessibleIndex 1), not current
+    const html = renderLessonItem({ id: 'les2', name: 'Deep dive' }, ctx, 0);
+    expect(html).toContain('clickable');
+    expect(html).toContain('data-step="1"');
+  });
+
+  it('does not mark the current lesson clickable', () => {
+    // les1 = index 0 = currentStepIndex
+    const html = renderLessonItem({ id: 'les1', name: 'Intro' }, ctx, 0);
+    expect(html).not.toContain('clickable');
+    expect(html).toContain('step-item current');
+  });
+
+  it('locks lessons beyond the access ceiling (no clickable)', () => {
+    // les3 = index 2 > maxAccessibleIndex 1 → locked
+    const html = renderLessonItem({ id: 'les3', name: 'Wrap up' }, ctx, 0);
+    expect(html).toContain('locked');
+    expect(html).not.toContain('clickable');
   });
 });

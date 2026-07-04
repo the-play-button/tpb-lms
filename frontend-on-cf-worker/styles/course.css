@@ -650,3 +650,171 @@
 .step-header .mastery-badge {
     margin-left: var(--space-md);
 }
+
+/* =============================================
+   In-course lesson & section tree (#stepsSidebar)
+   Skool-style course rail : collapsible SECTION
+   folders + clickable LESSON items.
+   ============================================= */
+
+.steps-sidebar.is-empty {
+    display: none;
+}
+
+.steps-sidebar .sidebar-header {
+    margin-bottom: var(--space-md);
+}
+
+.steps-sidebar .sidebar-title {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: var(--space-sm);
+    line-height: 1.3;
+}
+
+.steps-sidebar .sidebar-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.steps-sidebar .progress-text {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.steps-sidebar .progress-bar-mini {
+    flex: 1;
+    height: 4px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.steps-sidebar .progress-bar-mini .progress-fill {
+    height: 100%;
+    background: var(--accent-primary);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+}
+
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+}
+
+/* Section folders */
+.section-group .section-children {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.section-group.collapsed .section-children {
+    display: none;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-sm) var(--space-sm);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.section-header:hover {
+    background: var(--hover-bg);
+}
+
+.section-header.static {
+    cursor: default;
+}
+
+.section-chevron {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.section-name {
+    flex: 1;
+}
+
+/* Lesson items */
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    line-height: 1.3;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.step-item .step-status {
+    flex-shrink: 0;
+    width: 1.1rem;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.step-item .step-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.step-item .step-type-icon {
+    flex-shrink: 0;
+    opacity: 0.6;
+    font-size: 0.75rem;
+}
+
+.step-item.clickable {
+    cursor: pointer;
+}
+
+.step-item.clickable:hover {
+    background: var(--hover-bg);
+    box-shadow: var(--hover-glow);
+    color: var(--text-primary);
+}
+
+.step-item.current {
+    background: var(--accent-primary);
+    color: #fff;
+    font-weight: 600;
+}
+
+.step-item.current .step-type-icon {
+    opacity: 0.9;
+}
+
+.step-item.completed .step-status {
+    color: var(--success);
+}
+
+.step-item.locked {
+    color: var(--text-muted);
+    opacity: 0.55;
+    cursor: not-allowed;
+}

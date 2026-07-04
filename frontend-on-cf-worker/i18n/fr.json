@@ -95,5 +95,12 @@
     "networkError": "Erreur réseau",
     "unauthorized": "Non autorisé",
     "notFound": "Non trouvé"
+  },
+  "sidebar": {
+    "toggleSection": "Replier / déplier la section",
+    "stepCurrent": "Étape en cours",
+    "stepCompleted": "Étape terminée",
+    "stepLocked": "Verrouillée — terminez les étapes précédentes",
+    "stepPending": "Prochaine étape"
   }
 }

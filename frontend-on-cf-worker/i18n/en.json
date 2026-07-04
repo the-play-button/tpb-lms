@@ -95,5 +95,12 @@
     "networkError": "Network error",
     "unauthorized": "Unauthorized",
     "notFound": "Not found"
+  },
+  "sidebar": {
+    "toggleSection": "Toggle section",
+    "stepCurrent": "Current step",
+    "stepCompleted": "Completed",
+    "stepLocked": "Locked — complete the previous steps",
+    "stepPending": "Up next"
   }
 }
