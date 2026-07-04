@@ -116,7 +116,8 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                 ${raw(renderCourseOutline(course))}
 
                 <div class="overview-actions">
-                    ${raw(renderEnrollmentButton(course, isEnrolled, canEnroll, enrollmentStatus))}
+                    ${raw(renderPrimaryCta(course))}
+                    ${raw(renderEnrollmentSecondary(course, isEnrolled, canEnroll))}
                 </div>
 
                 ${raw(enrollmentWarningHtml)}
@@ -138,49 +139,65 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
 };
 
 /**
- * Render appropriate enrollment button
+ * Primary CTA — driven by real progress (not enrollment, which gates nothing).
+ * Always opens the course (loadCourse works regardless of enrollment).
  */
-const renderEnrollmentButton = (course, isEnrolled, canEnroll, enrollmentStatus) => {
-    if (isEnrolled) {
-        const { enrollment: { progress_percent = 0 } = {} } = enrollmentStatus ?? {};
-        const label = progress_percent > 0 ? `Continuer (${progress_percent}%)` : 'Commencer le cours';
-        return safeHtml`
-            <button class="btn-primary btn-start" data-testid="course-continue-btn" data-action="continue" data-course="${course.id}">
-                ${label} →
-            </button>
-            <button class="btn-secondary btn-abandon" data-testid="course-abandon-btn" data-action="abandon" data-course="${course.id}">
-                Abandonner le cours
-            </button>
-        `;
-    }
-
-    if (canEnroll) {
-        return safeHtml`
-            <button class="btn-primary btn-enroll" data-testid="course-enroll-btn" data-action="enroll" data-course="${course.id}">
-                S'inscrire au cours
-            </button>
-        `;
-    }
-
+export const renderPrimaryCta = (course) => {
+    const { completed_steps = 0, total_steps = 0 } = course.progress ?? {};
+    const pct = total_steps > 0 ? Math.round((completed_steps / total_steps) * 100) : 0;
+    const label = total_steps > 0 && completed_steps >= total_steps
+        ? t('course.review')
+        : completed_steps > 0
+            ? `${t('course.continue')} (${pct}%)`
+            : t('course.start');
     return safeHtml`
-        <button class="btn-disabled" data-testid="course-limit-btn" disabled>
-            Limite d'inscriptions atteinte
+        <button class="btn-primary btn-start" data-testid="course-open-btn" data-action="open" data-course="${course.id}">
+            ${label} →
         </button>
     `;
+};
+
+/**
+ * Secondary enrollment action — optional "my active courses" curation (cap-limited).
+ * Never the primary CTA (§ Plan 10 : enrollment is decoupled from access).
+ */
+const renderEnrollmentSecondary = (course, isEnrolled, canEnroll) => {
+    if (isEnrolled) {
+        return safeHtml`
+            <button class="btn-secondary btn-abandon" data-testid="course-abandon-btn" data-action="abandon" data-course="${course.id}">
+                ${t('course.removeFromActive')}
+            </button>
+        `;
+    }
+    if (canEnroll) {
+        return safeHtml`
+            <button class="btn-secondary btn-enroll" data-testid="course-enroll-btn" data-action="enroll" data-course="${course.id}">
+                ${t('course.addToActive')}
+            </button>
+        `;
+    }
+    return ''; // at the active-courses cap → the limit warning is shown separately
 };
 
 /**
  * Setup click handlers for overview buttons
  */
 const setupOverviewHandlers = (courseId) => {
+    // Primary CTA : open the course (works regardless of enrollment).
+    document.querySelector('[data-action="open"]')?.addEventListener('click', async () => {
+        await loadCourse(courseId);
+    });
+
+    // Secondary : add to "my active courses" (optional curation). Does NOT force
+    // loadCourse — the primary CTA owns that. Refresh the overview to reflect state.
     document.querySelector('[data-action="enroll"]')?.addEventListener('click', async (e) => {
         const btn = e.target;
         btn.disabled = true;
         btn.textContent = 'Inscription...';
-        
+
         try {
             await apiPost('/enrollments', { courseId });
-            await loadCourse(courseId);
+            await showCourseOverview(courseId);
         } catch (error) {
             log.error('Enrollment failed:', error);
             btn.disabled = false;
@@ -188,11 +205,7 @@ const setupOverviewHandlers = (courseId) => {
             alert(`Erreur: ${error.message}`);
         }
     });
-    
-    document.querySelector('[data-action="continue"]')?.addEventListener('click', async () => {
-        await loadCourse(courseId);
-    });
-    
+
     document.querySelector('[data-action="abandon"]')?.addEventListener('click', async (e) => {
         if (!confirm('Êtes-vous sûr de vouloir abandonner ce cours ? Votre progression sera conservée.')) {
             return;
@@ -204,7 +217,7 @@ const setupOverviewHandlers = (courseId) => {
         
         try {
             await apiPatch(`/enrollments/${courseId}`, { status: 'abandoned' });
-            window.location.href = '/';
+            await showCourseOverview(courseId);
         } catch (error) {
             log.error('Abandon failed:', error);
             btn.disabled = false;

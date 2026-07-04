@@ -41,7 +41,9 @@
     "continue": "Continue",
     "review": "Review",
     "curriculum": "Curriculum",
-    "freeNavigation": "Go back"
+    "freeNavigation": "Go back",
+    "addToActive": "Add to my active courses",
+    "removeFromActive": "Remove from my active courses"
   },
   "quiz": {
     "title": "Validation Quiz",

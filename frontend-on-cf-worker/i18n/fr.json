@@ -41,7 +41,9 @@
     "continue": "Continuer",
     "review": "Revoir",
     "curriculum": "Programme",
-    "freeNavigation": "Revenir en arrière"
+    "freeNavigation": "Revenir en arrière",
+    "addToActive": "Ajouter à mes cours actifs",
+    "removeFromActive": "Retirer de mes cours actifs"
   },
   "quiz": {
     "title": "Quiz de validation",
