@@ -2,7 +2,9 @@
  * Classroom — Skool-style landing : a grid of course cards. Clicking a card opens
  * the course overview (description + section/lesson outline + Start/Continue CTA).
  */
+import { api } from '../api.js';
 import { getState, setState, subscribe } from '../state.js';
+import { log } from '../log.js';
 import { setSafeHtml, safeHtml, raw } from './safe-dom.js';
 import { t } from '../../i18n/index.js';
 
@@ -13,9 +15,11 @@ const coverGradient = (courseId) => {
     return `linear-gradient(135deg, hsl(${hue} 55% 34%), hsl(${(hue + 45) % 360} 50% 20%))`;
 };
 
-export const renderCard = (course) => {
-    const percent = course.progress?.progress_percent || 0;
-    const completed = course.progress?.course_completed;
+// The /courses list only carries { videos_completed, quizzes_passed } (no total),
+// so accurate % + completion come from each course's /signals course_progress.
+export const renderCard = (course, courseProgress = null) => {
+    const percent = courseProgress?.percent ?? 0;
+    const completed = !!courseProgress && courseProgress.total > 0 && courseProgress.completed >= courseProgress.total;
     const cta = completed ? t('course.review') : percent > 0 ? t('course.continue') : t('course.start');
     return safeHtml`
         <button type="button" class="course-card" data-course="${course.id}" data-testid="classroom-card-${course.id}">
@@ -37,9 +41,10 @@ export const renderCard = (course) => {
 
 /**
  * Render the classroom grid into #somViewer and leave the in-course context
- * (clears courseData so the lesson tree collapses to empty).
+ * (clears courseData so the lesson tree collapses to empty). Per-course progress
+ * is fetched from /signals so the cards show real completion (Skool-style).
  */
-export const renderClassroom = () => {
+export const renderClassroom = async () => {
     const viewer = document.getElementById('somViewer');
     if (!viewer) return;
 
@@ -47,7 +52,30 @@ export const renderClassroom = () => {
     setState('courseData', null);
 
     const courses = getState('courses') || [];
-    const cards = courses.map(renderCard).join('');
+    setSafeHtml(viewer, safeHtml`
+        <div class="classroom">
+            <h1 class="classroom-title">${t('classroom.title')}</h1>
+            <div class="course-grid loading"><div class="loading-spinner"></div></div>
+        </div>
+    `);
+
+    const progressById = {};
+    await Promise.all(courses.map(async (course) => {
+        try {
+            const signals = await api(`/signals/${course.id}`);
+            progressById[course.id] = signals.course_progress ?? null;
+        } catch (error) {
+            // Non-blocking: a broken signal endpoint shouldn't hide the card. Log
+            // it (§ ALWAYS FAIL HARD) and render the card at 0%.
+            log.warn(`classroom: signals fetch failed for ${course.id}`, error);
+            progressById[course.id] = null;
+        }
+    }));
+
+    // Guard against a navigation away while progress was loading.
+    if (getState('currentCourse') || !document.querySelector('.classroom')) return;
+
+    const cards = courses.map((course) => renderCard(course, progressById[course.id])).join('');
     setSafeHtml(viewer, safeHtml`
         <div class="classroom">
             <h1 class="classroom-title">${t('classroom.title')}</h1>

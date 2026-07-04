@@ -12,7 +12,7 @@ import { fetchMarkdown, fetchCloudContent } from '../content/loader/index.js';
 import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
 import { loadCourse } from './loader.js';
 import { setSafeHtml, safeHtml, raw } from '../ui/safe-dom.js';
-import { t } from '../../i18n/index.js';
+import { t, getLanguage } from '../../i18n/index.js';
 
 /**
  * Read-only section/lesson outline for the overview (curriculum preview). Uses the
@@ -221,7 +221,7 @@ const setupOverviewHandlers = (courseId) => {
 export const showCourseOverview = async courseId => {
     try {
         const [course, enrollmentStatus] = await Promise.all([
-            api(`/courses/${courseId}`),
+            api(`/courses/${courseId}?lang=${getLanguage()}`),
             api(`/enrollments/${courseId}`).catch(err => {
                 // Log the failure so operators can see broken enrollment APIs
                 // ; default to non-enrolled+can-enroll so the course overview
