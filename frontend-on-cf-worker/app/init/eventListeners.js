@@ -13,6 +13,8 @@ import { handleTallySubmission } from '../quiz/handler.js';
 import { loadLeaderboard } from '../leaderboard.js';
 import { showBadgeModal, refreshUserData } from '../notifications.js';
 import { initMobileTabs } from '../ui/mobileTabs.js';
+import { initUserMenu } from '../ui/userMenu.js';
+import { updateBadgesGrid } from '../ui/badges.js';
 
 export const setupEventListeners = () => {
     initMobileTabs();
@@ -53,6 +55,13 @@ export const setupEventListeners = () => {
     window.addEventListener('languagechange', async (e) => {
         log.debug('🌐 Language changed to:', e.detail.lang);
         try {
+            // Re-render the static header chrome (not state-subscribed) in the new
+            // language: user menu + badges grid + leaderboard.
+            const session = getState('session');
+            if (session) initUserMenu(session.user, session.profile);
+            updateBadgesGrid();
+            loadLeaderboard();
+
             const currentStepIndex = getState('currentStepIndex');
 
             const { courses } = await api(`/courses?lang=${e.detail.lang}`);

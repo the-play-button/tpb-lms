@@ -10,6 +10,7 @@ import { renderCourseList, initCourseList } from './courseList.js';
 import { initStepsSidebar } from './stepsSidebar.js';
 import { initClassroom } from './classroom.js';
 import { initUserMenu } from './userMenu.js';
+import { setState } from '../state.js';
 import { renderLangSelector, initLangSelector } from './langSelector.js';
 import { setSafeHtml } from './safe-dom.js';
 
@@ -29,6 +30,9 @@ const initLangSelectorInHeader = () => {
  * @param {{ user: object, profile: object }} session
  */
 export const initAllUI = (session) => {
+    // Keep the session so language-change can re-render the user menu (§ i18n).
+    setState('session', session);
+
     // Subscriptions (reactive UI)
     initUserStats();
     initBadges();
