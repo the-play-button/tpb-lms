@@ -87,3 +87,21 @@ describe('getCourseForUser — nested sections (adjacency-list tree)', () => {
         expect(res.notFound).toBe(true);
     });
 });
+
+describe('getCourseForUser — progression mode', () => {
+    it('defaults to linear (can_access_step gated) with no raw_json', async () => {
+        const { body } = await getCourseForUser(makeEnv(ROWS, COURSE), 'u1', 'c1', null);
+        expect(body.progression_mode).toBe('linear');
+        // les1 is completed in the fixture → currentStepIndex 1 → gate = min(2, 3).
+        expect(body.progress.can_access_step).toBe(2);
+        expect(body.progress.can_access_step).toBeLessThan(body.progress.total_steps);
+    });
+
+    it('free: can_access_step = total (all reachable)', async () => {
+        const freeCourse = { ...COURSE, raw_json: '{"tpb_progression_mode":"free"}' };
+        const { body } = await getCourseForUser(makeEnv(ROWS, freeCourse), 'u1', 'c1', null);
+        expect(body.progression_mode).toBe('free');
+        expect(body.progress.can_access_step).toBe(body.progress.total_steps);
+        expect(body.progress.can_access_step).toBe(3);
+    });
+});

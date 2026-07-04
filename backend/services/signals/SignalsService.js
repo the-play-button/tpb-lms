@@ -3,6 +3,7 @@
  */
 
 import { checkCourseCompletionBadges, recordCourseCompletion } from '../../utils/xp/index.js';
+import { resolveProgressionMode } from '../courses/_progressionMode.js';
 
 const queryCourseSteps = (env, userId, courseId) =>
     env.DB.prepare(`
@@ -14,6 +15,9 @@ const queryCourseSteps = (env, userId, courseId) =>
         LEFT JOIN v_user_progress p ON p.class_id = c.id AND p.user_id = ?
         WHERE c.course_id = ? AND c.node_kind = 'LESSON' ORDER BY c.sys_order_index
     `).bind(userId, courseId).all();
+
+const queryCourseRaw = (env, courseId) =>
+    env.DB.prepare('SELECT raw_json FROM lms_course WHERE id = ?').bind(courseId).first();
 
 const queryClassMeta = (env, classId, courseId) =>
     env.DB.prepare('SELECT id, name, sys_order_index, media_json FROM lms_class WHERE id = ? AND course_id = ?')
@@ -68,7 +72,12 @@ const collectVideoPosition = (row) => {
 };
 
 export const fetchCourseSignals = async (env, userId, courseId) => {
-    const result = await queryCourseSteps(env, userId, courseId);
+    const [result, courseRow] = await Promise.all([
+        queryCourseSteps(env, userId, courseId),
+        queryCourseRaw(env, courseId),
+    ]);
+    const progressionMode = resolveProgressionMode(courseRow?.raw_json);
+    const isFree = progressionMode === 'free';
 
     let currentStep = 0;
     const videoPositions = {};
@@ -81,10 +90,12 @@ export const fetchCourseSignals = async (env, userId, courseId) => {
     });
 
     for (const step of steps) {
-        step.can_access = step.order_index <= currentStep + 1;
+        // Free mode: every lesson reachable. Linear: unlock up to the next step.
+        step.can_access = isFree ? true : step.order_index <= currentStep + 1;
     }
 
-    if (hasCorruptedState(steps)) {
+    // The corrupted-state auto-reset only guards the linear unlock invariant.
+    if (!isFree && hasCorruptedState(steps)) {
         await resetProgress(env, userId, courseId);
         return { corrupted: true };
     }
@@ -104,9 +115,10 @@ export const fetchCourseSignals = async (env, userId, courseId) => {
         corrupted: false,
         body: {
             course_id: courseId,
+            progression_mode: progressionMode,
             steps,
             current_step: currentStep,
-            can_access_step: Math.min(currentStep + 1, steps.length),
+            can_access_step: isFree ? steps.length : Math.min(currentStep + 1, steps.length),
             total_steps: steps.length,
             course_completed: courseCompleted,
             course_progress: { completed: completedSteps, total: totalSteps, percent: progressPercent },

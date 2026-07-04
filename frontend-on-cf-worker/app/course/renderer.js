@@ -35,7 +35,10 @@ export const renderCurrentStep = () => {
     const hasQuiz = !!quizMedia;
     const isContentStep = !hasVideo && !hasQuiz;
 
-    const canProceed = isContentStep || stepCompleted;
+    // Free-navigation courses (Skool-style) let the learner move + go back freely.
+    const isFree = (getState('courseData')?.progression_mode || 'linear') === 'free';
+    const canProceed = isContentStep || stepCompleted || isFree;
+    const canGoBack = isFree && stepIndex > 0;
 
     const viewer = document.getElementById('somViewer');
 
@@ -60,7 +63,7 @@ export const renderCurrentStep = () => {
             ${raw(renderQuizSection(ctx))}
 
             <div class="step-navigation">
-                <button class="nav-btn prev" data-testid="nav-prev-btn" disabled title="${t('course.linearProgression')}">← ${t('nav.prev')}</button>
+                <button class="nav-btn prev" data-testid="nav-prev-btn" ${canGoBack ? 'onclick="window.prevStep()"' : 'disabled'} title="${canGoBack ? t('course.freeNavigation') : t('course.linearProgression')}">← ${t('nav.prev')}</button>
                 <button class="nav-btn next" data-testid="nav-next-btn" ${canProceed ? '' : 'disabled'} onclick="window.nextStep()"
                     title="${!canProceed ? t('course.completeStep') : (isLastStep ? t('nav.finish') : t('nav.next'))}">
                     ${isLastStep ? `${t('nav.finish')} 🎉` : `${t('nav.next')} →`}

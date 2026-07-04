@@ -2,6 +2,8 @@
  * CoursesService — list/get course aggregation with translations + progress.
  */
 
+import { resolveProgressionMode } from './_progressionMode.js';
+
 const loadTranslations = async (env, contentType, contentId, lang) => {
     const result = await env.DB.prepare(`
         SELECT field, value FROM translations
@@ -234,6 +236,8 @@ export const getCourseForUser = async (env, userId, courseId, lang) => {
 
     const completedSteps = localizedLessons.filter(({ step_completed } = {}) => step_completed).length;
     const currentStepIndex = completedSteps;
+    const progressionMode = resolveProgressionMode(course.raw_json);
+    const total = localizedLessons.length;
 
     return {
         notFound: false,
@@ -242,15 +246,17 @@ export const getCourseForUser = async (env, userId, courseId, lang) => {
             title: localizedCourse.title,
             description: localizedCourse.description,
             categories: course.categories_json ? JSON.parse(course.categories_json) : [],
+            // 'linear' (default onboarding) | 'free' (Skool-style navigation).
+            progression_mode: progressionMode,
             // Tree of SECTION folders + LESSON leaves (display structure).
             nodes,
             // Flat DFS-ordered LESSON leaves (sequential progress + back-compat).
             classes: localizedLessons,
             progress: {
-                total_steps: localizedLessons.length,
+                total_steps: total,
                 completed_steps: completedSteps,
                 current_step: currentStepIndex,
-                can_access_step: Math.min(currentStepIndex + 1, localizedLessons.length),
+                can_access_step: progressionMode === 'free' ? total : Math.min(currentStepIndex + 1, total),
             },
         },
     };

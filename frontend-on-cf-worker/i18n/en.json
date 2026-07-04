@@ -40,7 +40,8 @@
     "start": "Start",
     "continue": "Continue",
     "review": "Review",
-    "curriculum": "Curriculum"
+    "curriculum": "Curriculum",
+    "freeNavigation": "Go back"
   },
   "quiz": {
     "title": "Validation Quiz",

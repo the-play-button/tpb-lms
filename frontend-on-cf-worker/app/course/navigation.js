@@ -54,12 +54,14 @@ export const nextStep = async () => {
     const hasVideo = media.some(({ type } = {}) => type === 'VIDEO');
     const hasQuiz = media.some(({ type } = {}) => type === 'QUIZ');
     const isContentStep = !hasVideo && !hasQuiz;
-    
-    if (!isContentStep && !stepSignal?.step_completed) {
+
+    // Free-navigation courses skip the complete-to-proceed gate.
+    const isLinear = (courseData?.progression_mode || 'linear') !== 'free';
+    if (isLinear && !isContentStep && !stepSignal?.step_completed) {
         alert("Vous devez compléter cette étape avant de continuer.");
         return;
     }
-    
+
     const courseId = getState('currentCourse');
     
     if (courseData && stepIndex < courseData.classes.length - 1) {
@@ -89,10 +91,16 @@ export const nextStep = async () => {
 };
 
 /**
- * Go to previous step (disabled for linear progression)
+ * Go to previous step. Blocked in linear mode ; free navigation steps back.
  */
 export const prevStep = () => {
-    alert("⚠️ Progression linéaire : impossible de revenir en arrière.");
+    const courseData = getState('courseData');
+    if ((courseData?.progression_mode || 'linear') !== 'free') {
+        alert("⚠️ Progression linéaire : impossible de revenir en arrière.");
+        return;
+    }
+    const stepIndex = getState('currentStepIndex');
+    if (stepIndex > 0) navigateToStep(stepIndex - 1);
 };
 
 /**
