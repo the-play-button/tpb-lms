@@ -24,14 +24,25 @@ export const renderDocumentSection = cls => {
     `;
 };
 
+// Inline step body stored in raw_json.tpb_content_md (self-contained, no
+// DOCUMENT-media fetch). Rendered with the same marked.parse pipeline as the
+// KMS modal + the DOCUMENT path. The legacy cloudflarestream sentinel is NOT
+// markdown (it's a video embed handled elsewhere) so it is excluded here.
+const renderInlineContentMd = cls => {
+    const md = cls.content_md;
+    if (!md || md.includes('cloudflarestream.com')) return '';
+    return `<div class="markdown-body">${marked.parse(cleanMarkdownForLms(md))}</div>`;
+};
+
 export const renderVideoContent = (ctx, videoHtml) => {
     const documentHtml = renderDocumentSection(ctx.cls);
+    const inlineMd = renderInlineContentMd(ctx.cls);
 
-    if (videoHtml && documentHtml) {
-        return videoHtml + '<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">' + documentHtml;
-    }
+    const parts = [videoHtml, inlineMd, documentHtml].filter(Boolean);
+    if (parts.length === 0) return safeHtml`<p>${t('course.noContent')}</p>`;
 
-    return videoHtml || documentHtml || safeHtml`<p>${t('course.noContent')}</p>`;
+    const sep = '<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">';
+    return parts.join(sep);
 };
 
 export const loadDocumentContent = async cls => {
