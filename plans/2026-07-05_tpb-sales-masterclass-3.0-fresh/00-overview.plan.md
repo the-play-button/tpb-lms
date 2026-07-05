@@ -66,28 +66,26 @@ composables). Accepté par l'industrie (RevOps bloque l'outbound sur data sale ;
 email s'effondre sur listes sales). C'est littéralement « réactiver une mailing list = la nettoyer
 d'abord ». **Rock solid.**
 
-**LVL2 → LVL3 (SALES avant MARKETING/ABM) — cohérence DÉFENDABLE, c'est une posture à assumer ⚠️✓**
-- *Lecture cohérente* : c'est un **GTM sales-led** (aligné avec la vision « many 1:1 » : le SALES
-  est la motion primaire, le MARKETING/ABM est un **amplificateur** posé dessus). L'ABM = ciblage
-  de **comptes** = **précision** = a besoin d'**intelligence 1st-party** (quels comptes ont
-  engagé, quel message a résonné, signaux d'intent) que **seule l'activité SALES génère**. ABM
-  sans data sales = spray firmographique 3rd-party (exactement ce que font les lead agencies, et
-  pourquoi leurs paid ads sous-performent).
-- *Le point à posséder* : ça **inverse le funnel classique** (marketing → MQL → SQL → sales). Un
-  sceptique dira « on peut faire de l'ABM avec de l'intent 3rd-party sans data sales ». La réponse :
-  **1st-party sales intelligence >> 3rd-party intent** pour la précision ABM, et **c'est un choix
-  opinionated délibéré**, pas une loi universelle. Ce qui **rend la dépendance serrée** = avoir
-  scopé LVL3 à **l'ABM** (account-based, précision) et pas à du demand-gen large / brand / contenu
-  (où « needs sales data first » serait faux). Bon instinct de l'avoir restreint à l'ABM.
-- *Par audience, la logique tient aussi* : sur les **customers**, la Sales Reactivation (LVL2 :
-  reps ré-engagent 1:1, re-qualifient, apprennent ce qui résonne) **précède** l'ABM Email (LVL3 :
-  scale automatisé sur segments) — sales warm+qualifie, ABM scale. Sur les **leads**, l'Outreach
-  (LVL2) valide les comptes/ICP que l'ABM Ads (LVL3) va ensuite bombarder avec précision.
+**LVL2 → LVL3 (SALES avant MARKETING/ABM) — cohérent, et ce n'est PAS une posture difficile ✓✓**
+Correctif utilisateur 2026-07-05 (important) : le « funnel classique marketing → sales » est un
+**biais de survivant**. Ce sont les gens visibles en ligne (créateurs de contenu, personal brands)
+qui en parlent — une **minorité bruyante**. La **réalité marché** : **TOUTE** entreprise a des
+**sales reps** (universel, sans exception) ; **très peu** postent du contenu / ont une personal
+brand (rare). Donc « sales-led » n'est **pas** un pari contrariant à défendre — c'est le **défaut
+du marché**.
+- *Pourquoi la dépendance SALES → ABM tient* : notre **ABM (LVL3) n'est PAS le GTM marketing-led**.
+  L'ABM = ciblage de **comptes** = précision = a besoin d'**intelligence 1st-party** (quels comptes
+  ont engagé, quel message a résonné, intent) que **seule l'activité SALES génère**. C'est une
+  **amplification posée sur la data sales**, distincte d'un point d'entrée marketing.
+- *Distinction cardinale (correctif user)* : il **existe** un autre path de croissance qui commence
+  par le marketing **sans focus ABM** — paid ads large + organic content + publication marketplace,
+  etc. = **GTM marketing-led**. Ce **serait une autre offre d'entrée (un LVL1 alternatif)** — mais
+  **on ne la vend pas / on ne se focus pas dessus**. Notre LVL3 ABM ≠ ce marketing-led ; d'où
+  pourquoi l'ABM reste bien au-dessus de la data sales et n'entre pas en contradiction.
 
-**Verdict honnête** : le système est **cohérent et bien pensé**, pas du « n'importe quoi ». UNE
-seule chose à assumer explicitement dans la masterclass : *« On est sales-led. Le marketing/ABM
-n'est pas votre point d'entrée ; c'est ce qu'on scale une fois qu'on a la data sales. »* — à
-enseigner comme une conviction, avec la défense (précision 1st-party) prête pour les objections.
+**Verdict honnête** : le système est **cohérent, et fondé sur la réalité marché** (pas un pari
+fragile). Rien de difficile à « assumer » : c'est ce qu'on **choisit de vendre**, pas un jugement
+sur les autres paths.
 
 ### Le style pédagogique visé (correctif « pas assez pratico-pratique »)
 
@@ -110,6 +108,10 @@ PROGRAM : TPB Sales Academy
 │
 ├── COURSE 0 — FOUNDATIONS  (partagé, prérequis de tout)
 │     • The Vision : BOSS · copilot · "human voice is sacred" · many 1:1
+│     • The 4 GTM Growth Paths (culture d'entreprise) : sales-led (universel — toute boîte a des
+│       reps) · marketing-led (paid ads + organic + marketplace, sans ABM) · partner-led ·
+│       PLG-led (SaaS). Tous VALIDES (on les suit nous-mêmes en interne). **Ce qu'on VEND = le
+│       sales-led + la fondation CRM.** Choisir quoi vendre ≠ cracher sur les autres paths.
 │     • The TPB Sales Doctrine : PACE-R · C.L.O.S.E.R · under-promise/over-deliver (transversal)
 │     • The Offer Map : les 4 offres, 3 niveaux, la value ladder, "CRM ride toujours avec" (−50% tactic)
 │     • Master ICP fundamentals : lead agencies + B2B mid-market avec CRM (élargi vs "External SDR Agency")
