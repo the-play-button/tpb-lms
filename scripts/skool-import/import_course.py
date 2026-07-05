@@ -132,21 +132,30 @@ class LmsApi:
         self.cl = httpx.Client(timeout=40, headers=self.h)
 
     def _req(self, method: str, url: str, json_body: dict) -> httpx.Response | None:
-        """One request with 2 retries on transient failures (timeout / 5xx)."""
-        for attempt in range(3):
+        """One request that backs off on 429 (respecting Retry-After — the LMS limits
+        POST /api/{coll} to 100/min per IP) and retries transient failures (timeout / 5xx)."""
+        transient_left = 2
+        rate_waits_left = 12
+        while True:
             try:
                 r = self.cl.request(method, url, json=json_body)
             except (httpx.TimeoutException, httpx.TransportError) as e:
-                if attempt == 2:
+                if transient_left <= 0:
                     print(f"      ! {method} {url} transport error: {e}")
                     return None
-                time.sleep(0.5 * (attempt + 1))
+                transient_left -= 1
+                time.sleep(0.5)
                 continue
-            if r.status_code >= 500 and attempt < 2:
-                time.sleep(0.5 * (attempt + 1))
+            if r.status_code == 429 and rate_waits_left > 0:
+                retry_after = int(r.headers.get("Retry-After") or "5")
+                time.sleep(min(max(retry_after, 1), 60) + 1)
+                rate_waits_left -= 1
+                continue
+            if r.status_code >= 500 and transient_left > 0:
+                transient_left -= 1
+                time.sleep(0.5)
                 continue
             return r
-        return None
 
     def upsert(self, coll: str, body: dict, report: dict) -> None:
         """POST (create-if-absent, idempotent by id) then PATCH (refresh fields)."""
