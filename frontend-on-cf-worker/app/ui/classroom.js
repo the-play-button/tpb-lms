@@ -22,8 +22,10 @@ const coverGradient = (courseId) => {
 const coverStyle = (course) => {
     const url = course.cover_image_url;
     if (url) {
+        // Single quotes inside the url: the whole style lands in a double-quoted
+        // style="…" attribute, so url("…") would close the attribute early.
         const scrim = 'linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55))';
-        return `background-image: ${scrim}, url("${encodeURI(url)}"); background-size: cover; background-position: center;`;
+        return `background-image: ${scrim}, url('${encodeURI(url)}'); background-size: cover; background-position: center;`;
     }
     return `background: ${coverGradient(course.id)};`;
 };

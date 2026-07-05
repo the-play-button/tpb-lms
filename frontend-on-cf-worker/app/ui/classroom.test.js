@@ -38,7 +38,10 @@ describe('renderCard — classroom course card', () => {
       null,
     );
     expect(html).toContain('background-image:');
-    expect(html).toContain('url("https://assets.skool.com/f/abc/cover.jpg")');
+    // Single-quoted url: it lands inside a double-quoted style="…" attribute, so
+    // url("…") would close the attribute early (regression guard, verified live).
+    expect(html).toContain("url('https://assets.skool.com/f/abc/cover.jpg')");
+    expect(html).not.toContain('url("https://assets.skool.com');
     expect(html).toContain('background-size: cover');
   });
 
