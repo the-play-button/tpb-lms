@@ -147,8 +147,10 @@ export const initSidebar = () => {
         }
         const course = event.target.closest('[data-open-course]');
         if (course) {
-            const { loadCourse } = await import('../course/loader.js');
-            await loadCourse(course.dataset.openCourse); // loadCourse owns its own URL update
+            // Land on the course overview (same as clicking a course card), not straight
+            // into the first lesson. "Commencer" on the overview opens the lesson.
+            const { showCourseOverview } = await import('../course/overview.js');
+            await showCourseOverview(course.dataset.openCourse);
             return;
         }
         const header = event.target.closest('.section-header');

@@ -252,7 +252,15 @@ export const showCourseOverview = async courseId => {
                 return { enrolled: false, can_enroll: true };
             })
         ]);
-        
+
+        // Viewing an overview means no lesson is open: keep the rail scoped to this
+        // course's program, and collapse any previously-open course (no stale expansion).
+        const owningProgram = (getState('courses') || []).find((c) => c.id === courseId)?.program_id
+            ?? getState('currentProgram') ?? null;
+        setState('currentProgram', owningProgram);
+        setState('currentCourse', null);
+        setState('courseData', null);
+
         await renderCourseOverview(course, enrollmentStatus);
     } catch (error) {
         log.error('Failed to show overview:', error);
