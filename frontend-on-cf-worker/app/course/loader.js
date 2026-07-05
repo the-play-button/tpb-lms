@@ -46,21 +46,30 @@ export const loadCourse = async (courseId, initialStepIndex = null) => {
         const signals = await api(`/signals/${courseId}`);
         setState('signals', signals);
         
+        const classes = course.classes || [];
+        const lastIndex = Math.max(0, classes.length - 1);
         let stepIndex;
         if (initialStepIndex !== null) {
-            stepIndex = Math.min(
-                initialStepIndex,
-                signals.can_access_step - 1,
-                (course.classes?.length || 1) - 1
-            );
+            // Explicit deep-link (e.g. ?step=): honour it, but never jump past a linear
+            // lock. In free mode can_access_step === total, so this clamp is a no-op.
+            stepIndex = Math.min(initialStepIndex, signals.can_access_step - 1, lastIndex);
         } else {
-            stepIndex = Math.min(
-            signals.can_access_step - 1,
-            (course.classes?.length || 1) - 1
-        );
+            // Resume where the learner left off = the FIRST lesson they haven't completed
+            // yet (in order). Works identically for linear and free. First time in a
+            // course → step 0 ; everything done → back to the start for review.
+            //
+            // We deliberately do NOT use can_access_step here: it's the *accessibility
+            // ceiling*, and for a free course it equals the total step count, which sent
+            // every "Start" to the LAST lesson (the old linear-only assumption leaking).
+            const completed = new Set(
+                (signals.steps || []).filter((s) => s.step_completed).map((s) => s.class_id),
+            );
+            const firstUnfinished = classes.findIndex((c) => !completed.has(c.id));
+            stepIndex = firstUnfinished < 0 ? 0 : firstUnfinished;
         }
-        
-        setState('currentStepIndex', Math.max(0, stepIndex));
+
+        stepIndex = Math.max(0, Math.min(stepIndex, lastIndex));
+        setState('currentStepIndex', stepIndex);
         
         updateURL(courseId, stepIndex);
         
