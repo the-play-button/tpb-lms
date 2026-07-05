@@ -647,6 +647,70 @@
     flex-shrink: 0;
 }
 
+/* Program-aware sidebar grouping (Plan 11) */
+#somList .nav-program {
+    margin-bottom: var(--space-sm);
+}
+
+#somList .nav-program-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+#somList .nav-program-header:hover {
+    background-color: var(--hover-bg);
+}
+
+#somList .nav-program-caret {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    transition: transform 0.15s ease;
+}
+
+#somList .nav-program.collapsed .nav-program-caret {
+    transform: rotate(-90deg);
+}
+
+#somList .nav-program-name {
+    flex: 1;
+    text-align: left;
+}
+
+#somList .nav-program-count {
+    flex-shrink: 0;
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0 var(--space-sm);
+}
+
+#somList .nav-sublist {
+    list-style: none;
+    margin: var(--space-xs) 0 0 var(--space-sm);
+    padding-left: var(--space-sm);
+    border-left: 1px solid var(--border);
+}
+
+#somList .nav-program.collapsed .nav-sublist {
+    display: none;
+}
+
 .step-header .mastery-badge {
     margin-left: var(--space-md);
 }
@@ -881,6 +945,7 @@
     flex-direction: column;
     gap: var(--space-sm);
     padding: var(--space-md);
+    flex: 1; /* stretch so cards in a row align; CTA pins to the bottom */
 }
 
 .course-card-title {
@@ -930,7 +995,8 @@
     font-size: 0.85rem;
     font-weight: 600;
     color: var(--accent-secondary);
-    margin-top: var(--space-xs);
+    margin-top: auto; /* pin to the bottom so all cards align (Plan 11) */
+    padding-top: var(--space-xs);
 }
 
 /* Back-to-classroom link in the lesson sidebar header */
