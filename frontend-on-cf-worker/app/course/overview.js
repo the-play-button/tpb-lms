@@ -67,7 +67,7 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                 introContent = marked.parse(cleanMarkdownForLms(stripFrontmatter(rawMd)));
             } catch (error) {
                 log.warn('Failed to fetch cloud intro:', error);
-                introContent = safeHtml`<p>${course.description || t('course.noDescription')}</p>`;
+                introContent = safeHtml`<p>${course.description || ''}</p>`;
             }
         } else if (introUrl) {
             try {
@@ -75,10 +75,10 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                 introContent = marked.parse(markdown);
             } catch (error) {
                 log.warn('Failed to fetch intro:', error);
-                introContent = safeHtml`<p>${course.description || t('course.noDescription')}</p>`;
+                introContent = safeHtml`<p>${course.description || ''}</p>`;
             }
         } else {
-            introContent = safeHtml`<p>${course.description || t('course.noDescription')}</p>`;
+            introContent = safeHtml`<p>${course.description || ''}</p>`;
         }
         
         const isEnrolled = enrollmentStatus?.enrolled && enrollmentStatus.enrollment?.status === 'active';
@@ -89,6 +89,16 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
             : '';
         const progressHtml = course.progress
             ? safeHtml`<div class="meta-item"><span class="meta-icon">📊</span><span class="meta-text">${t('course.progressCount', { done: course.progress.completed_steps, total: course.progress.total_steps })}</span></div>`
+            : '';
+        // Thin progress bar under the meta pills (only once the course has steps).
+        const { completed_steps: doneSteps = 0, total_steps: allSteps = 0 } = course.progress ?? {};
+        const pct = allSteps > 0 ? Math.round((doneSteps / allSteps) * 100) : 0;
+        const progressBarHtml = allSteps > 0
+            ? safeHtml`<div class="overview-progress"><div class="overview-progress-fill" style="width: ${pct}%"></div></div>`
+            : '';
+        // Only render the description block when there is real content (no empty state).
+        const introBlockHtml = introContent
+            ? safeHtml`<div class="overview-content markdown-body">${raw(introContent)}</div>`
             : '';
         const enrollmentWarningHtml = !canEnroll && !isEnrolled
             ? safeHtml`<div class="enrollment-limit-warning"><span class="warning-icon">⚠️</span><p>${t('course.enrollLimit', { max: enrollmentStatus?.max_active || 3 })}</p></div>`
@@ -101,10 +111,6 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                     ${raw(categoriesHtml)}
                 </header>
 
-                <div class="overview-content markdown-body">
-                    ${raw(introContent)}
-                </div>
-
                 <div class="course-meta">
                     <div class="meta-item">
                         <span class="meta-icon">📚</span>
@@ -112,6 +118,9 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
                     </div>
                     ${raw(progressHtml)}
                 </div>
+                ${raw(progressBarHtml)}
+
+                ${raw(introBlockHtml)}
 
                 ${raw(renderCourseOutline(course))}
 
