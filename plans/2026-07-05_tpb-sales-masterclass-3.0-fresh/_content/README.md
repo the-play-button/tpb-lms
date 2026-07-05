@@ -1,33 +1,49 @@
 # Master class SALES @ TPB 3.0 — contenu enrichi (map)
 
-Enrichissement **en place** de la masterclass existante (structure **PACE-R conservée**). On
-**n'a rien retiré** au contenu très travaillé ; on a **injecté** la couche vision → offres →
-niveaux, ajouté l'offre d'entrée, folded Nick Saraev dans l'outreach, et repositionné le dialer.
-**Pas de day-by-day pour l'instant** (décision user 2026-07-05, on verra après).
+Enrichissement **thorough** de la masterclass existante. Correction structurelle cardinale
+(user 2026-07-05) : **séparer les CORE COMPETENCIES (le craft, universel) de L'OFFRE (ce qu'on
+vend)**. Une masterclass **enseigne des compétences** (CLOSER, discovery, outbound Nick Saraev…) —
+elles ne sont **pas** focalisées sur une offre. Séparément, on enseigne **l'offre** (la seule).
 
-## Fichiers
+Décisions verrouillées (cf. `_recension-decisions.md`) :
+- **1 offre, 5 produits.** On ne vend **qu'UNE offre** au lancement (focus Hormozi beachhead).
+  Les 5 produits (cleaning, outreach, reactivation/dialer, ABM ads, ABM email) **supportent** cette
+  offre et sont du **savoir de delivery interne**, pas 5 offres à vendre.
+- **Enrichir, pas revoir.** Contenu existant excellent, augmenté. **PACE-R conservé.**
+- **Day-by-day différé.**
+- **Thorough = contenu réel** (source intégrée + adaptée TPB), zéro pointeur.
 
-| Fichier | Module PACE-R | Ce qui est enrichi |
+## Les 3 piliers
+
+| Pilier | Contenu | Fichiers |
 |---|---|---|
-| `00-opening.md` | (avant-propos) | Vision BOSS (+ fonctions supports) · 4 GTM paths · échelle d'offres. **Nouveau.** |
-| `01-purpose-vision-and-offers.md` | 1. Purpose | Vision détaillée · 4 GTM paths · **l'échelle d'offres + le système de niveaux** · positioning · target market (élargi) · founder narrative. |
-| `02-awareness-the-offers.md` | 2. Awareness | **Les offres (product knowledge)** : Entrée (Mailing List Reactivation) · LVL2 (Outreach, Sales Reactivation/dialer) · LVL3 (ABM). Remplace l'ancien mod 2 (draft, dialer-only). |
-| `03-core-skills.md` | 3. Core skills | CLOSER/discovery/demo/objections/closing **transversaux** + nuances par offre + **copywriting outreach Nick Saraev**. |
-| `04-execution.md` | 4. Execution | roleplay · shadowing · KPIs · CRM hygiene (exécution) — contextualisés par offre/niveau. |
-| `05-reinforcement.md` | 5. Reinforcement | coaching · call library · feedback · scorecard. |
-| `06-icp-specialization.md` | 6. Specialization | ICP **élargi** (lead agencies + B2B mid-market avec CRM) + nuances ICP par offre. |
-| `07-advanced.md` | 7. Advanced | écosystème GTM (Clay/ColdIQ/Lemlist) + tips. |
+| **1. Vision & contexte** | BOSS (+ fonctions supports) · 4 GTM paths · « 1 offre / 5 produits » · ICP maître | `00-opening.md` · `pillar-1-vision-and-context.md` |
+| **2. Core competencies** *(le craft, universel — indépendant de l'offre)* | **Outbound Mastery** (Nick Saraev intégré) · Sales conversation (C.L.O.S.E.R) · Discovery · Objection handling · Closing · LinkedIn/social · Tools GTM | `pillar-2-*.md` |
+| **3. L'offre (la seule)** | L'offre qu'on vend : outcome · ICP précis · discovery de l'offre · objections de l'offre · demo · pricing · closing appliqué | `pillar-3-the-offer.md` |
+| **+ Pratique** | Roleplay · shadowing · KPIs · reinforcement *(day-by-day différé)* | `pillar-practice.md` |
 
-## Convention de contenu
+Le rep **apprend le craft (pilier 2)** puis **l'applique pour vendre l'offre (pilier 3)**, dans le
+**contexte (pilier 1)**.
 
-- **[AUTHORED]** = contenu neuf/reframé, écrit ici.
-- **[CARRY]** = contenu existant excellent, importé ~tel quel depuis la source à l'import LMS
-  (cf. `_mapping/rewire-mapping.md` pour la source exacte) + la note d'enrichissement.
+## Mapping des sources (intégrées, pas référencées)
 
-## Le système de niveaux (rappel — vit dans `01`)
+- **Outbound Mastery** ← cours cold-outbound **Nick Saraev** (7 parties) + scripts maison (ancien
+  MC 3.2) + LinkedIn (ancien Z) + tools (ancien 7). **Compétence, pas offre.**
+- **Sales conversation / Discovery / Objections / Closing** ← ancien MC 3.1/3.3/3.5/3.6 (C.L.O.S.E.R,
+  BANT+…), adaptés. **Compétences transversales.**
+- **L'offre** ← offre Brutal CRM Truth (`crm-hygiene-offer/`) **moins le slop** (giveaway $602 800,
+  catalog-62, combinatoire garanties), reframée en **outcome** (« réactivation du pipeline »).
+- **Vision / ICP** ← ancien MC 0/1/6, enrichis (BOSS multi-fonctions, GTM paths, ICP élargi).
 
-Un rep n'apprend pas à vendre 4-5 offres d'un coup → **progression par niveaux** :
-**LVL1 Entrée (Mailing List Reactivation)** → **LVL2 SALES** → **LVL3 MARKETING/ABM**.
-Chaque niveau suppose le précédent (data propre → data sales → ABM). Le gating = les niveaux.
-En **vente réelle**, on peut mener avec n'importe quelle offre ; **le CRM cleaning ride toujours**
-(prérequis/bonus, affiché −50 %).
+## Statut
+
+- [x] `00-opening.md` (vision + offres — à re-caler « 1 offre »)
+- [x] `pillar-2-outbound-mastery.md` (Nick Saraev intégré, thorough)
+- [ ] `pillar-1-vision-and-context.md`
+- [ ] `pillar-2-*` (sales conversation, discovery, objections, closing, LinkedIn, tools)
+- [ ] `pillar-3-the-offer.md`
+- [ ] `pillar-practice.md`
+
+> Les anciens `01-…` / `02-…` / `03-…` / `04-07-…` (structure offer-tiered, shallow) sont
+> **remplacés** par les `pillar-*` ci-dessus (fix-forward, pas un revert : la structure offer-tiered
+> était erronée — cf. correction competency-vs-offer).
