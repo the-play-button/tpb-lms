@@ -64,10 +64,13 @@ export const cleanMarkdownForLms = markdown => {
     cleaned = cleaned.replace(/https?:\/\/iframe\.cloudflarestream\.com\/[\w]+[^\s]*/g, '');
 
     cleaned = cleaned.replace(/\[([^\]]*)\]\([^)]*\.md\)/g, '');
-    cleaned = cleaned.replace(/\s*\|\s*\|\s*/g, '');
-    cleaned = cleaned.replace(/^\s*\|\s*$/gm, '');
+    // Collapse stray empty cells / lone pipes, but ONLY within a line — \s would eat the
+    // newline between a GFM table's header row and its `|---|` separator and destroy the
+    // whole table. Horizontal whitespace ([ \t]) keeps real tables intact.
+    cleaned = cleaned.replace(/[ \t]*\|[ \t]*\|[ \t]*/g, '');
+    cleaned = cleaned.replace(/^[ \t]*\|[ \t]*$/gm, '');
 
-    cleaned = cleaned.replace(/---\s*\n+---/g, '---');
+    cleaned = cleaned.replace(/---[ \t]*\n+---/g, '---');
 
     cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
 
