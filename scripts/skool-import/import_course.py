@@ -177,10 +177,24 @@ class LmsApi:
         if self.sleep_s:
             time.sleep(self.sleep_s)
 
+    def create_program(self, program_id: str, name: str, cover_url: str | None) -> bool:
+        """POST /api/programs (idempotent by deterministic id; no update endpoint)."""
+        if self.dry_run:
+            print(f"  [dry-run] program {name!r} ({program_id})")
+            return True
+        body = {"id": program_id, "name": name,
+                "mediaJson": [{"type": "IMAGE", "url": cover_url, "name": "cover"}] if cover_url else []}
+        r = self._req("POST", f"{LMS}/api/programs", body)
+        ok = r is not None and r.status_code in (200, 201)
+        print(f"  {'OK' if ok else '!'} program {name!r} ({program_id})"
+              + ("" if ok else f" -> {getattr(r, 'status_code', 'ERR')} {getattr(r, 'text', '')[:120]}"))
+        return ok
+
 
 def import_one_course(course: dict, classroom_dir: Path, api: LmsApi, data_root: Path,
-                      progression_mode: str) -> dict:
-    """Upload one course tree (course → SECTION → LESSON) and return a report dict."""
+                      progression_mode: str, program_id: str | None = None) -> dict:
+    """Upload one course tree (course → SECTION → LESSON) and return a report dict.
+    program_id (optional) attaches the course to its parent Program (Plan 10)."""
     report = {"course": course["title"], "sections": 0, "lessons": 0, "loom": 0,
               "youtube": 0, "other_vid": 0, "no_vid": 0, "img_cdn": 0, "img_unmapped": 0,
               "warnings": [], "errors": []}
@@ -190,11 +204,14 @@ def import_one_course(course: dict, classroom_dir: Path, api: LmsApi, data_root:
     section_dirs = sorted(d for d in classroom_dir.iterdir() if d.is_dir()) if classroom_dir.is_dir() else []
 
     cover = course.get("coverImage")
-    api.upsert("courses", {
+    course_body = {
         "id": course_id, "name": course["title"], "description": course.get("desc") or "",
         "progressionMode": progression_mode,
         "mediaJson": [{"type": "IMAGE", "url": cover, "name": "cover"}] if cover else [],
-    }, report)
+    }
+    if program_id:
+        course_body["programId"] = program_id
+    api.upsert("courses", course_body, report)
 
     # Slug-match each tree set to its disk dir (robust to extra dirs like a course-level
     # 'about' section that has no set), order-fallback for leftovers.

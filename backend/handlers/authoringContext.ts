@@ -9,6 +9,7 @@ import type { LmsActor } from '../lms/types/HandlerContext.js';
 import type { Env } from '../types/Env.js';
 import { LmsCourseDatabaseRepository } from '../lms/infrastructure/repositories/LmsCourseDatabaseRepository.js';
 import { LmsClassDatabaseRepository } from '../lms/infrastructure/repositories/LmsClassDatabaseRepository.js';
+import { LmsProgramDatabaseRepository } from '../lms/infrastructure/repositories/LmsProgramDatabaseRepository.js';
 
 interface UserContext {
   user: { email: string };
@@ -25,4 +26,5 @@ export const createAuthoringContext = (
   userEmail: userContext.user.email,
   courseRepo: new LmsCourseDatabaseRepository(env.DB),
   classRepo: new LmsClassDatabaseRepository(env.DB),
+  programRepo: new LmsProgramDatabaseRepository(env.DB),
 });

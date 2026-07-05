@@ -52,10 +52,39 @@ export const renderCard = (course, courseProgress = null) => {
     `;
 };
 
+// A Program card (grouping of courses, Plan 10) — same cover treatment as a course
+// card, but the footer shows the course count instead of a progress bar.
+export const renderProgramCard = (program) => safeHtml`
+    <button type="button" class="course-card program-card" data-program="${program.id}" data-testid="classroom-program-${program.id}">
+        <span class="course-card-cover" style="${raw(coverStyle(program))}">
+            <span class="course-card-play">▶</span>
+        </span>
+        <span class="course-card-body">
+            <span class="course-card-title">${program.name}</span>
+            ${program.description ? raw(safeHtml`<span class="course-card-desc">${program.description}</span>`) : ''}
+            <span class="course-card-cta">${program.course_count} ${t('classroom.courses')} →</span>
+        </span>
+    </button>
+`;
+
+// Per-course completion from /signals (non-blocking — a broken endpoint renders 0%).
+const fetchProgress = async (courses) => {
+    const progressById = {};
+    await Promise.all(courses.map(async (course) => {
+        try {
+            const signals = await api(`/signals/${course.id}`);
+            progressById[course.id] = signals.course_progress ?? null;
+        } catch (error) {
+            log.warn(`classroom: signals fetch failed for ${course.id}`, error);
+            progressById[course.id] = null;
+        }
+    }));
+    return progressById;
+};
+
 /**
- * Render the classroom grid into #somViewer and leave the in-course context
- * (clears courseData so the lesson tree collapses to empty). Per-course progress
- * is fetched from /signals so the cards show real completion (Skool-style).
+ * Root classroom (Plan 10): Program cards (Maker School …) + standalone courses
+ * (program_id == null) at the top level. Clicking a program drills into its courses.
  */
 export const renderClassroom = async () => {
     const viewer = document.getElementById('somViewer');
@@ -64,7 +93,9 @@ export const renderClassroom = async () => {
     setState('currentCourse', null);
     setState('courseData', null);
 
-    const courses = getState('courses') || [];
+    const programs = getState('programs') || [];
+    const standalone = (getState('courses') || []).filter((c) => !c.program_id);
+
     setSafeHtml(viewer, safeHtml`
         <div class="classroom">
             <h1 class="classroom-title">${t('classroom.title')}</h1>
@@ -72,23 +103,13 @@ export const renderClassroom = async () => {
         </div>
     `);
 
-    const progressById = {};
-    await Promise.all(courses.map(async (course) => {
-        try {
-            const signals = await api(`/signals/${course.id}`);
-            progressById[course.id] = signals.course_progress ?? null;
-        } catch (error) {
-            // Non-blocking: a broken signal endpoint shouldn't hide the card. Log
-            // it (§ ALWAYS FAIL HARD) and render the card at 0%.
-            log.warn(`classroom: signals fetch failed for ${course.id}`, error);
-            progressById[course.id] = null;
-        }
-    }));
+    const progressById = await fetchProgress(standalone);
 
     // Guard against a navigation away while progress was loading.
     if (getState('currentCourse') || !document.querySelector('.classroom')) return;
 
-    const cards = courses.map((course) => renderCard(course, progressById[course.id])).join('');
+    const cards = programs.map(renderProgramCard).join('')
+        + standalone.map((course) => renderCard(course, progressById[course.id])).join('');
     setSafeHtml(viewer, safeHtml`
         <div class="classroom">
             <h1 class="classroom-title">${t('classroom.title')}</h1>
@@ -97,24 +118,73 @@ export const renderClassroom = async () => {
     `);
 
     const params = new URLSearchParams(window.location.search);
-    params.delete('som');
-    params.delete('course');
-    params.delete('step');
+    ['som', 'course', 'step', 'program'].forEach((p) => params.delete(p));
     const qs = params.toString();
     history.pushState({}, '', qs ? `?${qs}` : window.location.pathname);
 };
 
+/** Program landing (Plan 10): the courses of one program + a back link to the root. */
+export const renderProgram = async (programId) => {
+    const viewer = document.getElementById('somViewer');
+    if (!viewer) return;
+
+    setState('currentCourse', null);
+    setState('courseData', null);
+
+    const program = (getState('programs') || []).find((p) => p.id === programId);
+    if (!program) return renderClassroom();
+    const courses = (getState('courses') || []).filter((c) => c.program_id === programId);
+
+    setSafeHtml(viewer, safeHtml`
+        <div class="classroom classroom-program">
+            <button type="button" class="classroom-back" data-back>← ${t('classroom.title')}</button>
+            <h1 class="classroom-title">${program.name}</h1>
+            <div class="course-grid loading"><div class="loading-spinner"></div></div>
+        </div>
+    `);
+
+    const progressById = await fetchProgress(courses);
+    if (getState('currentCourse') || !document.querySelector('.classroom-program')) return;
+
+    const cards = courses.map((course) => renderCard(course, progressById[course.id])).join('');
+    setSafeHtml(viewer, safeHtml`
+        <div class="classroom classroom-program">
+            <button type="button" class="classroom-back" data-back>← ${t('classroom.title')}</button>
+            <h1 class="classroom-title">${program.name}</h1>
+            <div class="course-grid">${raw(cards)}</div>
+        </div>
+    `);
+
+    const params = new URLSearchParams(window.location.search);
+    ['som', 'course', 'step'].forEach((p) => params.delete(p));
+    params.set('program', programId);
+    history.pushState({}, '', `?${params.toString()}`);
+};
+
 export const initClassroom = () => {
-    // Refresh the grid on courses change only while the classroom is showing.
-    subscribe('courses', () => {
-        if (!getState('currentCourse') && document.querySelector('.classroom')) renderClassroom();
-    });
+    // Re-render the root grid when courses or programs change while it's showing.
+    const refreshIfRoot = () => {
+        if (!getState('currentCourse') && document.querySelector('.classroom') && !document.querySelector('.classroom-program')) {
+            renderClassroom();
+        }
+    };
+    subscribe('courses', refreshIfRoot);
+    subscribe('programs', refreshIfRoot);
 
     const viewer = document.getElementById('somViewer');
     if (!viewer || viewer.dataset.classroomWired) return;
     viewer.dataset.classroomWired = '1';
 
     viewer.addEventListener('click', async (event) => {
+        if (event.target.closest('.classroom-back[data-back]')) {
+            await renderClassroom();
+            return;
+        }
+        const programCard = event.target.closest('.program-card[data-program]');
+        if (programCard) {
+            await renderProgram(programCard.dataset.program);
+            return;
+        }
         const card = event.target.closest('.course-card[data-course]');
         if (!card) return;
         const { showCourseOverview } = await import('../course/overview.js');

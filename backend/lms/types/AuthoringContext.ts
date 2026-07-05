@@ -9,6 +9,7 @@
 import type { LmsActor } from './HandlerContext.js';
 import type { LmsCourseRepository } from '../domain/repositories/LmsCourseRepository.js';
 import type { LmsClassRepository } from '../domain/repositories/LmsClassRepository.js';
+import type { LmsProgramRepository } from '../domain/repositories/LmsProgramRepository.js';
 
 export interface AuthoringContext {
   db: D1Database;
@@ -16,4 +17,5 @@ export interface AuthoringContext {
   userEmail: string;
   courseRepo: LmsCourseRepository;
   classRepo: LmsClassRepository;
+  programRepo: LmsProgramRepository;
 }

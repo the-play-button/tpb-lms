@@ -14,10 +14,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
 from import_course import LmsApi, import_one_course, _classroom_dir_for
+
+
+def _program_id(name: str) -> str:
+    slug = re.sub(r"-+", "-", re.sub(r"[^a-z0-9]+", "-", name.lower())).strip("-")
+    return f"program_{slug}"
 
 
 def main() -> int:
@@ -27,6 +33,7 @@ def main() -> int:
     ap.add_argument("--skip", action="append", default=[], help="course key to skip (repeatable)")
     ap.add_argument("--from", dest="from_key", default=None, help="resume from this key (tree order)")
     ap.add_argument("--progression-mode", default="free", choices=["free", "linear"])
+    ap.add_argument("--program-name", default=None, help="group the imported courses under this Program (Plan 10)")
     ap.add_argument("--sleep-ms", type=int, default=60)
     ap.add_argument("--dry-run", action="store_true")
     args = ap.parse_args()
@@ -58,10 +65,19 @@ def main() -> int:
         return 2
 
     api = LmsApi(args.dry_run, args.sleep_ms)
+
+    # Optional Program grouping (Plan 10): create it once, cover = first selected
+    # course's Skool cover, then attach every imported course to it.
+    program_id = None
+    if args.program_name:
+        program_id = _program_id(args.program_name)
+        cover = next((tree[k].get("coverImage") for k in selected if tree[k].get("coverImage")), None)
+        api.create_program(program_id, args.program_name, cover)
+
     reports = []
     for k in selected:
         classroom_dir = _classroom_dir_for(root, k, tree, None)
-        rep = import_one_course(tree[k], classroom_dir, api, root, args.progression_mode)
+        rep = import_one_course(tree[k], classroom_dir, api, root, args.progression_mode, program_id)
         rep["key"] = k
         reports.append(rep)
 

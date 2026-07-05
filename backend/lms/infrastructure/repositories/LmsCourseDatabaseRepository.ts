@@ -55,6 +55,7 @@ export class LmsCourseDatabaseRepository implements LmsCourseRepository {
     if (patch.isActive !== undefined) add('is_active', patch.isActive ? 1 : 0);
     if (patch.isPrivate !== undefined) add('is_private', patch.isPrivate ? 1 : 0);
     if (patch.languagesJson !== undefined) add('languages_json', j(patch.languagesJson));
+    if (patch.programId !== undefined) add('program_id', patch.programId);
     if (patch.rawJson !== undefined) add('raw_json', j(patch.rawJson));
     if (sets.length === 0) return;
     sets.push("updated_at = datetime('now')");

@@ -12,6 +12,7 @@ const Schema = z.object({
   isPrivate: z.boolean().optional(),
   languagesJson: z.array(z.string()).optional(),
   progressionMode: z.enum(PROGRESSION_MODES).optional(),
+  programId: z.string().min(1).nullable().optional(),
   rawJson: z.record(z.string(), z.unknown()).optional(),
 });
 export type UpdateCourseInput = z.infer<typeof Schema> & { courseId: string };

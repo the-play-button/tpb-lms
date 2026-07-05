@@ -178,7 +178,8 @@
     "stepPending": "Up next"
   },
   "classroom": {
-    "title": "Classroom"
+    "title": "Classroom",
+    "courses": "courses"
   },
   "mastery": {
     "none": "Not started",

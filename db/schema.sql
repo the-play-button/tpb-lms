@@ -117,6 +117,20 @@ CREATE INDEX IF NOT EXISTS idx_kms_page_parent ON kms_page(parent_page_id);
 -- UNIFIED.TO: LMS (Learning Management)
 -- ============================================
 
+-- LmsProgram (migration 010): a grouping level above lms_course (Program → Course →
+-- Section → Lesson). A Skool "classroom" (e.g. Maker School) is a program bundling N
+-- courses. Standalone courses keep program_id NULL. cover via media_json IMAGE.
+CREATE TABLE IF NOT EXISTS lms_program (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    media_json TEXT,
+    is_active INTEGER DEFAULT 1,
+    raw_json TEXT,
+    created_at TEXT DEFAULT (datetime('now')),
+    updated_at TEXT DEFAULT (datetime('now'))
+);
+
 -- LmsCourse (courses)
 CREATE TABLE IF NOT EXISTS lms_course (
     id TEXT PRIMARY KEY,
@@ -131,10 +145,13 @@ CREATE TABLE IF NOT EXISTS lms_course (
     is_active INTEGER DEFAULT 1,
     is_private INTEGER DEFAULT 0,
     languages_json TEXT,
+    -- program_id added by migration 010 (nullable FK → lms_program; NULL = standalone).
+    program_id TEXT REFERENCES lms_program(id),
     raw_json TEXT,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
 );
+CREATE INDEX IF NOT EXISTS idx_lms_course_program ON lms_course(program_id);
 
 -- LmsClass (nodes of a course's content tree: SECTION folders + LESSON leaves)
 -- Field naming aligned on the unified.to canonical CRUD model (reference only,

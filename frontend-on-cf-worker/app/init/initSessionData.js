@@ -36,6 +36,17 @@ export const initSessionData = async (lang) => {
     const { courses } = await api(`/courses?lang=${lang}`);
     setState('courses', courses);
 
+    // 2b. Programs (grouping level above courses, Plan 10). Non-blocking: a broken
+    // endpoint shouldn't hide the classroom — fall back to an empty program list
+    // (courses then render flat).
+    try {
+        const { programs } = await api('/programs');
+        setState('programs', programs || []);
+    } catch (error) {
+        log.warn('programs fetch failed — courses render flat', error);
+        setState('programs', []);
+    }
+
     // 3. All badge definitions
     const badgeData = await api('/badges');
     setState('allBadges', badgeData.badges || []);

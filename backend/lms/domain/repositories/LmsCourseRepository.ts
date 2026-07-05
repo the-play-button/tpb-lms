@@ -13,6 +13,7 @@ export interface CourseRow {
   is_active: number;
   is_private: number;
   languages_json: string | null;
+  program_id: string | null;
   raw_json: string | null;
   created_at: string;
   updated_at: string;
@@ -37,6 +38,7 @@ export interface UpdateCoursePatch {
   isActive?: boolean;
   isPrivate?: boolean;
   languagesJson?: unknown;
+  programId?: string | null;
   rawJson?: unknown;
 }
 

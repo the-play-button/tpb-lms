@@ -4,7 +4,7 @@ import { describe, it, expect, vi } from 'vitest';
 vi.mock('../state.js', () => ({ getState: () => null, setState: () => {}, subscribe: () => () => {} }));
 vi.mock('../../i18n/index.js', () => ({ t: (k) => k }));
 
-import { renderCard } from './classroom.js';
+import { renderCard, renderProgramCard } from './classroom.js';
 
 describe('renderCard — classroom course card', () => {
   it('renders a clickable card with course id, title and real progress', () => {
@@ -49,5 +49,22 @@ describe('renderCard — classroom course card', () => {
     const html = renderCard({ id: 'c1', title: 'C' }, null);
     expect(html).toContain('linear-gradient');
     expect(html).not.toContain('assets.skool.com');
+  });
+});
+
+describe('renderProgramCard — classroom program card (Plan 10)', () => {
+  it('renders a program card with name, cover and course count (not progress)', () => {
+    const html = renderProgramCard({
+      id: 'program_maker-school', name: 'Maker School', course_count: 11,
+      cover_image_url: 'https://assets.skool.com/f/abc/p.jpg',
+    });
+    expect(html).toContain('class="course-card program-card"');
+    expect(html).toContain('data-program="program_maker-school"');
+    expect(html).toContain('Maker School');
+    expect(html).toContain('11');
+    expect(html).toContain("url('https://assets.skool.com/f/abc/p.jpg')");
+    // program cards drill into courses — no per-course progress bar / data-course
+    expect(html).not.toContain('data-course=');
+    expect(html).not.toContain('course-card-progress');
   });
 });

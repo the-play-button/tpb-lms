@@ -60,7 +60,7 @@ const enrichClass = (cls, currentStep) => {
 
 const queryActiveCourses = (env) =>
     env.DB.prepare(`
-        SELECT id, name, description, categories_json, is_private, media_json
+        SELECT id, name, description, categories_json, is_private, media_json, program_id
         FROM lms_course WHERE is_active = 1 ORDER BY name ASC
     `).all();
 
@@ -98,6 +98,7 @@ const enrichCourseSummary = async (env, course, userId, lang) => {
         categories: course.categories_json ? JSON.parse(course.categories_json) : [],
         is_private: course.is_private === 1,
         cover_image_url: extractCoverImageUrl(course.media_json),
+        program_id: course.program_id ?? null,
         total_steps: stepCount?.count || 0,
         progress: {
             videos_completed: progress?.videos_completed || 0,

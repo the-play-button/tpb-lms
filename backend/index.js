@@ -17,6 +17,7 @@ import { verifyAPIKey } from './auth/verifyAPIKey.js';
 import { getOrCreateContact } from './auth/getOrCreateContact.js';
 import { getSession } from './handlers/auth.js';
 import { listCourses, getCourse } from './handlers/courses.js';
+import { listPrograms } from './handlers/programs.js';
 import { listEnrollments, createEnrollment, updateEnrollment, getEnrollmentStatus, updateProgress } from './handlers/enrollment/index.js';
 import { listBadges } from './handlers/badges.js';
 import { createEvents } from './handlers/events.js';
@@ -49,6 +50,7 @@ import { deleteCourseController } from './lms/application/courses/deleteCourse/i
 import { createClassController } from './lms/application/classes/createClass/index.js';
 import { updateClassController } from './lms/application/classes/updateClass/index.js';
 import { deleteClassController } from './lms/application/classes/deleteClass/index.js';
+import { createProgramController } from './lms/application/programs/createProgram/index.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
 
@@ -288,6 +290,7 @@ const standardRoutes = [
   { method: 'GET', path: '/api/admin/stats', handler: getAdminStats },
   { method: 'GET', path: '/api/enrollments', handler: listEnrollments },
   { method: 'GET', path: '/api/courses', handler: listCourses },
+  { method: 'GET', path: '/api/programs', handler: listPrograms },
   { method: 'GET', path: '/api/kms/spaces', handler: listSpaces },
   { method: 'GET', path: '/api/translations', handler: getTranslationsForReview },
   { method: 'PUT', path: '/api/translations', handler: upsertTranslations },
@@ -344,6 +347,7 @@ const byocRoutes = [
 
 // Content-authoring CRUD (Plan 02): Tier 1 create/update/delete on courses + classes.
 const authoringRoutes = [
+  { method: 'POST',   path: '/api/programs',          handler: createProgramController },
   { method: 'POST',   path: '/api/courses',           handler: createCourseController },
   { method: 'PATCH',  path: '/api/courses/:courseId', handler: updateCourseController, params: ['courseId'] },
   { method: 'DELETE', path: '/api/courses/:courseId', handler: deleteCourseController, params: ['courseId'] },
