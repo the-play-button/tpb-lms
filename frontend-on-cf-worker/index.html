@@ -56,15 +56,11 @@
         <main class="lms-main">
             <!-- Sidebar navigation -->
             <nav class="lms-sidebar">
-                <!-- In-course lesson & section tree (populated when a course is open) -->
-                <div class="nav-section steps-sidebar is-empty" id="stepsSidebar">
-                    <!-- renderStepsSidebar() -->
-                </div>
-                <div class="nav-section">
-                    <h3>Mon Parcours</h3>
-                    <ul class="nav-list" id="somList">
-                        <!-- Populated dynamically -->
-                    </ul>
+                <!-- Single program-scoped tree: root shows the program picker; inside a
+                     program it shows only that program's courses; the open course expands
+                     inline to its lessons. renderSidebarTree() (app/ui/sidebar.js). -->
+                <div class="nav-section course-tree" id="courseTree">
+                    <!-- renderSidebarTree() -->
                 </div>
                 <div class="nav-section">
                     <h3>Mes Badges</h3>

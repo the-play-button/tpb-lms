@@ -6,8 +6,7 @@
  */
 import { updateUserStats, initUserStats } from './userStats.js';
 import { updateBadgesGrid, initBadges } from './badges.js';
-import { renderCourseList, initCourseList } from './courseList.js';
-import { initStepsSidebar } from './stepsSidebar.js';
+import { renderSidebarTree, initSidebar } from './sidebar.js';
 import { initClassroom } from './classroom.js';
 import { initUserMenu } from './userMenu.js';
 import { setState } from '../state.js';
@@ -36,13 +35,12 @@ export const initAllUI = (session) => {
     // Subscriptions (reactive UI)
     initUserStats();
     initBadges();
-    initCourseList();
-    initStepsSidebar();
+    initSidebar();
     initClassroom();
 
     // Initial render
     updateUserStats();
-    renderCourseList();
+    renderSidebarTree();
     updateBadgesGrid();
 
     // User menu (logout button)

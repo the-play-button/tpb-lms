@@ -19,6 +19,7 @@ const state = {
     badges: [],
     allBadges: [],
     courses: [],
+    currentProgram: null,
     currentCourse: null,
     currentStepIndex: 0,
     courseData: null,

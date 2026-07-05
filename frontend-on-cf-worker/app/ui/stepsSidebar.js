@@ -1,14 +1,19 @@
 /**
- * Steps Sidebar — in-course lesson & section navigation (Skool-style course rail).
+ * Lesson tree rendering — the in-course SECTION folders + LESSON items (Skool-style).
  *
- * Renders `course.nodes[]` as collapsible SECTION folders + LESSON items. Lessons
- * up to the furthest unlocked step are clickable (jump via navigateToStep) ;
- * locked lessons stay non-interactive. Falls back to a flat / tpb_section grouping
- * when the backend has not sent a `nodes` tree.
+ * This module OWNS the leaf of the sidebar tree: a course's `nodes[]` rendered as
+ * collapsible SECTION folders + clickable LESSON items (progress-gated). It is
+ * consumed by `sidebar.js`, which expands the current course inline inside the
+ * program-scoped tree. The whole-rail orchestration + wiring lives in `sidebar.js`.
+ *
+ * Exports:
+ *   - buildLessonCtx(course, signals, currentStepIndex) → ctx
+ *   - renderCourseLessons(course, ctx, opts?)           → `<nav class="steps-list">…</nav>`
+ *   - renderNodesTree / renderLessonItem                → building blocks (also unit-tested)
+ *   - toggleSection(headerEl)                           → collapse/expand a SECTION folder
  */
 
-import { getState, subscribe } from '../state.js';
-import { safeHtml, raw, setSafeHtml } from './safe-dom.js';
+import { safeHtml, raw } from './safe-dom.js';
 import { t } from '../../i18n/index.js';
 
 // Collapsed SECTION ids — module-level so full re-renders (on navigation /
@@ -19,7 +24,11 @@ const INDENT_BASE_PX = 8;
 const INDENT_STEP_PX = 14;
 const indentPx = (depth) => INDENT_BASE_PX + depth * INDENT_STEP_PX;
 
-const buildCtx = (course, signals, currentStepIndex) => {
+/**
+ * Build the render context (completed set + reachable ceiling) for a course's
+ * lessons from its progress signals.
+ */
+export const buildLessonCtx = (course, signals, currentStepIndex) => {
     const completedSteps = new Set(
         (signals?.steps || [])
             .filter(({ step_completed } = {}) => step_completed)
@@ -33,41 +42,15 @@ const buildCtx = (course, signals, currentStepIndex) => {
 };
 
 /**
- * Render the in-course lesson & section tree into #stepsSidebar.
- * @param {Object} options
- * @param {boolean} options.showSections - Group by section (default: true)
+ * Render a course's lessons as a `<nav class="steps-list">` tree (SECTION folders +
+ * LESSON items). Uses `course.nodes` when present, else falls back to the legacy
+ * `tpb_section` grouping. Returns a safe HTML string (empty when no classes).
  */
-export const renderStepsSidebar = (options = {}) => {
-    const { showSections = true } = options;
-    const sidebar = document.getElementById('stepsSidebar');
-    if (!sidebar) return;
-
-    const course = getState('courseData');
+export const renderCourseLessons = (course, ctx, { showSections = true } = {}) => {
     const { classes = [] } = course ?? {};
-    if (!classes.length) {
-        sidebar.classList.add('is-empty');
-        setSafeHtml(sidebar, '');
-        return;
-    }
-    sidebar.classList.remove('is-empty');
+    if (!classes.length) return '';
 
-    const ctx = buildCtx(course, getState('signals'), getState('currentStepIndex'));
-    const widthPercent = `${(ctx.completedSteps.size / classes.length) * 100}%`;
-
-    const fragments = [safeHtml`
-        <div class="sidebar-header">
-            <button type="button" class="back-to-classroom" data-testid="back-to-classroom">← ${t('nav.allCourses')}</button>
-            <h3 class="sidebar-title">${course.title || course.name}</h3>
-            <div class="sidebar-progress">
-                <span class="progress-text">${ctx.completedSteps.size}/${classes.length}</span>
-                <div class="progress-bar-mini">
-                    <div class="progress-fill" style="width: ${widthPercent}"></div>
-                </div>
-            </div>
-        </div>
-        <nav class="steps-list">
-    `];
-
+    const fragments = [`<nav class="steps-list">`];
     if (Array.isArray(course.nodes) && course.nodes.length && showSections) {
         fragments.push(renderNodesTree(course.nodes, ctx, 0));
     } else {
@@ -79,9 +62,8 @@ export const renderStepsSidebar = (options = {}) => {
             for (const step of steps) fragments.push(renderLessonItem(step, ctx, 0));
         }
     }
-
     fragments.push(`</nav>`);
-    setSafeHtml(sidebar, fragments.join(''));
+    return fragments.join('');
 };
 
 /**
@@ -142,43 +124,8 @@ export const renderLessonItem = (step, ctx, depth) => {
     `;
 };
 
-/**
- * Wire the sidebar: re-render on course/progress/navigation state changes, and
- * delegate clicks (lesson jump + section collapse toggle).
- */
-export const initStepsSidebar = () => {
-    // Wrap in arrows: subscribe() passes (value, oldValue) which would land as
-    // renderStepsSidebar's `options` (destructuring a null courseData would throw
-    // and mark the subscriber broken). renderStepsSidebar reads state itself.
-    subscribe('courseData', () => renderStepsSidebar());
-    subscribe('signals', () => renderStepsSidebar());
-    subscribe('currentStepIndex', () => renderStepsSidebar());
-
-    const sidebar = document.getElementById('stepsSidebar');
-    if (!sidebar || sidebar.dataset.wired) return;
-    sidebar.dataset.wired = '1';
-
-    sidebar.addEventListener('click', async (event) => {
-        if (event.target.closest('.back-to-classroom')) {
-            const { renderClassroom } = await import('./classroom.js');
-            renderClassroom();
-            return;
-        }
-        const header = event.target.closest('.section-header');
-        if (header && !header.classList.contains('static')) {
-            toggleSection(header);
-            return;
-        }
-        const item = event.target.closest('.step-item.clickable');
-        if (!item) return;
-        const step = Number(item.dataset.step);
-        if (!Number.isInteger(step)) return;
-        const { navigateToStep } = await import('../course/navigation.js');
-        navigateToStep(step);
-    });
-};
-
-const toggleSection = (header) => {
+/** Collapse/expand a SECTION folder from its header button (called by sidebar.js). */
+export const toggleSection = (header) => {
     const group = header.closest('.section-group');
     const sectionId = group?.dataset.sectionId;
     if (!sectionId) return;

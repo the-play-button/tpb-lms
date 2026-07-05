@@ -10,7 +10,8 @@
     "finish": "Terminer",
     "continue": "Continuer",
     "restart": "Recommencer",
-    "allCourses": "Tous les cours"
+    "allCourses": "Tous les cours",
+    "allPrograms": "Tous les programmes"
   },
   "header": {
     "myProgress": "Mon Parcours",
@@ -171,6 +172,7 @@
     "contactSupport": "Veuillez réessayer ou contacter le support."
   },
   "sidebar": {
+    "programs": "Programmes",
     "toggleSection": "Replier / déplier la section",
     "stepCurrent": "Étape en cours",
     "stepCompleted": "Étape terminée",

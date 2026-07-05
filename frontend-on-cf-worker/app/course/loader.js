@@ -21,7 +21,10 @@ import { setSafeHtml } from '../ui/safe-dom.js';
 export const loadCourse = async (courseId, initialStepIndex = null) => {
     try {
         setState('currentCourse', courseId);
-        
+        // Keep the rail scoped to this course's program (derive from the course list).
+        const owningProgram = (getState('courses') || []).find((c) => c.id === courseId)?.program_id ?? null;
+        setState('currentProgram', owningProgram);
+
         if (window.Sentry) {
             window.Sentry.setTag('course_id', courseId);
             window.Sentry.addBreadcrumb({

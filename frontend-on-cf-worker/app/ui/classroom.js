@@ -90,6 +90,7 @@ export const renderClassroom = async () => {
     const viewer = document.getElementById('somViewer');
     if (!viewer) return;
 
+    setState('currentProgram', null);
     setState('currentCourse', null);
     setState('courseData', null);
 
@@ -128,6 +129,7 @@ export const renderProgram = async (programId) => {
     const viewer = document.getElementById('somViewer');
     if (!viewer) return;
 
+    setState('currentProgram', programId);
     setState('currentCourse', null);
     setState('courseData', null);
 

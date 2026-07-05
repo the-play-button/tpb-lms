@@ -5,7 +5,6 @@ import { setState, getState } from '../state.js';
 import { api } from '../api.js';
 import { log } from '../log.js';
 
-import { loadCourse } from '../course/loader.js';
 import { renderCurrentStep } from '../course/renderer.js';
 import { t } from '../../i18n/index.js';
 import { stopVideoTracking, pauseVideo } from '../video/tracking/index.js';
@@ -19,15 +18,8 @@ import { updateBadgesGrid } from '../ui/badges.js';
 export const setupEventListeners = () => {
     initMobileTabs();
 
-    document.getElementById('somList')?.addEventListener('click', (e) => {
-        const link = e.target.closest('a[data-som-id]');
-        if (link) {
-            e.preventDefault();
-            const courseId = link.dataset.somId;
-            loadCourse(courseId);
-            history.pushState({}, '', `?som=${courseId}`);
-        }
-    });
+    // The left-rail course tree (#courseTree) is wired in app/ui/sidebar.js
+    // (program picker + course open + lesson navigation). Nothing to do here.
 
     document.querySelector('.leaderboard-tabs')?.addEventListener('click', (e) => {
         if (e.target.matches('.tab')) {
