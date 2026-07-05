@@ -29,7 +29,7 @@ describe('buildSidebarTreeHtml — program-scoped sidebar tree', () => {
     expect(html).toContain('TPB Sales Academy');
     expect(html).toContain('data-open-course="c1"');
     expect(html).toContain('data-open-course="c2"');
-    expect(html).not.toContain('data-open-program');       // no other-program picker inside a program
+    expect(html).not.toContain('tree-program-row');        // no other-program picker rows inside a program
     expect(html).not.toContain('data-open-course="solo"'); // standalone not in this program
   });
 
@@ -60,6 +60,6 @@ describe('buildSidebarTreeHtml — program-scoped sidebar tree', () => {
     });
     expect(html).toContain('data-back-to-classroom');
     expect(html).toContain('data-open-course="c2"'); // scoped to prog_sa via c1.program_id
-    expect(html).not.toContain('data-open-program');
+    expect(html).not.toContain('tree-program-row');  // no root program picker rows
   });
 });
