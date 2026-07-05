@@ -1,51 +1,28 @@
 # The Vision: Why We Exist
 
-Before you learn to sell, you should know what you're part of. This isn't a pep talk. The
-vision changes how you sell, and a rep who gets it closes differently than one who doesn't.
-
-## What we're building
-
-TPB is building the BOSS: a Business Operating Super System. It's a platform that copilots
-the real work across every function of a company.
-
-We start with go-to-market, meaning sales and marketing, because that's where the value
-shows up fastest and where it's easiest to measure. The full idea goes wider than that.
-Over time the BOSS copilots the support functions too: HR, recruiting, finance, accounting.
-The goal is simple. Every task a machine can help with, in every department, gets a copilot.
-What's left for people is the part only people do well: strategy, creativity, and
-relationships.
-
-## The belief that runs through everything
-
-There's one idea that makes us different, and it should shape every call you run: the human
-voice is sacred. Everything else is just friction between two conversations.
+The whole company runs on one belief, and it should shape every call you make: the human
+voice is sacred. Everything else is friction between two conversations.
 
 Data entry, research, list cleaning, follow-up admin. None of that is the job. The job is
-the conversation. So the copilot proposes and the human decides. We never automate blindly.
-We do a lot of one-to-one selling, just with the busywork taken off your plate. Not
-one-to-many, which is marketing. Not many-to-one, which is spam.
+the conversation. So we build software that takes the busywork off a salesperson's plate
+and hands back the part only a human can do. The copilot proposes, the human decides. We do
+a lot of one-to-one selling, never one-to-many spam.
 
-This matters when you sell. You never show up like a spam cannon. You show up as a person
-who did their homework, said something true, and earned a reply. The whole company is built
-on that respect for the conversation, and your outreach should sound like it.
+For you, on a call, that means one thing. You never sound like a spam cannon. You show up
+as a person who did their homework, said something true, and earned a reply. If your
+outreach doesn't sound like that, it's wrong.
 
-## The founder's story
+## The pitch in sixty seconds
 
-You'll tell a version of this on calls, so put it in your own words.
+You'll say a version of this often, so make it yours:
 
-Ten years of watching the same thing everywhere: salespeople losing half their day to admin
-instead of selling. The industry gave people a bad choice. Automate everything and sound
-like a robot nobody trusts, or do it all by hand and drown. We're building the third option:
-a copilot that takes the busywork away and hands the person back the part that matters. Give
-salespeople their time back so they can do the one thing software can't, which is have a
-real conversation.
+> "Salespeople lose half their day to admin instead of selling. The usual fix is to
+> automate everything and sound like a robot nobody trusts. We do the opposite. We take the
+> busywork away and give the person back the one thing software can't do, which is have a
+> real conversation."
 
-## Recap
+## Where this is going
 
-- We're building the BOSS, a copilot across every business function. We start with
-  go-to-market because that's where value is fastest and clearest.
-- The rule underneath it all: the human voice is sacred. The copilot proposes, the human
-  decides. We sell one-to-one, never spam.
-- This changes how you sell. Show up like a person who earned the conversation, not a
-  cannon.
-- Own the founder's story: give salespeople their time back for the thing software can't do.
+We start with sales and marketing because that's where the money shows up fastest. Over
+time the same copilot reaches HR, recruiting, finance, and accounting. You don't have to
+sell that vision. You just need to know you're the front edge of it.

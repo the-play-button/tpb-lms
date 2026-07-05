@@ -1,86 +1,64 @@
 # Roleplay Scenarios
 
-You don't get good at selling by reading about it. You get good by saying the words out
-loud, badly, until they come out well. This lesson gives you five roleplay scenarios pulled
-from real Brutal CRM Truth conversations. Run each one with a partner. One plays the
-prospect using the script below, one plays the rep. Then switch. Do each scenario until you
-can run it without notes.
+Run these with a partner. One plays the prospect from the brief, one plays the rep. Then
+switch. Do each until you can run it without notes. The reviewer scores on the checklist at
+the bottom.
 
-How to run a rep: hear it fully, don't flinch, reframe, confirm. Anchor value, point at the
-guarantee, tie urgency to their trigger. The reviewer scores on the checklist at the end.
+## 1. The data-fear prospect
 
-## Scenario 1: the data-fear prospect
+VP Marketing, 120-person manufacturer, HubSpot, last campaign at 64%. Interested, nervous
+about handing over the list.
 
-Prospect brief, for your partner to play: VP Marketing, 120-person B2B manufacturer,
-HubSpot. Last campaign delivered at 64%. Interested, but clearly nervous about handing over
-the contact list.
+> "Before anything else, I'm not comfortable giving an outside company our whole database.
+> What happens to it?"
 
-> Prospect: "Honestly, before anything else, I'm not comfortable giving an outside company
-> our whole database. What happens to it?"
+Rep goal: lead with Your-Data-Stays-Yours before ROI. Guarded to curious. Don't confirm any
+mechanism.
 
-Rep goal: lead with Your-Data-Stays-Yours before ROI. Get them from guarded to curious.
-Don't confirm any mechanism.
+## 2. "We can do it internally"
 
-## Scenario 2: "we can do it internally"
+COO, 200 employees, Salesforce, has a RevOps analyst.
 
-Prospect brief: COO, 200 employees, Salesforce. Has a RevOps person. Skeptical this is worth
-outside money.
+> "Isn't this just dedupe and some scripts we could run ourselves?"
 
-> Prospect: "We've got a RevOps analyst. Isn't this just dedupe and some scripts we could run
-> ourselves?"
+Rep goal: move from tool to outcome and risk. Zero-Loss Backup and rollback. "Under four
+hours, days not weeks, risk on us."
 
-Rep goal: move from tool to outcome and risk. Reference Zero-Loss Backup ($5k credit) and
-Rollback. Land "under four hours of your time, days not weeks, risk on us."
+## 3. The price flinch
 
-## Scenario 3: the price flinch
+CEO, 80 employees, Pipedrive, ARR about $9M. Loves the diagnostic, chokes on $70k.
 
-Prospect brief: CEO, 80 employees, Pipedrive, ARR about $9M. Loves the diagnostic, chokes on
-$70k.
+> "$70k is a lot for cleaning up a database."
 
-> Prospect: "$70k is a lot for cleaning up a database."
+Rep goal: don't discount. Back to $700k of value, then Never-A-Cost, they qualify. "You
+can't lose money on this."
 
-Rep goal: don't discount. Go back to about $700k of value, then hand them Never-A-Cost, they
-qualify because ARR is above $5M. Land "you can't lose money on this."
+## 4. "Not right now"
 
-## Scenario 4: "not right now"
+Head of Sales, 150 employees, HubSpot. Warm, stalling. Big outbound wave next quarter.
 
-Prospect brief: Head of Sales, 150 employees, HubSpot. Warm, but stalling. Mentioned a big
-outbound wave planned for next quarter.
+> "Sounds good. Let's circle back next quarter."
 
-> Prospect: "This all sounds good. Let's circle back next quarter."
+Rep goal: reattach to their trigger, not a fake timer. "The clean has to happen before the
+send, and it takes 7 days."
 
-Rep goal: reattach to their trigger, the outbound wave, not a fake timer. Land "the clean
-has to happen before the send to matter, and it takes 7 days."
+## 5. The Custom stack (WGE)
 
-## Scenario 5: the WGE archetype (Custom stack)
+COO, 400 employees. ERP (DECK) plus HubSpot that "don't talk." No source of truth. ARR $30M.
 
-Prospect brief: COO, 400 employees. Industrial ERP (DECK) plus HubSpot that "don't really
-talk." No single source of truth. ARR $30M.
+> "Our setup is messy. I doubt a standard cleanup applies to us."
 
-> Prospect: "Our setup is messy. We've got the ERP and the CRM and they're never in sync. I
-> doubt a standard cleanup even applies to us."
-
-Rep goal: recognize a Custom CRM stack in real time. Frame the complexity as a bigger,
-better engagement (paid Assessment plus bridge plus segmentation), not a harder sell.
+Rep goal: recognize a Custom stack live. Frame the complexity as a bigger, better deal.
 Qualify ARR for Never-A-Cost.
 
-## The reviewer checklist
+## Reviewer checklist (0 to 2 each)
 
-After each run, the reviewer scores 0 to 2 on each:
+- Heard the objection fully before responding.
+- Led with the right guarantee.
+- Anchored value with a real number on price.
+- Tied urgency to the prospect's trigger.
+- Routed the bucket correctly.
+- Never revealed the mechanism.
+- Ended with a clear next step, usually the free diagnostic.
 
-- [ ] Heard the objection fully before responding. Didn't flinch, didn't interrupt.
-- [ ] Led with the right guarantee for the objection.
-- [ ] Anchored value with a real number when price came up.
-- [ ] Tied urgency to the prospect's trigger, not a fake one.
-- [ ] Routed the bucket correctly (Standard, custom fields, Custom stack).
-- [ ] Never revealed or confirmed the delivery mechanism.
-- [ ] Ended with a clear next step, usually the free or served Assessment.
-
-Under 10 out of 14, run it again. This is reps, not theory.
-
-## Recap
-
-- Practice out loud with a partner until each scenario runs without notes.
-- Five scenarios cover the four objections plus the Custom-stack archetype, which are the
-  conversations you'll actually have.
-- Score every run on the checklist. Under 10 out of 14, do it again.
+Under 10 out of 14, run it again.
