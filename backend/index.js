@@ -51,6 +51,7 @@ import { createClassController } from './lms/application/classes/createClass/ind
 import { updateClassController } from './lms/application/classes/updateClass/index.js';
 import { deleteClassController } from './lms/application/classes/deleteClass/index.js';
 import { createProgramController } from './lms/application/programs/createProgram/index.js';
+import { updateProgramController } from './lms/application/programs/updateProgram/index.js';
 import { checkRateLimit } from './middleware/rateLimit.js';
 import { checkIdempotency, cacheIdempotencyResponse } from './middleware/idempotency.js';
 
@@ -348,6 +349,7 @@ const byocRoutes = [
 // Content-authoring CRUD (Plan 02): Tier 1 create/update/delete on courses + classes.
 const authoringRoutes = [
   { method: 'POST',   path: '/api/programs',          handler: createProgramController },
+  { method: 'PATCH',  path: '/api/programs/:programId', handler: updateProgramController, params: ['programId'] },
   { method: 'POST',   path: '/api/courses',           handler: createCourseController },
   { method: 'PATCH',  path: '/api/courses/:courseId', handler: updateCourseController, params: ['courseId'] },
   { method: 'DELETE', path: '/api/courses/:courseId', handler: deleteCourseController, params: ['courseId'] },
