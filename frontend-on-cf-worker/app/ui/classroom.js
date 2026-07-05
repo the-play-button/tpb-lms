@@ -17,13 +17,24 @@ const coverGradient = (courseId) => {
 
 // The /courses list only carries { videos_completed, quizzes_passed } (no total),
 // so accurate % + completion come from each course's /signals course_progress.
+// Real course cover (media IMAGE url) when present, else the deterministic gradient.
+// A dark scrim keeps the ▶ + focus ring readable over bright cover images.
+const coverStyle = (course) => {
+    const url = course.cover_image_url;
+    if (url) {
+        const scrim = 'linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55))';
+        return `background-image: ${scrim}, url("${encodeURI(url)}"); background-size: cover; background-position: center;`;
+    }
+    return `background: ${coverGradient(course.id)};`;
+};
+
 export const renderCard = (course, courseProgress = null) => {
     const percent = courseProgress?.percent ?? 0;
     const completed = !!courseProgress && courseProgress.total > 0 && courseProgress.completed >= courseProgress.total;
     const cta = completed ? t('course.review') : percent > 0 ? t('course.continue') : t('course.start');
     return safeHtml`
         <button type="button" class="course-card" data-course="${course.id}" data-testid="classroom-card-${course.id}">
-            <span class="course-card-cover" style="background: ${raw(coverGradient(course.id))}">
+            <span class="course-card-cover" style="${raw(coverStyle(course))}">
                 <span class="course-card-play">▶</span>
             </span>
             <span class="course-card-body">

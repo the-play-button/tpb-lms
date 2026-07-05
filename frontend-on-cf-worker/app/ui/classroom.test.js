@@ -31,4 +31,20 @@ describe('renderCard — classroom course card', () => {
     expect(html).not.toContain('course-card-desc');
     expect(html).toContain('width: 0%');
   });
+
+  it('uses the real cover image (with scrim) when cover_image_url is present', () => {
+    const html = renderCard(
+      { id: 'c1', title: 'C', cover_image_url: 'https://assets.skool.com/f/abc/cover.jpg' },
+      null,
+    );
+    expect(html).toContain('background-image:');
+    expect(html).toContain('url("https://assets.skool.com/f/abc/cover.jpg")');
+    expect(html).toContain('background-size: cover');
+  });
+
+  it('falls back to the deterministic gradient when there is no cover', () => {
+    const html = renderCard({ id: 'c1', title: 'C' }, null);
+    expect(html).toContain('linear-gradient');
+    expect(html).not.toContain('assets.skool.com');
+  });
 });

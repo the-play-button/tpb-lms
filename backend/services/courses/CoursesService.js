@@ -60,9 +60,21 @@ const enrichClass = (cls, currentStep) => {
 
 const queryActiveCourses = (env) =>
     env.DB.prepare(`
-        SELECT id, name, description, categories_json, is_private
+        SELECT id, name, description, categories_json, is_private, media_json
         FROM lms_course WHERE is_active = 1 ORDER BY name ASC
     `).all();
+
+// First IMAGE media url = the course cover (uploaded as media_json IMAGE). null when
+// absent → the classroom card falls back to its deterministic gradient.
+const extractCoverImageUrl = (mediaJson) => {
+    if (!mediaJson) return null;
+    try {
+        const media = JSON.parse(mediaJson);
+        return Array.isArray(media) ? (media.find((m) => m?.type === 'IMAGE')?.url ?? null) : null;
+    } catch {
+        return null;
+    }
+};
 
 const queryCourseStepCount = (env, courseId) =>
     env.DB.prepare("SELECT COUNT(*) as count FROM lms_class WHERE course_id = ? AND node_kind = 'LESSON'").bind(courseId).first();
@@ -85,6 +97,7 @@ const enrichCourseSummary = async (env, course, userId, lang) => {
         description: course.description,
         categories: course.categories_json ? JSON.parse(course.categories_json) : [],
         is_private: course.is_private === 1,
+        cover_image_url: extractCoverImageUrl(course.media_json),
         total_steps: stepCount?.count || 0,
         progress: {
             videos_completed: progress?.videos_completed || 0,
