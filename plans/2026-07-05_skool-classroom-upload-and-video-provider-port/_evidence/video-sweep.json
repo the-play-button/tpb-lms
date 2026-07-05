@@ -1,0 +1,4119 @@
+{
+  "total": 513,
+  "counts_summary": {
+    "loom_public": 413,
+    "loom_private": 0,
+    "yt_public": 100,
+    "yt_unavailable": 0,
+    "probe_error": 0
+  },
+  "loom_private": [],
+  "yt_unavailable": [],
+  "probe_error": [],
+  "results": [
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "1. What this program is",
+      "url": "https://www.loom.com/share/31225b09888e4b69934765d28a3f5803",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "2. Limiting beliefs",
+      "url": "https://www.loom.com/share/ce909271c6c24460bc10c3a230a30393",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "3. Skill-building",
+      "url": "https://www.loom.com/share/473eb983015843059b6197313382beba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "4. The casino",
+      "url": "https://www.loom.com/share/59ae1858149741c3a4200509d6d120b4",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "5. Revenue generating activities",
+      "url": "https://www.loom.com/share/aec95684de9842b28063e9c060cbddd3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "6. What does financial success actually look like?",
+      "url": "https://www.loom.com/share/7ec6acef367e4559a7621e0dae00c16d",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "1. Three cornerstone skills",
+      "url": "https://www.loom.com/share/013a4d1c998940fcb01f71d26bbc48c9",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "2. Three lead generation methods",
+      "url": "https://www.loom.com/share/cd23f409f64d4ecc8d65b19882f863df",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "3. A lifestyle that encourages growth",
+      "url": "https://www.loom.com/share/46a46eb7e8ab40e69ccbeacf472d74e4",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "4. An ambitious, motivated network",
+      "url": "https://www.loom.com/share/73348245e57b469086946efbc3fedae5",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "5. A library of high-ROI templates",
+      "url": "https://www.loom.com/share/3e9b7b15dc734016a62c65378e244733",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "1. Community rules",
+      "url": "https://www.loom.com/share/4b53503640214f75bb1dd542333ba251",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "2. Best of Maker School \ud83d\udd25",
+      "url": "https://www.loom.com/share/2a787608167c412f833108d89e9d724c",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "3. Tool stack, affiliates & discounts \ud83d\udcb8",
+      "url": "https://www.loom.com/share/a932a9750aa14268a1ac14e0274b531f",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Pre-Program: Start Here",
+      "course_key": "ab5cf4d1",
+      "lesson": "4. Let's get started!",
+      "url": "https://www.loom.com/share/ae6018de400d43828643c9d2587cadb3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "5. Pre-created Skills",
+      "url": "https://www.loom.com/share/55b2c8f8fbbb427da503398912d83d0f",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Monthly Community Call #1",
+      "url": "https://youtu.be/6vL7PgLe19w",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Monthly Community Call #2",
+      "url": "https://youtu.be/m_E3aYYkb_Y",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Monthly Community Call #3",
+      "url": "https://youtu.be/Xq_X0AoXiTA",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Monthly Community Call #4",
+      "url": "https://youtu.be/flcbr36jWQg",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Monthly Community Call #5",
+      "url": "https://youtu.be/0qpTV4zTAtY",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Monthly Community Call #6",
+      "url": "https://youtu.be/I8SthrYjbxo",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Monthly Community Call #7",
+      "url": "https://youtu.be/omHyvqhUE54",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Monthly Community Call #8",
+      "url": "https://youtu.be/XfL-0_tO8yo",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #1 (May 27)",
+      "url": "https://youtu.be/R1_e8gtbemU",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #2 (Jun 3)",
+      "url": "https://youtu.be/nUu6zHY0L3s",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #3 (Jun 10)",
+      "url": "https://youtu.be/WE8pv7l5iSk",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #4 (Jun 17)",
+      "url": "https://youtu.be/-454z6wZxew",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #5 (Jun 24)",
+      "url": "https://youtu.be/JJb_XGhKQfw",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #6 (Jul 1)",
+      "url": "https://youtu.be/S1gGywRjpDY",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #7 (Jul 8)",
+      "url": "https://youtu.be/-JrS1lT3NAo",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #8 (Jul 15)",
+      "url": "https://youtu.be/9BnhpvAuKm0",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #9 (Jul 22)",
+      "url": "https://youtu.be/oeuj88pZtR4",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #10 (Jul 29)",
+      "url": "https://youtu.be/Xvs3QxjaUoc",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #12 (Aug 12)",
+      "url": "https://youtu.be/WVx6wyWNveA",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #13 (Aug 19)",
+      "url": "https://youtu.be/NKVA-wSoOAI",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #14 (Aug 26)",
+      "url": "https://youtu.be/NvxZeGs3kos",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #15 (Sep 2)",
+      "url": "https://youtu.be/zQnFv7NHty8",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #16 (Sep 9)",
+      "url": "https://youtu.be/fto3FEtJ_Oc",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #17 (Sep 16)",
+      "url": "https://youtu.be/L4ktay0z7P4",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #18 (Sep 23)",
+      "url": "https://www.loom.com/share/15f2012bf3be494ab8a80572f0de85bd",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #19 (Sep 30)",
+      "url": "https://youtu.be/oi8v7Wl7yes",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #20 (Oct 7)",
+      "url": "https://youtu.be/zmSoHwnix3U",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #21 (Oct 14)",
+      "url": "https://youtu.be/jDtg9oE3jig",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #22 (Oct 21)",
+      "url": "https://youtu.be/giEBEUYsgUw",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #23 (Oct 28)",
+      "url": "https://youtu.be/S7kefCihXl8",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #24 (Nov 4)",
+      "url": "https://youtu.be/C9FB_wEABRY",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #25 (Nov 11)",
+      "url": "https://youtu.be/39GEaNaCKQ4",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #26 (Nov 18)",
+      "url": "https://youtu.be/Y7xYA6qwT5w",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #27 (Nov 25)",
+      "url": "https://youtu.be/0zjGnXogkCc",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #28 (Dec 2)",
+      "url": "https://youtu.be/lwvMo69LoSQ",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #29 (Dec 9)",
+      "url": "https://youtu.be/TRersOTGQ_M",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #30 (Dec 16)",
+      "url": "https://youtu.be/a81WHOLxzN0",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #31 (Dec 23)",
+      "url": "https://youtu.be/CDTfA8u_Am8",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #32 (Jan 6)",
+      "url": "https://youtu.be/p3F2IiKMop8",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #33 (Jan 13)",
+      "url": "https://youtu.be/E9j6wjwlFQE",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #34 (Jan 20)",
+      "url": "https://youtu.be/5cNYw0ps5ak",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #35 (Jan 27)",
+      "url": "https://youtu.be/UU2T9SU7RWo",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #36 (Feb 3)",
+      "url": "https://youtu.be/XQLvPwJ9zXY",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #37 (Feb 10)",
+      "url": "https://youtu.be/QEDCNVULKdg",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #38 (Feb 17)",
+      "url": "https://youtu.be/JEiAKK6u1Ec",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #40 (Mar 3)",
+      "url": "https://youtu.be/zTLrKi3_GNQ",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #41 (Mar 10)",
+      "url": "https://youtu.be/_cIX991jTaw",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #42 (Mar 18)",
+      "url": "https://youtu.be/Y19dZYn6uoI",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #43 (Mar 24)",
+      "url": "https://youtu.be/I8kpxEmeNso",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #44 (Mar 31)",
+      "url": "https://youtu.be/SoIEM_TM-Ys",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #45 (Apr 7)",
+      "url": "https://youtu.be/tf5ntmjhmaY",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #46 (Apr 14)",
+      "url": "https://youtu.be/VWrRuTWh3oQ",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #48 (Apr 28)",
+      "url": "https://youtu.be/QYk8PKM8P7k",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #49 (May 5)",
+      "url": "https://youtu.be/eDRi9ixA1J8",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #50 (May 12)",
+      "url": "https://youtu.be/o5AZ9G0I17E",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #52 (May 26)",
+      "url": "https://youtu.be/0cJ7hEYi6n8",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #53 (June 1)",
+      "url": "https://youtu.be/eexgr9WiUG0",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #54 (Jun 9)",
+      "url": "https://youtu.be/3XEL_4G4iZ8",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #55 (Jun 16)",
+      "url": "https://youtu.be/K_Gknosg7PI",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #56 (Jun 23)",
+      "url": "https://youtu.be/YNGWsdiCflo",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Weekly Community Call #57 (Jun 30)",
+      "url": "https://youtu.be/9SFJITgNDDw",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #1 with Connor Kaplan",
+      "url": "https://youtu.be/xE66f4d7C-A",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #2 with Connor Kaplan",
+      "url": "https://youtu.be/94A4Z9nT97I",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #3 with Connor Kaplan",
+      "url": "https://youtu.be/fFUPGxaBWxs",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #4 with Connor Kaplan",
+      "url": "https://youtu.be/9pZ_3NigCDA",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #5 with Connor Kaplan",
+      "url": "https://youtu.be/2kGU90ThPfs",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #6 with Connor Kaplan",
+      "url": "https://youtu.be/4AQq67Kd1q4",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #7 with Connor Kaplan",
+      "url": "https://youtu.be/GgA10f56lFQ",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #8 with Connor Kaplan",
+      "url": "https://youtu.be/kCiHICKKhCc",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #9 with Connor Kaplan",
+      "url": "https://youtu.be/Yv-aWiV6090",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #10 with Connor Kaplan",
+      "url": "https://youtu.be/PIScHmOBVtI",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #11 with Connor Kaplan",
+      "url": "https://youtu.be/OwqSlodPFXo",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #12 with Connor Kaplan",
+      "url": "https://youtu.be/E1_LonwMzHw",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #13 with Connor Kaplan",
+      "url": "https://youtu.be/40V810gLx7U",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #14 with Connor Kaplan",
+      "url": "https://www.youtube.com/watch?v=nioZbF8lphY",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #15 with Connor Kaplan",
+      "url": "https://youtu.be/ww33O-SUvF0",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #16 with Connor Kaplan",
+      "url": "https://youtu.be/Wnc9Wl66qTk",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #17 with Connor Kaplan",
+      "url": "https://www.youtube.com/watch?v=PPNK7slbjpk&feature=youtu.be",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #18 with Connor Kaplan",
+      "url": "https://www.youtube.com/watch?v=2tkNoo5n6jc&feature=youtu.be",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #18 with Connor Kaplan",
+      "url": "https://youtu.be/zI_SnDiUMnE",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #19 with Connor Kaplan",
+      "url": "https://youtu.be/3AzbEKDu7MQ",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #19 with Connor & Doug Shankman",
+      "url": "https://youtu.be/ZEkvE500rNo",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #20 with Connor Kaplan",
+      "url": "https://youtu.be/C4hMko0qitY",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #21 with Connor Kaplan",
+      "url": "https://youtu.be/oYExIeGsTq8",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #22 with Connor Kaplan",
+      "url": "https://youtu.be/97yMgnDlxsg",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #23 with Connor Kaplan",
+      "url": "https://www.youtube.com/watch?v=wW8bqmD0MQI",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #24 with Connor Kaplan",
+      "url": "https://youtu.be/mRTUKjg6ilg",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Sales Training #25 with Connor Kaplan",
+      "url": "https://youtu.be/vx_Qo-wgp_w",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "About",
+      "url": "https://www.loom.com/share/8e5609baa38a4638934bd8aa34e29b25",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Coaches, Consultants, & YouTube Inbound Businesses",
+      "url": "https://youtu.be/jUMPw_MgkVg?si=axKcVE7hc-NCnypt",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Recruitment Agencies, HR Departments, Hiring",
+      "url": "https://youtu.be/uBCT_qybLSQ",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "B2B Agencies, Digital Marketing/SEO Companies",
+      "url": "https://youtu.be/T9diMzLIpqQ",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Twitter Parasite System",
+      "url": "https://www.loom.com/share/4e4b8773764c47d682e51ea0140dbffb",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "AI Graphic Designer System",
+      "url": "https://www.youtube.com/watch?v=DrqR7a7lmBE",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Youtube to Blog Post Generator",
+      "url": "https://www.loom.com/share/673db45806cb4d89b03c8e5cd2e4cf88",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Medium Article Repurposing Workflow",
+      "url": "https://www.loom.com/share/d55af85078ab4c6d8c78dde33f78d906?sid=f0387625-8dc9-4826-ad55-37592efafef1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Upwork Scraper",
+      "url": "https://www.loom.com/share/85296294c8c846fb9d6d1af613a9d1d6",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Email Autoreply",
+      "url": "https://www.loom.com/share/ddaae76d381940df8030f7bc95705223",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Automatically Send Invoice to Client",
+      "url": "https://www.loom.com/share/ca2de6a4b4e54817afba75f297933e3f",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "AI Article Generator",
+      "url": "https://www.loom.com/share/035ea6e577174591891a54d0cd3db17c",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Onboard Client When They Pay",
+      "url": "https://www.loom.com/share/405aad0e520a4fd6b13f6ce9f116cac1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Automatic Publishing of Your Content to Socials",
+      "url": "https://www.loom.com/share/1e291d0cf4784efd9bec0d2e290f736e",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Email Categorization",
+      "url": "https://www.loom.com/share/7aad96e38f504916b4dd126f33f20849?sid=2b1db628-78a7-474e-803b-c9538435b349",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Bland.ai Voice Agent",
+      "url": "https://www.loom.com/share/c6e22399243b469f8408dd27e85b5e64",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Personalized DM Openers on Instagram",
+      "url": "https://www.loom.com/share/47a5c10b27c244f4890001ecb8a299cc",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Podcast Repurposing System",
+      "url": "https://www.youtube.com/watch?v=DNfp1XKC15k",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "YouTube Trend Detector",
+      "url": "https://youtu.be/eFtBMe96E-s",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "LinkedIn Parasite System",
+      "url": "https://www.youtube.com/watch?v=roTg7kyw8X4",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "AI Job Application System",
+      "url": "https://www.youtube.com/watch?v=ntSbFUQZHJ0&ab_channel=NickSaraev",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "PPC Ad Image Gen (Hacking N8N For Infinite Ads)..",
+      "url": "https://www.youtube.com/watch?v=6ffZxP0Ry7U",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Ad Spy Tool",
+      "url": "https://www.youtube.com/watch?v=0PJNiDuihBg&ab_channel=NickSaraev",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Instagram Parasite System",
+      "url": "https://www.youtube.com/watch?v=9zBtU1mwOR4&ab_channel=NickSaraev",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "N8N Instantly Auto-Reply Bot",
+      "url": "https://www.youtube.com/watch?v=qKcgBDCQo7s",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Resource Library",
+      "course_key": "167a7888",
+      "lesson": "Guarantee",
+      "url": "https://www.loom.com/share/e5e186b5cac74842944c1ced2afd895c?sid=9f58f0eb-a705-4dd3-85a8-80a4fc909cb2",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "What is no-code?",
+      "url": "https://www.loom.com/share/f491e4a80c5d4168b7e23be81b37afed",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "What is n8n?",
+      "url": "https://www.loom.com/share/b2d3f9bfc09b4da8b5da6d2aa53b246d?sid=a4c9c3d6-8f71-4cf5-b6b4-952dcc0724e9",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your first workflow",
+      "url": "https://www.loom.com/share/326a67dbb66042819792d2a8eb85791e?sid=b176841a-bc35-44f7-ac25-5c774b97f026",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Authentication",
+      "url": "https://www.loom.com/share/f2fe5247804441a5a36ed06dff2acde9?sid=0a0e6feb-6956-4a20-a66c-0912c124e6dd",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your second workflow",
+      "url": "https://www.loom.com/share/38f65f33020740e2b59a9d701320e179",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "AI prompting overview",
+      "url": "https://www.loom.com/share/ced7fbb928bf4024bba6cea8395cf0d1?sid=5a298efa-4d9d-435f-a566-c446ab8ebd3e",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Webhooks & HTTP requests",
+      "url": "https://www.loom.com/share/e852f477cb374ebbad273c7ddea01e33",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "JSON",
+      "url": "https://www.loom.com/share/5a11970b02ab47458eb259e8bcb58ffd",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your third workflow",
+      "url": "https://www.loom.com/share/441aa2445aa14f61bdcbe1eeca8c7bc8",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "n8n functions",
+      "url": "https://www.loom.com/share/302e7622d3504a0db0fd890b02e5c960",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your fourth workflow",
+      "url": "https://www.loom.com/share/5af68569bc3f46a5822e698e164d51c9",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Loops & data processing in n8n",
+      "url": "https://www.loom.com/share/15be83254d0f4c738ab22f77e9625e85",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your fifth workflow",
+      "url": "https://www.loom.com/share/8db979f942414561905f1698ccbcbd36",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your sixth workflow",
+      "url": "https://www.loom.com/share/afbcd546807a43488b1bc77fc335d562",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your seventh workflow",
+      "url": "https://www.loom.com/share/19e32e803ab8490f9c7ec0a0926b8a6c",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "What you're going to learn",
+      "url": "https://www.loom.com/share/15ac5dd8acd340a59fe3c10c4075cc68",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Claude is a contractor",
+      "url": "https://www.loom.com/share/171c772930e546fd83f3fdb0e2b8c31f",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Get highly specific",
+      "url": "https://www.loom.com/share/30a378e12a214191948278a00c07c1c8",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Front-load everything",
+      "url": "https://www.loom.com/share/4341fe1b604b440db8f9e4da88ce336c",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Nuanced context",
+      "url": "https://www.loom.com/share/a49b9931114c4e738e17fd185b5571ac",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Trust, but verify",
+      "url": "https://www.loom.com/share/0f555c1e9e9f4ba7beb5fed8a6879bf4",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Research, then execute (two-pass)",
+      "url": "https://www.loom.com/share/3112ddf0de974606be75addbe06b320f",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Always use the best model",
+      "url": "https://www.loom.com/share/1a70e9dd9fc94b55b7f155e8d0d3809c",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Last step",
+      "url": "https://www.loom.com/share/dfdfa4f4c70a4bf0a366fe0f5990b249",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "What is no-code?",
+      "url": "https://www.loom.com/share/f491e4a80c5d4168b7e23be81b37afed",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "What is Make.com & how does it work?",
+      "url": "https://www.loom.com/share/0ff09360505643aa84765b9566cc3ddf?sid=66171c1b-c090-4788-8026-911c6b86fe20",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your first scenario",
+      "url": "http://loom.com/share/d7ed5c0e4e3b4dfea162a7062e2105ec?from_recorder=1&focus_title=1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Authentication",
+      "url": "https://www.loom.com/share/e7744430a0ab48e7ab911bdcf6e96d7a?from_recorder=1&focus_title=1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your second scenario",
+      "url": "https://www.loom.com/share/536f3b74662c4bdeb726f6f9182161a0?sid=17596e83-6a92-4b07-affd-9e93e4eae45c",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "AI prompting overview",
+      "url": "https://www.loom.com/share/ced7fbb928bf4024bba6cea8395cf0d1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Webhooks & HTTP requests",
+      "url": "https://www.loom.com/share/60be7c44c1914dfdb17e8bd79d725dc2?sid=2d6e4086-c797-4e5b-aeaf-53e1436721d1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "JSON",
+      "url": "https://www.loom.com/share/8a4576eb979249d29c51f7638e31804c?sid=17eab41e-8197-408c-a2d3-5797c466d2f7",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your third scenario",
+      "url": "https://www.loom.com/share/c224d7b6070c4465b2de20d55b46f2cd",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Make.com functions",
+      "url": "https://www.loom.com/share/1db289854068442799ab0d5ce7af86a2",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your fourth scenario",
+      "url": "https://www.loom.com/share/015fe68fccb44cfabd3b3e525753334f",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Iterators & aggregators in Make.com",
+      "url": "https://www.loom.com/share/c0d6dd7640894ae68c2fe1e5860749fd?from_recorder=1&focus_title=1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your fifth scenario",
+      "url": "http://loom.com/share/d427b870abf449b484c993fb40eb0b94?from_recorder=1&focus_title=1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your sixth scenario",
+      "url": "http://loom.com/share/42cad0c6287f4f5c8a88ad1d73409d91?from_recorder=1&focus_title=1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Automation Tutorials",
+      "course_key": "3dda44a2",
+      "lesson": "Your seventh scenario",
+      "url": "https://www.loom.com/share/4351ca4d5daa48b8bf96ae5a04199efe",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "1. This is an exercise program",
+      "url": "https://www.loom.com/share/f58ba947e93349af91b1f990bb8a6118",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "2. No days off for the next month",
+      "url": "https://www.loom.com/share/372a7b42a5d4403c9a7ccf17d48f81c9",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "3. Remember to ask for feedback",
+      "url": "https://www.loom.com/share/1142eda887f3499988ce4b033659b78a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "4. Learn automation first",
+      "url": "https://www.loom.com/share/85c916132ab549f18ee65dd0e7bc06ba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "5. Lead gen & tool fees",
+      "url": "https://www.loom.com/share/10764c22d22b4ed0958994cdc1cb514c",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "6. One day at a time!",
+      "url": "https://www.loom.com/share/d2f0187afd1c4e4eb388324cbff85ec0",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "7. Wins from Month 1",
+      "url": "https://www.loom.com/share/1413b650e4764196b94a38f3f5b9bd16",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "1. Choose operating name",
+      "url": "https://www.loom.com/share/765509b9807d4fb6b63a200b411ced0a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "2. Buy main domain & set up primary email",
+      "url": "https://www.loom.com/share/afd23fdef04a4ebdbddeb6153d443f28",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "3. Set up cold email & start warmup",
+      "url": "https://www.loom.com/share/5367537ef96c43458a5d460c95cad101",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "1. Select niche(s)",
+      "url": "https://www.loom.com/share/466cc73b209d435186f63609c13a4e58",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "2. Build \"portfolio\" & 3 case studies",
+      "url": "https://www.loom.com/share/9534c8a65db24c23b9d4502e56bbb0da",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "3. Create Upwork profile",
+      "url": "https://www.loom.com/share/f7156087e89848e08a70aa88ce95e7f1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 1",
+      "course_key": "9376603b",
+      "lesson": "2. Write 3 new cold email sequences",
+      "url": "https://www.loom.com/share/7a5ffc3c1e984887aa8d25247d5df6a2",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. More of what works",
+      "url": "https://www.loom.com/share/f081611289914041a7ff2f3dea65bf81?sid=f1b593fa-51fe-4d0f-9d22-7f73782af80a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Some days off in the next month",
+      "url": "https://www.loom.com/share/7eb5e32146e741a492dca5e957b49ab3?sid=bd8ad096-fbdc-40be-9487-025a3dd78304",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Remember to ask for feedback",
+      "url": "https://www.loom.com/share/2357ed8f87cb4aaa9550cee0eeadafbb?sid=13807c58-f294-420b-904b-3e00a9ed0f7a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "4. One day at a time!",
+      "url": "https://www.loom.com/share/3027b6360ff948dca9f8c6d3db2bdaa9?sid=f9055dad-e04c-4ad4-8092-a7261e15ead5",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 3 applications",
+      "url": "https://www.loom.com/share/0eb1d9a50dd14499add517a1ca01e48d?sid=007bfde4-2927-46ce-b1a5-e3b1fe7bce01",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Solve 5 friction points",
+      "url": "https://www.loom.com/share/becef94213b34525a2644ebdaaa7dda0?sid=5bbf16a3-7fb9-4b8a-8270-10c9c3f40f3e",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Set up 5 software affiliate links",
+      "url": "https://www.loom.com/share/ccf44c2d23074918b13637978f5e73b6",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 3 applications",
+      "url": "https://www.loom.com/share/2e3ab150e68c49b5a5bad75d7addb0c0?sid=9c2b34a2-b695-41d1-990d-367d125460e7",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/07ce57d377ee42c79e6fa5ad36ada7db?sid=7c861970-ac1a-4ecd-8b80-c37e279ed30b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Set up 5 more software affiliate links",
+      "url": "https://www.loom.com/share/6ea8f622d5464c62abdafcfb342ad6b4?sid=3059e982-5072-4a88-8aff-21ff659789d3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 4 applications",
+      "url": "https://www.loom.com/share/aeab2c73e61d4f47bac3a3a4bf025928?sid=58f6e8b9-ae80-4826-9469-bfc26f0b68a1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create automated proposal system",
+      "url": "https://www.loom.com/share/be4c735c1ec143c9911a961c789a0466?sid=67b7beba-b21f-439b-857a-6e33e07e40d7",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Set up 5 more software affiliate links",
+      "url": "https://www.loom.com/share/e4760a470fd1403e967065a538d28094?sid=f821ca2d-3c57-4d5c-8969-257ed8273cf6",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 4 applications",
+      "url": "https://www.loom.com/share/fc1391f161a844d7811889e45c11a003?sid=f95b11a4-b86e-4373-8f69-513b5737b322",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/fc43e3be86934e15bf8894ad54868914?sid=f255d837-7b76-4d66-a832-c17863c01bfb",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Build project management system",
+      "url": "https://www.loom.com/share/6c79ae9782824e1d964971d2d85768de?sid=97a0a917-bfd9-4bc2-aea7-16dd5fd69cbd",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 4 applications",
+      "url": "https://www.loom.com/share/9909148b3e61480792e75f85031083d3?sid=ff722734-8a40-4d62-830f-8fd8aacf6c9e",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Cold email retrospective",
+      "url": "https://www.loom.com/share/a654178f22eb4be89c0a50f8d5f7432d?sid=81d864b6-e134-4f86-a48a-96360868b89b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 4 applications",
+      "url": "https://www.loom.com/share/15bef6b845d54c1492ada753c3755bcf?sid=fa678b42-b689-4504-9c95-4ac74ef80969",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/ec8b76e7ef9d41fa9920c7fac7e97f63?sid=d48e215f-4915-4d60-8d2c-cbe6778bae24",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Identify your new niche",
+      "url": "https://www.loom.com/share/5ac76b62587a42f0881501747719831a?sid=29d3d571-51d1-4923-b9e4-d5ce06a6980e",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Leisure, relaxation, rest",
+      "url": "https://www.loom.com/share/026dc2331d2e425b838d1bf1781e496f?sid=9e4bdb7a-a293-4c63-9f8e-44ddebab015d",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Upwork application retrospective",
+      "url": "https://www.loom.com/share/125b59349f2f4a78a046d43072d685ce?sid=540a836a-777e-4f00-a8c8-7eaecb9ef8db",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create a specialized Upwork profile",
+      "url": "https://www.loom.com/share/36c05b633ec244f488260e2ad800c99a?sid=990ae6cb-5bf7-4880-83af-6900a21cbcf1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Send 5 applications",
+      "url": "https://www.loom.com/share/88b64b540a4f428baf04155b91d2e8f9?sid=c18dd957-8eb6-4c4f-bdd9-846aba9da8e7",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/31dd53386b1d4b0087951c70fa89d6c9?sid=f5135ecd-219c-4167-99fe-2fe10299cbb9",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create community post calendar",
+      "url": "https://www.loom.com/share/0b4808858f2e4386a27ed11d217f243a?sid=ed4a26b3-9297-443c-9fe7-bb6dc02aaa01",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Solve 5 friction points",
+      "url": "https://www.loom.com/share/f895f981b699420d97e2194cdb169272?sid=c005b529-56c2-4217-9577-8f3b2a2239c6",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/506b12c073854c22a50f1c640eb5cb9a?sid=e8015ca3-2391-473b-bf6e-a9ca593bea0d",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Niche down your cold email campaigns",
+      "url": "https://www.loom.com/share/865d7667eacc40f5a148d3e8647c6b2a?sid=22a9a2a6-ae03-4fbf-a4a7-3a752874c1be",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Set up 5 more software affiliate links",
+      "url": "https://www.loom.com/share/a06830b9fbff4b25bd957f505e75a2f5?sid=8ea33016-8a57-44f7-8c34-6eed6d2f2c58",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/26eee1355d5342deaa0b8905e1865cf1?sid=751aab7c-4659-4196-b605-7017aba5c60d",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/c55a23d1c1494012b5390b98865a300b?sid=dbb02227-4962-4987-b7b6-ff0bc50c8e2a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Scrape 1,000 leads",
+      "url": "https://www.loom.com/share/49b38e1eaa534604a54b00b2d700f1ce?sid=e69bed23-3d3f-4488-9668-1072a691556f",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/705d5bf43d9042db81d5ecd1563fadc4?sid=fa7dbc86-d2f9-4fee-99cf-232bc1f07340",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Niche down your communities",
+      "url": "https://www.loom.com/share/8207e11a07ca477887db37229335c56a?sid=c743774b-afcd-466b-8571-db5eacfd7966",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Cold email retrospective",
+      "url": "https://www.loom.com/share/8ed6d3a5c380441cba0c961c7ac72f93?sid=dea570c1-ddfb-4315-a06d-3eb903c7c226",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/051eb370f1934e559a278384f7d5cc9e?sid=e796e4d2-05af-44a6-9353-31d670d69445",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/abae542dbc7942c2bdfb9b2b55a1f8f9?sid=7d78d56b-f785-4c4f-bc64-b1ffecad7c7d",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Create sales dashboard",
+      "url": "https://www.loom.com/share/03dd1b6569674fe49c85614920410b22?sid=668910f2-9d8f-4a3f-8e41-3eacbcca4405",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Leisure, relaxation, rest",
+      "url": "https://www.loom.com/embed/026dc2331d2e425b838d1bf1781e496f?autoplay=0&hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/62e6a705f43840bdb03a9e08da12b226?sid=dc6f5b06-208c-4aba-b45f-01713a23fcac",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/fbd8c19df7d4479190d2521fd516421d?sid=76f0a656-c071-448d-baa7-60b0eb9f1598",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Set up 5 more software affiliate links",
+      "url": "https://www.loom.com/share/366abe78133f4985ab6720867365fbf3?sid=8b0296f9-3f7d-4058-8977-75a7ceb95f4f",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/94a02a9ed23b4f109cdcf0165f3b0927?sid=4a91d398-e22c-4682-bd4e-dd4d5435d44a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Solve 4 friction points",
+      "url": "https://www.loom.com/share/3f6d1845722e4ebda0e8bdb556151e5e?sid=a515e7e1-abf6-48f7-9c09-fe104b53b28b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Set up 5 more software affiliate links",
+      "url": "https://www.loom.com/share/12de1802986849a79183ae256d60a60b?sid=1da3ebe9-639a-43f4-af28-61ff6dc259b1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/3df574a4830f427b8284c575c8c83859?sid=298216a5-2bbf-41ac-a613-7769728804cc",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/79c65e15252346dbb990a1e121040712?sid=79ab641b-c3fa-4609-a561-e93d221bc9a7",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/f8de422978de41fcbaf6db080f25c74b?sid=49ec24fb-bf1f-4cbe-b92a-fdcb9c5c7f36",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Upwork application retrospective",
+      "url": "https://www.loom.com/share/d1a066d0019f4f6cbe8e2c4a59126f26?sid=105e8b5c-57e4-44d5-9c84-43e4340b82b6",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Scrape 1,000 leads",
+      "url": "https://www.loom.com/share/8453a92caed54047abcf1521d26bc960?sid=7bcc1cf3-94ab-451a-a1c9-9424e48f8376",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/d1d58e30c4ff464391b2f0836c1ad4e4?sid=8e69b3e9-bb9b-4c4d-8364-654d1ec2c31b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/ab03bac8bd4442818b362372d665186f?sid=d54b5c66-36f9-49ac-8684-63f038dbc2f1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Cold email retrospective",
+      "url": "https://www.loom.com/share/c503fdb40fe84510a06d110daaafa6bb?sid=304235f4-468c-44f0-98a1-d60f5f85f52b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/7683c7978ff14bc4b1d73483ad87637c?sid=781efd79-230b-4c63-9fe8-5c32bcc98609",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Build 3 productized systems",
+      "url": "https://www.loom.com/share/0cd528aeda8d4988a1bd559557020a7b?sid=9445ab43-80ea-41bf-a968-ea01d0b1f786",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Leisure, relaxation, rest",
+      "url": "https://www.loom.com/embed/026dc2331d2e425b838d1bf1781e496f?autoplay=0&hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 4 applications",
+      "url": "https://www.loom.com/share/da2be1de150b4991988da1c3980f5f0b?sid=110d6055-1b31-460a-afab-783b1a6a214a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/54ded0d42dc64b4492ff804737504069?sid=b04a3d55-023b-47ae-8d0c-5065847bfdb0",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Solve 4 friction points",
+      "url": "https://www.loom.com/share/1095500c0a9943a98eb3c0a5d84a863c?sid=a8657b90-a0a6-423c-b7cb-6da238994097",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 4 applications",
+      "url": "https://www.loom.com/share/ce13ae8a994646ad837b899eb7c97ed0?sid=45067f41-14a2-4dda-8813-07e41efb2e65",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Set up 5 more software affiliate links",
+      "url": "https://www.loom.com/share/06ebd5f0c5534afe8f075b40523ea760?sid=1e4aef5e-4010-4afe-9ad3-b01c56664507",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 3 applications",
+      "url": "https://www.loom.com/share/f2d02bd2007a46dcb82a811201cf2347?sid=7d5e451e-6201-4059-91f0-a4bfd7c1f593",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/15e4a1128b93494eaebed2517464c0a9?sid=dd56f515-61a8-4387-ad4e-e8540eaa7f37",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 3 applications",
+      "url": "https://www.loom.com/share/afc971415f8d4fd58c203012f035565d?sid=03ce8dad-3609-400e-bfb7-3a8e4e105b6e",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create 3 retainer products",
+      "url": "https://www.loom.com/share/974eb2c2214b4525bcfd9582997c9693?sid=3a9b99f1-1e4e-4013-aa84-aa812546b6ac",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Scrape 1,000 leads",
+      "url": "https://www.loom.com/share/3aa057113d234a8192639e996f6d16c0?sid=c06287cb-8da0-45c1-8d6f-772fed2ad31c",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 3 applications",
+      "url": "https://www.loom.com/share/dc7bd93e27fa4b519caf1a4249276faa?sid=c15696c8-f319-40c8-b342-448439ba331b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/4700659f5fbb460ebdd26d23c956444e?sid=0ed3cd04-2849-4dab-8921-64cb18344515",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Cold email retrospective",
+      "url": "https://www.loom.com/share/9f7f7964fed142a78034fbfbe90aa3d7?sid=68417672-1869-406e-bd01-27a2097b8ab4",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Solve 3 friction points",
+      "url": "https://www.loom.com/share/f1bf0b85080841318e4ba2d7206c6a11?sid=7277969d-476c-4019-88da-adbd2fb2e9ac",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Leisure, relaxation, rest",
+      "url": "https://www.loom.com/embed/026dc2331d2e425b838d1bf1781e496f?autoplay=0&hide_owner=true&hide_share=true&hide_title=true&hideEmbedTopBar=true",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 4 applications",
+      "url": "https://www.loom.com/share/6a36b85052a742eba351a112ee034cf9?sid=bc467693-9c19-4862-8d22-26267011e818",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Create last community post",
+      "url": "https://www.loom.com/share/4c3e772e513b4fb8ac2dfba1a04a17b1?sid=c3dfcbec-14a1-41f0-a05b-631d4cc8e86d",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Build hiring pipeline",
+      "url": "https://youtu.be/0XZlnLn-eNU",
+      "kind": "youtube",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/12066e4b04094e4fb77ad98adc2fd2b2?sid=faf357ab-51d9-4249-ba92-b9b26fd7f2cd",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "2. Scrape 1,000 leads",
+      "url": "https://www.loom.com/share/3c9464a3bed64b5d94e850fb275a8efe?sid=d896e3be-701a-4519-8828-b650afe71e38",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 2",
+      "course_key": "c99d54b4",
+      "lesson": "3. Month 2 retrospective",
+      "url": "https://www.loom.com/share/d02e96356c9c4a2190dcd357241d2a41?sid=86e45462-6bcc-42c6-95d7-815bb13bbc16",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. More of what works",
+      "url": "https://www.loom.com/share/20871165c6394accb22e7953699e41d0?sid=da40eaf8-8ddd-4307-8cf4-f21be46d169b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Some days off in the next month",
+      "url": "https://www.loom.com/share/a924fffbda4e4e6fb72f84688832f52d?sid=244d8a3d-180c-43c1-9ce1-65fff6fe332b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "3. Remember to ask for feedback",
+      "url": "https://www.loom.com/share/840cb88d12384a96905a0ac8a362f2af?sid=858475fb-2332-4824-a4f0-0519c5cc60ad",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "4. Changes to Upwork",
+      "url": "https://www.loom.com/share/8e8459879cb94f97a603943ec38b7264?sid=ad5f0f2d-534e-406a-bf75-71dd023d05a6",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "5. One day at a time!",
+      "url": "https://www.loom.com/share/791166ba07b64828b974c70371e9889a?sid=e0a17c98-0bde-46ab-a7c2-77eb854dbe71",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Compile & solve 10 objections",
+      "url": "https://www.loom.com/share/fa5b3507dcbf44e483490b0cf6e6c306?sid=8f8f656d-ad03-473b-899c-1a25af339b9d",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. 10x your cold email",
+      "url": "https://www.loom.com/share/9391bbc2f37d4667804a1b696d4fa896?sid=07503615-a869-4ff5-82e0-c77eb9aabc23",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Solve 3 friction points",
+      "url": "https://www.loom.com/share/eb782e6733cc4a0f9b1b870ee1cbe701?sid=bfe02d48-64ea-4a6b-ba41-115f859b0d67",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Compile automation templates for scalability",
+      "url": "https://www.loom.com/share/5649ecba31de41a0b7854bee61a7caf6?sid=dc12bb33-f6eb-4c2a-9678-c4fbe397b8e2",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/67be4aaa56fa42d2b58be61978f1c9cc?sid=4c9224b8-ba46-4db9-935e-ab1b506c93ba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Scrape 3,000 leads",
+      "url": "https://www.loom.com/share/f2e9bf415b224071b91de13389ee5e2c?sid=d00935ca-48f0-475f-a970-ca78174ae799",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Document 1/4 of your SOPs",
+      "url": "https://www.loom.com/share/20339e280395457da9c29ea6b8ac10ab?sid=cafd9e0d-65fa-4fba-8c85-9b5b8a236516",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Cold email retrospective",
+      "url": "https://www.loom.com/share/a8399bacf5244cfe853d853b838e768c?sid=9f28b273-9294-40e4-9492-e2477b5148a1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Solve 3 friction points",
+      "url": "https://www.loom.com/share/eb782e6733cc4a0f9b1b870ee1cbe701?sid=bfe02d48-64ea-4a6b-ba41-115f859b0d67",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Document 2/4 of your SOPs",
+      "url": "https://www.loom.com/share/ccc634f2074843a78f142306d249670c?sid=c2b62dab-d63b-4691-89a9-2f28ddb09f9b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/67be4aaa56fa42d2b58be61978f1c9cc?sid=4c9224b8-ba46-4db9-935e-ab1b506c93ba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Scrape 3,000 leads",
+      "url": "https://www.loom.com/share/f2e9bf415b224071b91de13389ee5e2c?sid=d00935ca-48f0-475f-a970-ca78174ae799",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Create & deploy reactivation campaign",
+      "url": "https://www.loom.com/share/1acd80427fb147e08cdb79bfa530f0b9",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Cold email retrospective",
+      "url": "https://www.loom.com/share/a8399bacf5244cfe853d853b838e768c?sid=9f28b273-9294-40e4-9492-e2477b5148a1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Document 3/4 of your SOPs",
+      "url": "https://www.loom.com/share/455bf59dbaeb4044a1ce884856fb7693?sid=cc7ece3a-ad6a-4ad5-83d0-7aa525bb5735",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Document 4/4 of your SOPs",
+      "url": "https://www.loom.com/share/62e90c3b65f94e61b4b003cdd1025c12?sid=f17b328f-ec9f-4ff9-aff3-73b378a9f5da",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/67be4aaa56fa42d2b58be61978f1c9cc?sid=4c9224b8-ba46-4db9-935e-ab1b506c93ba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Scrape 3,000 leads",
+      "url": "https://www.loom.com/share/f2e9bf415b224071b91de13389ee5e2c?sid=d00935ca-48f0-475f-a970-ca78174ae799",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Build a centralized resource hub",
+      "url": "https://www.loom.com/share/d2ec12c4f78e4a3bbbcef850c31b4803?sid=cc5d1c88-391e-42d6-97fa-6399517a339a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Cold email retrospective",
+      "url": "https://www.loom.com/share/a8399bacf5244cfe853d853b838e768c?sid=9f28b273-9294-40e4-9492-e2477b5148a1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Set up inbound lead gen funnels",
+      "url": "https://www.loom.com/share/8e93ca690fc24caeaffead5d1a170063?sid=2c2cea01-b0f0-4306-84e7-481e63229b52",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Create next community post",
+      "url": "https://www.loom.com/share/67be4aaa56fa42d2b58be61978f1c9cc?sid=4c9224b8-ba46-4db9-935e-ab1b506c93ba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Solve 2 friction points",
+      "url": "https://www.loom.com/share/eb782e6733cc4a0f9b1b870ee1cbe701?sid=bfe02d48-64ea-4a6b-ba41-115f859b0d67",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Get newswire for PR/social proof",
+      "url": "https://www.loom.com/share/0f47dbd333bb44949bcb07105068f152?sid=6bbbfc2a-6a61-4cb6-bb44-86ee86f81889",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Scrape 3,000 leads",
+      "url": "https://www.loom.com/share/f2e9bf415b224071b91de13389ee5e2c?sid=d00935ca-48f0-475f-a970-ca78174ae799",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Upwork application retrospective",
+      "url": "https://www.loom.com/share/2e1157f58c484cd7b582d0ee64c65d29?sid=bb901f11-d8e7-41ee-a78a-ef1bf16a7023",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Create next community post",
+      "url": "https://www.loom.com/share/67be4aaa56fa42d2b58be61978f1c9cc?sid=4c9224b8-ba46-4db9-935e-ab1b506c93ba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Cold email retrospective",
+      "url": "https://www.loom.com/share/a8399bacf5244cfe853d853b838e768c?sid=9f28b273-9294-40e4-9492-e2477b5148a1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Solve 2 friction points",
+      "url": "https://www.loom.com/share/eb782e6733cc4a0f9b1b870ee1cbe701?sid=bfe02d48-64ea-4a6b-ba41-115f859b0d67",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Scrape 3,000 leads",
+      "url": "https://www.loom.com/share/f2e9bf415b224071b91de13389ee5e2c?sid=d00935ca-48f0-475f-a970-ca78174ae799",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Create next community post",
+      "url": "https://www.loom.com/share/67be4aaa56fa42d2b58be61978f1c9cc?sid=4c9224b8-ba46-4db9-935e-ab1b506c93ba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Set up SOS system & Qwoted",
+      "url": "https://www.loom.com/share/9bd1addc249e41718349e69f6fa0f773?sid=cdf65b56-3b7c-43b1-ba22-1baa733f82b0",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Cold email retrospective",
+      "url": "https://www.loom.com/share/a8399bacf5244cfe853d853b838e768c?sid=9f28b273-9294-40e4-9492-e2477b5148a1",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Solve 1 friction point",
+      "url": "https://www.loom.com/share/eb782e6733cc4a0f9b1b870ee1cbe701?sid=bfe02d48-64ea-4a6b-ba41-115f859b0d67",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/dc7bd93e27fa4b519caf1a4249276faa?sid=c15696c8-f319-40c8-b342-448439ba331b",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Set up auto invoice collection system",
+      "url": "https://www.loom.com/share/7257633ffc0e4d3bbe3bd76b507b0797",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Scrape 3,000 leads",
+      "url": "https://www.loom.com/share/f2e9bf415b224071b91de13389ee5e2c?sid=d00935ca-48f0-475f-a970-ca78174ae799",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Solve 1 friction point",
+      "url": "https://www.loom.com/share/eb782e6733cc4a0f9b1b870ee1cbe701?sid=bfe02d48-64ea-4a6b-ba41-115f859b0d67",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Send 5 applications",
+      "url": "https://www.loom.com/share/1b5f300bb46f43f18d1762b781beeb5c?sid=9ecb94ba-73ad-4f4c-bec1-48d2b1688f83",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "1. Create last community post",
+      "url": "https://www.loom.com/share/67be4aaa56fa42d2b58be61978f1c9cc?sid=4c9224b8-ba46-4db9-935e-ab1b506c93ba",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 3",
+      "course_key": "a6afd77f",
+      "lesson": "2. Month 3 retrospective",
+      "url": "https://www.loom.com/share/9d2e9cf001454a67908ef6ddfee81df8?sid=2cf5a2fc-0fc4-4220-8bfc-89cb704550ea",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. More of what works",
+      "url": "https://www.loom.com/share/7d050366a4e14a4aa17ab80f200b64f7?sid=1755fe0d-4785-44ad-a202-e69a0abdebe8",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Days off are entirely up to you",
+      "url": "https://www.loom.com/share/9cb47958ab2d42e3b9bf73cbda50872b?sid=9ad92a87-49d3-4293-ac3d-ef703517a5b3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Remember to ask for feedback",
+      "url": "https://www.loom.com/share/b5abeb6847e54e148923bc203e75ab58",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. \"Partner\" Proposal Upsell Template",
+      "url": "https://www.loom.com/share/076cc47f43e7420d99380d237fb35418",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Cold Email Proposal Template",
+      "url": "https://www.loom.com/share/b8496ce2cf2a4e72b0002925a1a902b0",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Instantly Templates",
+      "url": "https://www.loom.com/share/9cf693b9a83a4d548bfb2327d64949ce",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "4. All-In-One ClickUp CRM & PM Template",
+      "url": "https://www.loom.com/share/1a06f55143304fdeb79d4b7f57c95332",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "5. Upwork Response Templates",
+      "url": "https://www.loom.com/share/a359218d452b41b4a34990cdd88dad81",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 4",
+      "course_key": "db24b2b4",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. More of what works",
+      "url": "https://www.loom.com/share/963492f2b6f34f0c8b04e0dbf75d2d5d",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Days off are entirely up to you",
+      "url": "https://www.loom.com/share/6e0866ff66dd47749bc98e12db559346",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Remember to ask for feedback",
+      "url": "https://www.loom.com/share/da024db1870d40f3a6a9f20a5ae48179",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Sales Call Recordings",
+      "url": "https://www.loom.com/share/5165f39e96034dba8a715ecbc5b0a382",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Process Documentation 0 -> 1",
+      "url": "https://www.loom.com/share/f0df038a96ad48c1a656916c74bd35d9",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Recurring Revenue Blueprint",
+      "url": "https://www.loom.com/share/156d682dae504c37820bc5c8c76832d0",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "4. AI & Automation Agency Master Text Resource",
+      "url": "https://www.loom.com/share/f6ae3fd8e5e8454bb3cc5d7e9f16411a",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "1. Cold email management (30m)",
+      "url": "https://www.loom.com/share/ebcd64face6f4af5ac1aef5b805116a3",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "2. Upwork applications (30m)",
+      "url": "https://www.loom.com/share/dcf969e4872547a6a7c37ff2ecb6cd55",
+      "kind": "loom",
+      "status": 200
+    },
+    {
+      "course": "Month 5",
+      "course_key": "4bdb7bc2",
+      "lesson": "3. Community posts & content (30m)",
+      "url": "https://www.loom.com/share/15b7ae6a20a741cc9284b9c92b4c0077",
+      "kind": "loom",
+      "status": 200
+    }
+  ]
+}
