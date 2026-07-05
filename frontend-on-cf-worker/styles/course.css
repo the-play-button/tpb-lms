@@ -901,6 +901,26 @@
     margin-bottom: var(--space-lg);
 }
 
+/* Program landing back link (Plan 13) — clean text link, no default button chrome. */
+.classroom-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: transparent;
+    border: none;
+    padding: var(--space-xs) 0;
+    margin-bottom: var(--space-sm);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.classroom-back:hover {
+    color: var(--text-primary);
+}
+
 .course-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
