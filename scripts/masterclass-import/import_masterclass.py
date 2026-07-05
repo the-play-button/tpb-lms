@@ -40,7 +40,7 @@ PROGRAM = ("prog_mc_sales_academy", "TPB Sales Academy")
 COURSES = [
     ("course_mc_1", "1 — Vision & Context", [
         ("sec_mc_1_1", "Vision & Context", [
-            ("les_mc_1_1_1", "The Vision — Why We Exist", CONTENT / "c1-1-the-vision.md"),
+            ("les_mc_1_1_1", "The Vision: Why We Exist", CONTENT / "c1-1-the-vision.md"),
             ("les_mc_1_1_2", "How Companies Actually Go To Market", CONTENT / "c1-2-how-companies-go-to-market.md"),
             ("les_mc_1_1_3", "One Offer, Five Products", CONTENT / "c1-3-one-offer-five-products.md"),
         ]),
@@ -69,13 +69,13 @@ COURSES = [
     ]),
     ("course_mc_4", "4 — The Offer", [
         ("sec_mc_4_1", "The Offer", [
-            ("les_mc_4_1_1", "What We Sell — The Brutal CRM Truth", CONTENT / "c4-1-what-we-sell.md"),
-            ("les_mc_4_1_2", "Who We Sell To — ICP, Triggers, Buckets", CONTENT / "c4-2-who-we-sell-to.md"),
-            ("les_mc_4_1_3", "The Value — Why It Pays For Itself", CONTENT / "c4-3-the-value.md"),
+            ("les_mc_4_1_1", "What We Sell: The Brutal CRM Truth", CONTENT / "c4-1-what-we-sell.md"),
+            ("les_mc_4_1_2", "Who We Sell To: ICP, Triggers, Buckets", CONTENT / "c4-2-who-we-sell-to.md"),
+            ("les_mc_4_1_3", "The Value: Why It Pays For Itself", CONTENT / "c4-3-the-value.md"),
             ("les_mc_4_1_4", "Discovery For This Offer", CONTENT / "c4-4-discovery.md"),
             ("les_mc_4_1_5", "Objection Handling For This Offer", CONTENT / "c4-5-objections.md"),
             ("les_mc_4_1_6", "Pricing & Closing", CONTENT / "c4-6-pricing-and-closing.md"),
-            ("les_mc_4_1_7", "After The Yes — Delivery & The Five Products", CONTENT / "c4-7-delivery-routing.md"),
+            ("les_mc_4_1_7", "After The Yes: Delivery and the Five Products", CONTENT / "c4-7-delivery-routing.md"),
         ]),
     ]),
     ("course_mc_5", "5 — Practice & Reinforcement", [
