@@ -32,14 +32,15 @@ PROGRAM = ("prog_mc_sales_academy", "TPB Sales Academy")
 # course_id, name, [ (section_id, section_name, [ (lesson_id, lesson_name, src_path) ]) ]
 COURSES = [
     ("course_mc_1", "1 — Vision & Context", [
-        ("sec_mc_1_1", "Vision & Contexte", [
-            ("les_mc_1_1_1", "Ouverture — vision & offres", CONTENT / "00-opening.md"),
-            ("les_mc_1_1_2", "Vision BOSS · 4 GTM paths · 1 offre / 5 produits · ICP", CONTENT / "pillar-1-vision-and-context.md"),
+        ("sec_mc_1_1", "Vision & Context", [
+            ("les_mc_1_1_1", "The Vision — Why We Exist", CONTENT / "c1-1-the-vision.md"),
+            ("les_mc_1_1_2", "How Companies Actually Go To Market", CONTENT / "c1-2-how-companies-go-to-market.md"),
+            ("les_mc_1_1_3", "One Offer, Five Products", CONTENT / "c1-3-one-offer-five-products.md"),
         ]),
     ]),
     ("course_mc_2", "2 — Outbound Mastery", [
         ("sec_mc_2_1", "Outbound Mastery (Nick Saraev)", [
-            ("les_mc_2_1_0", "Intro TPB — comment on lit ce cours", CONTENT / "pillar-2-outbound-mastery.md"),
+            ("les_mc_2_1_0", "How To Use This Course", CONTENT / "c2-0-how-to-use-this-course.md"),
             ("les_mc_2_1_1", "Part 1 — Psychology of Trust", NS / "01-psychology-of-trust.md"),
             ("les_mc_2_1_2", "Part 2 — Components & Copywriting Framework", NS / "02-components-and-copywriting-framework.md"),
             ("les_mc_2_1_3", "Part 3 — Identity, Offers & Examples", NS / "03-identity-offers-examples.md"),
@@ -51,7 +52,7 @@ COURSES = [
     ]),
     ("course_mc_3", "3 — Sales Conversation", [
         ("sec_mc_3_1", "Sales Conversation", [
-            ("les_mc_3_1_0", "Overview — le craft de la conversation", CONTENT / "pillar-2-sales-conversation.md"),
+            ("les_mc_3_1_0", "The Craft Of The Conversation", CONTENT / "c3-0-the-craft-of-the-conversation.md"),
             ("les_mc_3_1_1", "C.L.O.S.E.R", MC / "3.1 Sales methodo - C.L.O.S.E.R.md"),
             ("les_mc_3_1_2", "Discovery playbook", MC / "3.3 Discovery playbook.md"),
             ("les_mc_3_1_3", "Objection handling", MC / "3.5 Objection handling.md"),
@@ -60,13 +61,22 @@ COURSES = [
         ]),
     ]),
     ("course_mc_4", "4 — The Offer", [
-        ("sec_mc_4_1", "L'offre (la seule)", [
-            ("les_mc_4_1_1", "L'offre — outcome, ICP, discovery, objections, pricing, closing", CONTENT / "pillar-3-the-offer.md"),
+        ("sec_mc_4_1", "The Offer", [
+            ("les_mc_4_1_1", "What We Sell — The Brutal CRM Truth", CONTENT / "c4-1-what-we-sell.md"),
+            ("les_mc_4_1_2", "Who We Sell To — ICP, Triggers, Buckets", CONTENT / "c4-2-who-we-sell-to.md"),
+            ("les_mc_4_1_3", "The Value — Why It Pays For Itself", CONTENT / "c4-3-the-value.md"),
+            ("les_mc_4_1_4", "Discovery For This Offer", CONTENT / "c4-4-discovery.md"),
+            ("les_mc_4_1_5", "Objection Handling For This Offer", CONTENT / "c4-5-objections.md"),
+            ("les_mc_4_1_6", "Pricing & Closing", CONTENT / "c4-6-pricing-and-closing.md"),
+            ("les_mc_4_1_7", "After The Yes — Delivery & The Five Products", CONTENT / "c4-7-delivery-routing.md"),
         ]),
     ]),
     ("course_mc_5", "5 — Practice & Reinforcement", [
-        ("sec_mc_5_1", "Pratique & renforcement", [
-            ("les_mc_5_1_1", "Roleplay · shadowing · KPIs · coaching · scorecard", CONTENT / "pillar-practice.md"),
+        ("sec_mc_5_1", "Practice & Reinforcement", [
+            ("les_mc_5_1_1", "Roleplay Scenarios", CONTENT / "c5-1-roleplay-scenarios.md"),
+            ("les_mc_5_1_2", "The Shadowing Protocol", CONTENT / "c5-2-shadowing.md"),
+            ("les_mc_5_1_3", "Your KPIs & Scorecard", CONTENT / "c5-3-kpis-and-scorecard.md"),
+            ("les_mc_5_1_4", "The Reinforcement Loop", CONTENT / "c5-4-reinforcement-loop.md"),
         ]),
     ]),
 ]
