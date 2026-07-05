@@ -36,15 +36,30 @@ content-proxy GitHub authentifié, `progression_mode` (Plan 09 précédente init
 - **02 — Gaps config authoring API (backend)** : `rawJson`/`progressionMode`/`contentMd`
   settables sur create/update courses+classes (pour du 100% API : nav `free`, intro,
   texte inline optionnel).
-- **03 — Pipeline upload + POC 1 cours** : push GitHub de l'arbre `classroom/`
-  (texte+images) + walk `course_trees.json` → POST structure via API (media Loom/YouTube
-  embed direct) sur `01_pre-program-start-here` (19 leçons), 100% API, vérif live.
-- **04 — Scale aux 12 cours** (après UAT utilisateur du POC).
+- **03 — Pipeline upload + POC 1 cours** (DONE) : walk `course_trees.json` → POST
+  structure via API (media Loom/YouTube embed direct) sur `01_pre-program-start-here`
+  (15 leçons), 100% API, vérif live. **Décision d'exécution : self-contained, zéro push
+  externe** — texte = `content_md` inline (rendu ajouté au viewer), vidéos = embeds
+  Loom/YouTube directs, cover + images de corps = **URLs Skool CDN publiques**
+  (vérifiées HTTP 200 sans auth). Le push GitHub initialement prévu est **abandonné**
+  (pas juste reporté) : rien n'est ré-hébergé, tout est référencé par URL publique.
+- **04 — Scale aux 11 cours** (Life Optimization = WIP vide, skippé), umbrella décomposé
+  en **4 sessions A/B/C/D = plans 05→08** (une par session) :
+  - **05 (session A) — Durcissement importer + assets self-contained** (images → Skool CDN
+    via `asset_url_to_local.json` reverse-map, path YouTube, mapping tree↔disk robuste,
+    throttle/retry/reporting, `import_all.py`, dry-run des 11, re-import POC vérifié).
+  - **06 (session B) — Upload cohorte 1** (Resource Library, Automation Tutorials, Month 1,
+    Month 2) + vérif live échantillon.
+  - **07 (session C) — Upload cohorte 2** (Month 3-6, Building Wealth, Building a Brand)
+    + vérif live.
+  - **08 (session D) — Sweep vidéos privées (413 Loom + 100 YT) + bilan + idempotence +
+    vérif 11 cartes Classroom + rapport `_evidence/`.**
 
 ## Séquencement
 
-01 → 02 → 03, puis **STOP pour UAT utilisateur** du POC avant 04.
-01 et 02 sont indépendants et testables isolément ; 03 les consomme.
+01 → 02 → 03 (DONE), puis **UAT utilisateur du POC** (fait), puis 04 (umbrella) décomposé
+en 05 → 06 → 07 → 08, **une session par plan**. 01 et 02 sont indépendants ; 03 les
+consomme ; 05 durcit le code, 06/07 uploadent, 08 finalise.
 
 ## Critères d'initiative
 
