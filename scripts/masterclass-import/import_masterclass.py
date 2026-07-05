@@ -26,6 +26,8 @@ WS = Path("/Users/wiestitie/labos/the-play-button-business")
 CONTENT = WS / "Apps/the-play-button/tpb-lms/plans/2026-07-05_tpb-sales-masterclass-3.0-fresh/_content"
 MC = WS / "Brain/the-play-button/pb05-lead-sales-training-program/inputs/TPB Notion/TPB Sales On-Boarding/Master class"
 NS = WS / "Brain/the-play-button/pb15-customer-marketing-playbook/inputs/sme-sources/nick-saraev/cold-outbound-course"
+# Alex Hormozi ACQ Closer Handbook — the day-by-day onboarding schedule, reproduced as-is.
+CH = WS / "Brain/the-play-button/pb15-customer-marketing-playbook/inputs/sme-sources/alex-hormozi/acq-closer-handbook"
 
 # Nick Saraev's cold-outbound course is ONE YouTube video (uSTGNHGFOAo). Each part is a
 # timestamped segment — lessons embed the video at the part's start (transcript = notes
@@ -98,6 +100,14 @@ COURSES = [
             ("les_mc_5_1_2", "The Shadowing Protocol", CONTENT / "c5-2-shadowing.md"),
             ("les_mc_5_1_3", "Your KPIs & Scorecard", CONTENT / "c5-3-kpis-and-scorecard.md"),
             ("les_mc_5_1_4", "The Reinforcement Loop", CONTENT / "c5-4-reinforcement-loop.md"),
+        ]),
+    ]),
+    # Day-by-day onboarding, reproduced as-is from Alex Hormozi's ACQ Closer Handbook.
+    ("course_mc_6", "6 — Onboarding Schedule (Alex Hormozi)", [
+        ("sec_mc_6_1", "The Day-by-Day (Alex Hormozi)", [
+            ("les_mc_6_1_1", "Onboarding: Schedule & Training", CH / "05-onboarding-schedule-and-training.md"),
+            ("les_mc_6_1_2", "On-Going: Training", CH / "06-on-going-training.md"),
+            ("les_mc_6_1_3", "On-Going: Schedule", CH / "07-on-going-schedule.md"),
         ]),
     ]),
 ]
