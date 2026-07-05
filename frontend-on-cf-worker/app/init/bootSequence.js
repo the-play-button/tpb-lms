@@ -51,10 +51,16 @@ export const runBootSequence = async () => {
         const stepParam = urlParams.get('step');
         const initialStep = stepParam !== null ? Math.max(0, parseInt(stepParam, 10) - 1) : null;
 
+        const programId = urlParams.get('program');
+
         if (courseId) {
             loadCourse(courseId, initialStep);
+        } else if (programId) {
+            // Deep-link into a Program landing (Plan 10): its course grid.
+            const { renderProgram } = await import('../ui/classroom.js');
+            renderProgram(programId);
         } else {
-            // No deep-link → Skool-style Classroom landing (grid of course cards).
+            // No deep-link → Skool-style Classroom landing (programs + standalone courses).
             renderClassroom();
         }
 
