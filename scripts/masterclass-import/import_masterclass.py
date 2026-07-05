@@ -36,6 +36,20 @@ def yt(start_sec: int) -> str:
 
 PROGRAM = ("prog_mc_sales_academy", "TPB Sales Academy")
 
+# Course cover images (served by the lms-viewer worker /thumbnails/). Carried on the
+# course mediaJson so re-imports PRESERVE the covers instead of wiping them.
+VIEWER = "https://lms-viewer.matthieu-marielouise.workers.dev/thumbnails"
+COURSE_COVERS = {
+    "course_mc_1": "course-1-vision",
+    "course_mc_2": "course-2-outbound",
+    "course_mc_3": "course-3-sales-conversation",
+    "course_mc_4": "course-4-the-offer",
+    "course_mc_5": "course-5-practice",
+}
+def course_cover(cid: str, cname: str) -> list:
+    slug = COURSE_COVERS.get(cid)
+    return [{"url": f"{VIEWER}/{slug}.jpg", "type": "IMAGE", "name": f"{cname} cover"}] if slug else []
+
 # course_id, name, [ (section_id, section_name, [ (lesson_id, lesson_name, src_path) ]) ]
 COURSES = [
     ("course_mc_1", "1 — Vision & Context", [
@@ -159,7 +173,7 @@ def main() -> int:
     n_les = 0
     for ci, (cid, cname, sections) in enumerate(COURSES):
         api.upsert("courses", {"id": cid, "name": cname, "description": "", "progressionMode": "free",
-                               "programId": pid, "sysOrderIndex": ci + 1, "mediaJson": []})
+                               "programId": pid, "sysOrderIndex": ci + 1, "mediaJson": course_cover(cid, cname)})
         print(f"  Course {cname!r}")
         for si, (sid, sname, lessons) in enumerate(sections):
             api.upsert("classes", {"id": sid, "courseId": cid, "nodeKind": "SECTION",
