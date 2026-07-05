@@ -15,6 +15,14 @@ const extractYoutubeId = (url) => {
     return m ? m[1] : null;
 };
 
+// Start offset in seconds, so a single video can be split into chaptered lessons
+// by timestamp. Supports `start=` and `t=` (plain seconds, optional trailing `s`).
+const extractStartSeconds = (url) => {
+    if (!url) return null;
+    const m = String(url).match(/[?&#](?:start|t)=(\d+)s?/);
+    return m ? Number(m[1]) : null;
+};
+
 const loadYouTubeApi = () => {
     if (window.YT && window.YT.Player) return Promise.resolve(window.YT);
     if (!ytScriptInjected) {
@@ -32,11 +40,14 @@ export const youtubeProvider = {
     match(media) {
         const url = media?.url || media?.video_url || null;
         const videoId = extractYoutubeId(url);
-        return videoId ? { providerId: 'youtube', videoId } : null;
+        if (!videoId) return null;
+        const start = extractStartSeconds(url);
+        return { providerId: 'youtube', videoId, ...(start ? { start } : {}) };
     },
 
     renderEmbed({ parsed, stepIndex, courseId, classId, videoDuration }) {
         const params = new URLSearchParams({ rel: '0', modestbranding: '1', enablejsapi: '1' });
+        if (parsed.start) params.set('start', String(parsed.start));
         return `
             <div class="video-container">
                 <iframe src="${EMBED_BASE}/${parsed.videoId}?${params.toString()}"

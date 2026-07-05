@@ -27,6 +27,13 @@ CONTENT = WS / "Apps/the-play-button/tpb-lms/plans/2026-07-05_tpb-sales-mastercl
 MC = WS / "Brain/the-play-button/pb05-lead-sales-training-program/inputs/TPB Notion/TPB Sales On-Boarding/Master class"
 NS = WS / "Brain/the-play-button/pb15-customer-marketing-playbook/inputs/sme-sources/nick-saraev/cold-outbound-course"
 
+# Nick Saraev's cold-outbound course is ONE YouTube video (uSTGNHGFOAo). Each part is a
+# timestamped segment — lessons embed the video at the part's start (transcript = notes
+# below). yt(start_seconds) builds the segment url the youtube provider reads.
+NICK_VIDEO = "https://www.youtube.com/watch?v=uSTGNHGFOAo"
+def yt(start_sec: int) -> str:
+    return f"{NICK_VIDEO}&start={start_sec}"
+
 PROGRAM = ("prog_mc_sales_academy", "TPB Sales Academy")
 
 # course_id, name, [ (section_id, section_name, [ (lesson_id, lesson_name, src_path) ]) ]
@@ -41,13 +48,13 @@ COURSES = [
     ("course_mc_2", "2 — Outbound Mastery", [
         ("sec_mc_2_1", "Outbound Mastery (Nick Saraev)", [
             ("les_mc_2_1_0", "How To Use This Course", CONTENT / "c2-0-how-to-use-this-course.md"),
-            ("les_mc_2_1_1", "Part 1 — Psychology of Trust", NS / "01-psychology-of-trust.md"),
-            ("les_mc_2_1_2", "Part 2 — Components & Copywriting Framework", NS / "02-components-and-copywriting-framework.md"),
-            ("les_mc_2_1_3", "Part 3 — Identity, Offers & Examples", NS / "03-identity-offers-examples.md"),
-            ("les_mc_2_1_4", "Part 4 — Offer Formula Deep Dive", NS / "04-offer-formula-deep-dive.md"),
-            ("les_mc_2_1_5", "Part 5 — Offers + Live Email Roasting", NS / "05-offers-and-email-roasting.md"),
-            ("les_mc_2_1_6", "Part 6 — Platforms, Subject Lines, Follow-ups", NS / "06-platforms-subjects-followups-iteration.md"),
-            ("les_mc_2_1_7", "Part 7 — AI in Copywriting & Gray Hat", NS / "07-ai-copywriting-and-gray-hat.md"),
+            ("les_mc_2_1_1", "Part 1 — Psychology of Trust", NS / "01-psychology-of-trust.md", yt(0)),
+            ("les_mc_2_1_2", "Part 2 — Components & Copywriting Framework", NS / "02-components-and-copywriting-framework.md", yt(1113)),
+            ("les_mc_2_1_3", "Part 3 — Identity, Offers & Examples", NS / "03-identity-offers-examples.md", yt(2713)),
+            ("les_mc_2_1_4", "Part 4 — Offer Formula Deep Dive", NS / "04-offer-formula-deep-dive.md", yt(3982)),
+            ("les_mc_2_1_5", "Part 5 — Offers + Live Email Roasting", NS / "05-offers-and-email-roasting.md", yt(5387)),
+            ("les_mc_2_1_6", "Part 6 — Platforms, Subject Lines, Follow-ups", NS / "06-platforms-subjects-followups-iteration.md", yt(10200)),
+            ("les_mc_2_1_7", "Part 7 — AI in Copywriting & Gray Hat", NS / "07-ai-copywriting-and-gray-hat.md", yt(12900)),
         ]),
     ]),
     ("course_mc_3", "3 — Sales Conversation", [
@@ -157,12 +164,17 @@ def main() -> int:
         for si, (sid, sname, lessons) in enumerate(sections):
             api.upsert("classes", {"id": sid, "courseId": cid, "nodeKind": "SECTION",
                                    "name": sname, "sysOrderIndex": si + 1})
-            for li, (lid, lname, src) in enumerate(lessons):
+            for li, lesson in enumerate(lessons):
+                lid, lname, src = lesson[0], lesson[1], lesson[2]
+                video_url = lesson[3] if len(lesson) > 3 else None
                 if not src.is_file():
                     api.errors.append(f"MISSING src {src}"); print(f"    ! MISSING {src}"); continue
+                # Video lesson → embed the clip (transcript becomes notes below it).
+                media = [{"url": video_url, "type": "VIDEO", "name": lname}] if video_url else []
+                step_type = "VIDEO" if video_url else "CONTENT"
                 api.upsert("classes", {"id": lid, "courseId": cid, "parentClassId": sid, "nodeKind": "LESSON",
-                                       "name": lname, "sysOrderIndex": li + 1, "stepType": "CONTENT",
-                                       "contentMd": load_md(src), "mediaJson": []})
+                                       "name": lname, "sysOrderIndex": li + 1, "stepType": step_type,
+                                       "contentMd": load_md(src), "mediaJson": media})
                 n_les += 1
     print(f"\n{'[dry-run] ' if args.dry_run else ''}Program {pname}: {len(COURSES)} courses · {n_les} lessons · errors {len(api.errors)}")
     for e in api.errors:
