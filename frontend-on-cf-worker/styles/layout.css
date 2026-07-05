@@ -121,9 +121,10 @@
 }
 
 .nav-section h3 {
-    font-size: 0.75rem;
+    font-size: var(--fs-nav-eyebrow);
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.08em;
     color: var(--text-muted);
     margin-bottom: var(--space-md);
 }
@@ -141,6 +142,7 @@
     align-items: center;
     gap: var(--space-sm);
     padding: var(--space-sm) var(--space-md);
+    font-size: var(--fs-nav-item);
     color: var(--text-secondary);
     text-decoration: none;
     border-radius: var(--radius-md);

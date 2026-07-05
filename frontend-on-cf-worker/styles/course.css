@@ -633,11 +633,14 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
 }
 
 #somList .course-title {
     flex: 1;
+    font-size: var(--fs-nav-item);
+    font-weight: 500;
+    line-height: 1.35;
 }
 
 #somList .course-badges {
@@ -662,10 +665,10 @@
     border: none;
     border-radius: var(--radius-md);
     color: var(--text-primary);
-    font-size: 0.72rem;
+    font-size: var(--fs-nav-group);
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
     cursor: pointer;
     transition: background-color 0.15s ease;
 }
@@ -675,7 +678,7 @@
 }
 
 #somList .nav-program-caret {
-    font-size: 0.7rem;
+    font-size: var(--fs-nav-meta);
     color: var(--text-muted);
     transition: transform 0.15s ease;
 }
@@ -691,7 +694,7 @@
 
 #somList .nav-program-count {
     flex-shrink: 0;
-    font-size: 0.68rem;
+    font-size: var(--fs-nav-meta);
     font-weight: 600;
     color: var(--text-muted);
     background: var(--bg-card);
@@ -746,7 +749,7 @@
 }
 
 .steps-sidebar .progress-text {
-    font-size: 0.72rem;
+    font-size: var(--fs-nav-meta);
     color: var(--text-muted);
     flex-shrink: 0;
 }
@@ -795,7 +798,7 @@
     border: none;
     border-radius: var(--radius-md);
     color: var(--text-primary);
-    font-size: 0.8rem;
+    font-size: var(--fs-nav-group);
     font-weight: 600;
     text-align: left;
     cursor: pointer;
@@ -811,7 +814,7 @@
 }
 
 .section-chevron {
-    font-size: 0.7rem;
+    font-size: var(--fs-nav-meta);
     color: var(--text-muted);
     flex-shrink: 0;
 }
@@ -828,8 +831,8 @@
     padding: var(--space-sm);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
-    font-size: 0.8rem;
-    line-height: 1.3;
+    font-size: var(--fs-nav-item);
+    line-height: 1.35;
     transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
@@ -850,7 +853,7 @@
 .step-item .step-type-icon {
     flex-shrink: 0;
     opacity: 0.6;
-    font-size: 0.75rem;
+    font-size: var(--fs-nav-meta);
 }
 
 .step-item.clickable {

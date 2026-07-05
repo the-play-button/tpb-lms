@@ -29,7 +29,14 @@
     --font-display: 'Space Grotesk', system-ui, sans-serif;
     --font-body: 'Inter', system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
-    
+
+    /* Sidebar / nav type scale — single source of truth so the left rail keeps a
+       coherent hierarchy: eyebrow < group header < item, meta for counts. */
+    --fs-nav-eyebrow: 0.6875rem; /* 11px — "MON PARCOURS" section label */
+    --fs-nav-group: 0.8125rem;   /* 13px — program / section group header */
+    --fs-nav-item: 0.875rem;     /* 14px — course / lesson leaf item */
+    --fs-nav-meta: 0.75rem;      /* 12px — counts, progress %, chevrons */
+
     /* Spacing */
     --space-xs: 0.25rem;
     --space-sm: 0.5rem;
