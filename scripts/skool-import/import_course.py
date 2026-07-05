@@ -192,9 +192,11 @@ class LmsApi:
 
 
 def import_one_course(course: dict, classroom_dir: Path, api: LmsApi, data_root: Path,
-                      progression_mode: str, program_id: str | None = None) -> dict:
+                      progression_mode: str, program_id: str | None = None,
+                      sys_order_index: int | None = None) -> dict:
     """Upload one course tree (course → SECTION → LESSON) and return a report dict.
-    program_id (optional) attaches the course to its parent Program (Plan 10)."""
+    program_id attaches the course to its Program (Plan 10) ; sys_order_index sets its
+    position in the classroom (Plan 12, from the course_trees.json order)."""
     report = {"course": course["title"], "sections": 0, "lessons": 0, "loom": 0,
               "youtube": 0, "other_vid": 0, "no_vid": 0, "img_cdn": 0, "img_unmapped": 0,
               "warnings": [], "errors": []}
@@ -211,6 +213,8 @@ def import_one_course(course: dict, classroom_dir: Path, api: LmsApi, data_root:
     }
     if program_id:
         course_body["programId"] = program_id
+    if sys_order_index is not None:
+        course_body["sysOrderIndex"] = sys_order_index
     api.upsert("courses", course_body, report)
 
     # Slug-match each tree set to its disk dir (robust to extra dirs like a course-level

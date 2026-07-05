@@ -74,10 +74,14 @@ def main() -> int:
         cover = next((tree[k].get("coverImage") for k in selected if tree[k].get("coverImage")), None)
         api.create_program(program_id, args.program_name, cover)
 
+    # Course order = position in course_trees.json (the Skool classroom order), 1-based.
+    order_of = {k: i + 1 for i, k in enumerate(tree.keys())}
+
     reports = []
     for k in selected:
         classroom_dir = _classroom_dir_for(root, k, tree, None)
-        rep = import_one_course(tree[k], classroom_dir, api, root, args.progression_mode, program_id)
+        rep = import_one_course(tree[k], classroom_dir, api, root, args.progression_mode,
+                                program_id, order_of.get(k))
         rep["key"] = k
         reports.append(rep)
 

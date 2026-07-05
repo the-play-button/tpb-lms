@@ -17,7 +17,7 @@ export const createCourseExecute = async (context: CreateCourseContext, ctx: Aut
     id, name: input.name, description: input.description ?? null,
     categoriesJson: input.categoriesJson, mediaJson: input.mediaJson,
     isPrivate: input.isPrivate, languagesJson: input.languagesJson,
-    rawJson,
+    sysOrderIndex: input.sysOrderIndex, rawJson,
   });
   return succeed(row);
 };

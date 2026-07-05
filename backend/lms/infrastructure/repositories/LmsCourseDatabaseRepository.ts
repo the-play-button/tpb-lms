@@ -25,8 +25,8 @@ export class LmsCourseDatabaseRepository implements LmsCourseRepository {
     await this.db
       .prepare(
         `INSERT OR IGNORE INTO lms_course
-           (id, name, description, categories_json, media_json, is_active, is_private, languages_json, raw_json)
-         VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)`,
+           (id, name, description, categories_json, media_json, is_active, is_private, languages_json, sys_order_index, raw_json)
+         VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?, ?)`,
       )
       .bind(
         data.id,
@@ -36,6 +36,7 @@ export class LmsCourseDatabaseRepository implements LmsCourseRepository {
         j(data.mediaJson),
         data.isPrivate ? 1 : 0,
         j(data.languagesJson),
+        data.sysOrderIndex ?? 0,
         j(data.rawJson),
       )
       .run();
@@ -56,6 +57,7 @@ export class LmsCourseDatabaseRepository implements LmsCourseRepository {
     if (patch.isPrivate !== undefined) add('is_private', patch.isPrivate ? 1 : 0);
     if (patch.languagesJson !== undefined) add('languages_json', j(patch.languagesJson));
     if (patch.programId !== undefined) add('program_id', patch.programId);
+    if (patch.sysOrderIndex !== undefined) add('sys_order_index', patch.sysOrderIndex);
     if (patch.rawJson !== undefined) add('raw_json', j(patch.rawJson));
     if (sets.length === 0) return;
     sets.push("updated_at = datetime('now')");

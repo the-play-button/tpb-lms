@@ -147,11 +147,14 @@ CREATE TABLE IF NOT EXISTS lms_course (
     languages_json TEXT,
     -- program_id added by migration 010 (nullable FK → lms_program; NULL = standalone).
     program_id TEXT REFERENCES lms_program(id),
+    -- sys_order_index added by migration 011 (explicit course order; default 0).
+    sys_order_index INTEGER DEFAULT 0,
     raw_json TEXT,
     created_at TEXT DEFAULT (datetime('now')),
     updated_at TEXT DEFAULT (datetime('now'))
 );
 CREATE INDEX IF NOT EXISTS idx_lms_course_program ON lms_course(program_id);
+CREATE INDEX IF NOT EXISTS idx_lms_course_order ON lms_course(sys_order_index);
 
 -- LmsClass (nodes of a course's content tree: SECTION folders + LESSON leaves)
 -- Field naming aligned on the unified.to canonical CRUD model (reference only,

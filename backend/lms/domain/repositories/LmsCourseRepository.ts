@@ -14,6 +14,7 @@ export interface CourseRow {
   is_private: number;
   languages_json: string | null;
   program_id: string | null;
+  sys_order_index: number;
   raw_json: string | null;
   created_at: string;
   updated_at: string;
@@ -27,6 +28,7 @@ export interface CreateCourseData {
   mediaJson?: unknown;
   isPrivate?: boolean;
   languagesJson?: unknown;
+  sysOrderIndex?: number;
   rawJson?: unknown;
 }
 
@@ -39,6 +41,7 @@ export interface UpdateCoursePatch {
   isPrivate?: boolean;
   languagesJson?: unknown;
   programId?: string | null;
+  sysOrderIndex?: number;
   rawJson?: unknown;
 }
 

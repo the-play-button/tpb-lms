@@ -60,8 +60,8 @@ const enrichClass = (cls, currentStep) => {
 
 const queryActiveCourses = (env) =>
     env.DB.prepare(`
-        SELECT id, name, description, categories_json, is_private, media_json, program_id
-        FROM lms_course WHERE is_active = 1 ORDER BY name ASC
+        SELECT id, name, description, categories_json, is_private, media_json, program_id, sys_order_index
+        FROM lms_course WHERE is_active = 1 ORDER BY sys_order_index ASC, name ASC
     `).all();
 
 // First IMAGE media url = the course cover (uploaded as media_json IMAGE). null when

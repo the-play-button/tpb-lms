@@ -13,6 +13,7 @@ const Schema = z.object({
   languagesJson: z.array(z.string()).optional(),
   progressionMode: z.enum(PROGRESSION_MODES).optional(),
   programId: z.string().min(1).nullable().optional(),
+  sysOrderIndex: z.number().int().optional(),
   rawJson: z.record(z.string(), z.unknown()).optional(),
 });
 export type UpdateCourseInput = z.infer<typeof Schema> & { courseId: string };

@@ -25,7 +25,7 @@ export const updateCourseExecute = async (context: UpdateCourseContext, ctx: Aut
     name: input.name, description: input.description,
     categoriesJson: input.categoriesJson, mediaJson: input.mediaJson,
     isActive: input.isActive, isPrivate: input.isPrivate, languagesJson: input.languagesJson,
-    programId: input.programId, rawJson,
+    programId: input.programId, sysOrderIndex: input.sysOrderIndex, rawJson,
   });
   const row = await ctx.courseRepo.findById(input.courseId);
   if (!row) return fail('NOT_FOUND');
