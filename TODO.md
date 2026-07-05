@@ -7,6 +7,10 @@
 
 ## Now
 
+**INITIATIVE (2026-07-05, EN COURS — overview draft)** — `plans/2026-07-05_tpb-sales-masterclass-3.0-fresh/` : recréer la masterclass sales **fresh 3.0**, structurée par **offres/niveaux** (LVL1 CRM Cleaning → LVL2 SALES → LVL3 MARKETING/ABM), **pratico-pratique** (Onboarding Sprint Day 1→14 façon Maker School + Hormozi CLOSER handbook), importée dans le LMS. Rewire : ancienne masterclass (dialer) + offre Brutal CRM Truth + cold-outbound course Nick Saraev. **Statut : `00-overview.plan.md` écrit, structure à valider avant plans numérotés.**
+- [ ] 00-overview — structure + système de niveaux + analyse de cohérence (DRAFT, à valider)
+- [ ] Plans 01→07 — Foundations / LVL1 / LVL2 / LVL3 / Onboarding Sprint / cohérence transversale / import LMS
+
 **INITIATIVE (2026-07-04, EXÉCUTÉE)** — `plans/2026-07-04_lms-api-doctrine-nesting-unifiedto-exit/` : revue API vs doctrines CRUD/api-only + write-API + sections imbriquées + exit sémantique Unified.to + vidéo YouTube. **Supersède le stub `2026-03_crud-list-endpoint-refactor`**. Validation : tsc 0 err, 17/17 vitest, 4/4 sidecars.
 - [x] Plan 03 DONE — nested sections ERD (`lms_class.parent_class_id` + `node_kind`, adjacency-list, backfill idempotent, getCourse tree) {tags:erd+lms+nesting}
 - [x] Plan 02 DONE — content-authoring CRUD API (6 use-cases 9-step, repos, PBAC hasScope, tree invariants + cascade) {tags:ddd+crud+lms}
