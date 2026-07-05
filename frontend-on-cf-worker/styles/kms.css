@@ -10,7 +10,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: var(--z-modal);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -38,8 +38,8 @@
 /* Content Container */
 .kms-modal-content {
     position: relative;
-    background: var(--bg-card, #1a1a2e);
-    border-radius: var(--radius-lg, 12px);
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-modal-deep);
     max-width: 800px;
     max-height: 85vh;
@@ -61,8 +61,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--border, #333);
-    background: var(--bg-secondary, #252542);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-secondary);
 }
 
 .kms-breadcrumb {
@@ -73,32 +73,32 @@
 }
 
 .kms-space {
-    color: var(--text-secondary, #888);
+    color: var(--text-secondary);
 }
 
 .kms-separator {
-    color: var(--text-tertiary, #666);
+    color: var(--text-tertiary);
 }
 
 .kms-title {
-    color: var(--text-primary, #fff);
+    color: var(--text-primary);
     font-weight: 600;
 }
 
 .kms-close-btn {
     background: transparent;
     border: none;
-    color: var(--text-secondary, #888);
+    color: var(--text-secondary);
     font-size: 1.2rem;
     cursor: pointer;
     padding: 0.5rem;
-    border-radius: var(--radius-sm, 6px);
+    border-radius: var(--radius-sm);
     transition: all 0.2s;
 }
 
 .kms-close-btn:hover {
-    background: var(--bg-hover, rgba(255, 255, 255, 0.1));
-    color: var(--text-primary, #fff);
+    background: var(--bg-hover);
+    color: var(--text-primary);
 }
 
 /* Body */
@@ -114,9 +114,9 @@
 .kms-modal-body h3 { font-size: 1.1rem; margin-top: 1.2rem; }
 
 .kms-modal-body pre {
-    background: var(--bg-code, #0d0d1a);
+    background: var(--bg-code);
     padding: 1rem;
-    border-radius: var(--radius-md, 8px);
+    border-radius: var(--radius-md);
     overflow-x: auto;
 }
 
@@ -135,11 +135,11 @@
 .kms-modal-body td {
     padding: 0.75rem;
     text-align: left;
-    border-bottom: 1px solid var(--border, #333);
+    border-bottom: 1px solid var(--border);
 }
 
 .kms-modal-body th {
-    background: var(--bg-secondary, #252542);
+    background: var(--bg-secondary);
     font-weight: 600;
 }
 
@@ -148,13 +148,13 @@
     display: flex;
     gap: 1rem;
     padding: 0.75rem 1.5rem;
-    border-top: 1px solid var(--border, #333);
-    background: var(--bg-secondary, #252542);
+    border-top: 1px solid var(--border);
+    background: var(--bg-secondary);
 }
 
 .kms-meta {
     font-size: 0.75rem;
-    color: var(--text-tertiary, #666);
+    color: var(--text-tertiary);
 }
 
 /* Loading State */
@@ -169,14 +169,14 @@ a[href^="/kms/"].kms-loading::after {
 
 /* KMS Link Styling */
 a[href^="/kms/"] {
-    color: var(--accent, #6366f1);
+    color: var(--accent);
     text-decoration: none;
-    border-bottom: 1px dashed var(--accent, #6366f1);
+    border-bottom: 1px dashed var(--accent);
     transition: all 0.2s;
 }
 
 a[href^="/kms/"]:hover {
-    color: var(--accent-light, #818cf8);
+    color: var(--accent-light);
     border-bottom-style: solid;
 }
 

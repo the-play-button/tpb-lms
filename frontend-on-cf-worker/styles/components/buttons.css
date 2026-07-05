@@ -38,7 +38,7 @@
 }
 
 .btn-danger {
-    background: linear-gradient(135deg, var(--error), #dc2626);
+    background: linear-gradient(135deg, var(--error), var(--error-dark));
 }
 
 .btn-danger:hover {

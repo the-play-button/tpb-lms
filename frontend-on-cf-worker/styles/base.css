@@ -162,6 +162,23 @@
     /* JS-animated transform values (set via element.style) */
     --tx: 0;
     --ty: 0;
+
+    /* Z-index scale (Plan 13 — single SSOT; replaces scattered raw values).
+       Order: header < overlay < modal < toast < loading < debug. */
+    --z-header: 100;
+    --z-overlay: 500;
+    --z-modal: 1000;
+    --z-toast: 1100;
+    --z-loading: 2000;
+    --z-debug: 9999;
+    --z-debug-top: 10000;
+
+    /* Learner-facing colors that were hardcoded (Plan 13) */
+    --warning-dark: #f59e0b;
+    --error-dark: #dc2626;
+    --color-rarity-rare-border: #3b82f6;
+    --on-media: #ffffff; /* text/icon over cover images + dark gradients */
+    --on-warning: #000000; /* text over the amber quiz-start gradient */
 }
 
 * {
