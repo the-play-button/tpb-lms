@@ -153,12 +153,59 @@ Open to a 15-min call ? 15:30 demain ? — Peter
 
 ---
 
-## 2.4 — Plateformes, subject lines, follow-ups, A/B *(≈ Nick parties 5-7 — à intégrer)*
+## 2.4 — Offres qui marchent + le scoring /7
 
-Contenu à transposer depuis Nick (roasting avant/après de 10 emails réels · cold email vs LinkedIn
-vs X DM · subject lines · séquences de follow-up · A/B testing · usage de l'IA en copywriting ·
-techniques **gray-hat** — **à cadrer brand-safety TPB**). *[À AUTHOR dans la même profondeur que
-2.1-2.3 — prochaine passe.]*
+**10 exemples d'offres réelles**, majoritairement **give-first** : blog gratuit en 48h (content,
+$92K/mo) · démo CRM fonctionnelle en 48h (pay-if-satisfied) · 3 emails réécrits gratuits
+(pay-on-performance) · mockup homepage en 72h (**5%+ CVR ou gratuit**) · etc. **Pattern universel** :
+outcome tangible + délai court + risk reversal. **System > template** : ne copie pas un email,
+comprends *pourquoi* il marche (les 7 leviers + les 4 étapes) et régénère.
+
+**La grille de scoring /7** (pour roaster un email — le sien ou celui d'un rep) : 1 point par levier
+Cialdini bien employé. Un email froid typique score **1-2/7** ; un bon score **5.5-6/7**. En
+formation : chaque rep prend un vrai email, le score, le réécrit → re-score. **9 roasts before/after
+de Nick** (scores 0/7 → 6/7) servent de banque d'exemples — patterns récurrents des « after » :
+voluntary disclosure (« ma copine pense que je suis fou »), in-group language (CTR/subs/thumbs),
+social proof spécifique (« creators 1-2M subs, +23% CTR »), give-first time-bound (thumbnail gratuit
+en 48h).
+
+## 2.5 — Optimisation par plateforme (les éléments visibles, dans l'ordre)
+
+Chaque canal a un nombre d'**éléments visibles** différent avant l'ouverture → on optimise les
+premiers en priorité :
+- **Cold email (6 éléments)** : sender name → subject → preview text → 1re ligne → corps → CTA.
+  Règle : subject **ne vend pas** (cf. 2.6), 1re ligne = personalization.
+- **LinkedIn (7 éléments)** : photo/profil crédible d'abord (ils regardent QUI écrit), message
+  court, pas de pitch au 1er contact.
+- **X/Twitter DM (6)** · **Instagram DM (4)** · **iMessage/SMS (3)** : de plus en plus court et
+  perso ; le SMS ne tolère aucune vibe corporate.
+- **Résumé** : plus le canal est « personnel » (SMS > IG > X > LinkedIn > email), plus le message
+  doit être court, humain, 1-to-1.
+
+## 2.6 — Subject lines · Follow-ups · A/B
+
+- **Subject lines** : **NE VENDENT PAS** — leur seul job = faire ouvrir. **Mauvais** : tout ce qui
+  sent la promo (« 30% off », « Quick question about {company} » spammy). **Bon** : court,
+  curiosité, perso, minuscule, façon « un collègue t'écrit ». Tester A/B systématiquement.
+- **Follow-ups** : la majorité des réponses arrivent **après** le 1er message. Philosophie : rester
+  utile, pas relancer « je remonte ce mail ». **Escalade** : ajouter à chaque relance un **nouveau
+  data-point / une nouvelle valeur** (un insight, un case, un free benchmark), pas juste « des
+  nouvelles ? ». 3-4 touches espacées.
+- **A/B & itération** : la **courbe d'itération** (3,5% → 10%+) exige de la **significativité
+  statistique** (500-1000+ envois/variante). Protocole : couper le bottom, variantes du top,
+  répéter. **Erreurs fréquentes** : juger sur trop peu d'envois, changer 5 choses à la fois (on
+  isole 1 variable), écouter le stated preference plutôt que le revealed.
+
+## 2.7 — IA en copywriting + gray-hat *(à cadrer brand-safety TPB)*
+
+- **Position IA (Nick, anti-hype)** : l'IA **ne remplace pas** le copywriter — elle produit du
+  « AI slop » poli qui sent l'IA. **Utile pour** : scaler la personalization (cold reading +
+  data-points), générer des variantes à tester, accélérer — **jamais** l'envoi brut. **Cohérent
+  TPB** : IA draft + **rep valide/personnalise** (voix humaine sacrée).
+- **Gray-hat (⚠️ à cadrer/limiter côté TPB)** : comptes pré-warmés achetés · power dialers ·
+  SMS/iMessage color emulation. Nick les mentionne avec disclaimer ; **côté TPB, on définit
+  explicitement notre ligne brand-safety** (ce qu'on s'autorise ou non). À enseigner comme *culture*
+  (savoir que ça existe), pas comme *pratique par défaut*.
 
 ---
 

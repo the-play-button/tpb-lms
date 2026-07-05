@@ -22,17 +22,12 @@ reps, sans exception) · **marketing-led** (paid ads + organic + marketplace, sa
 **partner-led** · **PLG-led** (SaaS). Tous valides — on les suit nous-mêmes en interne. **Ce
 qu'on VEND = le sales-led + la fondation CRM.** Choisir quoi vendre ≠ cracher sur les autres paths.
 
-**L'échelle d'offres qu'on vend :**
-
-- **Entrée — Mailing List Reactivation** (via CRM cleaning) : l'offre d'entrée cash-flow. On vend
-  la **réactivation de la liste** (l'outcome) ; le cleaning n'est que le **mécanisme** (on promet
-  l'outcome, pas le mécanisme).
-- **LVL2 — SALES** : **Outreach** (sur leads) · **Sales Reactivation** (sur clients : campagnes
-  email qui *remplacent l'outreach mais personnalisées et envoyées PAR les reps* + CRM task push +
-  dialer).
-- **LVL3 — MARKETING / ABM** : **ABM paid ads** (leads) · **ABM email** (clients).
-- Chaque niveau suppose le précédent : **data propre** (entrée) → **data sales** (LVL2) → **ABM**
-  (LVL3, qui a besoin de l'intelligence 1st-party générée par le sales).
+**1 offre, 5 produits** — on ne vend **qu'UNE offre** au lancement (focus Hormozi beachhead) :
+**« on réactive votre pipeline dormant »** (l'outcome ; le CRM cleaning est le mécanisme). Elle
+**diagnostique la contrainte** puis se délivre via le **produit** adéquat. Les **5 produits** (CRM
+cleaning · Outreach · Sales Reactivation/dialer · ABM paid ads · ABM email) **supportent** cette
+offre — c'est du **savoir de delivery interne**, pas 5 offres à vendre. Dépendance de delivery :
+data **propre** → data **sales** → **ABM**. *(Détail : Pilier 1 § 1.3 + Pilier 3.)*
 
 ## Puis PACE-R *(inchangé)*
 

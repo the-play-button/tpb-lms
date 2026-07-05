@@ -37,13 +37,18 @@ Le rep **apprend le craft (pilier 2)** puis **l'applique pour vendre l'offre (pi
 
 ## Statut
 
-- [x] `00-opening.md` (vision + offres — à re-caler « 1 offre »)
-- [x] `pillar-2-outbound-mastery.md` (Nick Saraev intégré, thorough)
-- [ ] `pillar-1-vision-and-context.md`
-- [ ] `pillar-2-*` (sales conversation, discovery, objections, closing, LinkedIn, tools)
-- [ ] `pillar-3-the-offer.md`
-- [ ] `pillar-practice.md`
+- [x] `00-opening.md` — vision + « 1 offre / 5 produits » (re-calé).
+- [x] `pillar-1-vision-and-context.md` — BOSS + supports · 4 GTM paths · 1 offre/5 produits · ICP maître.
+- [x] `pillar-2-outbound-mastery.md` — Nick Saraev **intégré en entier** (7 leviers · 3 composants ·
+      formule 4 étapes · offres/scoring · plateformes · subject/follow-up/A-B · IA/gray-hat).
+- [x] `pillar-2-sales-conversation.md` — C.L.O.S.E.R · discovery BANT+ · objections · closing.
+- [x] `pillar-3-the-offer.md` — l'offre unique (outcome · ICP · discovery · objections · pricing ·
+      closing · routing delivery), slop écarté.
+- [x] `pillar-practice.md` — roleplay/shadowing/KPIs/reinforcement (day-by-day différé).
 
-> Les anciens `01-…` / `02-…` / `03-…` / `04-07-…` (structure offer-tiered, shallow) sont
-> **remplacés** par les `pillar-*` ci-dessus (fix-forward, pas un revert : la structure offer-tiered
-> était erronée — cf. correction competency-vs-offer).
+**Restes de finition** (même profondeur, prochaine passe) : demo playbook + inbox handling (Pilier
+2E) · tools GTM · **le contenu ABM (LVL3)** est volontairement mince (produit tardif) ·
+**cohérence transversale** (1 nom produit / 1 devise $ / 1 histoire ROI / 1 pricing) · **import LMS**.
+
+> Les anciens `01-…`/`02-…`/`03-…`/`04-07-…` (offer-tiered, shallow) ont été **supprimés**
+> (fix-forward : structure erronée — correction competency-vs-offer).
