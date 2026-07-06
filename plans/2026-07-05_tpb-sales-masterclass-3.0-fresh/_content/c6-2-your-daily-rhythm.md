@@ -16,10 +16,10 @@ slots today are exactly what fill tomorrow's calendar.
 | 6:00 | Review and prep, write up new notes |
 | 6:30 to 9:00 | Priority list (3.5 hours of pure hunting) |
 | 9:30 | Team training (30 min) |
-| 10:00 to 2:30 | Priority list (4.5 hours) |
-| 3:00 to 4:30 | Outbound (2 hours) |
-| 5:00 to 6:00 | Priority list |
-| 6:30 to 7:00 | End-of-day checklist |
+| 10:00 to 14:30 | Priority list (4.5 hours) |
+| 15:00 to 16:30 | Outbound (2 hours) |
+| 17:00 to 18:00 | Priority list |
+| 18:30 to 19:00 | End-of-day checklist |
 
 **A normal day (calls booked):**
 
@@ -31,12 +31,12 @@ slots today are exactly what fill tomorrow's calendar.
 | 9:30 | Team training |
 | 10:00 to 11:00 | **Close calls** |
 | 11:30 to 12:00 | Priority list |
-| 12:30 to 1:00 | **Close calls** |
-| 1:30 to 2:30 | Priority list |
-| 3:00 to 4:30 | Outbound |
-| 5:00 to 5:30 | **Close calls** |
-| 6:00 | Priority list |
-| 6:30 to 7:00 | End-of-day checklist |
+| 12:30 to 13:00 | **Close calls** |
+| 13:30 to 14:30 | Priority list |
+| 15:00 to 16:30 | Outbound |
+| 17:00 to 17:30 | **Close calls** |
+| 18:00 | Priority list |
+| 18:30 to 19:00 | End-of-day checklist |
 
 Notice there's no idle time in either one. When you're not on a call, you're on your priority
 list or doing outbound, filling tomorrow.
