@@ -45,6 +45,7 @@ COURSE_COVERS = {
     "course_mc_3": "course-3-sales-conversation",
     "course_mc_4": "course-4-the-offer",
     "course_mc_5": "course-5-practice",
+    "course_mc_6": "course-6-onboarding",
 }
 def course_cover(cid: str, cname: str) -> list:
     slug = COURSE_COVERS.get(cid)

@@ -18,14 +18,13 @@ const coverGradient = (courseId) => {
 // The /courses list only carries { videos_completed, quizzes_passed } (no total),
 // so accurate % + completion come from each course's /signals course_progress.
 // Real course cover (media IMAGE url) when present, else the deterministic gradient.
-// A dark scrim keeps the ▶ + focus ring readable over bright cover images.
+// The cover image is shown raw (no scrim, no play icon) so the thumbnail reads clearly.
 const coverStyle = (course) => {
     const url = course.cover_image_url;
     if (url) {
         // Single quotes inside the url: the whole style lands in a double-quoted
         // style="…" attribute, so url("…") would close the attribute early.
-        const scrim = 'linear-gradient(180deg, rgba(0,0,0,0.15), rgba(0,0,0,0.55))';
-        return `background-image: ${scrim}, url('${encodeURI(url)}'); background-size: cover; background-position: center;`;
+        return `background-image: url('${encodeURI(url)}'); background-size: cover; background-position: center;`;
     }
     return `background: ${coverGradient(course.id)};`;
 };
@@ -36,9 +35,7 @@ export const renderCard = (course, courseProgress = null) => {
     const cta = completed ? t('course.review') : percent > 0 ? t('course.continue') : t('course.start');
     return safeHtml`
         <button type="button" class="course-card" data-course="${course.id}" data-testid="classroom-card-${course.id}">
-            <span class="course-card-cover" style="${raw(coverStyle(course))}">
-                <span class="course-card-play">▶</span>
-            </span>
+            <span class="course-card-cover" style="${raw(coverStyle(course))}"></span>
             <span class="course-card-body">
                 <span class="course-card-title">${course.title || course.name}</span>
                 ${course.description ? raw(safeHtml`<span class="course-card-desc">${course.description}</span>`) : ''}
@@ -56,9 +53,7 @@ export const renderCard = (course, courseProgress = null) => {
 // card, but the footer shows the course count instead of a progress bar.
 export const renderProgramCard = (program) => safeHtml`
     <button type="button" class="course-card program-card" data-program="${program.id}" data-testid="classroom-program-${program.id}">
-        <span class="course-card-cover" style="${raw(coverStyle(program))}">
-            <span class="course-card-play">▶</span>
-        </span>
+        <span class="course-card-cover" style="${raw(coverStyle(program))}"></span>
         <span class="course-card-body">
             <span class="course-card-title">${program.name}</span>
             ${program.description ? raw(safeHtml`<span class="course-card-desc">${program.description}</span>`) : ''}

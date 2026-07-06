@@ -32,7 +32,7 @@ describe('renderCard — classroom course card', () => {
     expect(html).toContain('width: 0%');
   });
 
-  it('uses the real cover image (with scrim) when cover_image_url is present', () => {
+  it('shows the real cover image raw (no scrim, no play icon) when cover_image_url is present', () => {
     const html = renderCard(
       { id: 'c1', title: 'C', cover_image_url: 'https://assets.skool.com/f/abc/cover.jpg' },
       null,
@@ -43,6 +43,10 @@ describe('renderCard — classroom course card', () => {
     expect(html).toContain("url('https://assets.skool.com/f/abc/cover.jpg')");
     expect(html).not.toContain('url("https://assets.skool.com');
     expect(html).toContain('background-size: cover');
+    // No dimming scrim over the cover, no play overlay — the thumbnail reads clean.
+    expect(html).not.toContain('rgba(0,0,0');
+    expect(html).not.toContain('course-card-play');
+    expect(html).not.toContain('▶');
   });
 
   it('falls back to the deterministic gradient when there is no cover', () => {
