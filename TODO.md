@@ -15,8 +15,8 @@
 - [ ] 21-course1-purpose-sections — Cours 1 : « Who We Serve & How We Win » + « The Founder's Story »
 - [ ] 22-course2-scripts-strategy — Cours 2 : section « Scripts & Strategy » (Notion 3.2)
 - [ ] 23-course3-house-voice — Cours 3 : passe house-voice sur les 5 imports bruts
-- [ ] 24-course4-product-ecosystem — Cours 4 : section « Product & Ecosystem » (Notion 2.x)
-- [ ] 25-course4-first-icp — Cours 4 : section « First ICP: External SDR Agency » (Notion 6.x)
+- [ ] 24-course4-product-ecosystem — Cours 4 : section « The Five Products & How They Fit » (SSOT c1-3/c4-7, drop dialer 2.1)
+- [ ] 25-course4-first-icp — Cours 4 : section « First Niche: Textile Manufacturers » (méthode 6.x appliquée textile, PAS SDR)
 - [ ] 26-course5-execution-reinforcement — Cours 5 : sections « Execution » + « Reinforcement »
 - [ ] Plans 01→07 — Foundations / LVL1 / LVL2 / LVL3 / Onboarding Sprint / cohérence transversale / import LMS
 

@@ -50,6 +50,11 @@ Zero em/en-dash, zero "in this lesson", zero source citation.
 - These are the richest source files (1900-2200w) → the rewrite must not drop scripts. Mitigation:
   each lesson keeps every script/question as a blockquote/table; trim only prose padding.
 - Repointing ids must stay identical → progress rows keyed on lesson id survive.
+- **Vieux ICP/produit dans les exemples** (voir 20-overview § SSOT & sourcing) : les fichiers bruts
+  peuvent illustrer avec « SDR agency » ou l'ancien produit dialer. La réécriture **repositionne
+  tout exemple** sur l'offre actuelle (CRM cleaning) + la niche textile ; le craft (CLOSER,
+  discovery, objections, closing, demo) reste ICP-agnostique mais les **exemples** sont actualisés.
+  Grep de sortie : zéro « SDR agency » / « Phone Burster » dans c3-1..c3-5.
 
 ## Critères de validation
 

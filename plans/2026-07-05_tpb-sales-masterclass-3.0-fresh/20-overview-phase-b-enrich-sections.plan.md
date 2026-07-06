@@ -34,38 +34,68 @@ déroulée **plan par plan**.
     0. what-is-sales 195w · 4.2 shadowing 128w · 5.1 coaching 173w · 5.2 call library 271w · 5.4
     scorecard 232w · Z. LinkedIn 91w.
 
-### Décisions actées (pas de question au user)
+### SSOT & sourcing doctrine (correctif cardinal user 2026-07-06)
 
-- **Nom produit (ex-O3)** : la section « Product & Ecosystem » réconcilie la section 2 Notion (qui
-  utilise les vieux noms « TPB Sales Assistant / Phone Burster ») sur le **naming déjà live dans le
-  LMS** : « One Offer, Five Products » (c1-3) + « The Brutal CRM Truth » (c4-1) + « the Five
-  Products » (c4-7). Aucun nouveau nom inventé, aucune question.
-- **Taxonomie d'offres (ex-O1)** : hors scope. On folde uniquement le contenu **pédagogique**
-  (produit, ICP, scripts, skills) qui ne dépend pas du ladder. Le ladder reste tel quel.
+> Verbatim user : *« la master class est vieille … je veux pas que tu me pourrisses tout le
+> travail en prenant la master class comme SSOT … tu ne vois même pas qu'on ne cible plus
+> spécifiquement les SDR agencies ? … on va commencer par la niche des fabricants de textiles. »*
+
+- **La masterclass Notion N'EST PAS le SSOT.** C'est une **source de skills + méthode** :
+  le craft de la conversation (CLOSER, discovery, objections, closing, demo, roleplay), la
+  **structure** d'une séquence de prospection, la **méthode** de profilage d'un ICP. Tout ce qui
+  y est **offre / produit / ICP-spécifique est PÉRIMÉ** (ancien produit dialer « Phone Burster »,
+  ancien ICP « External SDR Agency », offre unique). On ne l'importe **jamais verbatim**.
+- **Le SSOT du positionnement / offres / ICP = la direction actuelle**, déjà matérialisée dans
+  les leçons **live** du LMS :
+  - `c1-3` : **une offre** (« wake up your dormant pipeline ») + **cinq produits** (CRM cleaning,
+    outreach, sales reactivation, ABM paid ads, ABM email), ladder **clean → sales → ABM**.
+  - `c4-1` « The Brutal CRM Truth » (offre d'entrée = diagnostic CRM cleaning).
+  - `c4-2` ICP actuel : **B2B, US, mid-market** (50+ employés, 5 000+ contacts CRM), CRM sale ;
+    6 triggers ; 3 buckets (Standard gratuit / custom-fields $5-15k / custom-stack $20-80k) ;
+    référence **le cas WGE** (Wonder Grip Europe, fabricant industriel, ERP + CRM multi-source).
+  - Ladder LVL1/2/3 du `_recension-decisions.md`.
+- **ICP / première niche = FABRICANTS DE TEXTILES** (décision user 2026-07-06). Cohérent avec la
+  référence WGE déjà dans `c4-2` (fabricant industriel mid-market). On sait qu'il faut **UN seul
+  avatar** ; on démarre par les fabricants de textiles. La section ICP utilise la **méthode** de
+  profilage de la Notion section 6 (lexique métier, pain points, buying triggers, objections)
+  **appliquée aux fabricants de textiles + l'offre CRM-cleaning actuelle**, PAS le contenu SDR
+  agencies verbatim.
+- **Pas de fabrication** : il n'existe pas encore de matériel de positionnement textile dans le
+  repo (constat grep 2026-07-06). Le contenu ICP textile se dérive de (a) le modèle de douleur de
+  l'offre actuelle (WGE-like : ERP+CRM multi-source, délivrabilité, pipeline dormant) + (b) une
+  **passe de recherche desk légère** sur les fabricants de textiles, **flaggée pour validation
+  user**. On n'invente **jamais** un faux lexique insider. Si la profondeur métier manque, on le
+  dit (§ ALWAYS FAIL HARD), on ne gonfle pas.
 - **Voix** : chaque leçon nouvelle/réécrite suit le skill `marketing/content/copywriting/` +
   `reference/writing-a-course.md` : à la personne, ouvre sur la substance, scripts/tableaux/chiffres
-  utilisables tels quels, **zéro em/en-dash**, zéro « in this lesson », zéro citation de source.
+  utilisables tels quels, **zéro em/en-dash**, zéro « in this lesson », zéro citation de source,
+  **zéro vieux nom produit / vieil ICP**.
 
 ## Carte des sections à ajouter (SSOT du découpage)
 
-| Cours (existant) | Section existante (gardée) | Sections AJOUTÉES | Source Notion | Plan |
+Chaque « source » ci-dessous est **re-contextualisée** sur la direction actuelle (jamais verbatim).
+
+| Cours (existant) | Section existante (gardée) | Sections AJOUTÉES | Source (skills/méthode) → re-contextualisée | Plan |
 |---|---|---|---|---|
-| 1 — Vision & Context | Vision & Context | **Who We Serve & How We Win** ; **The Founder's Story** | 1.2 + 1.3 ; 1.4 | 21 |
-| 2 — Outbound Mastery | Outbound Mastery (Nick Saraev) | **Scripts & Strategy** | 3.2 | 22 |
-| 3 — Sales Conversation | Sales Conversation | *(pas de nouvelle section — passe house-voice sur les 5 imports bruts)* | 3.1/3.3/3.4/3.5/3.6 | 23 |
-| 4 — The Offer | The Offer | **Product & Ecosystem** | 2.1→2.5 | 24 |
-| 4 — The Offer | The Offer | **First ICP: External SDR Agency** | 6.1/6.2/6.3/6.4 (+6.0) | 25 |
-| 5 — Practice & Reinforcement | Practice & Reinforcement | **Execution** ; **Reinforcement** (réconcilie c5-*) | 4.1/4.3/4.4 ; 5.3 (+ existants) | 26 |
+| 1 — Vision & Context | Vision & Context | **Who We Serve** (= ICP actuel + niche textile) ; **The Founder's Story** | c4-2 (ICP actuel SSOT) + méthode 1.2 ; 1.4 (si non-périmé) | 21 |
+| 2 — Outbound Mastery | Outbound Mastery (Nick Saraev) | **Scripts & Strategy** | structure de 3.2 → offre actuelle (CRM cleaning) + niche textile | 22 |
+| 3 — Sales Conversation | Sales Conversation | *(pas de nouvelle section — passe house-voice sur les 5 imports bruts)* | 3.1/3.3/3.4/3.5/3.6 (craft ICP-agnostique) | 23 |
+| 4 — The Offer | The Offer | **The Five Products & How They Fit** | c1-3 + c4-7 (SSOT) + 2.3 integrations reframée ; **PAS** le deep-dive dialer 2.1 | 24 |
+| 4 — The Offer | The Offer | **First Niche: Textile Manufacturers** | **méthode** 6.1/6.2/6.3/6.4 appliquée aux fabricants de textiles + offre actuelle | 25 |
+| 5 — Practice & Reinforcement | Practice & Reinforcement | **Execution** ; **Reinforcement** (réconcilie c5-*) | 4.1/4.3/4.4 ; 5.3 (craft ICP-agnostique) | 26 |
 | 6 — Onboarding & Daily Rhythm | (inchangé) | — | — | — |
 
 ## Plans
 
-- **21** — Cours 1 : sections « Who We Serve & How We Win » + « The Founder's Story ».
-- **22** — Cours 2 : section « Scripts & Strategy » (le gros bloc pratique outbound).
-- **23** — Cours 3 : passe house-voice sur les 5 leçons brutes (homogénéité).
-- **24** — Cours 4 : section « Product & Ecosystem » (réconciliée au naming LMS).
-- **25** — Cours 4 : section « First ICP: External SDR Agency » (lexicon, pain, triggers, objections).
-- **26** — Cours 5 : sections « Execution » + « Reinforcement » (fold Notion 4.x/5.x, réconcilie c5-*).
+- **21** — Cours 1 : « Who We Serve » (ICP actuel c4-2 + niche textile) + « The Founder's Story ».
+- **22** — Cours 2 : « Scripts & Strategy » — structure de 3.2 repositionnée sur l'offre actuelle
+  (CRM cleaning) + niche textile, PAS le hook « audit HubSpot gratuit / 45 calls » SDR verbatim.
+- **23** — Cours 3 : passe house-voice sur les 5 leçons brutes (craft ICP-agnostique).
+- **24** — Cours 4 : « The Five Products & How They Fit » — ancré sur c1-3 + c4-7 (SSOT) + 2.3
+  integrations reframée. **Drop** le deep-dive dialer 2.1 (produit périmé).
+- **25** — Cours 4 : « First Niche: Textile Manufacturers » — méthode de profilage (6.1/6.2/6.3/6.4)
+  appliquée aux fabricants de textiles + offre actuelle ; recherche desk flaggée pour validation.
+- **26** — Cours 5 : « Execution » + « Reinforcement » (craft ICP-agnostique, réconcilie c5-*).
 
 Chaque plan : author les leçons `_content/*.md` (house-voice) → câbler le manifeste `COURSES` →
 `import_masterclass.py` (errors 0) → **live verify tpb-browser** (sections + lessons rendues,

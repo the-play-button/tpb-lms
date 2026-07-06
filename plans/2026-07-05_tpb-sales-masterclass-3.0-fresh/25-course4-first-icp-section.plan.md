@@ -1,60 +1,75 @@
-# 25 — Course 4 (The Offer): add « First ICP: External SDR Agency » section
+# 25 — Course 4 (The Offer): add « First Niche: Textile Manufacturers »
 
 ## Contexte
 
-Course `course_mc_4` "4 — The Offer" gets a SECOND added section (after 24's Product & Ecosystem):
-the External SDR Agency ICP deep-dive from Notion section 6, absent from the LMS. This is the most
-practical, insider-language content the user built:
-- `6.1 SDR Lexicon.md` (1018w) — agency structure/roles, metrics/KPIs vocabulary.
-- `6.2 Pain points.md` (1126w)
-- `6.3 Buying triggers.md` (800w)
-- `6.4 Objections.md` (1607w)
-- `6.0 How to find them?.md` (20w stub) → fold as a short closing block, not its own lesson.
+**Correctif cardinal (voir 20-overview § SSOT & sourcing doctrine)** : on ne cible plus « External
+SDR Agency ». Le SSOT de l'ICP est la leçon **live** `c4-2` : B2B, US, mid-market (50+ employés,
+5 000+ contacts CRM), CRM sale, 6 triggers, 3 buckets, **référence WGE** (fabricant industriel
+mid-market, ERP + CRM multi-source). **On démarre par UN avatar : les fabricants de textiles**
+(décision user 2026-07-06, cohérent avec WGE).
 
-The course already has `c4-2 Who We Sell To: ICP, Triggers, Buckets` (high-level). This section is the
-DEEP version for the first ICP. Read c4-2 first to avoid duplication; c4-2 stays the overview, this
-section is the drill-down (§ BIG BANG — one overview + one deep, not two overlapping overviews).
+Ce plan ajoute au cours `course_mc_4` une section **« First Niche: Textile Manufacturers »**. On
+réutilise la **méthode** de profilage de la Notion section 6 (lexique métier, pain points, buying
+triggers, objections) — **PAS son contenu SDR verbatim** — appliquée aux fabricants de textiles +
+l'offre CRM-cleaning actuelle.
 
-House voice = copywriting skill. Keep the lexicon tables (insider terms) and objection scripts
-verbatim-useful. Zero em/en-dash, zero citation.
+**Sourcing (pas de fabrication)** : aucun matériel de positionnement textile n'existe dans le repo
+(constat grep 2026-07-06). Le contenu se dérive de (a) le modèle de douleur de l'offre actuelle
+(`c4-2` : délivrabilité, pipeline dormant, ERP+CRM multi-source façon WGE) + (b) une **passe de
+recherche desk légère** sur les fabricants de textiles mid-market B2B (structure go-to-market,
+stack typique, cycles d'achat). Le lexique/pain/triggers dérivés sont **flaggés pour validation
+user** dans le `.done.md` (« à confirmer avec un vrai fabricant de textiles »). On n'invente **pas**
+un faux lexique insider ; si la profondeur manque, on écrit `.partial.md` + question.
 
-Depends on 24 being applied first (same course block; append after `sec_mc_4_2`).
+Course already has `c4-2 Who We Sell To` (ICP overview). This section is the **niche drill-down** ;
+`c4-2` reste l'overview (§ BIG BANG — un overview + un deep, pas deux overviews).
+
+Dépend de : Plan 24 appliqué avant (même bloc course_mc_4 ; append après `sec_mc_4_2`).
 
 ## Fichiers impactés
 
-- READ (dedup): `_content/c4-2-who-we-sell-to.md`
-- CREATE `.../_content/c4i-1-the-agency-world.md` (from 6.1 lexicon: structure, roles, metrics)
-- CREATE `.../_content/c4i-2-their-pain.md` (from 6.2)
-- CREATE `.../_content/c4i-3-buying-triggers.md` (from 6.3 + fold 6.0 how-to-find as a closing block)
-- CREATE `.../_content/c4i-4-icp-objections.md` (from 6.4)
-- MODIFY `import_masterclass.py` (course_mc_4 block: append 1 section tuple after sec_mc_4_2)
+- READ : `_content/c4-2-who-we-sell-to.md` (SSOT ICP, dedup boundary)
+- CREATE `.../_content/c4i-1-the-textile-world.md` (comment un fabricant de textiles va au marché : structure, stack ERP+CRM typique, vocabulaire métier dérivé + recherche desk)
+- CREATE `.../_content/c4i-2-their-pain.md` (la douleur CRM/sales d'un fabricant de textiles : base sale, pipeline dormant, délivrabilité, ERP≠CRM)
+- CREATE `.../_content/c4i-3-buying-triggers.md` (quand un fabricant de textiles achète le nettoyage CRM — mappe les 6 triggers de c4-2 à la réalité textile)
+- CREATE `.../_content/c4i-4-icp-objections.md` (objections spécifiques d'un fabricant de textiles + réponses, structure des objection loops)
+- MODIFY `import_masterclass.py` (course_mc_4 : append 1 section tuple après sec_mc_4_2)
 
 ## Étapes
 
-1. Read c4-2 (dedup boundary) + Notion 6.1/6.2/6.3/6.4/6.0.
-2. Author c4i-1..c4i-4, house voice, lexicon + objection scripts verbatim-useful.
-3. In `import_masterclass.py`, inside `course_mc_4`, after `sec_mc_4_2`, append:
+1. Read `c4-2` (ICP actuel + triggers + buckets) pour ancrer et éviter la dup.
+2. Read Notion 6.1/6.2/6.3/6.4 **pour la MÉTHODE uniquement** (comment on structure lexique / pain /
+   triggers / objections), pas le contenu SDR.
+3. Passe de recherche desk légère sur les fabricants de textiles B2B mid-market (structure,
+   go-to-market, stack, cycles) — noter les sources.
+4. Author c4i-1..c4i-4 en house-voice, ancrés sur l'offre CRM-cleaning + la réalité textile.
+   **Zéro** « SDR agency », « Phone Burster », « 45 calls/day », « HubSpot audit » SDR.
+5. In `import_masterclass.py`, inside `course_mc_4`, après `sec_mc_4_2`, append :
    ```python
-   ("sec_mc_4_3", "First ICP: External SDR Agency", [
-       ("les_mc_4_3_1", "The Agency World (Lexicon)", CONTENT / "c4i-1-the-agency-world.md"),
+   ("sec_mc_4_3", "First Niche: Textile Manufacturers", [
+       ("les_mc_4_3_1", "The Textile Manufacturer's World", CONTENT / "c4i-1-the-textile-world.md"),
        ("les_mc_4_3_2", "Their Pain", CONTENT / "c4i-2-their-pain.md"),
-       ("les_mc_4_3_3", "Buying Triggers & Where To Find Them", CONTENT / "c4i-3-buying-triggers.md"),
-       ("les_mc_4_3_4", "ICP-Specific Objections", CONTENT / "c4i-4-icp-objections.md"),
+       ("les_mc_4_3_3", "Buying Triggers", CONTENT / "c4i-3-buying-triggers.md"),
+       ("les_mc_4_3_4", "Niche-Specific Objections", CONTENT / "c4i-4-icp-objections.md"),
    ]),
    ```
-4. `python3 scripts/masterclass-import/import_masterclass.py` → `errors 0`.
-5. Live verify tpb-browser on `course_mc_4`: 3 sections; the ICP section's 4 lessons render; lexicon +
-   objection tables render; zero em/en-dash + citation; 0 console error.
-6. Write `25-...plan.done.md`.
+6. `python3 scripts/masterclass-import/import_masterclass.py` → `errors 0`.
+7. Live verify tpb-browser on `course_mc_4` : section « First Niche: Textile Manufacturers » avec 4
+   leçons ; tables rendues ; **grep = zéro « SDR agency » / « Phone Burster »** ; zéro em/en-dash +
+   citation ; 0 console error.
+8. Write `25-...plan.done.md` — **avec la liste explicite des affirmations textile à valider par le
+   user** (section « À confirmer »).
 
 ## Risques identifiés
 
-- Overlap with c4-2 → this section is the drill-down; c4-2 stays the overview. If a specific fact
-  duplicates, keep it in the deep lesson and trim c4-2 to a pointer sentence (no two full copies).
-- 6.0 is a stub → folded as a short block inside c4i-3, not inflated into a fake lesson.
+- **Pas de source textile** → risque de fabrication. Mitigation : dériver de l'offre + recherche
+  desk sourcée, flag validation user. Si la profondeur métier est insuffisante pour être honnête
+  → `.partial.md` + question, pas de bourrage.
+- Dup avec c4-2 → c4-2 reste l'overview, cette section est le deep textile ; pas deux copies.
 
 ## Critères de validation
 
-- `course_mc_4` shows 3 sections (The Offer, Product & Ecosystem, First ICP); 4 ICP lessons rendered.
-- `import_masterclass.py` errors 0; zero em/en-dash + citation; 0 console error (tpb-browser).
-- No duplicated full ICP overview between c4-2 and the new section.
+- `course_mc_4` : section « First Niche: Textile Manufacturers », 4 leçons rendues.
+- Zéro occurrence de « SDR agency » / « Phone Burster » / « 45 calls » dans les 4 leçons.
+- `import_masterclass.py` errors 0 ; zéro em/en-dash + citation ; 0 console error.
+- `.done.md` liste les affirmations textile à valider (honnêteté du sourcing).
