@@ -9,6 +9,15 @@
 
 **INITIATIVE (2026-07-05, EN COURS — overview draft)** — `plans/2026-07-05_tpb-sales-masterclass-3.0-fresh/` : recréer la masterclass sales **fresh 3.0**, structurée par **offres/niveaux** (LVL1 CRM Cleaning → LVL2 SALES → LVL3 MARKETING/ABM), **pratico-pratique** (Onboarding Sprint Day 1→14 façon Maker School + Hormozi CLOSER handbook), importée dans le LMS. Rewire : ancienne masterclass (dialer) + offre Brutal CRM Truth + cold-outbound course Nick Saraev. **Statut : `00-overview.plan.md` écrit, structure à valider avant plans numérotés.**
 - [ ] 00-overview — structure + système de niveaux + analyse de cohérence (DRAFT, à valider)
+
+**PHASE B (2026-07-06, EN COURS)** — même dossier, plans `20-26` : la masterclass 3.0 est **live** (6 cours, format OK). On **enrichit** en ajoutant des **sections** dans les cours existants (pas de nouveaux cours) avec le contenu Notion complet (Scripts & Strategy, Product & Ecosystem, First ICP, Purpose, house-voice pass), réparti homogène. Rollout plan par plan, en série. **Statut : `20-overview` validé, plans `21-26` écrits, en attente go user.**
+- [ ] 20-overview-phase-b — carte des sections à ajouter par cours (validé)
+- [ ] 21-course1-purpose-sections — Cours 1 : « Who We Serve & How We Win » + « The Founder's Story »
+- [ ] 22-course2-scripts-strategy — Cours 2 : section « Scripts & Strategy » (Notion 3.2)
+- [ ] 23-course3-house-voice — Cours 3 : passe house-voice sur les 5 imports bruts
+- [ ] 24-course4-product-ecosystem — Cours 4 : section « Product & Ecosystem » (Notion 2.x)
+- [ ] 25-course4-first-icp — Cours 4 : section « First ICP: External SDR Agency » (Notion 6.x)
+- [ ] 26-course5-execution-reinforcement — Cours 5 : sections « Execution » + « Reinforcement »
 - [ ] Plans 01→07 — Foundations / LVL1 / LVL2 / LVL3 / Onboarding Sprint / cohérence transversale / import LMS
 
 **INITIATIVE (2026-07-04, EXÉCUTÉE)** — `plans/2026-07-04_lms-api-doctrine-nesting-unifiedto-exit/` : revue API vs doctrines CRUD/api-only + write-API + sections imbriquées + exit sémantique Unified.to + vidéo YouTube. **Supersède le stub `2026-03_crud-list-endpoint-refactor`**. Validation : tsc 0 err, 17/17 vitest, 4/4 sidecars.
