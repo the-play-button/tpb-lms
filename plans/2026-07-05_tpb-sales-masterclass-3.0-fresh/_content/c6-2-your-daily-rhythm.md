@@ -3,16 +3,43 @@
 Once you're live, every day runs on the same rhythm. **The empty slots on today's calendar
 are what fill tomorrow's**, so you never waste one. Here's how a day is built.
 
-## What a day looks like
+## Your day, hour by hour
+
+Your day has two versions, and it's the **same person** running both. On a day with no calls
+booked, you spend it hunting. On a normal day, you weave calls through the hunting. The empty
+slots today are exactly what fill tomorrow's calendar.
+
+**A day with no booked calls (all hunt):**
 
 | Time | What you're doing |
 |---|---|
-| Start of day | **Review.** Yesterday's calls, today's booked calls, your notes. Know who you're talking to before you dial. |
-| Morning | **Training block.** Roleplay, review a recording, drill one script. This is sacred. You do it before the day pulls you away. |
-| Late morning | **Calls.** Work your booked calls in priority order. |
-| Midday | **Follow-ups.** Anyone who didn't pick up, anyone mid-deal. Move every open opportunity one step. |
-| Afternoon | **Primetime outbound.** The block where prospects actually answer. Protect it. This is where tomorrow's calls come from. |
-| End of day | **Close out.** Log every call, update every deal, book tomorrow. Nothing left in your head overnight. |
+| 6:00 | Review and prep, write up new notes |
+| 6:30 to 9:00 | Priority list (3.5 hours of pure hunting) |
+| 9:30 | Team training (30 min) |
+| 10:00 to 2:30 | Priority list (4.5 hours) |
+| 3:00 to 4:30 | Outbound (2 hours) |
+| 5:00 to 6:00 | Priority list |
+| 6:30 to 7:00 | End-of-day checklist |
+
+**A normal day (calls booked):**
+
+| Time | What you're doing |
+|---|---|
+| 6:00 | Review and prep, write up new notes |
+| 6:30 to 7:00 | Priority list |
+| 7:30 to 9:00 | **Close calls** |
+| 9:30 | Team training |
+| 10:00 to 11:00 | **Close calls** |
+| 11:30 to 12:00 | Priority list |
+| 12:30 to 1:00 | **Close calls** |
+| 1:30 to 2:30 | Priority list |
+| 3:00 to 4:30 | Outbound |
+| 5:00 to 5:30 | **Close calls** |
+| 6:00 | Priority list |
+| 6:30 to 7:00 | End-of-day checklist |
+
+Notice there's no idle time in either one. When you're not on a call, you're on your priority
+list or doing outbound, filling tomorrow.
 
 ## You're always doing one of two things
 

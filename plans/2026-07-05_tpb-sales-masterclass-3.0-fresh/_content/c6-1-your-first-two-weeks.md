@@ -4,22 +4,37 @@ Your first two weeks have one job: **get you on real calls, fast, without embarr
 yourself.** You do that by learning the material cold, rehearsing it out loud until it's
 automatic, and then getting on the phone. Here's the plan.
 
-## What a day looks like
+## Your first week, hour by hour
 
-Every day in week one runs on the same shape. Study, rehearse, roleplay, watch real calls,
-get tested, and check in with your coach at the start and the end.
+This is the actual schedule. It's built to move you from studying to selling as fast as you
+can handle. Monday you're buried in the material; by the end of the week you're doing real
+outbound. Every day opens and closes with a coach 1:1.
 
-| Time | What you're doing |
-|---|---|
-| Start of day | **Check-in with your coach.** Agenda for the day, coaching on yesterday, your questions. |
-| Morning | **Study the material** (the offer, discovery, objections, closing) and **rehearse your scripts out loud.** |
-| Late morning | **Roleplay** with a partner. **Watch real calls** (shadow) to hear how it actually sounds. |
-| Midday | **Roleplay** the scripts you just studied. |
-| Afternoon | **Script rehearsal**, then **roleplay tests** on tone, recaps, and objections. |
-| End of day | **Check-in with your coach.** They review your day, give feedback, tell you what to drill tomorrow. |
+| Time | Mon | Tue | Wed | Thu | Fri | Sat |
+|---|---|---|---|---|---|---|
+| 6:00 | Coach 1:1 | Coach 1:1 | Coach 1:1 | Coach 1:1 | Coach 1:1 | Coach 1:1 |
+| 6:30 | Coach 1:1 | Study | Study | Roleplay 1:1 | Roleplay 1:1 | Roleplay 1:1 |
+| 7:00-8:00 | Study | Script rehearsal | Script rehearsal | Outbound | Outbound | Outbound |
+| 8:30-9:00 | Study | Roleplay | Roleplay | Outbound | Outbound | Outbound |
+| 9:30 | Team training | Team training | Team training | Team training | Team training | Team training |
+| 10:00-11:30 | Study, then recording review | Recording review, then roleplay | Recording review, then roleplay | Outbound | Outbound | Outbound |
+| 12:00-1:30 | Shadow live calls | Shadow, then roleplay | Shadow, then roleplay | Roleplay | Roleplay | Roleplay |
+| 2:00-3:30 | Script rehearsal | Script rehearsal | Script rehearsal | Script rehearsal | Script rehearsal | Script rehearsal |
+| 4:00-5:00 | Roleplay | Roleplay test 1 | Roleplay test 1 | Roleplay tests 2 and 3 | Roleplay test 3 | Roleplay test 4 |
+| 5:00-5:30 | Shadow live calls | Recording review | Recording review | Recording review | Recording review | Recording review |
+| 6:00-7:00 | Coach 1:1 | Coach 1:1 | Coach 1:1 | Coach 1:1 | Coach 1:1 | Coach 1:1 |
 
-The week moves in one direction: **study-heavy on Day 1, calls-heavy by Day 5.** By the end
-you're spending real time reaching prospects, not just rehearsing.
+The week moves in one direction: **study-heavy on Monday, calls-heavy by Friday.** By the end
+you're spending real hours reaching prospects, not just rehearsing.
+
+The three activities you don't recognize yet:
+
+- **Shadow** = sit in on a real rep's live calls. Hear how it actually sounds, meet the team,
+  learn how a call really goes.
+- **Recording review** = study call recordings with your script in front of you. Don't just
+  listen, sell along with the rep, pause the hard parts, and run them until they're clean.
+- **Roleplay tests** = you have to pass three before you go live: **tone**, **recaps**, and
+  **objection looping.** Each one you pass, you start taking real calls.
 
 ## Two check-ins a day
 
