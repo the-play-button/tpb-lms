@@ -92,6 +92,13 @@ COURSES = [
             ("les_mc_4_1_6", "Pricing & Closing", CONTENT / "c4-6-pricing-and-closing.md"),
             ("les_mc_4_1_7", "After The Yes: Delivery and the Five Products", CONTENT / "c4-7-delivery-routing.md"),
         ]),
+        ("sec_mc_4_2", "Knowing Your Niches", [
+            ("les_mc_4_2_1", "How To Learn A Niche", CONTENT / "c4n-0-how-to-learn-a-niche.md"),
+            ("les_mc_4_2_2", "The GTM Ecosystem", CONTENT / "c4n-1-gtm-ecosystem.md"),
+            ("les_mc_4_2_3", "ICP: External SDR Agencies", CONTENT / "c4n-2-sdr-agencies.md"),
+            ("les_mc_4_2_4", "ICP: Lead-Generation Agencies", CONTENT / "c4n-3-lead-gen-agencies.md"),
+            ("les_mc_4_2_5", "ICP: GTM Operators", CONTENT / "c4n-4-gtm-operators.md"),
+        ]),
     ]),
     ("course_mc_5", "5 — Practice & Reinforcement", [
         ("sec_mc_5_1", "Practice & Reinforcement", [
