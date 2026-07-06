@@ -10,7 +10,7 @@ import { getState, setState } from '../state.js';
 import { log } from '../log.js';
 import { fetchMarkdown, fetchCloudContent } from '../content/loader/index.js';
 import { stripFrontmatter, cleanMarkdownForLms } from '../content/loader/_shared.js';
-import { loadCourse } from './loader.js';
+import { loadCourse, resumeStepIndex } from './loader.js';
 import { setSafeHtml, safeHtml, raw } from '../ui/safe-dom.js';
 import { t, getLanguage } from '../../i18n/index.js';
 
@@ -253,13 +253,22 @@ export const showCourseOverview = async courseId => {
             })
         ]);
 
-        // Viewing an overview means no lesson is open: keep the rail scoped to this
-        // course's program, and collapse any previously-open course (no stale expansion).
+        // Viewing an overview EXPANDS this course's tree in the left rail (so a click on
+        // the course name shows its sections/lessons, no "Commencer" needed). We load the
+        // course + signals into state — the sidebar subscribes and expands inline — and
+        // point the ▶ marker at the resume lesson, WITHOUT navigating into it (the main
+        // pane stays on the overview; only the CTA opens a lesson).
         const owningProgram = (getState('courses') || []).find((c) => c.id === courseId)?.program_id
             ?? getState('currentProgram') ?? null;
+        const signals = await api(`/signals/${courseId}`).catch((err) => {
+            log.warn(`signals fetch failed for course ${courseId}, tree markers default to none`, err);
+            return { steps: [], can_access_step: (course.classes || []).length };
+        });
         setState('currentProgram', owningProgram);
-        setState('currentCourse', null);
-        setState('courseData', null);
+        setState('currentCourse', courseId);
+        setState('courseData', course);
+        setState('signals', signals);
+        setState('currentStepIndex', resumeStepIndex(course.classes || [], signals));
 
         await renderCourseOverview(course, enrollmentStatus);
     } catch (error) {

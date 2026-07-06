@@ -7,7 +7,7 @@ vi.mock('../state.js', () => ({ getState: () => null, setState: () => {} }));
 vi.mock('../log.js', () => ({ log: { warn: vi.fn(), error: vi.fn() } }));
 vi.mock('../content/loader/index.js', () => ({ fetchMarkdown: vi.fn(), fetchCloudContent: vi.fn() }));
 vi.mock('../content/loader/_shared.js', () => ({ stripFrontmatter: (x) => x, cleanMarkdownForLms: (x) => x }));
-vi.mock('./loader.js', () => ({ loadCourse: vi.fn() }));
+vi.mock('./loader.js', () => ({ loadCourse: vi.fn(), resumeStepIndex: vi.fn(() => 0) }));
 vi.mock('../../i18n/index.js', () => ({ t: (k) => k, getLanguage: () => 'fr' }));
 
 import { renderPrimaryCta } from './overview.js';
