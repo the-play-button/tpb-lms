@@ -96,7 +96,7 @@ app.use('/*', async (c, next) => {
       configureLogger({
         service: 'tpb-lms',
         telemetry: {
-          url: c.env.TELEMETRY_URL,
+          bastionUrl: c.env.BASTION_URL,
           token: c.env.BASTION_TOKEN ?? '',
           projectSlug: 'tpb-lms',
           environment: 'production',
