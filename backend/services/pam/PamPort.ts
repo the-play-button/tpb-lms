@@ -17,11 +17,6 @@ export interface PamVerifyResult {
   owner?: { email: string };
 }
 
-export interface PamConfig {
-  bastionUrl: string;
-  getToken: () => string;
-}
-
 /**
  * PAM Port interface
  *

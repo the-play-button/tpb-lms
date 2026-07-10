@@ -9,12 +9,12 @@ import type { HandlerContext, AuthzBastionClient, LmsActor } from '../lms/types/
 import type { Env } from '../types/Env.js';
 import { BastionCloudflareAdapter } from '../services/bastion/adapters/BastionCloudflareAdapter.js';
 import { TpbStorageHttpAdapter } from '../services/storage/adapters/TpbStorageHttpAdapter.js';
-import { PamCloudflareAdapter } from '../services/pam/adapters/PamCloudflareAdapter.js';
+import { PamStorageClientAdapter } from '../services/pam/adapters/PamStorageClientAdapter.js';
 import { ConnectionResolverAdapter } from '../services/connections/adapters/ConnectionResolverAdapter.js';
 import { ContentRefsDatabaseRepository } from '../lms/infrastructure/repositories/ContentRefsDatabaseRepository.js';
 import { SharesDatabaseRepository } from '../lms/infrastructure/repositories/SharesDatabaseRepository.js';
 import { JustForwardDomainEventPublisher } from '../lms/infrastructure/events/JustForwardDomainEventPublisher.js';
-import { extractCallerJwt } from '@the-play-button/tpb-sdk-js';
+import { extractCallerJwt, StorageClient } from '@the-play-button/tpb-sdk-js';
 
 interface UserContext {
   user: { email: string };
@@ -51,10 +51,9 @@ export const createByocContext = async (
     bastionToken: env.BASTION_TOKEN,
   });
 
-  const pamClient = new PamCloudflareAdapter({
-    bastionUrl: env.BASTION_URL,
-    getToken: () => env.BASTION_TOKEN,
-  });
+  // PAM guest reads go through the tpb-storage BC (Plan 11b.b) via the SDK StorageClient, not the
+  // bastion escape-hatch. The JWT must carry `storage:delegated:read` (granted per B3-live).
+  const pamClient = new PamStorageClientAdapter(new StorageClient(env.TPB_STORAGE_URL, jwt));
 
   const connectionResolver = new ConnectionResolverAdapter({
     getAllConnections: () => bastionClient.getAllStorageConnections(jwt),

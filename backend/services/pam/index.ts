@@ -1,23 +1,8 @@
 /**
- * PAM Service - Privileged Access Management
+ * PAM Service — Privileged Access Management.
  *
- * USAGE:
- * const pam = createPamClient({ bastionUrl: env.BASTION_URL, getToken: () => token });
- * const result = await pam.verifyAccess(connectionId, fileId, guestEmail);
+ * Guest reads go through the tpb-storage BC (Plan 11b.b) via `PamStorageClientAdapter`, wired in
+ * `byocContext` with an SDK `StorageClient`. The bastion delegated-execute escape-hatch is dead.
  */
-
-export type { PamPort, PamConfig, PamVerifyResult } from './PamPort.js';
-
-export { PamCloudflareAdapter } from './adapters/PamCloudflareAdapter.js';
-
-import type { PamPort, PamConfig } from './PamPort.js';
-import { PamCloudflareAdapter } from './adapters/PamCloudflareAdapter.js';
-
-/**
- * Factory to create PAM client
- *
- * @param config - Configuration with fetcher and token provider
- */
-export const createPamClient = (config: PamConfig): PamPort => {
-  return new PamCloudflareAdapter(config);
-};
+export type { PamPort, PamVerifyResult } from './PamPort.js';
+export { PamStorageClientAdapter } from './adapters/PamStorageClientAdapter.js';
