@@ -1,0 +1,23 @@
+{
+  "$schema": "https://unpkg.com/knip@5/schema.json",
+  "ignore": [
+    "plans/**",
+    "**/_mocks/**",
+    "**/_archived/**",
+    "**/_archive/**"
+  ],
+  "workspaces": {
+    ".": {
+      "entry": [
+        "backend/index.js",
+        "frontend-on-cf-worker/_worker.js",
+        "scripts/**/*.{ts,mts}",
+        "**/cron/**/*.ts",
+        "**/crons/**/*.ts",
+        "**/*.cron.ts",
+        "**/*.{test,spec}.{ts,tsx}",
+        "**/__tests__/**/*.{ts,tsx}"
+      ]
+    }
+  }
+}
