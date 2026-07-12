@@ -26,11 +26,11 @@ const STEP_COUNTS_BY_FIXTURE = {
 
 export const VALID_FIXTURES = Object.keys(STEP_COUNTS_BY_FIXTURE);
 
-const resolveContactId = async (db: D1Database, email: string) => {
+const resolveContactId = async (db: D1Database, email: string | null): Promise<string | null> => {
     if (!email) return null;
     const result = await db.prepare(
         'SELECT id FROM crm_contact WHERE emails_json LIKE ?'
-    ).bind(`%${email}%`).first();
+    ).bind(`%${email}%`).first<{ id: string }>();
     return result?.id || null;
 };
 
@@ -59,12 +59,12 @@ const deleteForContactByEmail = async (db: D1Database, email: string) => {
     }
 };
 
-const cleanSlate = async (db: D1Database, userId: string, email: string) => {
+const cleanSlate = async (db: D1Database, userId: string, email: string | null) => {
     await deleteForUser(db, userId);
     if (email) await deleteForContactByEmail(db, email);
 };
 
-const insertProgressRow = (db: D1Database, userId: string, courseId: string, classId: string, timestamp) =>
+const insertProgressRow = (db: D1Database, userId: string, courseId: string, classId: string, timestamp: string) =>
     db.prepare(`
         INSERT INTO v_user_progress
         (user_id, class_id, course_id, video_max_position_sec, video_duration_sec,
@@ -73,19 +73,19 @@ const insertProgressRow = (db: D1Database, userId: string, courseId: string, cla
         VALUES (?, ?, ?, 300, 300, 1, ?, 1, 1, 1, ?, ?)
     `).bind(userId, classId, courseId, timestamp, timestamp, timestamp).run();
 
-const insertEvent = (db: D1Database, eventId: string, type, userId: string, courseId: string, classId: string, timestamp, payload) =>
+const insertEvent = (db: D1Database, eventId: string, type: string, userId: string, courseId: string, classId: string, timestamp: string, payload: unknown) =>
     db.prepare(`
         INSERT INTO lms_event (id, type, user_id, course_id, class_id, occurred_at, payload_json)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `).bind(eventId, type, userId, courseId, classId, timestamp, JSON.stringify(payload)).run();
 
-const awardBadge = (db: D1Database, awardId: string, badgeId: string, userId: string, now) =>
+const awardBadge = (db: D1Database, awardId: string, badgeId: string, userId: string, now: string) =>
     db.prepare(`
         INSERT OR IGNORE INTO gamification_award (id, badge_id, user_id, user_type, awarded_at, created_at)
         VALUES (?, ?, ?, 'contact', ?, ?)
     `).bind(awardId, badgeId, userId, now, now).run();
 
-const completeOneStep = async (db: D1Database, userId: string, courseId: string, classId: string, stepIndex, hourOffset) => {
+const completeOneStep = async (db: D1Database, userId: string, courseId: string, classId: string, stepIndex: number, hourOffset: number) => {
     const timestamp = new Date(Date.now() - hourOffset * 3600000).toISOString();
     await insertProgressRow(db, userId, courseId, classId, timestamp);
 
@@ -112,7 +112,7 @@ const completeOneStep = async (db: D1Database, userId: string, courseId: string,
     );
 };
 
-const completeSteps = async (db: D1Database, userId: string, count) => {
+const completeSteps = async (db: D1Database, userId: string, count: number) => {
     const courseId = 'pw05-2';
     const now = new Date().toISOString();
     const stepCount = Math.min(count, CLASS_IDS.length);
@@ -125,7 +125,7 @@ const completeSteps = async (db: D1Database, userId: string, count) => {
     if (count >= 6) await awardBadge(db, `fixture_award_course_${userId}`, 'course_complete', userId, now);
 };
 
-export const applyFixture = async (env: Env, cfUserId: string, fixture, email = null) => {
+export const applyFixture = async (env: Env, cfUserId: string, fixture: string, email: string | null = null) => {
     if (!(fixture in STEP_COUNTS_BY_FIXTURE)) {
         throw new Error(`Unknown fixture: ${fixture}`);
     }
@@ -140,6 +140,6 @@ export const applyFixture = async (env: Env, cfUserId: string, fixture, email = 
     await cleanSlate(db, cfUserId, email);
 
     const insertUserId = contactId || cfUserId;
-    const stepCount = STEP_COUNTS_BY_FIXTURE[fixture];
+    const stepCount = STEP_COUNTS_BY_FIXTURE[fixture as keyof typeof STEP_COUNTS_BY_FIXTURE];
     if (stepCount > 0) await completeSteps(db, insertUserId, stepCount);
 };
