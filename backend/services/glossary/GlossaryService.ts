@@ -3,10 +3,11 @@
  */
 
 import { upsertGlossaryTerm } from '../../handlers/glossary/_glossaryShared.js';
+import type { Env } from "../../types/Env.js";
 
-export const upsertTerm = (env, orgId, payload) => upsertGlossaryTerm(env.DB, orgId, payload);
+export const upsertTerm = (env: Env, orgId: string, payload) => upsertGlossaryTerm(env.DB, orgId, payload);
 
-export const listTerms = (env, orgId, filters = {}) => {
+export const listTerms = (env: Env, orgId: string, filters = {}) => {
     let query = `
         SELECT id, source_lang, target_lang, source_term, target_term, context, created_at
         FROM glossary
@@ -25,11 +26,11 @@ export const listTerms = (env, orgId, filters = {}) => {
     return env.DB.prepare(query).bind(...params).all();
 };
 
-export const deleteTerm = (env, orgId, termId) =>
+export const deleteTerm = (env: Env, orgId: string, termId: string) =>
     env.DB.prepare('DELETE FROM glossary WHERE id = ? AND org_id = ?')
         .bind(termId, orgId).run();
 
-export const buildLookupMap = async (env, orgId, sourceLang, targetLang) => {
+export const buildLookupMap = async (env: Env, orgId: string, sourceLang: string, targetLang: string) => {
     const result = await env.DB.prepare(`
         SELECT source_term, target_term
         FROM glossary

@@ -6,8 +6,9 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listForReview } from '../../services/translations/TranslationsService.js';
+import type { Env } from "../../types/Env.js";
 
-export const getTranslationsForReview = async (request, env, ctx) => {
+export const getTranslationsForReview = async (request: Request, env: Env, ctx) => {
     const url = new URL(request.url);
     const source = url.searchParams.get('source') || 'ai';
     const limit = parseInt(url.searchParams.get('limit') || '50', 10);

@@ -6,8 +6,9 @@
 import { jsonResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listKeysForUser } from '../../services/apikeys/ApiKeysService.js';
+import type { Env } from "../../types/Env.js";
 
-export const listAPIKeysHandler = async (request, env, auth) => {
+export const listAPIKeysHandler = async (request: Request, env: Env, auth) => {
     try {
         const userId = auth.contact?.id;
         if (!userId) return jsonResponse({ error: 'User not found' }, 400, request);

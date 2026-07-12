@@ -6,8 +6,9 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listByContent } from '../../services/translations/TranslationsService.js';
+import type { Env } from "../../types/Env.js";
 
-export const getTranslations = async (request, env, ctx) => {
+export const getTranslations = async (request: Request, env: Env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
     const contentType = pathParts[2];
     const contentId = pathParts[3];

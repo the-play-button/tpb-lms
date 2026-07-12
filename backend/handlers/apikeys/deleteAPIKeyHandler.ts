@@ -6,8 +6,9 @@
 import { jsonResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { findKeyByIdAndUser, revokeKey } from '../../services/apikeys/ApiKeysService.js';
+import type { Env } from "../../types/Env.js";
 
-export const deleteAPIKeyHandler = async (request, env, auth, keyId) => {
+export const deleteAPIKeyHandler = async (request: Request, env: Env, auth, keyId: string) => {
     try {
         const userId = auth.contact?.id;
         if (!userId) return jsonResponse({ error: 'User not found' }, 400, request);

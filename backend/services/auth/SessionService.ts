@@ -4,17 +4,17 @@
 
 import { getCurrentStreak } from '../../utils/xp/index.js';
 
-const queryLeaderboardRow = (db, userId) =>
+const queryLeaderboardRow = (db: D1Database, userId: string) =>
     db.prepare('SELECT * FROM v_leaderboard WHERE user_id = ?').bind(userId).first();
 
-const queryUserBadges = (db, userId) =>
+const queryUserBadges = (db: D1Database, userId: string) =>
     db.prepare(`
         SELECT b.id, b.name, b.description, b.icon_url, b.points_reward, b.rarity, b.type, a.awarded_at
         FROM gamification_award a JOIN gamification_badge b ON b.id = a.badge_id
         WHERE a.user_id = ? ORDER BY a.awarded_at DESC
     `).bind(userId).all();
 
-const queryRecentActivity = (db, userId) =>
+const queryRecentActivity = (db: D1Database, userId: string) =>
     db.prepare(`
         SELECT id, type, created_at,
             CASE WHEN type = 'VIDEO_VIEW' THEN json_extract(page_view_json, '$.video_id')
@@ -28,7 +28,7 @@ const queryRecentActivity = (db, userId) =>
         FROM crm_event WHERE user_id = ? ORDER BY created_at DESC LIMIT 10
     `).bind(userId).all();
 
-export const fetchUserData = async (db, contactId) => {
+export const fetchUserData = async (db: D1Database, contactId: string) => {
     const [stats, badges, recentActivity, currentStreak] = await Promise.all([
         queryLeaderboardRow(db, contactId),
         queryUserBadges(db, contactId),

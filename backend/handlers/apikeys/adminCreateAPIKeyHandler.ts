@@ -6,8 +6,9 @@
 import { jsonResponse } from '../../cors.js';
 import { generateAPIKey, getOrCreateContact } from '../../auth/index.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import type { Env } from "../../types/Env.js";
 
-export const adminCreateAPIKeyHandler = async (request, env, userContext) => {
+export const adminCreateAPIKeyHandler = async (request: Request, env: Env, userContext) => {
     try {
         if (userContext.user?.role !== 'admin') {
             return jsonResponse({ error: 'Forbidden: Admin role required' }, 403, request);

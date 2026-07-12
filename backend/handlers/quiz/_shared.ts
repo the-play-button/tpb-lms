@@ -7,6 +7,7 @@ import { recordQuizEvent, checkQuizBadges, checkStreakBadges } from '../../utils
 import { applyProjections } from '../../projections/engine.js';
 import { generateEventId } from '../../utils/events.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import type { Env } from "../../types/Env.js";
 
 export { log };
 export const XP_QUIZ_PASS = 100;
@@ -120,7 +121,7 @@ export const calculateScore = (answers, quizClass) => {
  * Store quiz event in lms_event and run projections
  */
 export const storeQuizEvent = async (
-    env,
+    env: Env,
     { userId, quizId, courseId, classId, score, maxScore, percentage, passed } = {}
 ) => {
     const eventId = generateEventId();
@@ -146,7 +147,7 @@ export const storeQuizEvent = async (
 /**
  * Handle badges for passed quiz
  */
-export const handleQuizBadges = async (db, userId, isPerfect) => {
+export const handleQuizBadges = async (db: D1Database, userId: string, isPerfect) => {
     let badge = await checkQuizBadges(db, userId, isPerfect);
     if (!badge) badge = await checkStreakBadges(db, userId);
     return badge;
@@ -155,7 +156,7 @@ export const handleQuizBadges = async (db, userId, isPerfect) => {
 /**
  * Process quiz submission (main logic)
  */
-export const processQuizSubmission = async (data, env, request, quizClass = null) => {
+export const processQuizSubmission = async (data, env: Env, request: Request, quizClass = null) => {
     const { userId, quizId, courseId, classId, score, maxScore, answers } = data;
 
     if (!userId || !quizId || score === undefined || !maxScore) {

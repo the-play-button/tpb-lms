@@ -6,8 +6,9 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { bulkUpsert } from '../../services/translations/TranslationsService.js';
+import type { Env } from "../../types/Env.js";
 
-export const upsertTranslations = async (request, env, ctx) => {
+export const upsertTranslations = async (request: Request, env: Env, ctx) => {
     let body;
     try {
         body = await request.json();

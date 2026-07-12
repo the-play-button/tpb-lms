@@ -4,7 +4,7 @@
 
 import { log } from './_shared.js';
 
-export const verifyTallySignature = async (request, signingSecret) => {
+export const verifyTallySignature = async (request: Request, signingSecret) => {
     const signature = request.headers.get('Tally-Signature');
     const body = await request.text();
 

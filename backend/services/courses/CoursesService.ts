@@ -3,8 +3,9 @@
  */
 
 import { resolveProgressionMode } from './_progressionMode.js';
+import type { Env } from "../../types/Env.js";
 
-const loadTranslations = async (env, contentType, contentId, lang) => {
+const loadTranslations = async (env: Env, contentType, contentId: string, lang: string) => {
     const result = await env.DB.prepare(`
         SELECT field, value FROM translations
         WHERE content_type = ? AND content_id = ? AND lang = ?
@@ -58,7 +59,7 @@ const enrichClass = (cls, currentStep) => {
     };
 };
 
-const queryActiveCourses = (env) =>
+const queryActiveCourses = (env: Env) =>
     env.DB.prepare(`
         SELECT id, name, description, categories_json, is_private, media_json, program_id, sys_order_index
         FROM lms_course WHERE is_active = 1 ORDER BY sys_order_index ASC, name ASC
@@ -76,16 +77,16 @@ const extractCoverImageUrl = (mediaJson) => {
     }
 };
 
-const queryCourseStepCount = (env, courseId) =>
+const queryCourseStepCount = (env: Env, courseId: string) =>
     env.DB.prepare("SELECT COUNT(*) as count FROM lms_class WHERE course_id = ? AND node_kind = 'LESSON'").bind(courseId).first();
 
-const queryCourseProgress = (env, userId, courseId) =>
+const queryCourseProgress = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT SUM(video_completed) as videos_completed, SUM(quiz_passed) as quizzes_passed
         FROM v_user_progress WHERE user_id = ? AND course_id = ?
     `).bind(userId, courseId).first();
 
-const enrichCourseSummary = async (env, course, userId, lang) => {
+const enrichCourseSummary = async (env: Env, course, userId: string, lang: string) => {
     const [stepCount, progress] = await Promise.all([
         queryCourseStepCount(env, course.id),
         queryCourseProgress(env, userId, course.id),
@@ -114,7 +115,7 @@ const enrichCourseSummary = async (env, course, userId, lang) => {
     return result;
 };
 
-export const listCoursesForUser = async (env, userId, lang) => {
+export const listCoursesForUser = async (env: Env, userId: string, lang: string) => {
     const courses = await queryActiveCourses(env);
     const enriched = await Promise.all(
         (courses.results || []).map((course) => enrichCourseSummary(env, course, userId, lang))
@@ -122,11 +123,11 @@ export const listCoursesForUser = async (env, userId, lang) => {
     return { courses: enriched };
 };
 
-const queryCourseById = (env, courseId) =>
+const queryCourseById = (env: Env, courseId: string) =>
     env.DB.prepare('SELECT * FROM lms_course WHERE id = ? AND is_active = 1')
         .bind(courseId).first();
 
-const queryCourseClasses = (env, userId, courseId) =>
+const queryCourseClasses = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT c.id, c.name, c.description, c.media_json,
             c.sys_order_index, c.raw_json,
@@ -139,7 +140,7 @@ const queryCourseClasses = (env, userId, courseId) =>
         WHERE c.course_id = ? ORDER BY c.sys_order_index ASC
     `).bind(userId, courseId).all();
 
-const applyCourseTranslations = async (env, courseId, lang, baseTitle, baseDescription) => {
+const applyCourseTranslations = async (env: Env, courseId: string, lang: string, baseTitle, baseDescription) => {
     if (!lang) return { title: baseTitle, description: baseDescription };
     const translations = await loadTranslations(env, 'course', courseId, lang);
     return {
@@ -148,7 +149,7 @@ const applyCourseTranslations = async (env, courseId, lang, baseTitle, baseDescr
     };
 };
 
-const applyClassTranslations = async (env, enrichedClasses, lang) => {
+const applyClassTranslations = async (env: Env, enrichedClasses, lang: string) => {
     if (!lang) return enrichedClasses;
     return Promise.all(enrichedClasses.map(async (cls) => {
         const classTranslations = await loadTranslations(env, 'class', cls.id, lang);
@@ -198,7 +199,7 @@ const enrichLessonSequence = (lessonRows) => {
 };
 
 // Build the display tree: SECTION folders + LESSON leaves (enriched/localized).
-const buildDisplayTree = (byParent, lessonById, sectionNameById, key = ROOT_KEY) =>
+const buildDisplayTree = (byParent, lessonById: string, sectionNameById: string, key = ROOT_KEY) =>
     (byParent.get(key) || []).map((row) => {
         const kind = row.node_kind || 'LESSON';
         if (kind === 'SECTION') {
@@ -218,7 +219,7 @@ const buildDisplayTree = (byParent, lessonById, sectionNameById, key = ROOT_KEY)
         };
     });
 
-const translateSectionNames = async (env, sectionRows, lang) => {
+const translateSectionNames = async (env: Env, sectionRows, lang: string) => {
     const map = new Map();
     if (!lang) return map;
     await Promise.all(sectionRows.map(async (row) => {
@@ -228,7 +229,7 @@ const translateSectionNames = async (env, sectionRows, lang) => {
     return map;
 };
 
-export const getCourseForUser = async (env, userId, courseId, lang) => {
+export const getCourseForUser = async (env: Env, userId: string, courseId: string, lang: string) => {
     const course = await queryCourseById(env, courseId);
     if (!course) return { notFound: true };
 

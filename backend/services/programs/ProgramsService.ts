@@ -1,3 +1,5 @@
+import type { Env } from "../../types/Env.js";
+
 /**
  * ProgramsService — read model for lms_program (Plan 10). A program groups N courses
  * (Program → Course → Section → Lesson). Thin read layer, mirrors CoursesService.
@@ -17,7 +19,7 @@ const extractCoverImageUrl = (mediaJson) => {
  * List active programs with cover + course count. Cheap: one query for programs, one
  * grouped count for course membership.
  */
-export const listProgramsForUser = async (env) => {
+export const listProgramsForUser = async (env: Env) => {
     const [programsRes, countsRes] = await Promise.all([
         env.DB.prepare('SELECT id, name, description, media_json FROM lms_program WHERE is_active = 1 ORDER BY name ASC').all(),
         env.DB.prepare("SELECT program_id, COUNT(*) AS n FROM lms_course WHERE is_active = 1 AND program_id IS NOT NULL GROUP BY program_id").all(),

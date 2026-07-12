@@ -4,8 +4,9 @@
 
 import { base64urlDecode, importPublicKey, getJWKS } from './_shared.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import type { Env } from "../types/Env.js";
 
-export const verifyAccessJWT = async (token, env) => {
+export const verifyAccessJWT = async (token, env: Env) => {
     if (!token) {
         return { valid: false, error: 'No token provided' };
     }

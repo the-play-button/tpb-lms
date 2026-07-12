@@ -5,8 +5,9 @@
 import { log } from '@the-play-button/tpb-sdk-js';
 import { upsertTerm } from './GlossaryService.js';
 import { isValidTermPayload } from '../../handlers/glossary/_glossaryShared.js';
+import type { Env } from "../../types/Env.js";
 
-export const bulkImportTerms = async (env, orgId, terms) => {
+export const bulkImportTerms = async (env: Env, orgId: string, terms) => {
     let successCount = 0;
     let errorCount = 0;
 

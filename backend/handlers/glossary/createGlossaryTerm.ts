@@ -9,8 +9,9 @@ import { log } from '@the-play-button/tpb-sdk-js';
 import { upsertTerm } from '../../services/glossary/GlossaryService.js';
 import { bulkImportTerms } from '../../services/glossary/GlossaryImportService.js';
 import { extractOrgIdFromUrl, isValidTermPayload } from './_glossaryShared.js';
+import type { Env } from "../../types/Env.js";
 
-export const createGlossaryTerm = async (request, env, ctx) => {
+export const createGlossaryTerm = async (request: Request, env: Env, ctx) => {
     const orgId = extractOrgIdFromUrl(request);
     if (!orgId) return errorResponse('Missing org_id', 400);
 

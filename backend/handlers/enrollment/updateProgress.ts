@@ -5,8 +5,9 @@
 
 import { jsonResponse, getUserId } from './_shared.js';
 import { updateUserEnrollmentProgress } from '../../services/enrollment/EnrollmentService.js';
+import type { Env } from "../../types/Env.js";
 
-export const updateProgress = async (request, env, userContext, enrollmentId) => {
+export const updateProgress = async (request: Request, env: Env, userContext, enrollmentId: string) => {
     const userId = getUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 

@@ -4,8 +4,9 @@
 
 import { jsonResponse, extractFieldsFromPayload, calculateScore, processQuizSubmission } from './_shared.js';
 import { findQuizClassByTallyFormId } from '../../services/quiz/QuizService.js';
+import type { Env } from "../../types/Env.js";
 
-const processTallyPayload = async (payload, env, request) => {
+const processTallyPayload = async (payload, env: Env, request: Request) => {
     if (payload.eventType !== 'FORM_RESPONSE') {
         return jsonResponse({ ignored: true, reason: 'Not a form response' }, 200, request);
     }
@@ -28,8 +29,8 @@ const processTallyPayload = async (payload, env, request) => {
     }, env, request, quizClass);
 };
 
-export const handleTallyWebhookWithBody = (bodyText, env, request) =>
+export const handleTallyWebhookWithBody = (bodyText, env: Env, request: Request) =>
     processTallyPayload(JSON.parse(bodyText), env, request);
 
-export const handleTallyWebhook = async (request, env) =>
+export const handleTallyWebhook = async (request: Request, env: Env) =>
     processTallyPayload(await request.json(), env, request);

@@ -3,11 +3,12 @@
  */
 
 import { log } from '@the-play-button/tpb-sdk-js';
+import type { Env } from "../../types/Env.js";
 
-const translationId = (contentType, contentId, field, lang) =>
+const translationId = (contentType, contentId: string, field, lang: string) =>
     `${contentType}:${contentId}:${field}:${lang}`;
 
-export const listByContent = async (env, contentType, contentId) => {
+export const listByContent = async (env: Env, contentType, contentId: string) => {
     const result = await env.DB.prepare(`
         SELECT field, lang, value, source, reviewed_at, reviewed_by, updated_at
         FROM translations
@@ -29,7 +30,7 @@ export const listByContent = async (env, contentType, contentId) => {
     return byLang;
 };
 
-export const upsertOne = async (env, params) => {
+export const upsertOne = async (env: Env, params) => {
     const { contentType, contentId, field, lang, value, source, userId } = params;
     const id = translationId(contentType, contentId, field, lang);
     await env.DB.prepare(`
@@ -41,7 +42,7 @@ export const upsertOne = async (env, params) => {
     return id;
 };
 
-export const listForReview = async (env, source, limit) => {
+export const listForReview = async (env: Env, source, limit) => {
     const result = await env.DB.prepare(`
         SELECT id, content_type, content_id, field, lang, value, source, created_at
         FROM translations
@@ -52,7 +53,7 @@ export const listForReview = async (env, source, limit) => {
     return result.results;
 };
 
-const upsertBatchOne = async (env, payload, userId) => {
+const upsertBatchOne = async (env: Env, payload, userId: string) => {
     const { content_type, content_id, field, lang, value, source = 'ai' } = payload;
     if (!content_type || !content_id || !field || !lang || value === undefined) {
         return false;
@@ -72,7 +73,7 @@ const upsertBatchOne = async (env, payload, userId) => {
     }
 };
 
-export const bulkUpsert = async (env, translations, userId) => {
+export const bulkUpsert = async (env: Env, translations, userId: string) => {
     let successCount = 0;
     let errorCount = 0;
     for (const t of translations) {

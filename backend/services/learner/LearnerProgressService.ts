@@ -3,21 +3,22 @@
  */
 
 import { getCurrentStreak } from '../../utils/xp/index.js';
+import type { Env } from "../../types/Env.js";
 
-const queryUserStats = (env, userId) =>
+const queryUserStats = (env: Env, userId: string) =>
     env.DB.prepare('SELECT * FROM v_user_stats WHERE user_id = ?').bind(userId).first();
 
-const queryUserLeaderboardRow = (env, userId) =>
+const queryUserLeaderboardRow = (env: Env, userId: string) =>
     env.DB.prepare('SELECT * FROM v_leaderboard WHERE user_id = ?').bind(userId).first();
 
-const queryUserBadges = (env, userId) =>
+const queryUserBadges = (env: Env, userId: string) =>
     env.DB.prepare(`
         SELECT b.*, a.awarded_at FROM gamification_award a
         JOIN gamification_badge b ON b.id = a.badge_id
         WHERE a.user_id = ? ORDER BY a.awarded_at DESC
     `).bind(userId).all();
 
-const queryRecentVideos = (env, userId) =>
+const queryRecentVideos = (env: Env, userId: string) =>
     env.DB.prepare(`
         SELECT id, json_extract(page_view_json, '$.video_id') as video_id,
             json_extract(page_view_json, '$.course_id') as course_id,
@@ -26,7 +27,7 @@ const queryRecentVideos = (env, userId) =>
         ORDER BY created_at DESC LIMIT 20
     `).bind(userId).all();
 
-const queryRecentQuizzes = (env, userId) =>
+const queryRecentQuizzes = (env: Env, userId: string) =>
     env.DB.prepare(`
         SELECT id, json_extract(form_json, '$.quiz_id') as quiz_id,
             json_extract(form_json, '$.course_id') as course_id,
@@ -37,7 +38,7 @@ const queryRecentQuizzes = (env, userId) =>
         ORDER BY created_at DESC LIMIT 20
     `).bind(userId).all();
 
-export const fetchLearnerProgress = async (env, userId, userEmail) => {
+export const fetchLearnerProgress = async (env: Env, userId: string, userEmail) => {
     const [stats, leaderboard, badges, videos, quizzes, currentStreak] = await Promise.all([
         queryUserStats(env, userId),
         queryUserLeaderboardRow(env, userId),

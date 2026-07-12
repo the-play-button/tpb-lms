@@ -6,8 +6,9 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { deleteTerm } from '../../services/glossary/GlossaryService.js';
+import type { Env } from "../../types/Env.js";
 
-export const deleteGlossaryTerm = async (request, env, ctx) => {
+export const deleteGlossaryTerm = async (request: Request, env: Env, ctx) => {
     const pathParts = new URL(request.url).pathname.split('/');
     const orgId = pathParts[2];
     const termId = pathParts[3];

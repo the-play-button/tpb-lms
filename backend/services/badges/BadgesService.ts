@@ -1,8 +1,10 @@
+import type { Env } from "../../types/Env.js";
+
 /**
  * BadgesService — gamification badges + per-user award projection.
  */
 
-export const listBadgesWithUserStatus = async (env, userId) => {
+export const listBadgesWithUserStatus = async (env: Env, userId: string) => {
     const badges = await env.DB.prepare(`
         SELECT id, name, description, icon_url, type, category, rarity, points_reward, criteria_json
         FROM gamification_badge

@@ -1,8 +1,10 @@
+import type { Env } from "../../types/Env.js";
+
 /**
  * ApiKeysService — list/revoke API keys per user.
  */
 
-export const listKeysForUser = async (env, userId) => {
+export const listKeysForUser = async (env: Env, userId: string) => {
     const result = await env.DB.prepare(`
         SELECT id, name, key_prefix, scopes, created_at, last_used_at, expires_at, is_active
         FROM api_key
@@ -22,10 +24,10 @@ export const listKeysForUser = async (env, userId) => {
     }));
 };
 
-export const findKeyByIdAndUser = (env, keyId, userId) =>
+export const findKeyByIdAndUser = (env: Env, keyId: string, userId: string) =>
     env.DB.prepare('SELECT id FROM api_key WHERE id = ? AND user_id = ?')
         .bind(keyId, userId).first();
 
-export const revokeKey = (env, keyId) =>
+export const revokeKey = (env: Env, keyId: string) =>
     env.DB.prepare('UPDATE api_key SET is_active = 0 WHERE id = ?')
         .bind(keyId).run();

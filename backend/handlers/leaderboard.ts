@@ -4,8 +4,9 @@
 
 import { jsonResponse } from '../cors.js';
 import { fetchLeaderboard, fetchUserStats } from '../services/leaderboard/LeaderboardService.js';
+import type { Env } from "../types/Env.js";
 
-export const getLeaderboard = async (request, env, userContext) => {
+export const getLeaderboard = async (request: Request, env: Env, userContext) => {
     const limit = parseInt(new URL(request.url).searchParams.get('limit') || '10', 10);
     const { contact = {}, employee = {} } = userContext;
     const userId = contact.id || employee.id;
@@ -13,7 +14,7 @@ export const getLeaderboard = async (request, env, userContext) => {
     return jsonResponse(body, 200, request);
 };
 
-export const getUserStats = async (request, env, userContext) => {
+export const getUserStats = async (request: Request, env: Env, userContext) => {
     const { contact: statsContact = {}, employee: statsEmployee = {} } = userContext;
     const userId = statsContact.id || statsEmployee.id;
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);

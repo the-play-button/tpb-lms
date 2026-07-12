@@ -3,7 +3,7 @@
  * Helper function used by courses handler
  */
 
-export const applyTranslations = (content, translations, lang) => {
+export const applyTranslations = (content, translations, lang: string) => {
     if (!translations || !translations[lang]) return content;
 
     const langTranslations = translations[lang];

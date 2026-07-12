@@ -1,8 +1,10 @@
+import type { Env } from "../../types/Env.js";
+
 /**
  * KmsReadService — read-only access to KMS spaces + pages.
  */
 
-const queryActiveSpaces = (env) =>
+const queryActiveSpaces = (env: Env) =>
     env.DB.prepare(`
         SELECT id, name, description, parent_space_id, is_active, created_at, updated_at
         FROM kms_space
@@ -10,14 +12,14 @@ const queryActiveSpaces = (env) =>
         ORDER BY name
     `).all();
 
-const querySpaceById = (env, spaceId) =>
+const querySpaceById = (env: Env, spaceId: string) =>
     env.DB.prepare(`
         SELECT id, name, description, parent_space_id, is_active, created_at, updated_at
         FROM kms_space
         WHERE id = ? AND is_active = 1
     `).bind(spaceId).first();
 
-const querySpacePages = (env, spaceId) =>
+const querySpacePages = (env: Env, spaceId: string) =>
     env.DB.prepare(`
         SELECT id, title, type, metadata_json, created_at, updated_at
         FROM kms_page
@@ -25,7 +27,7 @@ const querySpacePages = (env, spaceId) =>
         ORDER BY title
     `).bind(spaceId).all();
 
-const queryPageById = (env, pageId) =>
+const queryPageById = (env: Env, pageId: string) =>
     env.DB.prepare(`
         SELECT p.id, p.title, p.type, p.space_id, p.metadata_json, p.raw_json,
                p.download_url, p.web_url, p.created_at, p.updated_at,
@@ -44,12 +46,12 @@ const projectPage = (row) => ({
     updated_at: row.updated_at,
 });
 
-export const listSpaces = async (env) => {
+export const listSpaces = async (env: Env) => {
     const result = await queryActiveSpaces(env);
     return { spaces: result.results || [] };
 };
 
-export const getSpace = async (env, spaceId) => {
+export const getSpace = async (env: Env, spaceId: string) => {
     const space = await querySpaceById(env, spaceId);
     if (!space) return null;
     const pagesResult = await querySpacePages(env, spaceId);
@@ -59,7 +61,7 @@ export const getSpace = async (env, spaceId) => {
     };
 };
 
-export const getPage = async (env, pageId) => {
+export const getPage = async (env: Env, pageId: string) => {
     const page = await queryPageById(env, pageId);
     if (!page) return null;
     const metadata = page.metadata_json ? JSON.parse(page.metadata_json) : {};

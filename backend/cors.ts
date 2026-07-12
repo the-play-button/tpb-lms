@@ -21,7 +21,7 @@ const SECURITY_HEADERS = {
  * Generate CORS headers based on request origin
  * With credentials: 'include', we cannot use '*' for origin
  */
-export const getCorsHeaders = request => {
+export const getCorsHeaders = (request: Request) => {
     const origin = request.headers.get('Origin') || '';
     const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
     
@@ -39,20 +39,30 @@ export const getCorsHeaders = request => {
 /**
  * JSON response with CORS headers
  */
-export const jsonResponse = (data, status = 200, request = null) => {
-    const headers = request ? getCorsHeaders(request) : { 'Content-Type': 'application/json' };
+export const jsonResponse = (
+    data: unknown,
+    status = 200,
+    request: Request | null = null,
+): Response => {
+    const headers: Record<string, string> = request
+        ? getCorsHeaders(request)
+        : { 'Content-Type': 'application/json' };
     headers['Content-Type'] = 'application/json';
-    
+
     return new Response(JSON.stringify(data), {
         status,
-        headers
+        headers,
     });
 };
 
 /**
  * Error response helper
  */
-export const errorResponse = (message, status = 400, request = null) => {
+export const errorResponse = (
+    message: unknown,
+    status = 400,
+    request: Request | null = null,
+): Response => {
     return jsonResponse({ error: message }, status, request);
 };
 

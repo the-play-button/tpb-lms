@@ -14,6 +14,7 @@ import {
     fetchRawContent,
     fetchDirectoryListing,
 } from '../services/content/GithubContentService.js';
+import type { Env } from "../types/Env.js";
 
 const resolveGitHubParams = (url) => {
     const urlParam = url.searchParams.get('url');
@@ -29,7 +30,7 @@ const resolveGitHubParams = (url) => {
     return { params: { owner, repo, branch, path } };
 };
 
-const buildAuthErrorResponse = (request, response, errorBody, token, vaultDebug) => {
+const buildAuthErrorResponse = (request: Request, response, errorBody, token, vaultDebug) => {
     const baseDebug = {
         gitHubStatus: response.status,
         gitHubError: errorBody,
@@ -53,7 +54,7 @@ const buildAuthErrorResponse = (request, response, errorBody, token, vaultDebug)
 /**
  * GET /api/content/github
  */
-export const getGitHubContent = async (request, env, userContext) => {
+export const getGitHubContent = async (request: Request, env: Env, userContext) => {
     const url = new URL(request.url);
     const langParam = url.searchParams.get('lang');
     const resolved = resolveGitHubParams(url);
@@ -109,7 +110,7 @@ const projectDirectoryItem = (item) => ({
 /**
  * GET /api/content/github/tree
  */
-export const listGitHubDirectory = async (request, env, userContext) => {
+export const listGitHubDirectory = async (request: Request, env: Env, userContext) => {
     const url = new URL(request.url);
     const owner = url.searchParams.get('owner');
     const repo = url.searchParams.get('repo');

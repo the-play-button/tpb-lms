@@ -6,30 +6,31 @@
  */
 
 import { generateId, MAX_ACTIVE_ENROLLMENTS } from '../../handlers/enrollment/_shared.js';
+import type { Env } from "../../types/Env.js";
 
 export { MAX_ACTIVE_ENROLLMENTS };
 
-const findCourseById = (env, courseId) =>
+const findCourseById = (env: Env, courseId: string) =>
     env.DB.prepare('SELECT id, name, is_active FROM lms_course WHERE id = ?')
         .bind(courseId).first();
 
-const findEnrollmentByCourse = (env, userId, courseId) =>
+const findEnrollmentByCourse = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare('SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ?')
         .bind(userId, courseId).first();
 
-const findActiveEnrollmentByCourse = (env, userId, courseId) =>
+const findActiveEnrollmentByCourse = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(
         "SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ? AND status = 'active'"
     ).bind(userId, courseId).first();
 
-const countActiveEnrollments = async (env, userId) => {
+const countActiveEnrollments = async (env: Env, userId: string) => {
     const row = await env.DB.prepare(
         "SELECT COUNT(*) as count FROM lms_enrollment WHERE user_id = ? AND status = 'active'"
     ).bind(userId).first();
     return row?.count ?? 0;
 };
 
-const reactivateEnrollment = (env, enrollmentId) =>
+const reactivateEnrollment = (env: Env, enrollmentId: string) =>
     env.DB.prepare(`
         UPDATE lms_enrollment
         SET status = 'active',
@@ -41,24 +42,24 @@ const reactivateEnrollment = (env, enrollmentId) =>
         WHERE id = ?
     `).bind(enrollmentId).run();
 
-const insertEnrollment = (env, enrollmentId, userId, courseId) =>
+const insertEnrollment = (env: Env, enrollmentId: string, userId: string, courseId: string) =>
     env.DB.prepare(`
         INSERT INTO lms_enrollment (id, user_id, course_id, status, started_at, created_at, updated_at)
         VALUES (?, ?, ?, 'active', datetime('now'), datetime('now'), datetime('now'))
     `).bind(enrollmentId, userId, courseId).run();
 
-const setEnrollmentStatus = (env, enrollmentId, status, timestampField) =>
+const setEnrollmentStatus = (env: Env, enrollmentId: string, status, timestampField) =>
     env.DB.prepare(`
         UPDATE lms_enrollment
         SET status = ?, ${timestampField} = datetime('now'), updated_at = datetime('now')
         WHERE id = ?
     `).bind(status, enrollmentId).run();
 
-const findEnrollmentForProgress = (env, userId, enrollmentId) =>
+const findEnrollmentForProgress = (env: Env, userId: string, enrollmentId: string) =>
     env.DB.prepare('SELECT id, course_id, status FROM lms_enrollment WHERE id = ? AND user_id = ?')
         .bind(enrollmentId, userId).first();
 
-const updateEnrollmentProgressFields = (env, enrollmentId, fields) => {
+const updateEnrollmentProgressFields = (env: Env, enrollmentId: string, fields) => {
     const updates = ["last_activity_at = datetime('now')", "updated_at = datetime('now')"];
     const params = [];
     if (fields.current_class_id !== undefined) {
@@ -75,7 +76,7 @@ const updateEnrollmentProgressFields = (env, enrollmentId, fields) => {
     `).bind(...params).run();
 };
 
-const findEnrollmentDetailsByCourse = (env, userId, courseId) =>
+const findEnrollmentDetailsByCourse = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT e.*,
                (SELECT COUNT(*) FROM lms_class WHERE course_id = e.course_id AND node_kind = 'LESSON') as total_classes
@@ -83,7 +84,7 @@ const findEnrollmentDetailsByCourse = (env, userId, courseId) =>
         WHERE e.user_id = ? AND e.course_id = ?
     `).bind(userId, courseId).first();
 
-const queryUserEnrollments = (env, userId, status) => {
+const queryUserEnrollments = (env: Env, userId: string, status) => {
     let query = `
         SELECT e.*, c.name as course_name, c.description as course_description,
                (SELECT COUNT(*) FROM lms_class WHERE course_id = e.course_id AND node_kind = 'LESSON') as total_classes
@@ -120,7 +121,7 @@ const projectEnrollment = (row) => ({
 
 // ============ PUBLIC SERVICE API ============
 
-export const enrollUserInCourse = async (env, userId, courseId) => {
+export const enrollUserInCourse = async (env: Env, userId: string, courseId: string) => {
     const course = await findCourseById(env, courseId);
     if (!course || !course.is_active) {
         return { error: { status: 404, body: { error: 'Course not found or inactive' } } };
@@ -190,7 +191,7 @@ export const enrollUserInCourse = async (env, userId, courseId) => {
     };
 };
 
-export const abandonUserCourse = async (env, userId, courseId) => {
+export const abandonUserCourse = async (env: Env, userId: string, courseId: string) => {
     const enrollment = await findActiveEnrollmentByCourse(env, userId, courseId);
     if (!enrollment) {
         return { error: { status: 404, body: { error: 'No active enrollment found for this course' } } };
@@ -211,7 +212,7 @@ export const abandonUserCourse = async (env, userId, courseId) => {
     };
 };
 
-export const completeUserCourse = async (env, userId, courseId) => {
+export const completeUserCourse = async (env: Env, userId: string, courseId: string) => {
     const enrollment = await findEnrollmentByCourse(env, userId, courseId);
     if (!enrollment) {
         return { error: { status: 404, body: { error: 'No enrollment found for this course' } } };
@@ -232,7 +233,7 @@ export const completeUserCourse = async (env, userId, courseId) => {
     };
 };
 
-export const updateUserEnrollmentProgress = async (env, userId, enrollmentId, fields) => {
+export const updateUserEnrollmentProgress = async (env: Env, userId: string, enrollmentId: string, fields) => {
     const enrollment = await findEnrollmentForProgress(env, userId, enrollmentId);
     if (!enrollment) {
         return { error: { status: 404, body: { error: 'Enrollment not found' } } };
@@ -244,7 +245,7 @@ export const updateUserEnrollmentProgress = async (env, userId, enrollmentId, fi
     return { value: { status: 200, body: { message: 'Progress updated' } } };
 };
 
-export const getUserEnrollmentStatus = async (env, userId, courseId) => {
+export const getUserEnrollmentStatus = async (env: Env, userId: string, courseId: string) => {
     const enrollment = await findEnrollmentDetailsByCourse(env, userId, courseId);
     if (!enrollment) {
         const activeCount = await countActiveEnrollments(env, userId);
@@ -283,7 +284,7 @@ export const getUserEnrollmentStatus = async (env, userId, courseId) => {
     };
 };
 
-export const listUserEnrollments = async (env, userId, status) => {
+export const listUserEnrollments = async (env: Env, userId: string, status) => {
     const result = await queryUserEnrollments(env, userId, status);
     const enrollments = (result.results || []).map(projectEnrollment);
     const activeCount = enrollments.filter((e) => e.status === 'active').length;

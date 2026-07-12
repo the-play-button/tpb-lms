@@ -4,8 +4,9 @@
 
 import { applyProjections, getProgress } from '../../projections/engine.js';
 import { generateEventId } from '../../utils/events.js';
+import type { Env } from "../../types/Env.js";
 
-export const persistValidatedEvent = async (env, userId, validatedData) => {
+export const persistValidatedEvent = async (env: Env, userId: string, validatedData) => {
     const { type, course_id, class_id, payload } = validatedData;
     const eventId = generateEventId();
     const now = new Date().toISOString();
@@ -27,14 +28,14 @@ export const persistValidatedEvent = async (env, userId, validatedData) => {
     return { eventId, class_id };
 };
 
-export const classHasQuiz = async (env, classId) => {
+export const classHasQuiz = async (env: Env, classId: string) => {
     const cls = await env.DB.prepare('SELECT media_json FROM lms_class WHERE id = ?')
         .bind(classId).first();
     if (!cls?.media_json) return false;
     return JSON.parse(cls.media_json).some(({ type } = {}) => type === 'QUIZ');
 };
 
-export const deriveCompletionState = async (env, userId, classId) => {
+export const deriveCompletionState = async (env: Env, userId: string, classId: string) => {
     const progress = await getProgress(env.DB, userId, classId);
     const hasQuiz = await classHasQuiz(env, classId);
     const videoCompleted = progress?.video_completed === 1;
@@ -55,7 +56,7 @@ export const validateBatch = (events, validateEvent) => {
     return out;
 };
 
-export const persistBatch = async (env, userId, validatedEntries) => {
+export const persistBatch = async (env: Env, userId: string, validatedEntries) => {
     const results = [];
     let succeeded = 0;
     for (const entry of validatedEntries) {

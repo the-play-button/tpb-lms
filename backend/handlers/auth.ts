@@ -6,8 +6,9 @@ import { jsonResponse } from '../cors.js';
 import { verifyAccessJWT, getOrCreateContact } from '../auth/index.js';
 import { extractCallerJwt } from '@the-play-button/tpb-sdk-js';
 import { fetchUserData, buildSessionResponse } from '../services/auth/SessionService.js';
+import type { Env } from "../types/Env.js";
 
-const validateJWT = async (jwt, env, request) => {
+const validateJWT = async (jwt, env: Env, request: Request) => {
     if (!jwt) {
         return {
             error: jsonResponse({
@@ -31,7 +32,7 @@ const validateJWT = async (jwt, env, request) => {
 /**
  * GET /api/auth/session
  */
-export const getSession = async (request, env) => {
+export const getSession = async (request: Request, env: Env) => {
     // SDK primitive — centralized JWT extraction (CLAUDE.md § BASTION AUTH).
     const validation = await validateJWT(extractCallerJwt(request), env, request);
     if (validation.error) return validation.error;

@@ -4,8 +4,9 @@
  */
 
 import { sha256 } from './_shared.js';
+import type { Env } from "../types/Env.js";
 
-export const generateAPIKey = async (name, userId, env, options = {}) => {
+export const generateAPIKey = async (name, userId: string, env: Env, options = {}) => {
     const key = 'tpb_' + crypto.randomUUID().replace(/-/g, '');
     const keyHash = await sha256(key);
     const keyPrefix = key.substring(0, 12); // tpb_ + 8 chars

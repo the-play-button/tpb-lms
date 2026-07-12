@@ -1,3 +1,5 @@
+import type { Env } from "../../types/Env.js";
+
 /**
  * TestFixturesService — seed canned learner-progress states for QA.
  *
@@ -24,7 +26,7 @@ const STEP_COUNTS_BY_FIXTURE = {
 
 export const VALID_FIXTURES = Object.keys(STEP_COUNTS_BY_FIXTURE);
 
-const resolveContactId = async (db, email) => {
+const resolveContactId = async (db: D1Database, email: string) => {
     if (!email) return null;
     const result = await db.prepare(
         'SELECT id FROM crm_contact WHERE emails_json LIKE ?'
@@ -32,7 +34,7 @@ const resolveContactId = async (db, email) => {
     return result?.id || null;
 };
 
-const deleteForUser = (db, userId) =>
+const deleteForUser = (db: D1Database, userId: string) =>
     db.batch([
         db.prepare('DELETE FROM v_user_progress WHERE user_id = ?').bind(userId),
         db.prepare('DELETE FROM lms_event WHERE user_id = ?').bind(userId),
@@ -40,7 +42,7 @@ const deleteForUser = (db, userId) =>
         db.prepare('DELETE FROM gamification_award WHERE user_id = ?').bind(userId),
     ]);
 
-const deleteForContactByEmail = async (db, email) => {
+const deleteForContactByEmail = async (db: D1Database, email: string) => {
     const contacts = await db.prepare(
         'SELECT id FROM crm_contact WHERE emails_json LIKE ?'
     ).bind(`%${email}%`).all();
@@ -57,12 +59,12 @@ const deleteForContactByEmail = async (db, email) => {
     }
 };
 
-const cleanSlate = async (db, userId, email) => {
+const cleanSlate = async (db: D1Database, userId: string, email: string) => {
     await deleteForUser(db, userId);
     if (email) await deleteForContactByEmail(db, email);
 };
 
-const insertProgressRow = (db, userId, courseId, classId, timestamp) =>
+const insertProgressRow = (db: D1Database, userId: string, courseId: string, classId: string, timestamp) =>
     db.prepare(`
         INSERT INTO v_user_progress
         (user_id, class_id, course_id, video_max_position_sec, video_duration_sec,
@@ -71,19 +73,19 @@ const insertProgressRow = (db, userId, courseId, classId, timestamp) =>
         VALUES (?, ?, ?, 300, 300, 1, ?, 1, 1, 1, ?, ?)
     `).bind(userId, classId, courseId, timestamp, timestamp, timestamp).run();
 
-const insertEvent = (db, eventId, type, userId, courseId, classId, timestamp, payload) =>
+const insertEvent = (db: D1Database, eventId: string, type, userId: string, courseId: string, classId: string, timestamp, payload) =>
     db.prepare(`
         INSERT INTO lms_event (id, type, user_id, course_id, class_id, occurred_at, payload_json)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `).bind(eventId, type, userId, courseId, classId, timestamp, JSON.stringify(payload)).run();
 
-const awardBadge = (db, awardId, badgeId, userId, now) =>
+const awardBadge = (db: D1Database, awardId: string, badgeId: string, userId: string, now) =>
     db.prepare(`
         INSERT OR IGNORE INTO gamification_award (id, badge_id, user_id, user_type, awarded_at, created_at)
         VALUES (?, ?, ?, 'contact', ?, ?)
     `).bind(awardId, badgeId, userId, now, now).run();
 
-const completeOneStep = async (db, userId, courseId, classId, stepIndex, hourOffset) => {
+const completeOneStep = async (db: D1Database, userId: string, courseId: string, classId: string, stepIndex, hourOffset) => {
     const timestamp = new Date(Date.now() - hourOffset * 3600000).toISOString();
     await insertProgressRow(db, userId, courseId, classId, timestamp);
 
@@ -110,7 +112,7 @@ const completeOneStep = async (db, userId, courseId, classId, stepIndex, hourOff
     );
 };
 
-const completeSteps = async (db, userId, count) => {
+const completeSteps = async (db: D1Database, userId: string, count) => {
     const courseId = 'pw05-2';
     const now = new Date().toISOString();
     const stepCount = Math.min(count, CLASS_IDS.length);
@@ -123,7 +125,7 @@ const completeSteps = async (db, userId, count) => {
     if (count >= 6) await awardBadge(db, `fixture_award_course_${userId}`, 'course_complete', userId, now);
 };
 
-export const applyFixture = async (env, cfUserId, fixture, email = null) => {
+export const applyFixture = async (env: Env, cfUserId: string, fixture, email = null) => {
     if (!(fixture in STEP_COUNTS_BY_FIXTURE)) {
         throw new Error(`Unknown fixture: ${fixture}`);
     }

@@ -2,7 +2,7 @@
  * Record a quiz event in crm_event
  */
 
-export const recordQuizEvent = async (db, userId, quizId, courseId, classId, score, maxScore, passed, answers) => {
+export const recordQuizEvent = async (db: D1Database, userId: string, quizId: string, courseId: string, classId: string, score, maxScore, passed, answers) => {
     const now = new Date().toISOString();
     const id = `evt_${crypto.randomUUID()}`;
 

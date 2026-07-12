@@ -2,7 +2,7 @@
  * Record course completion signal
  */
 
-export const recordCourseCompletion = async (db, userId, courseId) => {
+export const recordCourseCompletion = async (db: D1Database, userId: string, courseId: string) => {
     const now = new Date().toISOString();
     const id = `sig_course_complete_${courseId}_${userId}_${Date.now()}`;
 

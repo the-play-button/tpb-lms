@@ -13,8 +13,9 @@ import { validateEvent } from '../schemas/events.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { persistValidatedEvent, deriveCompletionState, persistBatch, validateBatch } from '../services/events/EventsService.js';
 import { resolveUserId } from './_resolveUserId.js';
+import type { Env } from "../types/Env.js";
 
-const resolveAuthedJsonBody = async (request, userContext) => {
+const resolveAuthedJsonBody = async (request: Request, userContext) => {
     const userId = resolveUserId(userContext);
     if (!userId) return { errorResponse: jsonResponse({ error: 'User not authenticated' }, 401, request) };
     try {
@@ -24,7 +25,7 @@ const resolveAuthedJsonBody = async (request, userContext) => {
     }
 };
 
-const createSingleEvent = async (request, env, userId, body) => {
+const createSingleEvent = async (request: Request, env: Env, userId: string, body) => {
     const validation = validateEvent(body);
     if (!validation.success) return jsonResponse({ error: validation.error }, 400, request);
 
@@ -41,7 +42,7 @@ const createSingleEvent = async (request, env, userId, body) => {
     return jsonResponse({ success: true, event_id: eventId, ...completion }, 201, request);
 };
 
-const createBatchEvents = async (request, env, userId, events) => {
+const createBatchEvents = async (request: Request, env: Env, userId: string, events) => {
     if (!Array.isArray(events) || events.length === 0) {
         return jsonResponse({ error: 'events must be a non-empty array' }, 400, request);
     }
@@ -55,7 +56,7 @@ const createBatchEvents = async (request, env, userId, events) => {
  * (body { events: [...] }). Tier 1 create accepting single-or-array — no separate
  * /batch endpoint (cf. crud_list_only_endpoint_design § Q3 bulk-create).
  */
-export const createEvents = async (request, env, userContext) => {
+export const createEvents = async (request: Request, env: Env, userContext) => {
     const authed = await resolveAuthedJsonBody(request, userContext);
     if (authed.errorResponse) return authed.errorResponse;
     const { userId, body } = authed;

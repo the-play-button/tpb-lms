@@ -2,7 +2,7 @@
  * Get user's current streak (days of consecutive activity)
  */
 
-export const getCurrentStreak = async (db, userId) => {
+export const getCurrentStreak = async (db: D1Database, userId: string) => {
     const activities = await db.prepare(`
         SELECT DISTINCT date(created_at) as activity_date
         FROM crm_event

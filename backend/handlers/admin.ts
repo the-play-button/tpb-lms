@@ -6,12 +6,13 @@ import { jsonResponse } from '../cors.js';
 import { requireRole } from '../middleware/guard.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { fetchAdminStats } from '../services/admin/AdminService.js';
+import type { Env } from "../types/Env.js";
 
 /**
  * Get admin overview statistics
  * GET /api/admin/stats
  */
-export const getAdminStats = async (request, env, userContext) => {
+export const getAdminStats = async (request: Request, env: Env, userContext) => {
     const guardResult = requireRole('admin')(userContext);
     if (guardResult) {
         return jsonResponse({

@@ -1,3 +1,5 @@
+import type { Env } from "../../types/Env.js";
+
 /**
  * GithubContentService — proxy GitHub content fetch with bastion-managed PAT.
  *
@@ -14,7 +16,7 @@ const GITHUB_PAT_VAULT_PATH = 'tpb/infra/github_pat_tpb_repos';
 let cachedToken = null;
 let tokenExpiry = 0;
 
-const fetchVaultToken = async (env, debug) => {
+const fetchVaultToken = async (env: Env, debug) => {
     if (!env.BASTION_URL || !env.BASTION_TOKEN) {
         throw new Error('BASTION_URL and BASTION_TOKEN are required to fetch GitHub PAT from vault');
     }
@@ -39,7 +41,7 @@ const fetchVaultToken = async (env, debug) => {
     return token;
 };
 
-const getTokenDebug = (env) => ({
+const getTokenDebug = (env: Env) => ({
     cached: false,
     hasBastionUrl: !!env.BASTION_URL,
     hasVaultToken: !!env.BASTION_TOKEN,
@@ -48,7 +50,7 @@ const getTokenDebug = (env) => ({
     vaultError: null,
 });
 
-export const getGitHubTokenWithDebug = async (env) => {
+export const getGitHubTokenWithDebug = async (env: Env) => {
     const debug = getTokenDebug(env);
     if (cachedToken && Date.now() < tokenExpiry) {
         debug.cached = true;
@@ -60,9 +62,9 @@ export const getGitHubTokenWithDebug = async (env) => {
     return { token, debug };
 };
 
-export const getGitHubToken = async (env) => (await getGitHubTokenWithDebug(env)).token;
+export const getGitHubToken = async (env: Env) => (await getGitHubTokenWithDebug(env)).token;
 
-export const injectI18nIntoPath = (path, lang) => {
+export const injectI18nIntoPath = (path, lang: string) => {
     if (!lang) return path;
     if (path.includes('/STEPS/')) return path.replace('/STEPS/', `/i18n/${lang}/STEPS/`);
     const match = path.match(/^(.+\/SOM_[^/]+\/)(.+)$/);
@@ -87,7 +89,7 @@ export const parseGitHubUrl = (url) => {
 export const buildGitHubApiUrl = ({ owner, repo, branch, path } = {}) =>
     `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
 
-export const fetchRawContent = async (env, params) => {
+export const fetchRawContent = async (env: Env, params) => {
     const tokenResult = await getGitHubTokenWithDebug(env);
     const apiUrl = buildGitHubApiUrl(params);
     const headers = {
@@ -99,7 +101,7 @@ export const fetchRawContent = async (env, params) => {
     return { response, tokenResult, apiUrl };
 };
 
-export const fetchDirectoryListing = async (env, params) => {
+export const fetchDirectoryListing = async (env: Env, params) => {
     const token = await getGitHubToken(env);
     const apiUrl = buildGitHubApiUrl(params);
     const headers = {

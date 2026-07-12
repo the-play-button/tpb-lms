@@ -8,14 +8,15 @@
  */
 
 import { calculateScore, processQuizSubmission } from '../../handlers/quiz/_shared.js';
+import type { Env } from "../../types/Env.js";
 
-const findQuizClassByTallyFormId = (env, tallyFormId) =>
+const findQuizClassByTallyFormId = (env: Env, tallyFormId: string) =>
     env.DB.prepare(`
         SELECT lc.* FROM lms_class lc, json_each(lc.media_json) je
         WHERE json_extract(je.value, '$.tally_form_id') = ?
     `).bind(tallyFormId).first();
 
-export const submitQuizFromUser = async (env, request, body) => {
+export const submitQuizFromUser = async (env: Env, request: Request, body) => {
     const quizClass = await findQuizClassByTallyFormId(env, body.quizId);
     const { score, maxScore } = calculateScore(body.answers || [], quizClass);
     const enriched = {

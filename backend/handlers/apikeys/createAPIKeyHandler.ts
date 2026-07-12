@@ -6,8 +6,9 @@
 import { jsonResponse } from '../../cors.js';
 import { generateAPIKey, getOrCreateContact } from '../../auth/index.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import type { Env } from "../../types/Env.js";
 
-export const createAPIKeyHandler = async (request, env, auth) => {
+export const createAPIKeyHandler = async (request: Request, env: Env, auth) => {
     try {
         const body = await request.json();
 

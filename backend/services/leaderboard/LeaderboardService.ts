@@ -1,3 +1,5 @@
+import type { Env } from "../../types/Env.js";
+
 /**
  * LeaderboardService — leaderboard + user stats queries.
  */
@@ -22,7 +24,7 @@ const calculateXP = (stats) => {
     return (video_completed_count * 50) + (quiz_passed_count * 100) + (course_completed_count * 200);
 };
 
-const fetchUserInfo = async (db, userId) => {
+const fetchUserInfo = async (db: D1Database, userId: string) => {
     let user = await db.prepare(`
         SELECT id, name, json_extract(emails_json, '$[0].email') as email
         FROM crm_contact WHERE id = ?
@@ -38,7 +40,7 @@ const fetchUserInfo = async (db, userId) => {
     return user ? { id: user.id, name: user.name, email: user.email } : { id: userId };
 };
 
-const fetchCurrentUserRank = async (db, userId) => {
+const fetchCurrentUserRank = async (db: D1Database, userId: string) => {
     const userStats = await db.prepare(
         'SELECT user_id, total_points FROM v_leaderboard WHERE user_id = ?'
     ).bind(userId).first();
@@ -51,7 +53,7 @@ const fetchCurrentUserRank = async (db, userId) => {
     return { rank, points: userStats.total_points };
 };
 
-const enrichLeaderboardEntry = async (db, entry, index) => ({
+const enrichLeaderboardEntry = async (db: D1Database, entry, index) => ({
     rank: index + 1,
     user_id: entry.user_id,
     total_points: entry.total_points || 0,
@@ -61,7 +63,7 @@ const enrichLeaderboardEntry = async (db, entry, index) => ({
     user: await fetchUserInfo(db, entry.user_id),
 });
 
-export const fetchLeaderboard = async (env, userId, limit) => {
+export const fetchLeaderboard = async (env: Env, userId: string, limit) => {
     const results = await env.DB.prepare(`
         SELECT user_id, user_type, total_points, videos_completed, quizzes_completed, badges_earned
         FROM v_leaderboard LIMIT ?
@@ -88,7 +90,7 @@ export const fetchLeaderboard = async (env, userId, limit) => {
     };
 };
 
-const fetchUserStatsParallel = (env, userId) => Promise.all([
+const fetchUserStatsParallel = (env: Env, userId: string) => Promise.all([
     env.DB.prepare('SELECT * FROM v_signal_summary WHERE user_id = ?').bind(userId).first(),
     env.DB.prepare('SELECT * FROM v_user_activity WHERE user_id = ?').bind(userId).first(),
     env.DB.prepare(`
@@ -98,7 +100,7 @@ const fetchUserStatsParallel = (env, userId) => Promise.all([
     `).bind(userId).all(),
 ]);
 
-export const fetchUserStats = async (env, userId) => {
+export const fetchUserStats = async (env: Env, userId: string) => {
     const [stats, activity, badges] = await fetchUserStatsParallel(env, userId);
     return {
         user_id: userId,

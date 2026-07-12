@@ -8,6 +8,7 @@
 import { jsonResponse } from '../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { applyFixture, VALID_FIXTURES } from '../services/fixtures/TestFixturesService.js';
+import type { Env } from "../types/Env.js";
 
 const constantTimeSecretEquals = async (a, b) => {
     if (!a || !b) return false;
@@ -42,7 +43,7 @@ const constantTimeSecretEquals = async (a, b) => {
  * Note: email is optional but HIGHLY RECOMMENDED for clean_slate to work properly.
  * The system uses both CF Access user_id AND contact_id (resolved from email).
  */
-export const handleTestSeed = async (request, env) => {
+export const handleTestSeed = async (request: Request, env: Env) => {
     const secret = request.headers.get('X-Test-Secret');
     if (!await constantTimeSecretEquals(secret, env.TEST_SECRET)) {
         return jsonResponse({ error: 'Forbidden' }, 403, request);

@@ -5,11 +5,12 @@
 import { jsonResponse } from '../cors.js';
 import { fetchCourseSignals, fetchStepSignals, resetProgress } from '../services/signals/SignalsService.js';
 import { resolveUserId } from './_resolveUserId.js';
+import type { Env } from "../types/Env.js";
 
 /**
  * GET /api/signals/:courseId
  */
-export const getCourseSignalsHandler = async (request, env, userContext, courseId) => {
+export const getCourseSignalsHandler = async (request: Request, env: Env, userContext, courseId: string) => {
     const userId = resolveUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
@@ -27,7 +28,7 @@ export const getCourseSignalsHandler = async (request, env, userContext, courseI
 /**
  * GET /api/signals/:courseId/:classId
  */
-export const getStepSignals = async (request, env, userContext, courseId, classId) => {
+export const getStepSignals = async (request: Request, env: Env, userContext, courseId: string, classId: string) => {
     const userId = resolveUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
@@ -39,7 +40,7 @@ export const getStepSignals = async (request, env, userContext, courseId, classI
 /**
  * DELETE /api/signals/:courseId
  */
-export const deleteCourseSignals = async (request, env, userContext, courseId) => {
+export const deleteCourseSignals = async (request: Request, env: Env, userContext, courseId: string) => {
     const userId = resolveUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 

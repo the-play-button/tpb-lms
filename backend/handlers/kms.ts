@@ -5,8 +5,9 @@
 import { jsonResponse } from '../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listSpaces as svcListSpaces, getSpace as svcGetSpace, getPage as svcGetPage } from '../services/kms/KmsReadService.js';
+import type { Env } from "../types/Env.js";
 
-export const listSpaces = async (request, env, userContext) => {
+export const listSpaces = async (request: Request, env: Env, userContext) => {
     try {
         const body = await svcListSpaces(env);
         return jsonResponse(body, 200, request);
@@ -16,7 +17,7 @@ export const listSpaces = async (request, env, userContext) => {
     }
 };
 
-export const getSpace = async (request, env, userContext, spaceId) => {
+export const getSpace = async (request: Request, env: Env, userContext, spaceId: string) => {
     try {
         const space = await svcGetSpace(env, spaceId);
         if (!space) return jsonResponse({ error: 'Space not found' }, 404, request);
@@ -27,7 +28,7 @@ export const getSpace = async (request, env, userContext, spaceId) => {
     }
 };
 
-export const getPage = async (request, env, userContext, pageId) => {
+export const getPage = async (request: Request, env: Env, userContext, pageId: string) => {
     try {
         const page = await svcGetPage(env, pageId);
         if (!page) return jsonResponse({ error: 'Page not found' }, 404, request);

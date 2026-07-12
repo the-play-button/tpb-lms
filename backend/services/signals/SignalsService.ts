@@ -4,8 +4,9 @@
 
 import { checkCourseCompletionBadges, recordCourseCompletion } from '../../utils/xp/index.js';
 import { resolveProgressionMode } from '../courses/_progressionMode.js';
+import type { Env } from "../../types/Env.js";
 
-const queryCourseSteps = (env, userId, courseId) =>
+const queryCourseSteps = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT c.id as class_id, c.name, c.sys_order_index, c.media_json,
             COALESCE(p.video_completed, 0) as video_completed,
@@ -16,14 +17,14 @@ const queryCourseSteps = (env, userId, courseId) =>
         WHERE c.course_id = ? AND c.node_kind = 'LESSON' ORDER BY c.sys_order_index
     `).bind(userId, courseId).all();
 
-const queryCourseRaw = (env, courseId) =>
+const queryCourseRaw = (env: Env, courseId: string) =>
     env.DB.prepare('SELECT raw_json FROM lms_course WHERE id = ?').bind(courseId).first();
 
-const queryClassMeta = (env, classId, courseId) =>
+const queryClassMeta = (env: Env, classId: string, courseId: string) =>
     env.DB.prepare('SELECT id, name, sys_order_index, media_json FROM lms_class WHERE id = ? AND course_id = ?')
         .bind(classId, courseId).first();
 
-const queryStepProgress = (env, userId, classId) =>
+const queryStepProgress = (env: Env, userId: string, classId: string) =>
     env.DB.prepare('SELECT * FROM v_user_progress WHERE user_id = ? AND class_id = ?')
         .bind(userId, classId).first();
 
@@ -53,7 +54,7 @@ const hasCorruptedState = (steps) =>
         return nextStep && !nextStep.can_access;
     });
 
-export const resetProgress = async (env, userId, courseId) => {
+export const resetProgress = async (env: Env, userId: string, courseId: string) => {
     const db = env.DB;
     await db.prepare('DELETE FROM v_user_progress WHERE user_id = ? AND course_id = ?')
         .bind(userId, courseId).run();
@@ -71,7 +72,7 @@ const collectVideoPosition = (row) => {
     };
 };
 
-export const fetchCourseSignals = async (env, userId, courseId) => {
+export const fetchCourseSignals = async (env: Env, userId: string, courseId: string) => {
     const [result, courseRow] = await Promise.all([
         queryCourseSteps(env, userId, courseId),
         queryCourseRaw(env, courseId),
@@ -128,7 +129,7 @@ export const fetchCourseSignals = async (env, userId, courseId) => {
     };
 };
 
-export const fetchStepSignals = async (env, userId, courseId, classId) => {
+export const fetchStepSignals = async (env: Env, userId: string, courseId: string, classId: string) => {
     const [cls, progress] = await Promise.all([
         queryClassMeta(env, classId, courseId),
         queryStepProgress(env, userId, classId),

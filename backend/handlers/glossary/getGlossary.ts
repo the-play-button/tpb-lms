@@ -7,8 +7,9 @@ import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listTerms } from '../../services/glossary/GlossaryService.js';
 import { extractOrgIdFromUrl } from './_glossaryShared.js';
+import type { Env } from "../../types/Env.js";
 
-export const getGlossary = async (request, env, ctx) => {
+export const getGlossary = async (request: Request, env: Env, ctx) => {
     const orgId = extractOrgIdFromUrl(request);
     if (!orgId) return errorResponse('Missing org_id', 400);
 
