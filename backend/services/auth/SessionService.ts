@@ -43,7 +43,19 @@ export const fetchUserData = async (db: D1Database, contactId: string) => {
     };
 };
 
-export const buildSessionResponse = (jwtResult, contact, userData) => {
+interface JwtResult { email?: string; payload?: { name?: string; groups?: unknown[]; [key: string]: unknown } }
+interface SessionContact { id?: string; name?: string; [key: string]: unknown }
+interface SessionUserData {
+    stats?: {
+        total_points?: number;
+        videos_completed?: number;
+        quizzes_completed?: number;
+        [key: string]: unknown;
+    } | null;
+    [key: string]: unknown;
+}
+
+export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionContact, userData: SessionUserData) => {
     const totalPoints = userData.stats?.total_points || 0;
     return {
         user: {

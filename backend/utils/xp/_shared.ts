@@ -5,7 +5,7 @@
 /**
  * Award a badge to a user
  */
-export const awardBadge = async (db: D1Database, userId: string, badgeId: string, courseId = null, classId = null) => {
+export const awardBadge = async (db: D1Database, userId: string, badgeId: string, courseId: string | null = null, classId: string | null = null) => {
     const now = new Date().toISOString();
     const id = `award_${crypto.randomUUID()}`;
 

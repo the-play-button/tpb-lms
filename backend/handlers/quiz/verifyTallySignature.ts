@@ -3,8 +3,9 @@
  */
 
 import { log } from './_shared.js';
+import { toError } from '../../utils/toError.js';
 
-export const verifyTallySignature = async (request: Request, signingSecret) => {
+export const verifyTallySignature = async (request: Request, signingSecret: string) => {
     const signature = request.headers.get('Tally-Signature');
     const body = await request.text();
 
@@ -20,7 +21,7 @@ export const verifyTallySignature = async (request: Request, signingSecret) => {
         const isValid = await crypto.subtle.verify('HMAC', key, signatureBytes, encoder.encode(body));
         return { isValid, body, noSignature: false };
     } catch (error) {
-        log.error('Signature verification error', { error });
+        log.error('Signature verification error', toError(error));
         return { isValid: false, body, noSignature: false, error: 'Signature verification failed' };
     }
 };

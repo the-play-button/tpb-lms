@@ -36,6 +36,11 @@ interface ProgressFields {
     completed_classes_count?: number;
 }
 
+/** Discriminated result of an enrollment action (error path vs value path). */
+export type EnrollmentActionResult =
+    | { error: { status: number; body: unknown } }
+    | { value: { status: number; body: unknown } };
+
 const findCourseById = (env: Env, courseId: string) =>
     env.DB.prepare('SELECT id, name, is_active FROM lms_course WHERE id = ?')
         .bind(courseId).first<CourseRow>();
@@ -147,7 +152,7 @@ const projectEnrollment = (row: EnrollmentRow) => ({
 
 // ============ PUBLIC SERVICE API ============
 
-export const enrollUserInCourse = async (env: Env, userId: string, courseId: string) => {
+export const enrollUserInCourse = async (env: Env, userId: string, courseId: string): Promise<EnrollmentActionResult> => {
     const course = await findCourseById(env, courseId);
     if (!course || !course.is_active) {
         return { error: { status: 404, body: { error: 'Course not found or inactive' } } };
@@ -217,7 +222,7 @@ export const enrollUserInCourse = async (env: Env, userId: string, courseId: str
     };
 };
 
-export const abandonUserCourse = async (env: Env, userId: string, courseId: string) => {
+export const abandonUserCourse = async (env: Env, userId: string, courseId: string): Promise<EnrollmentActionResult> => {
     const enrollment = await findActiveEnrollmentByCourse(env, userId, courseId);
     if (!enrollment) {
         return { error: { status: 404, body: { error: 'No active enrollment found for this course' } } };
@@ -238,7 +243,7 @@ export const abandonUserCourse = async (env: Env, userId: string, courseId: stri
     };
 };
 
-export const completeUserCourse = async (env: Env, userId: string, courseId: string) => {
+export const completeUserCourse = async (env: Env, userId: string, courseId: string): Promise<EnrollmentActionResult> => {
     const enrollment = await findEnrollmentByCourse(env, userId, courseId);
     if (!enrollment) {
         return { error: { status: 404, body: { error: 'No enrollment found for this course' } } };
@@ -259,7 +264,7 @@ export const completeUserCourse = async (env: Env, userId: string, courseId: str
     };
 };
 
-export const updateUserEnrollmentProgress = async (env: Env, userId: string, enrollmentId: string, fields: ProgressFields) => {
+export const updateUserEnrollmentProgress = async (env: Env, userId: string, enrollmentId: string, fields: ProgressFields): Promise<EnrollmentActionResult> => {
     const enrollment = await findEnrollmentForProgress(env, userId, enrollmentId);
     if (!enrollment) {
         return { error: { status: 404, body: { error: 'Enrollment not found' } } };
@@ -271,7 +276,7 @@ export const updateUserEnrollmentProgress = async (env: Env, userId: string, enr
     return { value: { status: 200, body: { message: 'Progress updated' } } };
 };
 
-export const getUserEnrollmentStatus = async (env: Env, userId: string, courseId: string) => {
+export const getUserEnrollmentStatus = async (env: Env, userId: string, courseId: string): Promise<EnrollmentActionResult> => {
     const enrollment = await findEnrollmentDetailsByCourse(env, userId, courseId);
     if (!enrollment) {
         const activeCount = await countActiveEnrollments(env, userId);
@@ -310,7 +315,7 @@ export const getUserEnrollmentStatus = async (env: Env, userId: string, courseId
     };
 };
 
-export const listUserEnrollments = async (env: Env, userId: string, status: string | undefined) => {
+export const listUserEnrollments = async (env: Env, userId: string, status: string | undefined): Promise<EnrollmentActionResult> => {
     const result = await queryUserEnrollments(env, userId, status);
     const enrollments = (result.results || []).map(projectEnrollment);
     const activeCount = enrollments.filter((e) => e.status === 'active').length;

@@ -8,7 +8,7 @@ import { extractCallerJwt } from '@the-play-button/tpb-sdk-js';
 import { fetchUserData, buildSessionResponse } from '../services/auth/SessionService.js';
 import type { Env } from "../types/Env.js";
 
-const validateJWT = async (jwt, env: Env, request: Request) => {
+const validateJWT = async (jwt: string | null | undefined, env: Env, request: Request) => {
     if (!jwt) {
         return {
             error: jsonResponse({
@@ -35,9 +35,9 @@ const validateJWT = async (jwt, env: Env, request: Request) => {
 export const getSession = async (request: Request, env: Env) => {
     // SDK primitive — centralized JWT extraction (CLAUDE.md § BASTION AUTH).
     const validation = await validateJWT(extractCallerJwt(request), env, request);
-    if (validation.error) return validation.error;
+    if ('error' in validation) return validation.error;
 
-    const contact = await getOrCreateContact(validation.result.email, env);
-    const userData = await fetchUserData(env.DB, contact.id);
+    const contact = await getOrCreateContact(validation.result.email ?? '', env);
+    const userData = await fetchUserData(env.DB, contact.id as string);
     return jsonResponse(buildSessionResponse(validation.result, contact, userData), 200, request);
 };

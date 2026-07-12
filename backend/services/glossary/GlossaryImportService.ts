@@ -6,8 +6,9 @@ import { log } from '@the-play-button/tpb-sdk-js';
 import { upsertTerm } from './GlossaryService.js';
 import { isValidTermPayload } from '../../handlers/glossary/_glossaryShared.js';
 import type { Env } from "../../types/Env.js";
+import { toError } from "../../utils/toError.js";
 
-export const bulkImportTerms = async (env: Env, orgId: string, terms) => {
+export const bulkImportTerms = async (env: Env, orgId: string, terms: unknown[]) => {
     let successCount = 0;
     let errorCount = 0;
 
@@ -20,7 +21,7 @@ export const bulkImportTerms = async (env: Env, orgId: string, terms) => {
             await upsertTerm(env, orgId, term);
             successCount += 1;
         } catch (error) {
-            log.error('glossary term import failed', error, { sourceTerm: term.source_term });
+            log.error('glossary term import failed', toError(error), { sourceTerm: term.source_term });
             errorCount += 1;
         }
     }

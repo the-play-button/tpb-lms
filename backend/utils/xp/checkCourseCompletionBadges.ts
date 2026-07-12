@@ -6,7 +6,7 @@
 import { awardBadge } from './_shared.js';
 
 export const checkCourseCompletionBadges = async (db: D1Database, userId: string, courseId: string) => {
-    const badges = [];
+    const badges: unknown[] = [];
 
     const completeBadge = await awardBadge(db, userId, 'course_complete', courseId);
     if (completeBadge) badges.push(completeBadge);
@@ -15,7 +15,7 @@ export const checkCourseCompletionBadges = async (db: D1Database, userId: string
         SELECT COUNT(DISTINCT course_id) as count
         FROM lms_signal
         WHERE user_id = ? AND type = 'COURSE_COMPLETED'
-    `).bind(userId).first();
+    `).bind(userId).first<{ count?: number }>();
 
     const courseCount = (completedCourses?.count || 0) + 1; // +1 for current completion
 
