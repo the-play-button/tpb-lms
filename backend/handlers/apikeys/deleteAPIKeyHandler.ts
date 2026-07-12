@@ -7,8 +7,10 @@ import { jsonResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { findKeyByIdAndUser, revokeKey } from '../../services/apikeys/ApiKeysService.js';
 import type { Env } from "../../types/Env.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import { toError } from "../../utils/toError.js";
 
-export const deleteAPIKeyHandler = async (request: Request, env: Env, auth, keyId: string) => {
+export const deleteAPIKeyHandler = async (request: Request, env: Env, auth: HandlerUserContext, keyId: string) => {
     try {
         const userId = auth.contact?.id;
         if (!userId) return jsonResponse({ error: 'User not found' }, 400, request);
@@ -19,7 +21,7 @@ export const deleteAPIKeyHandler = async (request: Request, env: Env, auth, keyI
         await revokeKey(env, keyId);
         return jsonResponse({ success: true, message: 'API key revoked' }, 200, request);
     } catch (error) {
-        log.error('API key revoke failed', error, { file: 'handlers/apikeys/deleteAPIKeyHandler.js' });
+        log.error('API key revoke failed', toError(error), { file: 'handlers/apikeys/deleteAPIKeyHandler.js' });
         return jsonResponse({ error: 'Failed to revoke API key' }, 500, request);
     }
 };

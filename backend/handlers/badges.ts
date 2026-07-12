@@ -15,6 +15,6 @@ import type { HandlerUserContext } from "../types/HandlerContext.js";
  * Returns all badge definitions with user's earned status.
  */
 export const listBadges = async (request: Request, env: Env, userContext: HandlerUserContext) => {
-    const result = await listBadgesWithUserStatus(env, userContext.contact.id);
+    const result = await listBadgesWithUserStatus(env, userContext.contact?.id ?? '');
     return jsonResponse(result, 200, request);
 };

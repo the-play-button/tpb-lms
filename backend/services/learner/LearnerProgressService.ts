@@ -8,8 +8,16 @@ import type { Env } from "../../types/Env.js";
 const queryUserStats = (env: Env, userId: string) =>
     env.DB.prepare('SELECT * FROM v_user_stats WHERE user_id = ?').bind(userId).first();
 
+interface LeaderboardStatsRow {
+    total_points?: number;
+    videos_completed?: number;
+    quizzes_completed?: number;
+    badges_earned?: number;
+    [key: string]: unknown;
+}
+
 const queryUserLeaderboardRow = (env: Env, userId: string) =>
-    env.DB.prepare('SELECT * FROM v_leaderboard WHERE user_id = ?').bind(userId).first();
+    env.DB.prepare('SELECT * FROM v_leaderboard WHERE user_id = ?').bind(userId).first<LeaderboardStatsRow>();
 
 const queryUserBadges = (env: Env, userId: string) =>
     env.DB.prepare(`
@@ -38,7 +46,7 @@ const queryRecentQuizzes = (env: Env, userId: string) =>
         ORDER BY created_at DESC LIMIT 20
     `).bind(userId).all();
 
-export const fetchLearnerProgress = async (env: Env, userId: string, userEmail) => {
+export const fetchLearnerProgress = async (env: Env, userId: string, userEmail: string | null) => {
     const [stats, leaderboard, badges, videos, quizzes, currentStreak] = await Promise.all([
         queryUserStats(env, userId),
         queryUserLeaderboardRow(env, userId),

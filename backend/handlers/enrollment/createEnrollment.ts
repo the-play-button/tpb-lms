@@ -13,12 +13,12 @@ export const createEnrollment = async (request: Request, env: Env, userContext: 
     const userId = getUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
-    let body = {};
+    let body: { courseId?: string; course_id?: string } = {};
     try { body = await request.json(); } catch { /* empty body → validated below */ }
     const courseId = body?.courseId ?? body?.course_id;
     if (!courseId) return jsonResponse({ error: 'courseId is required' }, 400, request);
 
     const result = await enrollUserInCourse(env, userId, courseId);
-    const out = result.error ?? result.value;
+    const out = 'error' in result ? result.error : result.value;
     return jsonResponse(out.body, out.status, request);
 };

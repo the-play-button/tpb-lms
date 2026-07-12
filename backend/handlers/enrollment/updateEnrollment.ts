@@ -13,11 +13,13 @@ export const updateEnrollment = async (request: Request, env: Env, userContext: 
     const userId = getUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
-    let body = {};
+    let body: { status?: string } = {};
     try { body = await request.json(); } catch { /* empty body → validated below */ }
     const status = body?.status;
 
-    let result;
+    let result:
+        | { error: { status: number; body: unknown } }
+        | { value: { status: number; body: unknown } };
     if (status === 'abandoned') {
         result = await abandonUserCourse(env, userId, courseId);
     } else if (status === 'completed') {
@@ -26,6 +28,6 @@ export const updateEnrollment = async (request: Request, env: Env, userContext: 
         return jsonResponse({ error: "status must be 'abandoned' or 'completed'" }, 400, request);
     }
 
-    const out = result.error ?? result.value;
+    const out = 'error' in result ? result.error : result.value;
     return jsonResponse(out.body, out.status, request);
 };

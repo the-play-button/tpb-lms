@@ -12,8 +12,8 @@ export const listEnrollments = async (request: Request, env: Env, userContext: H
     const userId = getUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
-    const status = new URL(request.url).searchParams.get('status');
+    const status = new URL(request.url).searchParams.get('status') ?? undefined;
     const result = await listUserEnrollments(env, userId, status);
-    const out = result.error ?? result.value;
+    const out = 'error' in result ? result.error : result.value;
     return jsonResponse(out.body, out.status, request);
 };

@@ -12,7 +12,7 @@ export const updateProgress = async (request: Request, env: Env, userContext: Ha
     const userId = getUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
-    let body;
+    let body: { current_class_id?: string; completed_classes_count?: number };
     try {
         body = await request.json();
     } catch {
@@ -20,6 +20,6 @@ export const updateProgress = async (request: Request, env: Env, userContext: Ha
     }
 
     const result = await updateUserEnrollmentProgress(env, userId, enrollmentId, body);
-    const out = result.error ?? result.value;
+    const out = 'error' in result ? result.error : result.value;
     return jsonResponse(out.body, out.status, request);
 };

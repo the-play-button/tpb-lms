@@ -7,8 +7,9 @@ import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listByContent } from '../../services/translations/TranslationsService.js';
 import type { Env } from "../../types/Env.js";
+import { toError } from "../../utils/toError.js";
 
-export const getTranslations = async (request: Request, env: Env, ctx) => {
+export const getTranslations = async (request: Request, env: Env, _ctx?: unknown) => {
     const pathParts = new URL(request.url).pathname.split('/');
     const contentType = pathParts[2];
     const contentId = pathParts[3];
@@ -25,7 +26,7 @@ export const getTranslations = async (request: Request, env: Env, ctx) => {
             translations,
         });
     } catch (error) {
-        log.error('translations fetch failed', error, { file: 'handlers/translations/getTranslations.js' });
+        log.error('translations fetch failed', toError(error), { file: 'handlers/translations/getTranslations.js' });
         return errorResponse('Failed to fetch translations', 500);
     }
 };

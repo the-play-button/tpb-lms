@@ -7,11 +7,14 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { bulkUpsert } from '../../services/translations/TranslationsService.js';
 import type { Env } from "../../types/Env.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.js";
 
-export const upsertTranslations = async (request: Request, env: Env, ctx) => {
-    let body;
+interface UpsertTranslationsBody { translations?: unknown[]; }
+
+export const upsertTranslations = async (request: Request, env: Env, ctx: HandlerUserContext) => {
+    let body: UpsertTranslationsBody;
     try {
-        body = await request.json();
+        body = await request.json() as UpsertTranslationsBody;
     } catch {
         return errorResponse('Invalid JSON body', 400);
     }
@@ -22,7 +25,7 @@ export const upsertTranslations = async (request: Request, env: Env, ctx) => {
     }
 
     const userId = ctx.user?.id || 'system';
-    const { successCount, errorCount } = await bulkUpsert(env, translations, userId);
+    const { successCount, errorCount } = await bulkUpsert(env, translations as never, userId);
     return jsonResponse({
         success: true,
         inserted: successCount,
