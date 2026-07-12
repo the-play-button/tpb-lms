@@ -37,7 +37,7 @@ export const adminCreateAPIKeyHandler = async (request: Request, env: Env, userC
 
         const result = await generateAPIKey(
             body.name.trim(),
-            contact.id,
+            (contact.id as string | null) ?? null,
             env,
             {
                 scopes: body.scopes || '*',

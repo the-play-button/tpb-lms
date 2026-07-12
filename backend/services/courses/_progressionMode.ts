@@ -17,17 +17,17 @@ export const DEFAULT_PROGRESSION_MODE = 'linear';
  * @param {string|object|null|undefined} rawJson - lms_course.raw_json (string or parsed).
  * @returns {'linear'|'free'}
  */
-export const resolveProgressionMode = (rawJson) => {
+export const resolveProgressionMode = (rawJson: string | Record<string, unknown> | null | undefined): string => {
     if (!rawJson) return DEFAULT_PROGRESSION_MODE;
 
-    let parsed;
+    let parsed: unknown;
     try {
         parsed = typeof rawJson === 'string' ? JSON.parse(rawJson) : rawJson;
     } catch {
         return DEFAULT_PROGRESSION_MODE;
     }
 
-    const mode = parsed?.tpb_progression_mode;
+    const mode = (parsed as { tpb_progression_mode?: string } | null)?.tpb_progression_mode;
     if (mode == null) return DEFAULT_PROGRESSION_MODE;
     if (PROGRESSION_MODES.includes(mode)) return mode;
 

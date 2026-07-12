@@ -4,7 +4,18 @@ import type { Env } from "../../types/Env.js";
  * AdminService — admin-only aggregated stats.
  */
 
-const projectAdminStats = (stats) => ({
+interface AdminStatsRow {
+    total_students?: number;
+    active_24h?: number;
+    active_7d?: number;
+    courses_completed?: number;
+    videos_completed?: number;
+    quizzes_passed?: number;
+    avg_quiz_score?: number | null;
+    [key: string]: unknown;
+}
+
+const projectAdminStats = (stats: AdminStatsRow) => ({
     totalStudents: stats.total_students || 0,
     active24h: stats.active_24h || 0,
     active7d: stats.active_7d || 0,
@@ -15,7 +26,7 @@ const projectAdminStats = (stats) => ({
 });
 
 export const fetchAdminStats = async (env: Env) => {
-    const stats = await env.DB.prepare('SELECT * FROM v_admin_overview').first();
+    const stats = await env.DB.prepare('SELECT * FROM v_admin_overview').first<AdminStatsRow>();
     if (!stats) return null;
     return projectAdminStats(stats);
 };

@@ -23,10 +23,10 @@ interface TokenDebug {
 }
 
 interface GitHubUrlParts {
-    owner?: string;
-    repo?: string;
-    branch?: string;
-    path?: string;
+    owner?: string | null;
+    repo?: string | null;
+    branch?: string | null;
+    path?: string | null;
 }
 
 let cachedToken: string | null = null;

@@ -52,7 +52,7 @@ export const base64urlDecode = (str: string) => {
 export const importPublicKey = async (jwk: Jwk) => {
     return await crypto.subtle.importKey(
         'jwk',
-        { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: 'RS256', use: 'sig' },
+        { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: 'RS256', use: 'sig' } as JsonWebKey,
         { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
         false,
         ['verify']

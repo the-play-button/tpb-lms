@@ -62,17 +62,17 @@ const fetchUserInfo = async (db: D1Database, userId: string) => {
     return user ? { id: user.id, name: user.name, email: user.email } : { id: userId };
 };
 
-const fetchCurrentUserRank = async (db: D1Database, userId: string) => {
+const fetchCurrentUserRank = async (db: D1Database, userId: string): Promise<{ rank: number | null; points: number }> => {
     const userStats = await db.prepare(
         'SELECT user_id, total_points FROM v_leaderboard WHERE user_id = ?'
-    ).bind(userId).first();
+    ).bind(userId).first<{ user_id?: string; total_points?: number }>();
     if (!userStats) return { rank: null, points: 0 };
 
     const rankResult = await db.prepare(
         'SELECT COUNT(*) + 1 as rank FROM v_leaderboard WHERE total_points > ?'
-    ).bind(userStats.total_points).first();
-    const { rank = null } = rankResult || {};
-    return { rank, points: userStats.total_points };
+    ).bind(userStats.total_points ?? 0).first<{ rank?: number }>();
+    const rank = rankResult?.rank ?? null;
+    return { rank, points: userStats.total_points ?? 0 };
 };
 
 const enrichLeaderboardEntry = async (db: D1Database, entry: LeaderboardRow, index: number) => ({
@@ -82,7 +82,7 @@ const enrichLeaderboardEntry = async (db: D1Database, entry: LeaderboardRow, ind
     video_completed_count: entry.videos_completed || 0,
     quiz_passed_count: entry.quizzes_completed || 0,
     badges_count: entry.badges_earned || 0,
-    user: await fetchUserInfo(db, entry.user_id),
+    user: await fetchUserInfo(db, entry.user_id ?? ''),
 });
 
 export const fetchLeaderboard = async (env: Env, userId: string, limit: number) => {

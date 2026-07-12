@@ -13,7 +13,7 @@ import type { HandlerUserContext } from "../types/HandlerContext.js";
  * Supports ?lang= parameter for translations
  */
 export const listCourses = async (request: Request, env: Env, userContext: HandlerUserContext) => {
-    const userId = resolveUserId(userContext);
+    const userId = resolveUserId(userContext) ?? '';
     const lang = new URL(request.url).searchParams.get('lang') ?? '';
     const body = await listCoursesForUser(env, userId, lang);
     return jsonResponse(body, 200, request);
@@ -24,7 +24,7 @@ export const listCourses = async (request: Request, env: Env, userContext: Handl
  * Supports ?lang= parameter for translations
  */
 export const getCourse = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string) => {
-    const userId = resolveUserId(userContext);
+    const userId = resolveUserId(userContext) ?? '';
     const lang = new URL(request.url).searchParams.get('lang') ?? '';
     const result = await getCourseForUser(env, userId, courseId, lang);
     if (result.notFound) return jsonResponse({ error: 'Course not found' }, 404, request);
