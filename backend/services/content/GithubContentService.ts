@@ -13,10 +13,26 @@ const TOKEN_TTL_MS = 5 * 60 * 1000;
 // the one the SDK + all Workers consume.
 const GITHUB_PAT_VAULT_PATH = 'tpb/infra/github_pat_tpb_repos';
 
-let cachedToken = null;
+interface TokenDebug {
+    cached: boolean;
+    hasBastionUrl: boolean;
+    hasVaultToken: boolean;
+    vaultTokenPrefix: string | null;
+    vaultStatus: number | null;
+    vaultError: string | null;
+}
+
+interface GitHubUrlParts {
+    owner?: string;
+    repo?: string;
+    branch?: string;
+    path?: string;
+}
+
+let cachedToken: string | null = null;
 let tokenExpiry = 0;
 
-const fetchVaultToken = async (env: Env, debug) => {
+const fetchVaultToken = async (env: Env, debug: TokenDebug): Promise<string> => {
     if (!env.BASTION_URL || !env.BASTION_TOKEN) {
         throw new Error('BASTION_URL and BASTION_TOKEN are required to fetch GitHub PAT from vault');
     }
@@ -33,7 +49,7 @@ const fetchVaultToken = async (env: Env, debug) => {
         const body = await response.text();
         throw new Error(`Vault fetch failed (${response.status}): ${body}`);
     }
-    const result = await response.json();
+    const result = await response.json() as { value?: string; data?: { value?: string } };
     const token = result.value ?? result.data?.value ?? null;
     if (!token) {
         throw new Error(`Vault response missing value for ${GITHUB_PAT_VAULT_PATH}`);
@@ -41,7 +57,7 @@ const fetchVaultToken = async (env: Env, debug) => {
     return token;
 };
 
-const getTokenDebug = (env: Env) => ({
+const getTokenDebug = (env: Env): TokenDebug => ({
     cached: false,
     hasBastionUrl: !!env.BASTION_URL,
     hasVaultToken: !!env.BASTION_TOKEN,
@@ -64,7 +80,7 @@ export const getGitHubTokenWithDebug = async (env: Env) => {
 
 export const getGitHubToken = async (env: Env) => (await getGitHubTokenWithDebug(env)).token;
 
-export const injectI18nIntoPath = (path, lang: string) => {
+export const injectI18nIntoPath = (path: string, lang: string): string => {
     if (!lang) return path;
     if (path.includes('/STEPS/')) return path.replace('/STEPS/', `/i18n/${lang}/STEPS/`);
     const match = path.match(/^(.+\/SOM_[^/]+\/)(.+)$/);
@@ -76,7 +92,7 @@ const RAW_PATTERN = /raw\.githubusercontent\.com\/([^/]+)\/([^/]+)\/([^/]+)\/(.+
 const BLOB_PATTERN = /github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/;
 const SIMPLE_PATTERN = /^([^/]+)\/([^/]+)\/(.+)$/;
 
-export const parseGitHubUrl = (url) => {
+export const parseGitHubUrl = (url: string): GitHubUrlParts | null => {
     const raw = url.match(RAW_PATTERN);
     if (raw) return { owner: raw[1], repo: raw[2], branch: raw[3], path: raw[4] };
     const blob = url.match(BLOB_PATTERN);
@@ -86,13 +102,13 @@ export const parseGitHubUrl = (url) => {
     return null;
 };
 
-export const buildGitHubApiUrl = ({ owner, repo, branch, path } = {}) =>
+export const buildGitHubApiUrl = ({ owner, repo, branch, path }: GitHubUrlParts = {}) =>
     `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
 
-export const fetchRawContent = async (env: Env, params) => {
+export const fetchRawContent = async (env: Env, params: GitHubUrlParts) => {
     const tokenResult = await getGitHubTokenWithDebug(env);
     const apiUrl = buildGitHubApiUrl(params);
-    const headers = {
+    const headers: Record<string, string> = {
         'Accept': 'application/vnd.github.v3.raw',
         'User-Agent': 'TPB-LMS/1.0',
     };
@@ -101,10 +117,10 @@ export const fetchRawContent = async (env: Env, params) => {
     return { response, tokenResult, apiUrl };
 };
 
-export const fetchDirectoryListing = async (env: Env, params) => {
+export const fetchDirectoryListing = async (env: Env, params: GitHubUrlParts) => {
     const token = await getGitHubToken(env);
     const apiUrl = buildGitHubApiUrl(params);
-    const headers = {
+    const headers: Record<string, string> = {
         'Accept': 'application/vnd.github.v3+json',
         'User-Agent': 'TPB-LMS/1.0',
     };
