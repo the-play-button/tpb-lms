@@ -2,7 +2,7 @@
 # Deploy with: npx wrangler deploy
 
 name = "lms-api"
-main = "index.js"
+main = "index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
