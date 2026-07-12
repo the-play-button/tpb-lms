@@ -9,8 +9,12 @@
  * - /* → Serve static assets
  */
 
+interface FrontendWorkerEnv {
+    ASSETS: { fetch(request: Request): Promise<Response> };
+}
+
 export default {
-    async fetch(request, env) {
+    async fetch(request: Request, env: FrontendWorkerEnv): Promise<Response> {
         const url = new URL(request.url);
         
         if (url.pathname === '/__auth/token') {

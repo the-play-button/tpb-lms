@@ -2,7 +2,7 @@
 # Deploy with: npx wrangler deploy (from frontend-on-cf-worker directory)
 
 name = "lms-viewer"
-main = "_worker.js"
+main = "_worker.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 
