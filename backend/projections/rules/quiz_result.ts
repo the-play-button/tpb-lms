@@ -6,26 +6,30 @@
  * Simple logic: store score, mark passed at 80%
  */
 
-export const QUIZ_RESULT_PROJECTION = {
+import type { Projection, ProjectionEvent, ProjectionKey, ProjectionState } from '../engine.js';
+
+interface QuizPayload { score?: number; max_score?: number; }
+
+export const QUIZ_RESULT_PROJECTION: Projection = {
     name: 'quiz_result',
     eventTypes: ['QUIZ_SUBMIT'],
-    
+
     /**
      * Extract key from event
      */
-    getKey(event) {
+    getKey(event: ProjectionEvent): ProjectionKey {
         return {
-            user_id: event.user_id,
-            class_id: event.class_id
+            user_id: event.user_id ?? '',
+            class_id: event.class_id ?? ''
         };
     },
-    
+
     /**
      * Reduce: (currentState, event) => newState
      * Pure function, no side effects
      */
-    reduce(state, event) {
-        const payload = event.payload;
+    reduce(state: ProjectionState, event: ProjectionEvent & { payload: unknown }): ProjectionState {
+        const payload = (event.payload ?? {}) as QuizPayload;
         const score = payload.score || 0;
         const maxScore = payload.max_score || 1;
         const percentage = Math.round((score / maxScore) * 100);

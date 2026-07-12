@@ -5,8 +5,18 @@
 import { sha256 } from './_shared.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import type { Env } from "../types/Env.js";
+import { toError } from "../utils/toError.js";
 
-export const verifyAPIKey = async (apiKey, env: Env) => {
+interface ApiKeyRow {
+    id: string;
+    name?: string;
+    user_id?: string;
+    scopes?: string;
+    expires_at?: string | null;
+    is_active?: number;
+}
+
+export const verifyAPIKey = async (apiKey: string | null | undefined, env: Env) => {
     if (!apiKey) {
         return { valid: false, error: 'No API key provided' };
     }
@@ -22,7 +32,7 @@ export const verifyAPIKey = async (apiKey, env: Env) => {
             SELECT id, name, user_id, scopes, expires_at, is_active
             FROM api_key
             WHERE key_hash = ? AND is_active = 1
-        `).bind(keyHash).first();
+        `).bind(keyHash).first<ApiKeyRow>();
 
         if (!record) {
             return { valid: false, error: 'Invalid API key' };
@@ -46,7 +56,7 @@ export const verifyAPIKey = async (apiKey, env: Env) => {
         };
 
     } catch (error) {
-        log.error('API key verification error', error, { file: 'auth/verifyAPIKey.js' });
+        log.error('API key verification error', toError(error), { file: 'auth/verifyAPIKey.js' });
         return { valid: false, error: 'API key verification failed' };
     }
 };

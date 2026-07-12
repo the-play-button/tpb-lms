@@ -50,23 +50,24 @@ const schemas = {
  * @param {object} body - Raw request body
  * @returns {{ success: boolean, data?: object, error?: string }}
  */
-export const validateEvent = (body) => {
-  if (!body?.type) {
-    return { success: false, error: 'type is required' };
+export const validateEvent = (body: unknown) => {
+  const typed = body as { type?: string } | null;
+  if (!typed?.type) {
+    return { success: false as const, error: 'type is required' };
   }
-  
-  const schema = schemas[body.type];
+
+  const schema = schemas[typed.type as keyof typeof schemas];
   if (!schema) {
-    return { success: false, error: `Unknown event type: ${body.type}` };
+    return { success: false as const, error: `Unknown event type: ${typed.type}` };
   }
-  
+
   const result = schema.safeParse(body);
   if (result.success) {
-    return { success: true, data: result.data };
+    return { success: true as const, data: result.data };
   }
-  
-  return { 
-    success: false, 
-    error: result.error.issues.map(({ message } = {}) => `${i.path.join('.')}: ${message}`).join(', ')
+
+  return {
+    success: false as const,
+    error: result.error.issues.map((i) => `${i.path.join('.')}: ${i.message}`).join(', ')
   };
 };

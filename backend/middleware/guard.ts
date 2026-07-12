@@ -10,18 +10,26 @@
  * @param {...string} allowedRoles - Roles that are allowed (e.g., 'admin', 'instructor', 'student')
  * @returns {Function} Guard function that takes userContext
  */
-export const requireRole = (...allowedRoles) => {
-  return (userContext) => {
-    const { user: { role = 'student' } = {} } = userContext ?? {};
-    
+import type { HandlerUserContext } from '../types/HandlerContext.js';
+
+export interface RoleGuardError {
+  error: string;
+  requiredRole: string[];
+  actualRole: string;
+}
+
+export const requireRole = (...allowedRoles: string[]) => {
+  return (userContext: HandlerUserContext | null | undefined): RoleGuardError | null => {
+    const role = userContext?.user?.role ?? 'student';
+
     if (!allowedRoles.includes(role)) {
-      return { 
-        error: 'Forbidden', 
+      return {
+        error: 'Forbidden',
         requiredRole: allowedRoles,
-        actualRole: role 
+        actualRole: role
       };
     }
-    
+
     return null; // OK - no error
   };
 };

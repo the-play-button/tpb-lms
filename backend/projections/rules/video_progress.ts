@@ -6,26 +6,30 @@
  * Simple logic: track max position reached, complete at 90%
  */
 
-export const VIDEO_PROGRESS_PROJECTION = {
+import type { Projection, ProjectionEvent, ProjectionKey, ProjectionState } from '../engine.js';
+
+interface VideoPayload { position_sec?: number; duration_sec?: number; }
+
+export const VIDEO_PROGRESS_PROJECTION: Projection = {
     name: 'video_progress',
     eventTypes: ['VIDEO_PING'],
-    
+
     /**
      * Extract key from event
      */
-    getKey(event) {
+    getKey(event: ProjectionEvent): ProjectionKey {
         return {
-            user_id: event.user_id,
-            class_id: event.class_id
+            user_id: event.user_id ?? '',
+            class_id: event.class_id ?? ''
         };
     },
-    
+
     /**
      * Reduce: (currentState, event) => newState
      * Pure function, no side effects
      */
-    reduce(state, event) {
-        const payload = event.payload;
+    reduce(state: ProjectionState, event: ProjectionEvent & { payload: unknown }): ProjectionState {
+        const payload = (event.payload ?? {}) as VideoPayload;
         const position = payload.position_sec || 0;
         const duration = payload.duration_sec || state.video_duration_sec || 0;
         

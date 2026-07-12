@@ -6,15 +6,17 @@
 import { sha256 } from './_shared.js';
 import type { Env } from "../types/Env.js";
 
-export const generateAPIKey = async (name, userId: string, env: Env, options = {}) => {
+interface GenerateApiKeyOptions { scopes?: string; expiresAt?: string | null; }
+
+export const generateAPIKey = async (name: string, userId: string | null, env: Env, options: GenerateApiKeyOptions = {}) => {
     const key = 'tpb_' + crypto.randomUUID().replace(/-/g, '');
     const keyHash = await sha256(key);
     const keyPrefix = key.substring(0, 12); // tpb_ + 8 chars
 
     const id = crypto.randomUUID();
     const now = new Date().toISOString();
-    const scopes = options.scopes || '*';
-    const expiresAt = options.expiresAt || null;
+    const scopes = options.scopes ?? '*';
+    const expiresAt = options.expiresAt ?? null;
 
     await env.DB.prepare(`
         INSERT INTO api_key (id, name, key_hash, key_prefix, user_id, scopes, expires_at, created_at, is_active)

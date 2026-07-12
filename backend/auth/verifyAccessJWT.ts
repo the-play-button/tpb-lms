@@ -5,8 +5,12 @@
 import { base64urlDecode, importPublicKey, getJWKS } from './_shared.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import type { Env } from "../types/Env.js";
+import { toError } from "../utils/toError.js";
 
-export const verifyAccessJWT = async (token, env: Env) => {
+interface JwtPayload { exp?: number; email?: string; sub?: string; [key: string]: unknown; }
+interface JwtHeader { kid?: string; [key: string]: unknown; }
+
+export const verifyAccessJWT = async (token: string | null | undefined, env: Env) => {
     if (!token) {
         return { valid: false, error: 'No token provided' };
     }
@@ -18,8 +22,8 @@ export const verifyAccessJWT = async (token, env: Env) => {
         }
 
         const [headerB64, payloadB64, signatureB64] = parts;
-        const header = JSON.parse(new TextDecoder().decode(base64urlDecode(headerB64)));
-        const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(payloadB64)));
+        const header = JSON.parse(new TextDecoder().decode(base64urlDecode(headerB64))) as JwtHeader;
+        const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(payloadB64))) as JwtPayload;
 
         if (payload.exp && payload.exp < Math.floor(Date.now() / 1000)) {
             return { valid: false, error: 'Token expired' };
@@ -27,7 +31,7 @@ export const verifyAccessJWT = async (token, env: Env) => {
 
         const teamDomain = env.ACCESS_TEAM_DOMAIN || 'theplaybutton';
         const jwks = await getJWKS(teamDomain);
-        const key = jwks.keys.find(({ kid } = {}) => kid === header.kid);
+        const key = jwks.keys.find((k) => k.kid === header.kid);
 
         if (!key) {
             return { valid: false, error: 'Key not found in JWKS' };
@@ -56,7 +60,7 @@ export const verifyAccessJWT = async (token, env: Env) => {
         };
 
     } catch (error) {
-        log.error('JWT verification error', error, { file: 'auth/verifyAccessJWT.js' });
+        log.error('JWT verification error', toError(error), { file: 'auth/verifyAccessJWT.js' });
         return { valid: false, error: 'JWT verification failed' };
     }
 };
