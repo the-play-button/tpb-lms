@@ -14,26 +14,50 @@ export const XP_QUIZ_PASS = 100;
 
 export { jsonResponse, recordQuizEvent, checkQuizBadges, checkStreakBadges, applyProjections, generateEventId };
 
+/** Row shape of the quiz `lms_class` (media_json + raw_json carry the quiz config). */
+interface QuizClassRow {
+    id?: string;
+    media_json?: string | null;
+    raw_json?: string | null;
+    [key: string]: unknown;
+}
+
+/** Tally form field (answers arrive as an array of these). */
+interface TallyField {
+    key?: string;
+    label?: string;
+    title?: string;
+    value?: unknown;
+    answer?: { value?: unknown };
+}
+
+type CorrectAnswers = Record<string, unknown>;
+type QuizAnswers = TallyField[] | Record<string, unknown>;
+
+/** Normalize a caught `unknown` into an Error for `log.error`. */
+const toError = (e: unknown): Error => (e instanceof Error ? e : new Error(String(e)));
+
 /**
  * Get pass threshold from quiz class media_json
  */
-export const getPassThreshold = quizClass => {
+export const getPassThreshold = (quizClass: QuizClassRow | null | undefined): number => {
     if (!quizClass?.media_json) {
         return 80;
     }
-    const quizMedia = JSON.parse(quizClass.media_json).find(({ type } = {}) => type === 'QUIZ' || type === 'WEB');
+    const media = JSON.parse(quizClass.media_json) as Array<{ type?: string; pass_threshold?: number }>;
+    const quizMedia = media.find((m) => m?.type === 'QUIZ' || m?.type === 'WEB');
     return quizMedia?.pass_threshold || 80;
 };
 
 /**
  * Build list of wrong answers for corrections modal
  */
-export const buildWrongAnswersList = (answers, correctAnswers) => {
-    const wrong = [];
+export const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: CorrectAnswers) => {
+    const wrong: Array<{ question: unknown; yourAnswer: unknown; correctAnswer: unknown }> = [];
     if (!Array.isArray(answers)) return null;
 
     for (const field of answers) {
-        const questionText = field.title || field.label;
+        const questionText = field.title || field.label || '';
         const userAnswer = field.answer?.value || field.value;
         const correct = correctAnswers[questionText];
 
@@ -51,10 +75,10 @@ export const buildWrongAnswersList = (answers, correctAnswers) => {
 /**
  * Extract user/course/answers from Tally fields
  */
-export const extractFieldsFromPayload = fields => {
-    let userId = null;
-    let courseId = null;
-    const answers = {};
+export const extractFieldsFromPayload = (fields: TallyField[]) => {
+    let userId: unknown = null;
+    let courseId: unknown = null;
+    const answers: Record<string, unknown> = {};
 
     for (const field of fields) {
         const key = field.key || '';
@@ -75,7 +99,7 @@ export const extractFieldsFromPayload = fields => {
 /**
  * Calculate quiz score from answers and config
  */
-export const calculateScore = (answers, quizClass) => {
+export const calculateScore = (answers: QuizAnswers, quizClass: QuizClassRow | null): { score: number; maxScore: number } => {
     if (!quizClass) {
         throw new Error('calculateScore: quizClass is null — quiz lookup failed');
     }
@@ -83,7 +107,7 @@ export const calculateScore = (answers, quizClass) => {
         throw new Error(`calculateScore: raw_json missing on class ${quizClass.id}`);
     }
 
-    const correctAnswers = JSON.parse(quizClass.raw_json).correct_answers;
+    const correctAnswers = JSON.parse(quizClass.raw_json).correct_answers as CorrectAnswers | undefined;
     if (!correctAnswers || Object.keys(correctAnswers).length === 0) {
         throw new Error(`calculateScore: no correct_answers in class ${quizClass.id}`);
     }
@@ -93,7 +117,7 @@ export const calculateScore = (answers, quizClass) => {
 
     if (Array.isArray(answers)) {
         for (const field of answers) {
-            const questionText = field.title || field.label;
+            const questionText = field.title || field.label || '';
             const userAnswer = field.answer?.value || field.value;
             const correct = correctAnswers[questionText];
 
@@ -120,9 +144,20 @@ export const calculateScore = (answers, quizClass) => {
 /**
  * Store quiz event in lms_event and run projections
  */
+interface StoreQuizEventInput {
+    userId: string;
+    quizId: string;
+    courseId: string;
+    classId: string;
+    score: number;
+    maxScore: number;
+    percentage: number;
+    passed: boolean;
+}
+
 export const storeQuizEvent = async (
     env: Env,
-    { userId, quizId, courseId, classId, score, maxScore, percentage, passed } = {}
+    { userId, quizId, courseId, classId, score, maxScore, percentage, passed }: StoreQuizEventInput
 ) => {
     const eventId = generateEventId();
     const now = new Date().toISOString();
@@ -147,16 +182,26 @@ export const storeQuizEvent = async (
 /**
  * Handle badges for passed quiz
  */
-export const handleQuizBadges = async (db: D1Database, userId: string, isPerfect) => {
+export const handleQuizBadges = async (db: D1Database, userId: string, isPerfect: boolean) => {
     let badge = await checkQuizBadges(db, userId, isPerfect);
     if (!badge) badge = await checkStreakBadges(db, userId);
     return badge;
 };
 
+interface QuizSubmissionData {
+    userId: string;
+    quizId: string;
+    courseId: string;
+    classId: string;
+    score: number;
+    maxScore: number;
+    answers: QuizAnswers;
+}
+
 /**
  * Process quiz submission (main logic)
  */
-export const processQuizSubmission = async (data, env: Env, request: Request, quizClass = null) => {
+export const processQuizSubmission = async (data: QuizSubmissionData, env: Env, request: Request, quizClass: QuizClassRow | null = null) => {
     const { userId, quizId, courseId, classId, score, maxScore, answers } = data;
 
     if (!userId || !quizId || score === undefined || !maxScore) {
@@ -178,7 +223,7 @@ export const processQuizSubmission = async (data, env: Env, request: Request, qu
             await storeQuizEvent(env, { userId, quizId, courseId, classId, score, maxScore, percentage, passed });
             storeQuizEventOk = true;
         } catch (e) {
-            log.error('Failed to store lms_event or run projection', { error: e });
+            log.error('Failed to store lms_event or run projection', toError(e));
             storeQuizEventOk = false; // explicit fail marker — telemetry only
         }
     }
@@ -196,7 +241,7 @@ export const processQuizSubmission = async (data, env: Env, request: Request, qu
             log.info('Reset video progress for retry (position reset to 0)', { userId, classId });
             videoProgressResetOk = true;
         } catch (e) {
-            log.error('Failed to reset video progress', { error: e });
+            log.error('Failed to reset video progress', toError(e));
             videoProgressResetOk = false; // explicit fail marker — retry next request
         }
 
@@ -222,7 +267,7 @@ export const processQuizSubmission = async (data, env: Env, request: Request, qu
             try {
                 wrongAnswers = buildWrongAnswersList(answers, JSON.parse(quizClass.raw_json).correct_answers || {});
             } catch (e) {
-                log.warn('Failed to build wrong answers list', { error: e.message });
+                log.warn('Failed to build wrong answers list', { error: toError(e).message });
                 wrongAnswers = null; // explicit fallback — UI shows generic "review incorrect answers" message
             }
         }
