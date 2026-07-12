@@ -23,6 +23,9 @@ export interface Env extends BastionClientEnv {
    *  plans/2026-05-26_exit-unifiedto-runtime-final/. */
   TPB_STORAGE_URL: string;
 
+  // --- Test fixtures (dev/QA seed endpoint auth) ---
+  TEST_SECRET?: string;
+
   // --- Legacy (to be removed post-migration) ---
   BASTION_BACKEND_SECRET_KEY?: string;
   TALLY_WEBHOOK_SECRET?: string;

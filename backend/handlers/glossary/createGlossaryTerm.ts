@@ -10,14 +10,24 @@ import { upsertTerm } from '../../services/glossary/GlossaryService.js';
 import { bulkImportTerms } from '../../services/glossary/GlossaryImportService.js';
 import { extractOrgIdFromUrl, isValidTermPayload } from './_glossaryShared.js';
 import type { Env } from "../../types/Env.js";
+import { toError } from "../../utils/toError.js";
 
-export const createGlossaryTerm = async (request: Request, env: Env, ctx) => {
+interface GlossaryTermBody {
+    terms?: unknown[];
+    source_lang?: string;
+    target_lang?: string;
+    source_term?: string;
+    target_term?: string;
+    context?: string;
+}
+
+export const createGlossaryTerm = async (request: Request, env: Env, _ctx?: unknown) => {
     const orgId = extractOrgIdFromUrl(request);
     if (!orgId) return errorResponse('Missing org_id', 400);
 
-    let body;
+    let body: GlossaryTermBody;
     try {
-        body = await request.json();
+        body = await request.json() as GlossaryTermBody;
     } catch {
         return errorResponse('Invalid JSON body', 400);
     }
@@ -48,7 +58,7 @@ export const createGlossaryTerm = async (request: Request, env: Env, ctx) => {
             context,
         });
     } catch (error) {
-        log.error('glossary term add failed', error, { file: 'handlers/glossary/createGlossaryTerm.js' });
+        log.error('glossary term add failed', toError(error), { file: 'handlers/glossary/createGlossaryTerm.js' });
         return errorResponse('Failed to add glossary term', 500);
     }
 };

@@ -7,14 +7,23 @@ import { jsonResponse } from '../../cors.js';
 import { generateAPIKey, getOrCreateContact } from '../../auth/index.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import type { Env } from "../../types/Env.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import { toError } from "../../utils/toError.js";
 
-export const adminCreateAPIKeyHandler = async (request: Request, env: Env, userContext) => {
+interface AdminCreateApiKeyBody {
+    name?: string;
+    user_email?: string;
+    scopes?: string;
+    expiresAt?: string | null;
+}
+
+export const adminCreateAPIKeyHandler = async (request: Request, env: Env, userContext: HandlerUserContext) => {
     try {
         if (userContext.user?.role !== 'admin') {
             return jsonResponse({ error: 'Forbidden: Admin role required' }, 403, request);
         }
 
-        const body = await request.json();
+        const body = await request.json() as AdminCreateApiKeyBody;
 
         if (!body.name || typeof body.name !== 'string' || body.name.trim().length === 0) {
             return jsonResponse({ error: 'Name is required' }, 400, request);
@@ -53,7 +62,7 @@ export const adminCreateAPIKeyHandler = async (request: Request, env: Env, userC
         }, 201, request);
 
     } catch (error) {
-        log.error('admin API key create failed', error, { file: 'handlers/apikeys/adminCreateAPIKeyHandler.js' });
+        log.error('admin API key create failed', toError(error), { file: 'handlers/apikeys/adminCreateAPIKeyHandler.js' });
         return jsonResponse({ error: 'Failed to create API key' }, 500, request);
     }
 };

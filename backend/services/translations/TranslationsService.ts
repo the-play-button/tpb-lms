@@ -4,19 +4,50 @@
 
 import { log } from '@the-play-button/tpb-sdk-js';
 import type { Env } from "../../types/Env.js";
+import { toError } from "../../utils/toError.js";
 
-const translationId = (contentType, contentId: string, field, lang: string) =>
+interface TranslationRow {
+    field: string;
+    lang: string;
+    value?: string;
+    source?: string;
+    reviewed_at?: string | null;
+    reviewed_by?: string | null;
+    updated_at?: string | null;
+    [key: string]: unknown;
+}
+
+interface UpsertParams {
+    contentType: string;
+    contentId: string;
+    field: string;
+    lang: string;
+    value: string;
+    source: string;
+    userId: string;
+}
+
+interface TranslationPayload {
+    content_type?: string;
+    content_id?: string;
+    field?: string;
+    lang?: string;
+    value?: unknown;
+    source?: string;
+}
+
+const translationId = (contentType: string, contentId: string, field: string, lang: string) =>
     `${contentType}:${contentId}:${field}:${lang}`;
 
-export const listByContent = async (env: Env, contentType, contentId: string) => {
+export const listByContent = async (env: Env, contentType: string, contentId: string) => {
     const result = await env.DB.prepare(`
         SELECT field, lang, value, source, reviewed_at, reviewed_by, updated_at
         FROM translations
         WHERE content_type = ? AND content_id = ?
         ORDER BY lang, field
-    `).bind(contentType, contentId).all();
+    `).bind(contentType, contentId).all<TranslationRow>();
 
-    const byLang = {};
+    const byLang: Record<string, Record<string, unknown>> = {};
     for (const row of result.results) {
         if (!byLang[row.lang]) byLang[row.lang] = {};
         byLang[row.lang][row.field] = {
@@ -30,7 +61,7 @@ export const listByContent = async (env: Env, contentType, contentId: string) =>
     return byLang;
 };
 
-export const upsertOne = async (env: Env, params) => {
+export const upsertOne = async (env: Env, params: UpsertParams) => {
     const { contentType, contentId, field, lang, value, source, userId } = params;
     const id = translationId(contentType, contentId, field, lang);
     await env.DB.prepare(`
@@ -42,7 +73,7 @@ export const upsertOne = async (env: Env, params) => {
     return id;
 };
 
-export const listForReview = async (env: Env, source, limit) => {
+export const listForReview = async (env: Env, source: string, limit: number) => {
     const result = await env.DB.prepare(`
         SELECT id, content_type, content_id, field, lang, value, source, created_at
         FROM translations
@@ -53,7 +84,7 @@ export const listForReview = async (env: Env, source, limit) => {
     return result.results;
 };
 
-const upsertBatchOne = async (env: Env, payload, userId: string) => {
+const upsertBatchOne = async (env: Env, payload: TranslationPayload, userId: string) => {
     const { content_type, content_id, field, lang, value, source = 'ai' } = payload;
     if (!content_type || !content_id || !field || !lang || value === undefined) {
         return false;
@@ -68,12 +99,12 @@ const upsertBatchOne = async (env: Env, payload, userId: string) => {
         `).bind(id, content_type, content_id, field, lang, value, source, value, source).run();
         return true;
     } catch (error) {
-        log.error('translation upsert failed', error, { translationId: id });
+        log.error('translation upsert failed', toError(error), { translationId: id });
         return false;
     }
 };
 
-export const bulkUpsert = async (env: Env, translations, userId: string) => {
+export const bulkUpsert = async (env: Env, translations: TranslationPayload[], userId: string) => {
     let successCount = 0;
     let errorCount = 0;
     for (const t of translations) {

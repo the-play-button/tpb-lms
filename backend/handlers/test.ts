@@ -9,8 +9,11 @@ import { jsonResponse } from '../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { applyFixture, VALID_FIXTURES } from '../services/fixtures/TestFixturesService.js';
 import type { Env } from "../types/Env.js";
+import { toError } from "../utils/toError.js";
 
-const constantTimeSecretEquals = async (a, b) => {
+interface TestSeedBody { fixture?: string; user_id?: string; email?: string; }
+
+const constantTimeSecretEquals = async (a: string | null | undefined, b: string | null | undefined) => {
     if (!a || !b) return false;
     const key = await crypto.subtle.importKey(
         'raw',
@@ -49,9 +52,9 @@ export const handleTestSeed = async (request: Request, env: Env) => {
         return jsonResponse({ error: 'Forbidden' }, 403, request);
     }
 
-    let body;
+    let body: TestSeedBody;
     try {
-        body = await request.json();
+        body = await request.json() as TestSeedBody;
     } catch {
         return jsonResponse({ error: 'Invalid JSON body' }, 400, request);
     }
@@ -64,7 +67,7 @@ export const handleTestSeed = async (request: Request, env: Env) => {
     }
 
     try {
-        await applyFixture(env, user_id, fixture, email);
+        await applyFixture(env, user_id, fixture, email ?? null);
         return jsonResponse({
             success: true,
             fixture,
@@ -73,7 +76,7 @@ export const handleTestSeed = async (request: Request, env: Env) => {
             message: `Fixture '${fixture}' applied successfully`,
         }, 200, request);
     } catch (e) {
-        log.error('fixture error', e, { file: 'handlers/test.js' });
-        return jsonResponse({ error: 'Failed to apply fixture', detail: e.message }, 500, request);
+        log.error('fixture error', toError(e), { file: 'handlers/test.js' });
+        return jsonResponse({ error: 'Failed to apply fixture', detail: toError(e).message }, 500, request);
     }
 };

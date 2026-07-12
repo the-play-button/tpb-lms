@@ -16,7 +16,17 @@ import {
 } from '../services/content/GithubContentService.js';
 import type { Env } from "../types/Env.js";
 
-const resolveGitHubParams = (url) => {
+interface GitHubParams {
+    owner?: string | null;
+    repo?: string | null;
+    branch?: string | null;
+    path?: string | null;
+}
+type ResolvedParams = { error: string } | { params: GitHubParams };
+
+const toError = (e: unknown): Error => (e instanceof Error ? e : new Error(String(e)));
+
+const resolveGitHubParams = (url: URL): ResolvedParams => {
     const urlParam = url.searchParams.get('url');
     if (urlParam) {
         const parsed = parseGitHubUrl(decodeURIComponent(urlParam));
@@ -30,7 +40,7 @@ const resolveGitHubParams = (url) => {
     return { params: { owner, repo, branch, path } };
 };
 
-const buildAuthErrorResponse = (request: Request, response, errorBody, token, vaultDebug) => {
+const buildAuthErrorResponse = (request: Request, response: Response, errorBody: string, token: string | null, vaultDebug: unknown) => {
     const baseDebug = {
         gitHubStatus: response.status,
         gitHubError: errorBody,
@@ -54,12 +64,12 @@ const buildAuthErrorResponse = (request: Request, response, errorBody, token, va
 /**
  * GET /api/content/github
  */
-export const getGitHubContent = async (request: Request, env: Env, userContext) => {
+export const getGitHubContent = async (request: Request, env: Env, _userContext?: unknown) => {
     const url = new URL(request.url);
     const langParam = url.searchParams.get('lang');
     const resolved = resolveGitHubParams(url);
-    if (resolved.error) return jsonResponse({ error: resolved.error }, 400, request);
-    const params = { ...resolved.params };
+    if ('error' in resolved) return jsonResponse({ error: resolved.error }, 400, request);
+    const params: GitHubParams = { ...resolved.params };
     if (!params.owner || !params.repo || !params.path) {
         return jsonResponse({
             error: 'Missing required parameters',
@@ -67,7 +77,7 @@ export const getGitHubContent = async (request: Request, env: Env, userContext) 
             optional: 'branch (defaults to main), lang (for i18n)',
         }, 400, request);
     }
-    if (langParam) params.path = injectI18nIntoPath(params.path, langParam);
+    if (langParam && params.path) params.path = injectI18nIntoPath(params.path, langParam);
 
     try {
         const { response, tokenResult } = await fetchRawContent(env, params);
@@ -89,17 +99,25 @@ export const getGitHubContent = async (request: Request, env: Env, userContext) 
                 'Content-Type': 'text/markdown; charset=utf-8',
                 'Cache-Control': 'public, max-age=300',
                 'X-GitHub-Repo': `${params.owner}/${params.repo}`,
-                'X-GitHub-Branch': params.branch,
-                'X-GitHub-Path': params.path,
+                'X-GitHub-Branch': params.branch ?? 'main',
+                'X-GitHub-Path': params.path ?? '',
             },
         });
     } catch (error) {
-        log.error('GitHub content fetch error:', error);
-        return jsonResponse({ error: 'Failed to fetch content', message: error.message }, 500, request);
+        log.error('GitHub content fetch error:', toError(error));
+        return jsonResponse({ error: 'Failed to fetch content', message: toError(error).message }, 500, request);
     }
 };
 
-const projectDirectoryItem = (item) => ({
+interface DirectoryItem {
+    name?: string;
+    path?: string;
+    type?: string;
+    size?: number;
+    download_url?: string | null;
+}
+
+const projectDirectoryItem = (item: DirectoryItem) => ({
     name: item.name,
     path: item.path,
     type: item.type,
@@ -110,7 +128,7 @@ const projectDirectoryItem = (item) => ({
 /**
  * GET /api/content/github/tree
  */
-export const listGitHubDirectory = async (request: Request, env: Env, userContext) => {
+export const listGitHubDirectory = async (request: Request, env: Env, _userContext?: unknown) => {
     const url = new URL(request.url);
     const owner = url.searchParams.get('owner');
     const repo = url.searchParams.get('repo');
@@ -123,7 +141,7 @@ export const listGitHubDirectory = async (request: Request, env: Env, userContex
         if (!response.ok) {
             return jsonResponse({ error: `GitHub API error: ${response.status}` }, response.status, request);
         }
-        const items = await response.json();
+        const items = await response.json() as DirectoryItem[];
         return jsonResponse({
             owner,
             repo,
@@ -132,6 +150,6 @@ export const listGitHubDirectory = async (request: Request, env: Env, userContex
             files: items.map(projectDirectoryItem),
         }, 200, request);
     } catch (error) {
-        return jsonResponse({ error: error.message }, 500, request);
+        return jsonResponse({ error: toError(error).message }, 500, request);
     }
 };

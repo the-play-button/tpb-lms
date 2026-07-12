@@ -12,8 +12,40 @@
 import { VIDEO_PROGRESS_PROJECTION } from './rules/video_progress.js';
 import { QUIZ_RESULT_PROJECTION } from './rules/quiz_result.js';
 import { log } from '@the-play-button/tpb-sdk-js';
+import { toError } from '../utils/toError.js';
 
-const PROJECTIONS = [
+export interface ProjectionKey { user_id: string; class_id: string; }
+
+export interface ProjectionState {
+    video_completed?: number;
+    quiz_passed?: number;
+    video_max_position_sec?: number;
+    video_duration_sec?: number;
+    video_completed_at?: string | null;
+    quiz_score?: number;
+    quiz_max_score?: number;
+    quiz_passed_at?: string | null;
+    [key: string]: unknown;
+}
+
+export interface ProjectionEvent {
+    id?: string;
+    type: string;
+    user_id?: string;
+    course_id?: string;
+    class_id?: string;
+    payload_json?: unknown;
+    [key: string]: unknown;
+}
+
+export interface Projection {
+    name: string;
+    eventTypes: string[];
+    getKey: (event: ProjectionEvent) => ProjectionKey;
+    reduce: (state: ProjectionState, event: ProjectionEvent & { payload: unknown }) => ProjectionState;
+}
+
+const PROJECTIONS: Projection[] = [
     VIDEO_PROGRESS_PROJECTION,
     QUIZ_RESULT_PROJECTION
 ];
@@ -26,9 +58,9 @@ const PROJECTIONS = [
  * @param {Object} event - { id, type, user_id, course_id, class_id, payload_json }
  * @returns {Object} - { video_completed, quiz_passed }
  */
-export const applyProjections = async (db: D1Database, event) => {
-    let result = {};
-    
+export const applyProjections = async (db: D1Database, event: ProjectionEvent) => {
+    const result: Record<string, unknown> = {};
+
     for (const projection of PROJECTIONS) {
         if (!projection.eventTypes.includes(event.type)) continue;
         
@@ -51,7 +83,7 @@ export const applyProjections = async (db: D1Database, event) => {
             
             log.info('Projection applied', { name: projection.name, video_completed: next.video_completed, quiz_passed: next.quiz_passed });
         } catch (error) {
-            log.error('Projection failed', { name: projection.name, error });
+            log.error('Projection failed', toError(error), { name: projection.name });
             result[`${projection.name}_failed`] = true; // explicit failure marker — caller can detect
         }
     }
@@ -62,17 +94,17 @@ export const applyProjections = async (db: D1Database, event) => {
 /**
  * Get current state from v_user_progress
  */
-const getState = async (db: D1Database, key) => {
+const getState = async (db: D1Database, key: ProjectionKey) => {
     return await db.prepare(`
-        SELECT * FROM v_user_progress 
+        SELECT * FROM v_user_progress
         WHERE user_id = ? AND class_id = ?
-    `).bind(key.user_id, key.class_id).first();
+    `).bind(key.user_id, key.class_id).first<ProjectionState>();
 }
 
 /**
  * Upsert state into v_user_progress
  */
-const upsertState = async (db: D1Database, key, courseId: string, state) => {
+const upsertState = async (db: D1Database, key: ProjectionKey, courseId: string | undefined, state: ProjectionState) => {
     const now = new Date().toISOString();
     
     await db.prepare(`
