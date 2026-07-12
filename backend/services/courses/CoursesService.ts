@@ -5,30 +5,83 @@
 import { resolveProgressionMode } from './_progressionMode.js';
 import type { Env } from "../../types/Env.js";
 
-const loadTranslations = async (env: Env, contentType, contentId: string, lang: string) => {
+type Translations = Record<string, string>;
+
+interface MediaItem {
+    type?: string;
+    url?: string;
+    [key: string]: unknown;
+}
+
+/** Row shape of the localized `lms_class` join (queryCourseClasses). */
+interface ClassRow {
+    id: string;
+    name?: string;
+    description?: string;
+    media_json?: string | null;
+    raw_json?: string | null;
+    sys_order_index?: number | null;
+    parent_class_id?: string | null;
+    node_kind?: string | null;
+    video_completed?: number;
+    quiz_passed?: number;
+    video_max_position_sec?: number | null;
+    video_duration_sec?: number | null;
+    [key: string]: unknown;
+}
+
+/** Row shape of `lms_course` (queryActiveCourses / queryCourseById). */
+interface CourseRow {
+    id: string;
+    name?: string;
+    description?: string;
+    categories_json?: string | null;
+    is_private?: number;
+    media_json?: string | null;
+    program_id?: string | null;
+    raw_json?: string | null;
+    [key: string]: unknown;
+}
+
+interface EnrichedClass {
+    id: string;
+    name?: string;
+    description?: string;
+    order_index: number;
+    media: MediaItem[];
+    step_type: string;
+    content_md: string;
+    video_completed: boolean;
+    quiz_passed: boolean;
+    step_completed: boolean;
+    can_access: boolean;
+    [key: string]: unknown;
+}
+
+const loadTranslations = async (env: Env, contentType: string, contentId: string, lang: string): Promise<Translations> => {
     const result = await env.DB.prepare(`
         SELECT field, value FROM translations
         WHERE content_type = ? AND content_id = ? AND lang = ?
-    `).bind(contentType, contentId, lang).all();
-    const map = {};
+    `).bind(contentType, contentId, lang).all<{ field: string; value: string }>();
+    const map: Translations = {};
     for (const row of result.results || []) map[row.field] = row.value;
     return map;
 };
 
-const applyTranslations = (obj, translations) => {
+const applyTranslations = <T extends Record<string, unknown>>(obj: T, translations: Translations): T => {
     if (!translations || Object.keys(translations).length === 0) return obj;
-    const result = { ...obj };
+    const result = { ...obj } as Record<string, unknown>;
     for (const [field, value] of Object.entries(translations)) {
         if (field === 'name' && result.title !== undefined) result.title = value;
         if (result[field] !== undefined) result[field] = value;
     }
-    return result;
+    return result as T;
 };
 
-const enrichMedia = (media, videoCompleted, quizPassed, cls) => {
+const enrichMedia = (media: MediaItem, videoCompleted: boolean, quizPassed: boolean, cls: ClassRow): MediaItem => {
     if (media.type === 'VIDEO') {
         const coveragePct = cls.video_duration_sec
-            ? Math.round((cls.video_max_position_sec / cls.video_duration_sec) * 100)
+            ? Math.round(((cls.video_max_position_sec ?? 0) / cls.video_duration_sec) * 100)
             : 0;
         return { ...media, completed: videoCompleted, coverage_pct: coveragePct };
     }
@@ -36,10 +89,10 @@ const enrichMedia = (media, videoCompleted, quizPassed, cls) => {
     return media;
 };
 
-const enrichClass = (cls, currentStep) => {
-    const media = cls.media_json ? JSON.parse(cls.media_json) : [];
-    const raw = cls.raw_json ? JSON.parse(cls.raw_json) : {};
-    const hasQuiz = media.some(({ type } = {}) => type === 'QUIZ');
+const enrichClass = (cls: ClassRow, currentStep: number): EnrichedClass => {
+    const media: MediaItem[] = cls.media_json ? JSON.parse(cls.media_json) : [];
+    const raw: Record<string, unknown> = cls.raw_json ? JSON.parse(cls.raw_json) : {};
+    const hasQuiz = media.some((m: MediaItem) => m.type === 'QUIZ');
     const videoCompleted = cls.video_completed === 1;
     const quizPassed = cls.quiz_passed === 1;
     const stepCompleted = videoCompleted && (!hasQuiz || quizPassed);
@@ -49,9 +102,9 @@ const enrichClass = (cls, currentStep) => {
         name: cls.name,
         description: cls.description,
         order_index: orderIndex,
-        media: media.map((m) => enrichMedia(m, videoCompleted, quizPassed, cls)),
-        step_type: raw.tpb_step_type || 'CONTENT',
-        content_md: raw.tpb_content_md || '',
+        media: media.map((m: MediaItem) => enrichMedia(m, videoCompleted, quizPassed, cls)),
+        step_type: (raw.tpb_step_type as string) || 'CONTENT',
+        content_md: (raw.tpb_content_md as string) || '',
         video_completed: videoCompleted,
         quiz_passed: quizPassed,
         step_completed: stepCompleted,
@@ -67,26 +120,28 @@ const queryActiveCourses = (env: Env) =>
 
 // First IMAGE media url = the course cover (uploaded as media_json IMAGE). null when
 // absent → the classroom card falls back to its deterministic gradient.
-const extractCoverImageUrl = (mediaJson) => {
+const extractCoverImageUrl = (mediaJson: string | null | undefined): string | null => {
     if (!mediaJson) return null;
     try {
-        const media = JSON.parse(mediaJson);
-        return Array.isArray(media) ? (media.find((m) => m?.type === 'IMAGE')?.url ?? null) : null;
+        const media: unknown = JSON.parse(mediaJson);
+        return Array.isArray(media)
+            ? ((media as MediaItem[]).find((m) => m?.type === 'IMAGE')?.url ?? null)
+            : null;
     } catch {
         return null;
     }
 };
 
 const queryCourseStepCount = (env: Env, courseId: string) =>
-    env.DB.prepare("SELECT COUNT(*) as count FROM lms_class WHERE course_id = ? AND node_kind = 'LESSON'").bind(courseId).first();
+    env.DB.prepare("SELECT COUNT(*) as count FROM lms_class WHERE course_id = ? AND node_kind = 'LESSON'").bind(courseId).first<{ count: number }>();
 
 const queryCourseProgress = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT SUM(video_completed) as videos_completed, SUM(quiz_passed) as quizzes_passed
         FROM v_user_progress WHERE user_id = ? AND course_id = ?
-    `).bind(userId, courseId).first();
+    `).bind(userId, courseId).first<{ videos_completed: number | null; quizzes_passed: number | null }>();
 
-const enrichCourseSummary = async (env: Env, course, userId: string, lang: string) => {
+const enrichCourseSummary = async (env: Env, course: CourseRow, userId: string, lang: string) => {
     const [stepCount, progress] = await Promise.all([
         queryCourseStepCount(env, course.id),
         queryCourseProgress(env, userId, course.id),
@@ -117,15 +172,16 @@ const enrichCourseSummary = async (env: Env, course, userId: string, lang: strin
 
 export const listCoursesForUser = async (env: Env, userId: string, lang: string) => {
     const courses = await queryActiveCourses(env);
+    const rows = (courses.results || []) as unknown as CourseRow[];
     const enriched = await Promise.all(
-        (courses.results || []).map((course) => enrichCourseSummary(env, course, userId, lang))
+        rows.map((course) => enrichCourseSummary(env, course, userId, lang))
     );
     return { courses: enriched };
 };
 
 const queryCourseById = (env: Env, courseId: string) =>
     env.DB.prepare('SELECT * FROM lms_course WHERE id = ? AND is_active = 1')
-        .bind(courseId).first();
+        .bind(courseId).first<CourseRow>();
 
 const queryCourseClasses = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
@@ -140,7 +196,7 @@ const queryCourseClasses = (env: Env, userId: string, courseId: string) =>
         WHERE c.course_id = ? ORDER BY c.sys_order_index ASC
     `).bind(userId, courseId).all();
 
-const applyCourseTranslations = async (env: Env, courseId: string, lang: string, baseTitle, baseDescription) => {
+const applyCourseTranslations = async (env: Env, courseId: string, lang: string, baseTitle: string | undefined, baseDescription: string | undefined) => {
     if (!lang) return { title: baseTitle, description: baseDescription };
     const translations = await loadTranslations(env, 'course', courseId, lang);
     return {
@@ -149,7 +205,7 @@ const applyCourseTranslations = async (env: Env, courseId: string, lang: string,
     };
 };
 
-const applyClassTranslations = async (env: Env, enrichedClasses, lang: string) => {
+const applyClassTranslations = async (env: Env, enrichedClasses: EnrichedClass[], lang: string): Promise<EnrichedClass[]> => {
     if (!lang) return enrichedClasses;
     return Promise.all(enrichedClasses.map(async (cls) => {
         const classTranslations = await loadTranslations(env, 'class', cls.id, lang);
@@ -162,12 +218,14 @@ const applyClassTranslations = async (env: Env, enrichedClasses, lang: string) =
 // SECTION nodes are folders; LESSON nodes are leaves carrying media + progress.
 const ROOT_KEY = '__root';
 
-const buildAdjacency = (rows) => {
-    const byParent = new Map();
+type Adjacency = Map<string, ClassRow[]>;
+
+const buildAdjacency = (rows: ClassRow[]): Adjacency => {
+    const byParent: Adjacency = new Map();
     for (const row of rows) {
         const key = row.parent_class_id || ROOT_KEY;
         if (!byParent.has(key)) byParent.set(key, []);
-        byParent.get(key).push(row);
+        byParent.get(key)!.push(row);
     }
     for (const siblings of byParent.values()) {
         siblings.sort((a, b) => (a.sys_order_index ?? 0) - (b.sys_order_index ?? 0));
@@ -177,7 +235,7 @@ const buildAdjacency = (rows) => {
 
 // Depth-first traversal → ordered flat list of LESSON leaf rows (the global step
 // sequence used for sequential progress / can_access gating).
-const flattenLessonsDFS = (byParent, key = ROOT_KEY, acc = []) => {
+const flattenLessonsDFS = (byParent: Adjacency, key = ROOT_KEY, acc: ClassRow[] = []): ClassRow[] => {
     for (const row of byParent.get(key) || []) {
         if ((row.node_kind || 'LESSON') === 'LESSON') acc.push(row);
         flattenLessonsDFS(byParent, row.id, acc);
@@ -187,7 +245,7 @@ const flattenLessonsDFS = (byParent, key = ROOT_KEY, acc = []) => {
 
 // Enrich the DFS-ordered lesson rows, assigning a GLOBAL step index by position
 // (sys_order_index is now per-sibling, so array position is the true ordinal).
-const enrichLessonSequence = (lessonRows) => {
+const enrichLessonSequence = (lessonRows: ClassRow[]): EnrichedClass[] => {
     let currentStep = 0;
     const enriched = lessonRows.map((cls, i) => {
         const e = enrichClass(cls, currentStep);
@@ -199,7 +257,7 @@ const enrichLessonSequence = (lessonRows) => {
 };
 
 // Build the display tree: SECTION folders + LESSON leaves (enriched/localized).
-const buildDisplayTree = (byParent, lessonById: string, sectionNameById: string, key = ROOT_KEY) =>
+const buildDisplayTree = (byParent: Adjacency, lessonById: Map<string, EnrichedClass>, sectionNameById: Map<string, string>, key = ROOT_KEY): unknown[] =>
     (byParent.get(key) || []).map((row) => {
         const kind = row.node_kind || 'LESSON';
         if (kind === 'SECTION') {
@@ -219,8 +277,8 @@ const buildDisplayTree = (byParent, lessonById: string, sectionNameById: string,
         };
     });
 
-const translateSectionNames = async (env: Env, sectionRows, lang: string) => {
-    const map = new Map();
+const translateSectionNames = async (env: Env, sectionRows: ClassRow[], lang: string): Promise<Map<string, string>> => {
+    const map = new Map<string, string>();
     if (!lang) return map;
     await Promise.all(sectionRows.map(async (row) => {
         const t = await loadTranslations(env, 'class', row.id, lang);
@@ -234,14 +292,14 @@ export const getCourseForUser = async (env: Env, userId: string, courseId: strin
     if (!course) return { notFound: true };
 
     const classesResult = await queryCourseClasses(env, userId, courseId);
-    const rows = classesResult.results || [];
+    const rows = (classesResult.results || []) as unknown as ClassRow[];
     const byParent = buildAdjacency(rows);
 
     // Flat LESSON sequence (progress) + section folders (display).
     const lessonRows = flattenLessonsDFS(byParent);
     const enrichedLessons = enrichLessonSequence(lessonRows);
     const localizedLessons = await applyClassTranslations(env, enrichedLessons, lang);
-    const lessonById = new Map(localizedLessons.map((l) => [l.id, l]));
+    const lessonById = new Map<string, EnrichedClass>(localizedLessons.map((l) => [l.id, l]));
 
     const sectionRows = rows.filter((r) => (r.node_kind || 'LESSON') === 'SECTION');
     const sectionNameById = await translateSectionNames(env, sectionRows, lang);
@@ -249,7 +307,7 @@ export const getCourseForUser = async (env: Env, userId: string, courseId: strin
     const nodes = buildDisplayTree(byParent, lessonById, sectionNameById);
     const localizedCourse = await applyCourseTranslations(env, courseId, lang, course.name, course.description);
 
-    const completedSteps = localizedLessons.filter(({ step_completed } = {}) => step_completed).length;
+    const completedSteps = localizedLessons.filter((l) => l.step_completed).length;
     const currentStepIndex = completedSteps;
     const progressionMode = resolveProgressionMode(course.raw_json);
     const total = localizedLessons.length;
