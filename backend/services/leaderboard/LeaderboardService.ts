@@ -4,7 +4,29 @@ import type { Env } from "../../types/Env.js";
  * LeaderboardService — leaderboard + user stats queries.
  */
 
-const buildStatsObject = (stats) => {
+interface StatsRow {
+    video_completed_count?: number;
+    quiz_passed_count?: number;
+    step_completed_count?: number;
+    course_completed_count?: number;
+}
+
+interface ActivityRow {
+    last_event_at?: string | null;
+    events_24h?: number;
+    total_events?: number;
+}
+
+interface LeaderboardRow {
+    user_id?: string;
+    total_points?: number;
+    videos_completed?: number;
+    quizzes_completed?: number;
+    badges_earned?: number;
+    [key: string]: unknown;
+}
+
+const buildStatsObject = (stats: StatsRow | null) => {
     const {
         video_completed_count = 0,
         quiz_passed_count = 0,
@@ -14,12 +36,12 @@ const buildStatsObject = (stats) => {
     return { video_completed_count, quiz_passed_count, step_completed_count, course_completed_count };
 };
 
-const buildActivityObject = (activity) => {
+const buildActivityObject = (activity: ActivityRow | null) => {
     const { last_event_at = null, events_24h = 0, total_events = 0 } = activity || {};
     return { last_event_at, events_24h, total_events };
 };
 
-const calculateXP = (stats) => {
+const calculateXP = (stats: StatsRow | null) => {
     const { video_completed_count = 0, quiz_passed_count = 0, course_completed_count = 0 } = stats || {};
     return (video_completed_count * 50) + (quiz_passed_count * 100) + (course_completed_count * 200);
 };
@@ -53,7 +75,7 @@ const fetchCurrentUserRank = async (db: D1Database, userId: string) => {
     return { rank, points: userStats.total_points };
 };
 
-const enrichLeaderboardEntry = async (db: D1Database, entry, index) => ({
+const enrichLeaderboardEntry = async (db: D1Database, entry: LeaderboardRow, index: number) => ({
     rank: index + 1,
     user_id: entry.user_id,
     total_points: entry.total_points || 0,
@@ -63,11 +85,11 @@ const enrichLeaderboardEntry = async (db: D1Database, entry, index) => ({
     user: await fetchUserInfo(db, entry.user_id),
 });
 
-export const fetchLeaderboard = async (env: Env, userId: string, limit) => {
+export const fetchLeaderboard = async (env: Env, userId: string, limit: number) => {
     const results = await env.DB.prepare(`
         SELECT user_id, user_type, total_points, videos_completed, quizzes_completed, badges_earned
         FROM v_leaderboard LIMIT ?
-    `).bind(limit).all();
+    `).bind(limit).all<LeaderboardRow>();
 
     const leaderboard = await Promise.all(
         (results.results || []).map((entry, index) => enrichLeaderboardEntry(env.DB, entry, index))

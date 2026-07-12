@@ -32,7 +32,7 @@ export const verifyAPIKey = async (apiKey, env: Env) => {
             return { valid: false, error: 'API key expired' };
         }
 
-        env.DB.prepare(`
+        void env.DB.prepare(`
             UPDATE api_key SET last_used_at = ? WHERE id = ?
         `).bind(new Date().toISOString(), record.id).run();
 

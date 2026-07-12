@@ -3,17 +3,29 @@
  * SSOT for term-id derivation + DB upsert.
  */
 
-export const REQUIRED_FIELDS = ['source_lang', 'target_lang', 'source_term', 'target_term'];
+export interface GlossaryTermPayload {
+    source_lang?: string;
+    target_lang?: string;
+    source_term?: string;
+    target_term?: string;
+    context?: string;
+    [key: string]: unknown;
+}
 
-export const isValidTermPayload = (payload) =>
-    payload &&
-    REQUIRED_FIELDS.every((key) => typeof payload[key] === 'string' && payload[key].length > 0);
+export const REQUIRED_FIELDS = ['source_lang', 'target_lang', 'source_term', 'target_term'] as const;
 
-export const deriveTermId = (orgId: string, sourceLang: string, targetLang: string, sourceTerm) =>
+export const isValidTermPayload = (payload: unknown): payload is GlossaryTermPayload =>
+    !!payload &&
+    REQUIRED_FIELDS.every((key) => {
+        const v = (payload as Record<string, unknown>)[key];
+        return typeof v === 'string' && v.length > 0;
+    });
+
+export const deriveTermId = (orgId: string, sourceLang: string, targetLang: string, sourceTerm: string) =>
     `${orgId}-${sourceLang}-${targetLang}-${sourceTerm.toLowerCase().replace(/\s+/g, '_')}`;
 
-export const upsertGlossaryTerm = async (db: D1Database, orgId: string, payload) => {
-    const { source_lang, target_lang, source_term, target_term, context } = payload;
+export const upsertGlossaryTerm = async (db: D1Database, orgId: string, payload: GlossaryTermPayload) => {
+    const { source_lang = '', target_lang = '', source_term = '', target_term = '', context } = payload;
     const id = deriveTermId(orgId, source_lang, target_lang, source_term);
 
     await db.prepare(`

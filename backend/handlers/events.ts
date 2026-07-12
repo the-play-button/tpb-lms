@@ -14,18 +14,23 @@ import { log } from '@the-play-button/tpb-sdk-js';
 import { persistValidatedEvent, deriveCompletionState, persistBatch, validateBatch } from '../services/events/EventsService.js';
 import { resolveUserId } from './_resolveUserId.js';
 import type { Env } from "../types/Env.js";
+import type { HandlerUserContext } from "../types/HandlerContext.js";
+import { toError } from "../utils/toError.js";
 
-const resolveAuthedJsonBody = async (request: Request, userContext) => {
+interface EventBody { events?: unknown[]; [key: string]: unknown; }
+type AuthedBody = { errorResponse: Response } | { userId: string; body: EventBody };
+
+const resolveAuthedJsonBody = async (request: Request, userContext: HandlerUserContext): Promise<AuthedBody> => {
     const userId = resolveUserId(userContext);
     if (!userId) return { errorResponse: jsonResponse({ error: 'User not authenticated' }, 401, request) };
     try {
-        return { userId, body: await request.json() };
+        return { userId, body: await request.json() as EventBody };
     } catch {
         return { errorResponse: jsonResponse({ error: 'Invalid JSON body' }, 400, request) };
     }
 };
 
-const createSingleEvent = async (request: Request, env: Env, userId: string, body) => {
+const createSingleEvent = async (request: Request, env: Env, userId: string, body: unknown) => {
     const validation = validateEvent(body);
     if (!validation.success) return jsonResponse({ error: validation.error }, 400, request);
 
@@ -34,7 +39,7 @@ const createSingleEvent = async (request: Request, env: Env, userId: string, bod
     try {
         ({ eventId, class_id: classId } = await persistValidatedEvent(env, userId, validation.data));
     } catch (e) {
-        log.error('event store failed', e, { file: 'handlers/events.js' });
+        log.error('event store failed', toError(e), { file: 'handlers/events.js' });
         return jsonResponse({ error: 'Failed to store event' }, 500, request);
     }
 
@@ -42,7 +47,7 @@ const createSingleEvent = async (request: Request, env: Env, userId: string, bod
     return jsonResponse({ success: true, event_id: eventId, ...completion }, 201, request);
 };
 
-const createBatchEvents = async (request: Request, env: Env, userId: string, events) => {
+const createBatchEvents = async (request: Request, env: Env, userId: string, events: unknown[]) => {
     if (!Array.isArray(events) || events.length === 0) {
         return jsonResponse({ error: 'events must be a non-empty array' }, 400, request);
     }
@@ -56,9 +61,9 @@ const createBatchEvents = async (request: Request, env: Env, userId: string, eve
  * (body { events: [...] }). Tier 1 create accepting single-or-array — no separate
  * /batch endpoint (cf. crud_list_only_endpoint_design § Q3 bulk-create).
  */
-export const createEvents = async (request: Request, env: Env, userContext) => {
+export const createEvents = async (request: Request, env: Env, userContext: HandlerUserContext) => {
     const authed = await resolveAuthedJsonBody(request, userContext);
-    if (authed.errorResponse) return authed.errorResponse;
+    if ('errorResponse' in authed) return authed.errorResponse;
     const { userId, body } = authed;
 
     if (Array.isArray(body?.events)) {

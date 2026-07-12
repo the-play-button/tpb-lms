@@ -6,7 +6,21 @@ import { applyProjections, getProgress } from '../../projections/engine.js';
 import { generateEventId } from '../../utils/events.js';
 import type { Env } from "../../types/Env.js";
 
-export const persistValidatedEvent = async (env: Env, userId: string, validatedData) => {
+export interface ValidatedEvent {
+    type: string;
+    course_id?: string;
+    class_id: string;
+    payload?: unknown;
+}
+
+type ValidateEventResult =
+    | { success: true; data: ValidatedEvent }
+    | { success: false; error: unknown };
+type ValidateEventFn = (evt: unknown) => ValidateEventResult;
+
+interface BatchEntry { data?: ValidatedEvent; error?: unknown; }
+
+export const persistValidatedEvent = async (env: Env, userId: string, validatedData: ValidatedEvent) => {
     const { type, course_id, class_id, payload } = validatedData;
     const eventId = generateEventId();
     const now = new Date().toISOString();
@@ -30,9 +44,10 @@ export const persistValidatedEvent = async (env: Env, userId: string, validatedD
 
 export const classHasQuiz = async (env: Env, classId: string) => {
     const cls = await env.DB.prepare('SELECT media_json FROM lms_class WHERE id = ?')
-        .bind(classId).first();
+        .bind(classId).first<{ media_json?: string | null }>();
     if (!cls?.media_json) return false;
-    return JSON.parse(cls.media_json).some(({ type } = {}) => type === 'QUIZ');
+    const media = JSON.parse(cls.media_json) as Array<{ type?: string }>;
+    return media.some((m) => m?.type === 'QUIZ');
 };
 
 export const deriveCompletionState = async (env: Env, userId: string, classId: string) => {
@@ -47,8 +62,8 @@ export const deriveCompletionState = async (env: Env, userId: string, classId: s
     };
 };
 
-export const validateBatch = (events, validateEvent) => {
-    const out = [];
+export const validateBatch = (events: unknown[], validateEvent: ValidateEventFn): BatchEntry[] => {
+    const out: BatchEntry[] = [];
     for (const evt of events) {
         const v = validateEvent(evt);
         out.push(v.success ? { data: v.data } : { error: v.error });
@@ -56,11 +71,11 @@ export const validateBatch = (events, validateEvent) => {
     return out;
 };
 
-export const persistBatch = async (env: Env, userId: string, validatedEntries) => {
-    const results = [];
+export const persistBatch = async (env: Env, userId: string, validatedEntries: BatchEntry[]) => {
+    const results: Array<{ success: boolean; error?: unknown; event_id?: string }> = [];
     let succeeded = 0;
     for (const entry of validatedEntries) {
-        if (entry.error) {
+        if (entry.error || !entry.data) {
             results.push({ success: false, error: entry.error });
             continue;
         }
