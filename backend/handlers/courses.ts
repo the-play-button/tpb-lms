@@ -6,12 +6,13 @@ import { jsonResponse } from '../cors.js';
 import { listCoursesForUser, getCourseForUser } from '../services/courses/CoursesService.js';
 import { resolveUserId } from './_resolveUserId.js';
 import type { Env } from "../types/Env.js";
+import type { HandlerUserContext } from "../types/HandlerContext.js";
 
 /**
  * GET /api/courses
  * Supports ?lang= parameter for translations
  */
-export const listCourses = async (request: Request, env: Env, userContext) => {
+export const listCourses = async (request: Request, env: Env, userContext: HandlerUserContext) => {
     const userId = resolveUserId(userContext);
     const lang = new URL(request.url).searchParams.get('lang');
     const body = await listCoursesForUser(env, userId, lang);
@@ -22,7 +23,7 @@ export const listCourses = async (request: Request, env: Env, userContext) => {
  * GET /api/courses/:id
  * Supports ?lang= parameter for translations
  */
-export const getCourse = async (request: Request, env: Env, userContext, courseId: string) => {
+export const getCourse = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string) => {
     const userId = resolveUserId(userContext);
     const lang = new URL(request.url).searchParams.get('lang');
     const result = await getCourseForUser(env, userId, courseId, lang);

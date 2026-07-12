@@ -1,3 +1,5 @@
+import type { HandlerUserContext } from "../types/HandlerContext.js";
+
 /**
  * Shared SSOT helper for extracting the LMS user id from a CF Access userContext.
  *
@@ -6,5 +8,5 @@
  * (entropy `function_duplication_name`).
  */
 
-export const resolveUserId = (userContext) =>
+export const resolveUserId = (userContext: HandlerUserContext) =>
     userContext?.contact?.id || userContext?.employee?.id || null;

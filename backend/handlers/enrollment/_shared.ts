@@ -3,6 +3,7 @@
  */
 
 import { jsonResponse } from '../../cors.js';
+import type { HandlerUserContext } from "../../types/HandlerContext.js";
 
 export const MAX_ACTIVE_ENROLLMENTS = 3;
 
@@ -19,7 +20,7 @@ export const generateId = () => {
 /**
  * Extract userId from userContext
  */
-export const getUserId = userContext => {
+export const getUserId = (userContext: HandlerUserContext) => {
     return userContext.contact?.id || userContext.employee?.id;
 };
 
