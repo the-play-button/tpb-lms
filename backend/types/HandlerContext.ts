@@ -13,7 +13,7 @@ export interface ContactRecord {
 }
 
 export interface HandlerUserContext {
-    user: { email: string | null; role: string };
+    user: { email: string | null; role: string; id?: string };
     contact: ContactRecord | null;
     employee: ContactRecord | null;
     learner: ContactRecord | null;

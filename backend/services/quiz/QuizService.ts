@@ -8,25 +8,34 @@
  */
 
 import { calculateScore, processQuizSubmission } from '../../handlers/quiz/_shared.js';
+import type { QuizClassRow } from '../../handlers/quiz/_shared.js';
 import type { Env } from "../../types/Env.js";
+
+interface QuizSubmissionInput {
+    quizId: string;
+    answers?: unknown;
+    classId?: string;
+    courseId?: string;
+    [key: string]: unknown;
+}
 
 const findQuizClassByTallyFormId = (env: Env, tallyFormId: string) =>
     env.DB.prepare(`
         SELECT lc.* FROM lms_class lc, json_each(lc.media_json) je
         WHERE json_extract(je.value, '$.tally_form_id') = ?
-    `).bind(tallyFormId).first();
+    `).bind(tallyFormId).first<QuizClassRow>();
 
-export const submitQuizFromUser = async (env: Env, request: Request, body) => {
+export const submitQuizFromUser = async (env: Env, request: Request, body: QuizSubmissionInput) => {
     const quizClass = await findQuizClassByTallyFormId(env, body.quizId);
-    const { score, maxScore } = calculateScore(body.answers || [], quizClass);
+    const { score, maxScore } = calculateScore((body.answers as never) || [], quizClass);
     const enriched = {
         ...body,
         score,
         maxScore,
-        classId: body.classId || quizClass?.id,
-        courseId: body.courseId || quizClass?.course_id,
+        classId: body.classId || (quizClass?.id ?? ''),
+        courseId: body.courseId || (quizClass?.course_id ?? ''),
     };
-    return processQuizSubmission(enriched, env, request, quizClass);
+    return processQuizSubmission(enriched as never, env, request, quizClass);
 };
 
 export { findQuizClassByTallyFormId };

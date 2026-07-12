@@ -19,13 +19,30 @@ const querySpaceById = (env: Env, spaceId: string) =>
         WHERE id = ? AND is_active = 1
     `).bind(spaceId).first();
 
+interface KmsPageRow {
+    id?: string;
+    title?: string;
+    type?: string;
+    metadata_json?: string | null;
+    created_at?: string | null;
+    updated_at?: string | null;
+    [key: string]: unknown;
+}
+interface KmsPageFullRow extends KmsPageRow {
+    space_id?: string;
+    raw_json?: string | null;
+    download_url?: string | null;
+    web_url?: string | null;
+    space_name?: string | null;
+}
+
 const querySpacePages = (env: Env, spaceId: string) =>
     env.DB.prepare(`
         SELECT id, title, type, metadata_json, created_at, updated_at
         FROM kms_page
         WHERE space_id = ? AND is_active = 1
         ORDER BY title
-    `).bind(spaceId).all();
+    `).bind(spaceId).all<KmsPageRow>();
 
 const queryPageById = (env: Env, pageId: string) =>
     env.DB.prepare(`
@@ -35,9 +52,9 @@ const queryPageById = (env: Env, pageId: string) =>
         FROM kms_page p
         LEFT JOIN kms_space s ON p.space_id = s.id
         WHERE p.id = ? AND p.is_active = 1
-    `).bind(pageId).first();
+    `).bind(pageId).first<KmsPageFullRow>();
 
-const projectPage = (row) => ({
+const projectPage = (row: KmsPageRow) => ({
     id: row.id,
     title: row.title,
     type: row.type,
@@ -65,7 +82,7 @@ export const getPage = async (env: Env, pageId: string) => {
     const page = await queryPageById(env, pageId);
     if (!page) return null;
     const metadata = page.metadata_json ? JSON.parse(page.metadata_json) : {};
-    const rawData = page.raw_json ? JSON.parse(page.raw_json) : {};
+    const rawData = (page.raw_json ? JSON.parse(page.raw_json) : {}) as { content_md?: string };
     return {
         id: page.id,
         title: page.title,

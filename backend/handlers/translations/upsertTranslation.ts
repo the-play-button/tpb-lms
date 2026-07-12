@@ -8,8 +8,12 @@ import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { upsertOne } from '../../services/translations/TranslationsService.js';
 import type { Env } from "../../types/Env.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import { toError } from "../../utils/toError.js";
 
-export const upsertTranslation = async (request: Request, env: Env, ctx) => {
+interface UpsertTranslationBody { field?: string; value?: string; source?: string; }
+
+export const upsertTranslation = async (request: Request, env: Env, ctx: HandlerUserContext) => {
     const pathParts = new URL(request.url).pathname.split('/');
     const contentType = pathParts[2];
     const contentId = pathParts[3];
@@ -19,9 +23,9 @@ export const upsertTranslation = async (request: Request, env: Env, ctx) => {
         return errorResponse('Missing content_type, content_id, or lang', 400);
     }
 
-    let body;
+    let body: UpsertTranslationBody;
     try {
-        body = await request.json();
+        body = await request.json() as UpsertTranslationBody;
     } catch {
         return errorResponse('Invalid JSON body', 400);
     }
@@ -46,7 +50,7 @@ export const upsertTranslation = async (request: Request, env: Env, ctx) => {
             source,
         });
     } catch (error) {
-        log.error('translation upsert failed', error, { file: 'handlers/translations/upsertTranslation.js' });
+        log.error('translation upsert failed', toError(error), { file: 'handlers/translations/upsertTranslation.js' });
         return errorResponse('Failed to upsert translation', 500);
     }
 };

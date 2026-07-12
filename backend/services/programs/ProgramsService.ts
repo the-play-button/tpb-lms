@@ -5,11 +5,16 @@ import type { Env } from "../../types/Env.js";
  * (Program → Course → Section → Lesson). Thin read layer, mirrors CoursesService.
  */
 
-const extractCoverImageUrl = (mediaJson) => {
+interface ProgramRow { id: string; name?: string; description?: string; media_json?: string | null; }
+interface ProgramCountRow { program_id: string; n?: number; }
+
+const extractCoverImageUrl = (mediaJson: string | null | undefined): string | null => {
     if (!mediaJson) return null;
     try {
-        const media = JSON.parse(mediaJson);
-        return Array.isArray(media) ? (media.find((m) => m?.type === 'IMAGE')?.url ?? null) : null;
+        const media = JSON.parse(mediaJson) as unknown;
+        return Array.isArray(media)
+            ? ((media as Array<{ type?: string; url?: string }>).find((m) => m?.type === 'IMAGE')?.url ?? null)
+            : null;
     } catch {
         return null;
     }
@@ -21,10 +26,10 @@ const extractCoverImageUrl = (mediaJson) => {
  */
 export const listProgramsForUser = async (env: Env) => {
     const [programsRes, countsRes] = await Promise.all([
-        env.DB.prepare('SELECT id, name, description, media_json FROM lms_program WHERE is_active = 1 ORDER BY name ASC').all(),
-        env.DB.prepare("SELECT program_id, COUNT(*) AS n FROM lms_course WHERE is_active = 1 AND program_id IS NOT NULL GROUP BY program_id").all(),
+        env.DB.prepare('SELECT id, name, description, media_json FROM lms_program WHERE is_active = 1 ORDER BY name ASC').all<ProgramRow>(),
+        env.DB.prepare("SELECT program_id, COUNT(*) AS n FROM lms_course WHERE is_active = 1 AND program_id IS NOT NULL GROUP BY program_id").all<ProgramCountRow>(),
     ]);
-    const countById = {};
+    const countById: Record<string, number | undefined> = {};
     for (const row of countsRes.results || []) countById[row.program_id] = row.n;
     const programs = (programsRes.results || []).map((p) => ({
         id: p.id,

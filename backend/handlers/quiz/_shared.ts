@@ -15,8 +15,9 @@ export const XP_QUIZ_PASS = 100;
 export { jsonResponse, recordQuizEvent, checkQuizBadges, checkStreakBadges, applyProjections, generateEventId };
 
 /** Row shape of the quiz `lms_class` (media_json + raw_json carry the quiz config). */
-interface QuizClassRow {
+export interface QuizClassRow {
     id?: string;
+    course_id?: string;
     media_json?: string | null;
     raw_json?: string | null;
     [key: string]: unknown;

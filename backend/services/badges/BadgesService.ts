@@ -4,6 +4,9 @@ import type { Env } from "../../types/Env.js";
  * BadgesService — gamification badges + per-user award projection.
  */
 
+interface BadgeRow { id: string; criteria_json?: string | null; [key: string]: unknown; }
+interface AwardRow { badge_id: string; awarded_at?: string | null; }
+
 export const listBadgesWithUserStatus = async (env: Env, userId: string) => {
     const badges = await env.DB.prepare(`
         SELECT id, name, description, icon_url, type, category, rarity, points_reward, criteria_json
@@ -17,15 +20,15 @@ export const listBadgesWithUserStatus = async (env: Env, userId: string) => {
                 WHEN 'LEGENDARY' THEN 4
             END,
             name ASC
-    `).all();
+    `).all<BadgeRow>();
 
     const earned = await env.DB.prepare(`
         SELECT badge_id, awarded_at
         FROM gamification_award
         WHERE user_id = ?
-    `).bind(userId).all();
+    `).bind(userId).all<AwardRow>();
 
-    const earnedMap = {};
+    const earnedMap: Record<string, string | null | undefined> = {};
     for (const e of earned.results || []) {
         earnedMap[e.badge_id] = e.awarded_at;
     }
