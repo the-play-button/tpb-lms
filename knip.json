@@ -1,5 +1,9 @@
 {
   "$schema": "https://unpkg.com/knip@5/schema.json",
+  "eslint": false,
+  "vitest": false,
+  "vite": false,
+  "prisma": false,
   "ignore": [
     "plans/**",
     "**/_mocks/**",
