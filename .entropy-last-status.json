@@ -651,8 +651,8 @@
   "updatedAt": "2026-07-14T03:04:30.824Z",
   "schemaVersion": 2,
   "version": 2,
-  "updated": "2026-07-14",
-  "total": 114,
+  "updated": "2026-07-14T03:04:30.824Z",
+  "total": 0,
   "by_check": {
     "ack_generic_reason": 0,
     "ack_mega_check_format_canonical": 0,
@@ -1292,8 +1292,6 @@
     "ws_broadcast_missing_entity_updates": 0,
     "zod_coerce_boolean_ban": 0,
     "zod_safeparse_silent_fallback": 0,
-    "zod_state_enum_missing_catch_safety_net": 0,
-    "ts_exported_function_missing_return_type": 113,
-    "ts_literal_const_object_missing_as_const": 1
+    "zod_state_enum_missing_catch_safety_net": 0
   }
 }
