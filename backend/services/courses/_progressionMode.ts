@@ -1,4 +1,6 @@
 import { log } from '@the-play-button/tpb-sdk-js';
+import { PROGRESSION_MODES } from '../../lms/domain/ProgressionMode.js';
+export { PROGRESSION_MODES };
 /**
  * Per-course progression mode (stored in lms_course.raw_json.tpb_progression_mode).
  *
@@ -8,7 +10,7 @@ import { log } from '@the-play-button/tpb-sdk-js';
  *   complete-to-proceed gate.
  */
 
-export const PROGRESSION_MODES = ['linear', 'free'];
+
 export const DEFAULT_PROGRESSION_MODE = 'linear';
 
 /**
@@ -30,7 +32,7 @@ export const resolveProgressionMode = (rawJson: string | Record<string, unknown>
 
     const mode = (parsed as { tpb_progression_mode?: string } | null)?.tpb_progression_mode;
     if (mode == null) return DEFAULT_PROGRESSION_MODE;
-    if (PROGRESSION_MODES.includes(mode)) return mode;
+    if (PROGRESSION_MODES.some((m) => m === mode)) return mode;
 
     log.warn('Invalid tpb_progression_mode, defaulting to linear', { mode });
     return DEFAULT_PROGRESSION_MODE;

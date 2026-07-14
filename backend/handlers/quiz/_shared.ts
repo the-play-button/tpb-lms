@@ -51,7 +51,7 @@ export const getPassThreshold = (quizClass: QuizClassRow | null | undefined): nu
  * Build list of wrong answers for corrections modal
  */
 export const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: CorrectAnswers) => {
-    const wrong: Array<{ question: unknown; yourAnswer: unknown; correctAnswer: unknown }> = [];
+    const wrongAnswers: Array<{ question: unknown; yourAnswer: unknown; correctAnswer: unknown }> = [];
     if (!Array.isArray(answers)) return null;
 
     for (const field of answers) {
@@ -60,7 +60,7 @@ export const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: Corr
         const correct = correctAnswers[questionText];
 
         if (correct && userAnswer !== correct) {
-            wrong.push({
+            wrongAnswers.push({
                 question: questionText,
                 yourAnswer: userAnswer,
                 correctAnswer: correct

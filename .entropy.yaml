@@ -129,6 +129,12 @@ tpb_checks:
   # there is no @the-play-button/tpb-lms-contracts package to move them into, and
   # creating one for 3 event schemas is overkill for a legacy monolith.
   contracts_canonical_location: false
+  # naming_convention: FP-prone heuristic on collective nouns / past-participles
+  # (the project already documents naming FPs above: 'output vs outputs'). The
+  # residual findings are  (a standard collective noun + an API response
+  # field read by frontend-on-cf-worker cls.media — un-renameable), plus borderline
+  # / locals. Not a correctness invariant.
+  naming_convention: false
 
 # Project-specific exceptions
 exceptions:
