@@ -47,7 +47,7 @@ export const createByocContext = async (
   const bastionClient = new BastionCloudflareAdapter({ bastionUrl: env.BASTION_URL });
 
   const storageService = new TpbStorageHttpAdapter({
-    tpbStorageUrl: env.TPB_STORAGE_URL,  // entropy-connection-capability-hardcoded-url-ok: internal TPB M2M sibling-Worker URL (lms-viewer frontend / tpb-storage) via wrangler [vars]+Env — established pattern, not a vendor connection capability
+    tpbStorageUrl: env.TPB_STORAGE_URL,
     bastionToken: env.BASTION_TOKEN,
   });
 

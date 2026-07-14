@@ -99,15 +99,15 @@ export const extractFieldsFromPayload = (fields: TallyField[]) => {
  */
 export const calculateScore = (answers: QuizAnswers, quizClass: QuizClassRow | null): { score: number; maxScore: number } => {
     if (!quizClass) {
-        throw new Error('calculateScore: quizClass is null — quiz lookup failed');  // entropy-generic-error-ok: internal invariant assertion — the quiz pipeline guarantees a non-null quizClass with raw_json+correct_answers before calculateScore; this is a programming-invariant guard (500), not a user-facing domain error
+        throw new Error('calculateScore: quizClass is null — quiz lookup failed');
     }
     if (!quizClass.raw_json) {
-        throw new Error(`calculateScore: raw_json missing on class ${quizClass.id}`);  // entropy-generic-error-ok: internal invariant assertion — the quiz pipeline guarantees a non-null quizClass with raw_json+correct_answers before calculateScore; this is a programming-invariant guard (500), not a user-facing domain error
+        throw new Error(`calculateScore: raw_json missing on class ${quizClass.id}`);
     }
 
     const correctAnswers = JSON.parse(quizClass.raw_json).correct_answers as CorrectAnswers | undefined;
     if (!correctAnswers || Object.keys(correctAnswers).length === 0) {
-        throw new Error(`calculateScore: no correct_answers in class ${quizClass.id}`);  // entropy-generic-error-ok: internal invariant assertion — the quiz pipeline guarantees a non-null quizClass with raw_json+correct_answers before calculateScore; this is a programming-invariant guard (500), not a user-facing domain error
+        throw new Error(`calculateScore: no correct_answers in class ${quizClass.id}`);
     }
 
     const maxScore = Object.keys(correctAnswers).length;

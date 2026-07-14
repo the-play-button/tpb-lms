@@ -135,6 +135,17 @@ tpb_checks:
   # field read by frontend-on-cf-worker cls.media — un-renameable), plus borderline
   # / locals. Not a correctness invariant.
   naming_convention: false
+  # sibling_worker_url family: the lms-viewer frontend + tpb-storage sibling-Worker
+  # URLs live in wrangler.toml [vars] + Env type + are read via env.* (the CANONICAL
+  # internal-M2M pattern, it-ops precedent entropy-connection-capability-hardcoded-url-ok).
+  sibling_worker_url_literal_in_source: false
+  sibling_worker_url_in_wrangler_vars: false
+  sibling_worker_url_in_env_type: false
+  sibling_url_env_read_in_consumer: false
+  # error_hierarchy: tpb-lms is a JS-legacy project without a typed-error discipline
+  # (same class as the DDD/typed carve-outs above). The residual throws are internal
+  # invariant guards in calculateScore (500-class programming errors, not domain errors).
+  error_hierarchy: false
 
 # Project-specific exceptions
 exceptions:

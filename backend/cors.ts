@@ -4,7 +4,7 @@
  */
 
 export const ALLOWED_ORIGINS = [
-    'https://lms-viewer.matthieu-marielouise.workers.dev',  // Frontend (Workers)  // entropy-connection-capability-hardcoded-url-ok: internal TPB M2M sibling-Worker URL (lms-viewer frontend / tpb-storage) via wrangler [vars]+Env — established pattern, not a vendor connection capability
+    'https://lms-viewer.matthieu-marielouise.workers.dev',  // Frontend (Workers)
     'http://localhost:8080',
     'http://127.0.0.1:8080'
 ];
