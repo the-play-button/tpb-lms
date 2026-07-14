@@ -5,8 +5,8 @@ import type { Env } from "../../types/Env.js";
  * (Program → Course → Section → Lesson). Thin read layer, mirrors CoursesService.
  */
 
-interface ProgramRow { id: string; name?: string; description?: string; media_json?: string | null; }
-interface ProgramCountRow { program_id: string; n?: number; }
+interface ProgramsProgramRow { id: string; name?: string; description?: string; media_json?: string | null; }
+interface ProgramsProgramCountRow { program_id: string; n?: number; }
 
 const extractCoverImageUrl = (mediaJson: string | null | undefined): string | null => {
     if (!mediaJson) return null;
@@ -26,8 +26,8 @@ const extractCoverImageUrl = (mediaJson: string | null | undefined): string | nu
  */
 export const listProgramsForUser = async (env: Env) => {
     const [programsRes, countsRes] = await Promise.all([
-        env.DB.prepare('SELECT id, name, description, media_json FROM lms_program WHERE is_active = 1 ORDER BY name ASC').all<ProgramRow>(),
-        env.DB.prepare("SELECT program_id, COUNT(*) AS n FROM lms_course WHERE is_active = 1 AND program_id IS NOT NULL GROUP BY program_id").all<ProgramCountRow>(),
+        env.DB.prepare('SELECT id, name, description, media_json FROM lms_program WHERE is_active = 1 ORDER BY name ASC').all<ProgramsProgramRow>(),
+        env.DB.prepare("SELECT program_id, COUNT(*) AS n FROM lms_course WHERE is_active = 1 AND program_id IS NOT NULL GROUP BY program_id").all<ProgramsProgramCountRow>(),
     ]);
     const countById: Record<string, number | undefined> = {};
     for (const row of countsRes.results || []) countById[row.program_id] = row.n;

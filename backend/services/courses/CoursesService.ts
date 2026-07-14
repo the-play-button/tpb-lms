@@ -14,7 +14,7 @@ interface MediaItem {
 }
 
 /** Row shape of the localized `lms_class` join (queryCourseClasses). */
-interface ClassRow {
+interface CoursesClassRow {
     id: string;
     name?: string;
     description?: string;
@@ -31,7 +31,7 @@ interface ClassRow {
 }
 
 /** Row shape of `lms_course` (queryActiveCourses / queryCourseById). */
-interface CourseRow {
+interface CoursesCourseRow {
     id: string;
     name?: string;
     description?: string;
@@ -78,7 +78,7 @@ const applyTranslations = <T extends Record<string, unknown>>(obj: T, translatio
     return result as T;
 };
 
-const enrichMedia = (media: MediaItem, videoCompleted: boolean, quizPassed: boolean, cls: ClassRow): MediaItem => {
+const enrichMedia = (media: MediaItem, videoCompleted: boolean, quizPassed: boolean, cls: CoursesClassRow): MediaItem => {
     if (media.type === 'VIDEO') {
         const coveragePct = cls.video_duration_sec
             ? Math.round(((cls.video_max_position_sec ?? 0) / cls.video_duration_sec) * 100)
@@ -89,7 +89,7 @@ const enrichMedia = (media: MediaItem, videoCompleted: boolean, quizPassed: bool
     return media;
 };
 
-const enrichClass = (cls: ClassRow, currentStep: number): EnrichedClass => {
+const enrichClass = (cls: CoursesClassRow, currentStep: number): EnrichedClass => {
     const media: MediaItem[] = cls.media_json ? JSON.parse(cls.media_json) : [];
     const raw: Record<string, unknown> = cls.raw_json ? JSON.parse(cls.raw_json) : {};
     const hasQuiz = media.some((m: MediaItem) => m.type === 'QUIZ');
@@ -141,7 +141,7 @@ const queryCourseProgress = (env: Env, userId: string, courseId: string) =>
         FROM v_user_progress WHERE user_id = ? AND course_id = ?
     `).bind(userId, courseId).first<{ videos_completed: number | null; quizzes_passed: number | null }>();
 
-const enrichCourseSummary = async (env: Env, course: CourseRow, userId: string, lang: string) => {
+const enrichCourseSummary = async (env: Env, course: CoursesCourseRow, userId: string, lang: string) => {
     const [stepCount, progress] = await Promise.all([
         queryCourseStepCount(env, course.id),
         queryCourseProgress(env, userId, course.id),
@@ -172,7 +172,7 @@ const enrichCourseSummary = async (env: Env, course: CourseRow, userId: string, 
 
 export const listCoursesForUser = async (env: Env, userId: string, lang: string) => {
     const courses = await queryActiveCourses(env);
-    const rows = (courses.results || []) as unknown as CourseRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
+    const rows = (courses.results || []) as unknown as CoursesCourseRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
     const enriched = await Promise.all(
         rows.map((course) => enrichCourseSummary(env, course, userId, lang))
     );
@@ -181,7 +181,7 @@ export const listCoursesForUser = async (env: Env, userId: string, lang: string)
 
 const queryCourseById = (env: Env, courseId: string) =>
     env.DB.prepare('SELECT * FROM lms_course WHERE id = ? AND is_active = 1')
-        .bind(courseId).first<CourseRow>();
+        .bind(courseId).first<CoursesCourseRow>();
 
 const queryCourseClasses = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
@@ -218,9 +218,9 @@ const applyClassTranslations = async (env: Env, enrichedClasses: EnrichedClass[]
 // SECTION nodes are folders; LESSON nodes are leaves carrying media + progress.
 const ROOT_KEY = '__root';
 
-type Adjacency = Map<string, ClassRow[]>;
+type Adjacency = Map<string, CoursesClassRow[]>;
 
-const buildAdjacency = (rows: ClassRow[]): Adjacency => {
+const buildAdjacency = (rows: CoursesClassRow[]): Adjacency => {
     const byParent: Adjacency = new Map();
     for (const row of rows) {
         const key = row.parent_class_id || ROOT_KEY;
@@ -236,7 +236,7 @@ const buildAdjacency = (rows: ClassRow[]): Adjacency => {
 
 // Depth-first traversal → ordered flat list of LESSON leaf rows (the global step
 // sequence used for sequential progress / can_access gating).
-const flattenLessonsDFS = (byParent: Adjacency, key = ROOT_KEY, acc: ClassRow[] = []): ClassRow[] => {
+const flattenLessonsDFS = (byParent: Adjacency, key = ROOT_KEY, acc: CoursesClassRow[] = []): CoursesClassRow[] => {
     for (const row of byParent.get(key) || []) {
         if ((row.node_kind || 'LESSON') === 'LESSON') acc.push(row);
         flattenLessonsDFS(byParent, row.id, acc);
@@ -246,7 +246,7 @@ const flattenLessonsDFS = (byParent: Adjacency, key = ROOT_KEY, acc: ClassRow[] 
 
 // Enrich the DFS-ordered lesson rows, assigning a GLOBAL step index by position
 // (sys_order_index is now per-sibling, so array position is the true ordinal).
-const enrichLessonSequence = (lessonRows: ClassRow[]): EnrichedClass[] => {
+const enrichLessonSequence = (lessonRows: CoursesClassRow[]): EnrichedClass[] => {
     let currentStep = 0;
     const enriched = lessonRows.map((cls, i) => {
         const e = enrichClass(cls, currentStep);
@@ -278,7 +278,7 @@ const buildDisplayTree = (byParent: Adjacency, lessonById: Map<string, EnrichedC
         };
     });
 
-const translateSectionNames = async (env: Env, sectionRows: ClassRow[], lang: string): Promise<Map<string, string>> => {
+const translateSectionNames = async (env: Env, sectionRows: CoursesClassRow[], lang: string): Promise<Map<string, string>> => {
     const map = new Map<string, string>();
     if (!lang) return map;
     await Promise.all(sectionRows.map(async (row) => {
@@ -293,7 +293,7 @@ export const getCourseForUser = async (env: Env, userId: string, courseId: strin
     if (!course) return { notFound: true };
 
     const classesResult = await queryCourseClasses(env, userId, courseId);
-    const rows = (classesResult.results || []) as unknown as ClassRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
+    const rows = (classesResult.results || []) as unknown as CoursesClassRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
     const byParent = buildAdjacency(rows);
 
     // Flat LESSON sequence (progress) + section folders (display).

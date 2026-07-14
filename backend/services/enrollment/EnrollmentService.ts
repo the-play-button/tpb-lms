@@ -14,7 +14,7 @@ export type { EnrollmentActionResult };
 
 export { MAX_ACTIVE_ENROLLMENTS };
 
-interface CourseRow { id: string; name?: string; is_active?: number; }
+interface EnrollmentCourseRow { id: string; name?: string; is_active?: number; }
 interface EnrollmentBasic { id: string; status?: string; }
 interface EnrollmentProgressRow { id: string; course_id?: string; status?: string; }
 
@@ -44,7 +44,7 @@ interface ProgressFields {
 
 const findCourseById = (env: Env, courseId: string) =>
     env.DB.prepare('SELECT id, name, is_active FROM lms_course WHERE id = ?')
-        .bind(courseId).first<CourseRow>();
+        .bind(courseId).first<EnrollmentCourseRow>();
 
 const findEnrollmentByCourse = (env: Env, userId: string, courseId: string) =>
     env.DB.prepare('SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ?')
