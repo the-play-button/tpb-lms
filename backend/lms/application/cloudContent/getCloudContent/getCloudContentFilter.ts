@@ -10,7 +10,7 @@ import type { GetCloudContentContext } from './getCloudContentHydrateContext.js'
 /** Named wire-shape projection : canonical CloudContent output. */
 const getCloudContentToWire = (
   output: GetCloudContentOutput,
-  filtered: Record<string, unknown>,
+  filtered: Partial<GetCloudContentOutput>,
 ): GetCloudContentOutput => ({
   content: output.content,
   contentType: output.contentType,
@@ -24,9 +24,9 @@ export const getCloudContentFilter = (
 ): GetCloudContentOutput => {
   const { contentRef } = context;
   const filtered = filterFields(
-    output as unknown as Record<string, unknown>,
+    output,
     viewerEmail,
     contentRef.ownerEmail.value
   );
-  return getCloudContentToWire(output, filtered as Record<string, unknown>);
+  return getCloudContentToWire(output, filtered);
 };

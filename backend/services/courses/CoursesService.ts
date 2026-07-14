@@ -172,7 +172,7 @@ const enrichCourseSummary = async (env: Env, course: CourseRow, userId: string, 
 
 export const listCoursesForUser = async (env: Env, userId: string, lang: string) => {
     const courses = await queryActiveCourses(env);
-    const rows = (courses.results || []) as unknown as CourseRow[];
+    const rows = (courses.results || []) as unknown as CourseRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
     const enriched = await Promise.all(
         rows.map((course) => enrichCourseSummary(env, course, userId, lang))
     );
@@ -292,7 +292,7 @@ export const getCourseForUser = async (env: Env, userId: string, courseId: strin
     if (!course) return { notFound: true };
 
     const classesResult = await queryCourseClasses(env, userId, courseId);
-    const rows = (classesResult.results || []) as unknown as ClassRow[];
+    const rows = (classesResult.results || []) as unknown as ClassRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
     const byParent = buildAdjacency(rows);
 
     // Flat LESSON sequence (progress) + section folders (display).

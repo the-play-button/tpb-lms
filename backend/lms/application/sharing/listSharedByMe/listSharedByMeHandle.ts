@@ -12,7 +12,7 @@ import { listSharedByMeTrack } from './listSharedByMeTrack.js';
 /**
  * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track
  */
-export const listSharedByMeHandle = async (ctx: HandlerContext): Promise<Result<string, SharedByMeEntry[]>> => {
+export const listSharedByMeHandle = async (ctx: HandlerContext): Promise<Result<string, Partial<SharedByMeEntry>[]>> => {
   // 1. ValidateInput
   const inputResult = listSharedByMeValidateInput(ctx.userEmail);
   if (!inputResult.ok) return fail(inputResult.error);

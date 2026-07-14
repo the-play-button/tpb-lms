@@ -5,7 +5,7 @@
  * Field-Level Security filter
  * Strips sensitive fields based on viewer's relationship to the data
  */
-export const filterFields = <T extends Record<string, unknown>>(
+export const filterFields = <T extends object>(
   data: T,
   viewerEmail: string,
   ownerEmail: string,

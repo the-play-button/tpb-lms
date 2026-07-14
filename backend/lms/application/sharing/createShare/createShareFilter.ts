@@ -9,10 +9,5 @@ import type { ShareContentOutput } from './createShareExecute.js';
  * Strip internal IDs from non-owner viewers.
  */
 export const createShareFilter = (output: ShareContentOutput, viewerEmail: string, ownerEmail: string): Partial<ShareContentOutput> => {
-  return filterFields(
-    output as unknown as Record<string, unknown>,
-    viewerEmail,
-    ownerEmail,
-    ['connectionId', 'fileId']
-  ) as Partial<ShareContentOutput>;
+  return filterFields(output, viewerEmail, ownerEmail, ['connectionId', 'fileId']);
 };

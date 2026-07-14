@@ -19,11 +19,11 @@ const listPermissionsToWire = (
 export const listPermissionsFilter = (output: ListPermissionsOutput, viewerEmail: string, ownerEmail: string): ListPermissionsOutput => {
   const filteredPermissions = output.permissions.map((p) =>
     filterFields(
-      p as unknown as Record<string, unknown>,
+      p,
       viewerEmail,
       ownerEmail
     )
-  ) as unknown as PermissionEntry[];
+  ) as unknown as PermissionEntry[];  // entropy-no-unsafe-type-assertion-ok: FLS strips sensitive fields → Partial<PermissionEntry>, re-widened to the wire-projection shape (listPermissionsToWire owns the canonical output contract)
 
   return listPermissionsToWire(output, filteredPermissions);
 };

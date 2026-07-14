@@ -8,12 +8,6 @@ import type { SharedWithMeEntry } from './listSharedWithMeExecute.js';
  * Filter step: apply FLS to listSharedWithMe entries.
  * Viewer sees content shared by others — strip sensitive fields from non-owner entries.
  */
-export const listSharedWithMeFilter = (entries: SharedWithMeEntry[], viewerEmail: string): SharedWithMeEntry[] => {
-  return entries.map((entry) =>
-    filterFields(
-      entry as unknown as Record<string, unknown>,
-      viewerEmail,
-      entry.shared_by
-    ) as unknown as SharedWithMeEntry
-  );
+export const listSharedWithMeFilter = (entries: SharedWithMeEntry[], viewerEmail: string): Partial<SharedWithMeEntry>[] => {
+  return entries.map((entry) => filterFields(entry, viewerEmail, entry.shared_by));
 };
