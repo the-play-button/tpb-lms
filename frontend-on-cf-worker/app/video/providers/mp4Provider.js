@@ -4,8 +4,7 @@
  */
 import { log } from '../../log.js';
 import { getSubtitleTracks } from '../../course/renderer.functions/_mediaHelpers.js';
-
-const RESUME_THRESHOLD = 5;
+import { RESUME_THRESHOLD } from '../tracking/_shared.js';
 
 const speedControl = () => `
     <div class="video-controls" style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem; gap: 0.5rem;">

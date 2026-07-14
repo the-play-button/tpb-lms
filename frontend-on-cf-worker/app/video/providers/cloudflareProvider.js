@@ -3,10 +3,9 @@
  * Tracking via the Stream player SDK (global `Stream`).
  */
 import { log } from '../../log.js';
-import { trackingState } from '../tracking/_shared.js';
+import { trackingState, RESUME_THRESHOLD } from '../tracking/_shared.js';
 
 const IFRAME_BASE = 'https://iframe.cloudflarestream.com';
-const RESUME_THRESHOLD = 5;
 
 const speedControl = () => `
     <div class="video-controls" style="display: flex; justify-content: flex-end; margin-bottom: 0.5rem; gap: 0.5rem;">
@@ -90,6 +89,7 @@ export const cloudflareProvider = {
             });
             log.debug('Stream SDK tracking initialized');
         } catch (error) {
+            // entropy-ts-silent-log-only-catch-ok: best-effort CF Stream progress tracking — if the SDK fails to attach, playback still works, we just skip event recording.
             log.error('Failed to initialize Stream SDK:', error);
         }
         return {

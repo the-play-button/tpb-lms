@@ -1,0 +1,152 @@
+/* =============================================
+   Sidebar course tree (#courseTree) — ONE program-scoped tree.
+   Root = program picker ; inside a program = that program's courses,
+   the open course expanded inline to its lessons (.steps-list below).
+   ============================================= */
+
+.course-tree {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* Root eyebrow ("Programmes") */
+.course-tree .tree-eyebrow {
+    font-size: var(--fs-nav-eyebrow);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+}
+
+/* Back link + scoped program title (inside a program) */
+.course-tree .tree-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    margin-bottom: var(--space-sm);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-muted);
+    font-size: var(--fs-nav-meta);
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+.course-tree .tree-back:hover {
+    color: var(--text-primary);
+    background: var(--hover-bg);
+}
+/* Program title (or standalone-course title) — clickable: opens the program landing. */
+.course-tree .tree-program-title {
+    display: block;
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1.3;
+    margin-bottom: var(--space-sm);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+.course-tree .tree-program-title:hover {
+    background: var(--hover-bg);
+    color: var(--accent-primary);
+}
+
+.course-tree .tree-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+}
+
+/* A row — program (root) or course */
+.course-tree .tree-program-row,
+.course-tree .tree-course-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    text-align: left;
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.course-tree .tree-program-row:hover,
+.course-tree .tree-course-row:hover {
+    box-shadow: var(--hover-glow);
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+/* Program picker rows read as group headers (bold, uppercase) */
+.course-tree .tree-program-row {
+    color: var(--text-primary);
+    font-size: var(--fs-nav-group);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* Course rows */
+.course-tree .tree-course-row {
+    font-size: var(--fs-nav-item);
+    font-weight: 500;
+}
+.course-tree .tree-course-row.active { color: var(--text-primary); }
+.course-tree .tree-course-row.current {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+.course-tree .tree-caret {
+    flex-shrink: 0;
+    width: 0.9rem;
+    text-align: center;
+    font-size: var(--fs-nav-meta);
+    color: var(--text-muted);
+}
+.course-tree .tree-label { flex: 1; }
+.course-tree .tree-badges {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-shrink: 0;
+}
+.course-tree .tree-count {
+    flex-shrink: 0;
+    font-size: var(--fs-nav-meta);
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0 var(--space-sm);
+}
+
+/* Lessons of the expanded course: indent under the course row with a rail */
+.course-tree .tree-course.expanded .steps-list {
+    margin: var(--space-xs) 0 var(--space-sm) var(--space-md);
+    padding-left: var(--space-sm);
+    border-left: 1px solid var(--border);
+}
+
+.step-header .mastery-badge {
+    margin-left: var(--space-md);
+}
+

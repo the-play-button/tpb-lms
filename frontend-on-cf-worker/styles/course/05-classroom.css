@@ -1,0 +1,145 @@
+/* =============================================
+   Classroom landing (grid of course cards) +
+   course overview curriculum outline.
+   ============================================= */
+
+.classroom {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: var(--space-lg) 0;
+}
+
+.classroom-title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: var(--space-lg);
+}
+
+/* Program landing back link (Plan 13) — clean text link, no default button chrome. */
+.classroom-back {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: transparent;
+    border: none;
+    padding: var(--space-xs) 0;
+    margin-bottom: var(--space-sm);
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.classroom-back:hover {
+    color: var(--text-primary);
+}
+
+.course-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg);
+}
+
+.course-card {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    cursor: pointer;
+    padding: 0;
+    color: inherit;
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.course-card:hover {
+    box-shadow: var(--hover-glow);
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+.course-card-cover {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+}
+
+.course-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    flex: 1; /* stretch so cards in a row align; CTA pins to the bottom */
+}
+
+.course-card-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.3;
+}
+
+.course-card-desc {
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.course-card-progress {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.course-card-progress-bar {
+    flex: 1;
+    height: 5px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.course-card-progress-fill {
+    display: block;
+    height: 100%;
+    background: var(--accent-primary);
+    border-radius: 999px;
+}
+
+.course-card-progress-text {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.course-card-cta {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-secondary);
+    margin-top: auto; /* pin to the bottom so all cards align (Plan 11) */
+    padding-top: var(--space-xs);
+}
+
+/* Back-to-classroom link in the lesson sidebar header */
+.back-to-classroom {
+    display: inline-flex;
+    align-items: center;
+    background: transparent;
+    border: none;
+    padding: 0 0 var(--space-sm) 0;
+    color: var(--text-muted);
+    font-size: 0.72rem;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.back-to-classroom:hover {
+    color: var(--text-primary);
+}
+

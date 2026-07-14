@@ -53,7 +53,10 @@ export const loomProvider = {
                     { context: PLAYERJS_CONTEXT, version: PLAYERJS_VERSION, method, value, listener: listenerId },
                     LOOM_ORIGIN,
                 );
-            } catch (e) { log.warn('video', 'loom postMessage failed', e); }
+            } catch (e) {
+                // entropy-ts-silent-log-only-catch-ok: best-effort Loom player.js postMessage — a cross-origin frame not ready yet is expected; the player still functions, tracking retries on the next event.
+                log.warn('video', 'loom postMessage failed', e);
+            }
         };
 
         const subscribe = () => {

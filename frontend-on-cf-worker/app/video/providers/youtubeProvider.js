@@ -89,7 +89,7 @@ export const youtubeProvider = {
                 });
                 log.debug('YouTube IFrame API tracking initialized');
             } catch (error) {
-                // Best-effort: playback still works even if tracking fails to attach.
+                // entropy-ts-silent-log-only-catch-ok: best-effort YouTube IFrame API tracking — playback still works even if tracking fails to attach.
                 log.error('video', 'YouTube IFrame API tracking failed', error);
             }
         })();

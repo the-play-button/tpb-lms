@@ -108,9 +108,7 @@ export const prevStep = () => {
  * Restart module (reset all progress)
  */
 export const restartModule = async () => {
-    const confirmed = confirm(t('course.restartConfirm'));
-
-    if (confirmed) {
+    if (confirm(t('course.restartConfirm'))) {
         const currentCourse = getState('currentCourse');
         try {
             await apiDelete(`/signals/${currentCourse}`);

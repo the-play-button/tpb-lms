@@ -1,0 +1,175 @@
+/* =============================================
+   Course overview (landing shown before a course
+   is opened): header + meta + curriculum card.
+   ============================================= */
+
+.course-overview {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: var(--space-xl) 0 var(--space-2xl);
+}
+
+.overview-header {
+    margin-bottom: var(--space-lg);
+}
+
+.course-overview .course-title {
+    font-size: 1.9rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+/* Meta pills (steps, progress) */
+.course-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+.course-meta .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0.35rem 0.75rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.course-meta .meta-icon {
+    font-size: 0.9rem;
+    line-height: 1;
+}
+
+/* Thin progress bar */
+.overview-progress {
+    height: 6px;
+    background: var(--border);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: var(--space-xl);
+}
+
+.overview-progress-fill {
+    height: 100%;
+    background: var(--accent-primary);
+    border-radius: var(--radius-full);
+    transition: width 0.3s ease;
+}
+
+/* Description (only rendered when there's real content) */
+.overview-content {
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: var(--space-xl);
+}
+
+/* Curriculum card */
+.course-outline-wrap {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    margin: 0 0 var(--space-xl);
+}
+
+.course-outline-title {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin: 0 0 var(--space-md);
+}
+
+.course-outline {
+    list-style: none;
+    counter-reset: overview-lesson;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    margin: 0;
+    padding: 0;
+}
+
+.outline-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+}
+
+.outline-section-name {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xs);
+}
+
+.outline-lessons {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    padding: 0;
+}
+
+.outline-lesson {
+    counter-increment: overview-lesson;
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    border-radius: var(--radius-md);
+}
+
+.outline-lesson::before {
+    content: counter(overview-lesson);
+    flex-shrink: 0;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+/* Actions */
+.overview-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.overview-actions .btn-secondary {
+    padding: 0.6rem 1.1rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.overview-actions .btn-secondary:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+    border-color: var(--text-muted);
+}

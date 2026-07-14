@@ -59,9 +59,7 @@ export const showQuiz = (classId, tallyFormIds, quizName) => {
         return;
     }
 
-    const confirmed = confirm(t('quiz.attemptWarning'));
-    
-    if (confirmed) {
+    if (confirm(t('quiz.attemptWarning'))) {
         currentQuizInfo = {
             classId,
             tallyFormId,

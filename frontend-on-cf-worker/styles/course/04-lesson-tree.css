@@ -1,0 +1,122 @@
+/* =============================================
+   Lesson & section tree (rendered inside the expanded course of #courseTree).
+   Skool-style : collapsible SECTION folders + clickable LESSON items.
+   ============================================= */
+
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+}
+
+/* Section folders */
+.section-group .section-children {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: hidden;
+}
+
+.section-group.collapsed .section-children {
+    display: none;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-sm) var(--space-sm);
+    background: transparent;
+    border: none;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-size: var(--fs-nav-group);
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.section-header:hover {
+    background: var(--hover-bg);
+}
+
+.section-header.static {
+    cursor: default;
+}
+
+.section-chevron {
+    font-size: var(--fs-nav-meta);
+    color: var(--text-muted);
+    flex-shrink: 0;
+}
+
+.section-name {
+    flex: 1;
+}
+
+/* Lesson items */
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm);
+    border-radius: var(--radius-md);
+    color: var(--text-secondary);
+    font-size: var(--fs-nav-item);
+    line-height: 1.35;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+}
+
+.step-item .step-status {
+    flex-shrink: 0;
+    width: 1.1rem;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.step-item .step-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.step-item .step-type-icon {
+    flex-shrink: 0;
+    opacity: 0.6;
+    font-size: var(--fs-nav-meta);
+}
+
+.step-item.clickable {
+    cursor: pointer;
+}
+
+.step-item.clickable:hover {
+    background: var(--hover-bg);
+    box-shadow: var(--hover-glow);
+    color: var(--text-primary);
+}
+
+.step-item.current {
+    background: var(--accent-primary);
+    color: var(--on-media);
+    font-weight: 600;
+}
+
+.step-item.current .step-type-icon {
+    opacity: 0.9;
+}
+
+.step-item.completed .step-status {
+    color: var(--success);
+}
+
+.step-item.locked {
+    color: var(--text-muted);
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+

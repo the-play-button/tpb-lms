@@ -91,7 +91,8 @@ export const renderCourseOverview = async (course, enrollmentStatus = null) => {
             ? safeHtml`<div class="meta-item"><span class="meta-icon">📊</span><span class="meta-text">${t('course.progressCount', { done: course.progress.completed_steps, total: course.progress.total_steps })}</span></div>`
             : '';
         // Thin progress bar under the meta pills (only once the course has steps).
-        const { completed_steps: doneSteps = 0, total_steps: allSteps = 0 } = course.progress ?? {};
+        const doneSteps = course.progress?.completed_steps ?? 0;
+        const allSteps = course.progress?.total_steps ?? 0;
         const pct = allSteps > 0 ? Math.round((doneSteps / allSteps) * 100) : 0;
         const progressBarHtml = allSteps > 0
             ? safeHtml`<div class="overview-progress"><div class="overview-progress-fill" style="width: ${pct}%"></div></div>`

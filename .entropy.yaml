@@ -171,6 +171,8 @@ exceptions:
   # Files allowed to have high coupling (entry points, orchestrators)
   coupling:
     - backend/index.js
+    - frontend-on-cf-worker/app/init/bootSequence.js   # boot orchestrator (composition root — wires all boot phases)
+    - frontend-on-cf-worker/app/init/eventListeners.js # DOM event-listener wiring hub (extracted from index.js to reduce coupling elsewhere)
   
   # Files expected to be "god files" (shared utilities by design)
   god_files:
