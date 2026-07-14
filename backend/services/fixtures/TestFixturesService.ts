@@ -117,7 +117,9 @@ const completeSteps = async (db: D1Database, userId: string, count: number) => {
     const now = new Date().toISOString();
     const stepCount = Math.min(count, CLASS_IDS.length);
     for (let i = 0; i < stepCount; i += 1) {
-        await completeOneStep(db, userId, courseId, CLASS_IDS[i], i, count - i);
+        const classId = CLASS_IDS[i];
+        if (!classId) continue;
+        await completeOneStep(db, userId, courseId, classId, i, count - i);
     }
     if (count >= 1) await awardBadge(db, `fixture_award_first_quiz_${userId}`, 'first_quiz', userId, now);
     if (count >= 2) await awardBadge(db, `fixture_award_perfect_${userId}`, 'perfect_quiz', userId, now);

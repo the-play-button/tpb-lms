@@ -3,8 +3,10 @@
  * GAP-1406: Security headers
  */
 
+const PRIMARY_ORIGIN = 'https://lms-viewer.matthieu-marielouise.workers.dev';  // Frontend (Workers)
+
 export const ALLOWED_ORIGINS = [
-    'https://lms-viewer.matthieu-marielouise.workers.dev',  // Frontend (Workers)
+    PRIMARY_ORIGIN,
     'http://localhost:8080',
     'http://127.0.0.1:8080'
 ];
@@ -23,7 +25,7 @@ const SECURITY_HEADERS = {
  */
 export const getCorsHeaders = (request: Request) => {
     const origin = request.headers.get('Origin') || '';
-    const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+    const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : PRIMARY_ORIGIN;
     
     return {
         'Access-Control-Allow-Origin': allowedOrigin,

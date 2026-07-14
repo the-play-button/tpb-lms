@@ -22,6 +22,9 @@ export const verifyAccessJWT = async (token: string | null | undefined, env: Env
         }
 
         const [headerB64, payloadB64, signatureB64] = parts;
+        if (!headerB64 || !payloadB64 || !signatureB64) {
+            return { valid: false, error: 'Invalid JWT format' };
+        }
         const header = JSON.parse(new TextDecoder().decode(base64urlDecode(headerB64))) as JwtHeader;
         const payload = JSON.parse(new TextDecoder().decode(base64urlDecode(payloadB64))) as JwtPayload;
 

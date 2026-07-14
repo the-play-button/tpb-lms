@@ -49,8 +49,8 @@ export const listByContent = async (env: Env, contentType: string, contentId: st
 
     const byLang: Record<string, Record<string, unknown>> = {};
     for (const row of result.results) {
-        if (!byLang[row.lang]) byLang[row.lang] = {};
-        byLang[row.lang][row.field] = {
+        const langMap = byLang[row.lang] ?? (byLang[row.lang] = {});
+        langMap[row.field] = {
             value: row.value,
             source: row.source,
             reviewed_at: row.reviewed_at,

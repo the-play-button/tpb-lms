@@ -21,6 +21,9 @@ importers:
       '@cloudflare/workers-types':
         specifier: ^4.20260217.0
         version: 4.20260418.1
+      '@total-typescript/ts-reset':
+        specifier: ^0.6.1
+        version: 0.6.1
       '@vitest/coverage-v8':
         specifier: ^4.1.0
         version: 4.1.5(vitest@4.1.5)
@@ -403,6 +406,9 @@ packages:
       '@the-play-button/tpb-sdk-js': '>=1.20.0'
       lucide-react: '>=0.400.0'
       react: '>=18.0.0'
+
+  '@total-typescript/ts-reset@0.6.1':
+    resolution: {integrity: sha512-cka47fVSo6lfQDIATYqb/vO1nvFfbPw7uWLayIXIhGETj0wcOOlrlkobOMDNQOFr9QOafegUPq13V2+6vtD7yg==}
 
   '@tybys/wasm-util@0.10.3':
     resolution: {integrity: sha512-F3fo1MYrRJYL3zER0OUOmkutjr1Vp23m7OsSgp7nq4SP6OqX6C/56XFIPAl5bt3zaBRjmW7SGz3u/6LwFpYcOg==}
@@ -1382,6 +1388,8 @@ snapshots:
       '@the-play-button/tpb-sdk-js': 18.1.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
       lucide-react: 1.14.0(react@19.2.5)
       react: 19.2.5
+
+  '@total-typescript/ts-reset@0.6.1': {}
 
   '@tybys/wasm-util@0.10.3':
     dependencies:

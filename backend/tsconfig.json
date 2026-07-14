@@ -10,6 +10,7 @@
       "@cloudflare/workers-types"
     ],
     "strict": true,
+    "noUncheckedIndexedAccess": true,
     "noEmit": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -37,6 +38,7 @@
     }
   },
   "include": [
+    "reset.d.ts",
     "lms/**/*.ts",
     "services/**/*.ts",
     "handlers/**/*.ts",

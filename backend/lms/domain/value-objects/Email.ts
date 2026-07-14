@@ -25,7 +25,9 @@ export class Email {
   }
 
   get domain(): string {
-    return this.value.split('@')[1];
+    // EMAIL_REGEX (create) guarantees exactly one '@' with a domain part;
+    // reconstitute() bypasses validation, so fall back to '' defensively.
+    return this.value.split('@')[1] ?? '';
   }
 
   toString(): string {

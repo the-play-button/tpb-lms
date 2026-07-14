@@ -30,7 +30,7 @@ const constantTimeSecretEquals = async (a: string | null | undefined, b: string 
     const viewA = new Uint8Array(hmacA);
     const viewB = new Uint8Array(hmacB);
     let diff = 0;
-    for (let i = 0; i < viewA.length; i += 1) diff |= viewA[i] ^ viewB[i];
+    for (let i = 0; i < viewA.length; i += 1) diff |= (viewA[i] ?? 0) ^ (viewB[i] ?? 0);
     return diff === 0;
 };
 

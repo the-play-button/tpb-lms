@@ -90,8 +90,8 @@ const enrichMedia = (media: MediaItem, videoCompleted: boolean, quizPassed: bool
 };
 
 const enrichClass = (cls: CoursesClassRow, currentStep: number): EnrichedClass => {
-    const mediaItems: MediaItem[] = cls.media_json ? JSON.parse(cls.media_json) : [];
-    const raw: Record<string, unknown> = cls.raw_json ? JSON.parse(cls.raw_json) : {};
+    const mediaItems: MediaItem[] = cls.media_json ? (JSON.parse(cls.media_json) as MediaItem[]) : [];
+    const raw: Record<string, unknown> = cls.raw_json ? (JSON.parse(cls.raw_json) as Record<string, unknown>) : {};
     const hasQuiz = mediaItems.some((m: MediaItem) => m.type === 'QUIZ');
     const videoCompleted = cls.video_completed === 1;
     const quizPassed = cls.quiz_passed === 1;

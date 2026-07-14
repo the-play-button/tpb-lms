@@ -105,7 +105,7 @@ export const calculateScore = (answers: QuizAnswers, quizClass: QuizClassRow | n
         throw new Error(`calculateScore: raw_json missing on class ${quizClass.id}`);
     }
 
-    const correctAnswers = JSON.parse(quizClass.raw_json).correct_answers as CorrectAnswers | undefined;
+    const correctAnswers = (JSON.parse(quizClass.raw_json) as { correct_answers?: CorrectAnswers }).correct_answers;
     if (!correctAnswers || Object.keys(correctAnswers).length === 0) {
         throw new Error(`calculateScore: no correct_answers in class ${quizClass.id}`);
     }
@@ -263,7 +263,7 @@ export const processQuizSubmission = async (data: QuizSubmissionData, env: Env, 
 
         if (!isPerfect && quizClass?.raw_json) {
             try {
-                wrongAnswers = buildWrongAnswersList(answers, JSON.parse(quizClass.raw_json).correct_answers || {});
+                wrongAnswers = buildWrongAnswersList(answers, (JSON.parse(quizClass.raw_json) as { correct_answers?: CorrectAnswers }).correct_answers || {});
             } catch (e) {
                 log.warn('Failed to build wrong answers list', { error: toError(e).message });
                 wrongAnswers = null; // explicit fallback — UI shows generic "review incorrect answers" message
