@@ -13,5 +13,16 @@ export default defineConfig({
       'frontend-on-cf-worker/**/*.{test,spec}.{ts,js}',
     ],
     environment: 'node',
+    coverage: {
+      provider: 'v8',
+      // Floors set just below current coverage (stmts 58 / branch 50 / funcs 66 / lines 61)
+      // so `vitest run --coverage` guards regression. Ratchet UP over time, never down.
+      thresholds: {
+        statements: 55,
+        branches: 45,
+        functions: 60,
+        lines: 58,
+      },
+    },
   },
 });
