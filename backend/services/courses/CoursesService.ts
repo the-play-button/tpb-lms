@@ -224,8 +224,9 @@ const buildAdjacency = (rows: ClassRow[]): Adjacency => {
     const byParent: Adjacency = new Map();
     for (const row of rows) {
         const key = row.parent_class_id || ROOT_KEY;
-        if (!byParent.has(key)) byParent.set(key, []);
-        byParent.get(key)!.push(row);
+        let siblings = byParent.get(key);
+        if (!siblings) { siblings = []; byParent.set(key, siblings); }
+        siblings.push(row);
     }
     for (const siblings of byParent.values()) {
         siblings.sort((a, b) => (a.sys_order_index ?? 0) - (b.sys_order_index ?? 0));

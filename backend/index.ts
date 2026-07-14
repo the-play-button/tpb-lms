@@ -112,7 +112,7 @@ app.use('/*', async (c, next) => {
       // failure must surface to the CF Worker tail logs (= what stderr
       // becomes in the Workers runtime).
       // eslint-disable-next-line no-console
-      globalThis.console.error('[telemetry] logger init failed — continuing without telemetry:', err);
+      globalThis.console.error('[telemetry] logger init failed — continuing without telemetry:', err);  // entropy-console-leak-ok: telemetry logger bootstrap fallback — SDK log not yet initialised at this point (init failure path)
       loggerReady = true; // explicit recovery — don't retry on every request
     }
   }
