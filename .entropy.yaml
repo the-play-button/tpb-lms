@@ -123,6 +123,12 @@ tpb_checks:
   # are one-off data-migration importers (not user-facing CLIs with argparse) —
   # same "scripts/ are migration/devops utilities" carve-out class noted above.
   cli_script_documentation: false
+  # contracts_canonical_location: tpb-lms is a self-contained MONOLITH (not part
+  # of the per-BC contracts-package convention). Its Zod event-validation schemas
+  # live in backend/schemas/ (the app SSOT, "Zod via ESM, zero node_modules") —
+  # there is no @the-play-button/tpb-lms-contracts package to move them into, and
+  # creating one for 3 event schemas is overkill for a legacy monolith.
+  contracts_canonical_location: false
 
 # Project-specific exceptions
 exceptions:
