@@ -72,7 +72,7 @@ describe('CheckPolicies — PBAC hasScope gate', () => {
   const ctxWith = (scopes: string[]): AuthoringContext => ({
     db: {} as never,
     actor: { id: 'a', email: 'a@x', type: 'user', bastionUserId: null, scopes, organizationId: null, roles: [] },
-    userEmail: 'a@x', courseRepo: {} as never, classRepo: {} as never,
+    userEmail: 'a@x', courseRepo: {} as never, classRepo: {} as never, programRepo: {} as never,
   });
 
   it('allows when actor holds lms:class:write', () => {

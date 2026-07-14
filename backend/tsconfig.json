@@ -3,8 +3,12 @@
     "target": "ES2022",
     "module": "ES2022",
     "moduleResolution": "bundler",
-    "lib": ["ES2022"],
-    "types": ["@cloudflare/workers-types"],
+    "lib": [
+      "ES2022"
+    ],
+    "types": [
+      "@cloudflare/workers-types"
+    ],
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
@@ -14,20 +18,31 @@
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",
     "paths": {
-      "@services/*": ["services/*"],
-      "@domain/*": ["domain/*"],
-      "@infrastructure/*": ["infrastructure/*"],
-      "@application/*": ["application/*"],
-      "@types/*": ["types/*"]
+      "@services/*": [
+        "services/*"
+      ],
+      "@domain/*": [
+        "lms/domain/*"
+      ],
+      "@infrastructure/*": [
+        "lms/infrastructure/*"
+      ],
+      "@application/*": [
+        "lms/application/*"
+      ],
+      "@types/*": [
+        "types/*",
+        "lms/types/*"
+      ]
     }
   },
   "include": [
+    "lms/**/*.ts",
     "services/**/*.ts",
-    "domain/**/*.ts",
-    "infrastructure/**/*.ts",
-    "application/**/*.ts",
     "handlers/**/*.ts",
     "types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }
