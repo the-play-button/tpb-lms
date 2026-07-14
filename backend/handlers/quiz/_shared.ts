@@ -67,7 +67,7 @@ export const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: Corr
             });
         }
     }
-    return wrong.length > 0 ? wrong : null;
+    return wrongAnswers.length > 0 ? wrongAnswers : null;
 };
 
 /**
