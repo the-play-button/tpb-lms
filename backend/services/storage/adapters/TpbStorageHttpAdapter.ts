@@ -11,14 +11,14 @@
 import type { StoragePort } from '../StoragePort.js';
 import type { StorageFile } from '../../types/StorageFile.js';
 
+import type { TpbStorageHttpAdapterConfig } from './TpbStorageHttpAdapter.types';
+export type { TpbStorageHttpAdapterConfig };
+
+
 // Note: `listFiles` is not part of StoragePort but is exposed by the prior
 // adapter for ConnectionResolverAdapter.testAccess. Kept here to preserve the
 // public contract.
 
-export interface TpbStorageHttpAdapterConfig {
-  tpbStorageUrl: string;
-  bastionToken: string;
-}
 
 interface TpbStorageFileResponse {
   id?: string;

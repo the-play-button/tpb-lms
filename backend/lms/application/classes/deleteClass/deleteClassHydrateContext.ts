@@ -3,7 +3,10 @@ import type { AuthoringContext } from '../../../types/AuthoringContext.js';
 import type { ClassRow } from '../../../domain/repositories/LmsClassRepository.js';
 import type { DeleteClassInput } from './deleteClassValidateInput.js';
 
-export interface DeleteClassContext { input: DeleteClassInput; current: ClassRow; }
+import type { DeleteClassContext } from './deleteClassHydrateContext.types';
+export type { DeleteClassContext };
+
+
 
 export const deleteClassHydrateContext = async (input: DeleteClassInput, ctx: AuthoringContext): Promise<Result<'NOT_FOUND', DeleteClassContext>> => {
   const current = await ctx.classRepo.findById(input.classId);

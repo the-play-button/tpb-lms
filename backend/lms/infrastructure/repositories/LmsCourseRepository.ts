@@ -1,44 +1,19 @@
+
+import type { CourseRow } from './LmsCourseRepository.types/CourseRow';
+import type { CreateCourseData } from './LmsCourseRepository.types/CreateCourseData';
+import type { UpdateCoursePatch } from './LmsCourseRepository.types/UpdateCoursePatch';
+export type { CourseRow };
+export type { CreateCourseData };
+export type { UpdateCoursePatch };
+
 /**
  * LmsCourseRepository — D1 CRUD for lms_course (content-authoring write layer).
  *
  * Plain row DTOs (no entity reconstitution): a course is a simple aggregate root.
  */
 
-export interface CourseRow {
-  id: string;
-  name: string;
-  description: string | null;
-  categories_json: string | null;
-  media_json: string | null;
-  is_active: number;
-  is_private: number;
-  languages_json: string | null;
-  raw_json: string | null;
-  created_at: string;
-  updated_at: string;
-}
 
-export interface CreateCourseData {
-  id: string;
-  name: string;
-  description?: string | null;
-  categoriesJson?: unknown;
-  mediaJson?: unknown;
-  isPrivate?: boolean;
-  languagesJson?: unknown;
-  rawJson?: unknown;
-}
 
-export interface UpdateCoursePatch {
-  name?: string;
-  description?: string | null;
-  categoriesJson?: unknown;
-  mediaJson?: unknown;
-  isActive?: boolean;
-  isPrivate?: boolean;
-  languagesJson?: unknown;
-  rawJson?: unknown;
-}
 
 const j = (v: unknown): string | null => (v === undefined ? null : v === null ? null : JSON.stringify(v));
 

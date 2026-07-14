@@ -3,12 +3,10 @@ import type { Email } from '../value-objects/index.js';
 import type { DraftContentRef } from '../entities/ContentRef/DraftContentRef.js';
 import type { SharedContentRef } from '../entities/ContentRef/SharedContentRef.js';
 
-export interface Enrollment {
-  learnerEmail: string;
-  courseId: string;
-  classId: string;
-  active: boolean;
-}
+import type { Enrollment } from './ContentAccessPolicies.types';
+export type { Enrollment };
+
+
 
 /**
  * A learner must be actively enrolled in the class to access its content.

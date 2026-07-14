@@ -1,18 +1,13 @@
 import { succeed, type Result } from '../../../domain/core/Result.js';
 import type { ListPermissionsContext } from './listPermissionsHydrateContext.js';
 
-export interface PermissionEntry {
-  id: string;
-  shared_with: string;
-  role: string;
-  created_at: string;
-}
+import type { PermissionEntry } from './listPermissionsExecute.types/PermissionEntry';
+import type { ListPermissionsOutput } from './listPermissionsExecute.types/ListPermissionsOutput';
+export type { PermissionEntry };
+export type { ListPermissionsOutput };
 
-export interface ListPermissionsOutput {
-  content_ref_id: string;
-  owner_email: string;
-  permissions: PermissionEntry[];
-}
+
+
 
 /**
  * Execute step: map active shares to permission entries.

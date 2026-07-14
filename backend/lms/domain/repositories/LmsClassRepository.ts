@@ -5,53 +5,18 @@
  */
 import type { NodeKind } from '../NodeKind.js';
 
+import type { ClassRow } from './LmsClassRepository.types/ClassRow';
+import type { CreateClassData } from './LmsClassRepository.types/CreateClassData';
+import type { UpdateClassPatch } from './LmsClassRepository.types/UpdateClassPatch';
+import type { LmsClassRepository } from './LmsClassRepository.types/LmsClassRepository';
+export type { ClassRow };
+export type { CreateClassData };
+export type { UpdateClassPatch };
+export type { LmsClassRepository };
+
+
 export type { NodeKind };
 
-export interface ClassRow {
-  id: string;
-  course_id: string;
-  parent_class_id: string | null;
-  node_kind: NodeKind;
-  name: string;
-  description: string | null;
-  media_json: string | null;
-  sys_order_index: number;
-  raw_json: string | null;
-  created_at: string;
-  updated_at: string;
-}
 
-export interface CreateClassData {
-  id: string;
-  courseId: string;
-  parentClassId?: string | null;
-  nodeKind: NodeKind;
-  name: string;
-  description?: string | null;
-  mediaJson?: unknown;
-  sysOrderIndex?: number;
-  rawJson?: unknown;
-}
 
-export interface UpdateClassPatch {
-  name?: string;
-  description?: string | null;
-  mediaJson?: unknown;
-  sysOrderIndex?: number;
-  parentClassId?: string | null;
-  nodeKind?: NodeKind;
-  rawJson?: unknown;
-}
 
-export interface LmsClassRepository {
-  findById(id: string): Promise<ClassRow | null>;
-  findByCourse(courseId: string): Promise<ClassRow[]>;
-  /** Idempotent by id (INSERT OR IGNORE); returns the row. */
-  insert(data: CreateClassData): Promise<ClassRow>;
-  update(id: string, patch: UpdateClassPatch): Promise<void>;
-  /** Collect a node + all its descendants (recursive CTE). */
-  collectSubtreeIds(id: string): Promise<string[]>;
-  /** Delete a node and its entire subtree; returns the row count deleted. */
-  deleteSubtree(id: string): Promise<number>;
-  deleteByCourse(courseId: string): Promise<void>;
-}

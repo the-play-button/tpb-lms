@@ -5,11 +5,10 @@ import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { ContentRefId } from '../../../domain/value-objects/index.js';
 import type { ListPermissionsValidatedInput } from './listPermissionsValidateInput.js';
 
-export interface ListPermissionsContext {
-  contentRef: ContentRef;
-  shares: ActiveShare[];
-  isOwner: boolean;
-}
+import type { ListPermissionsContext } from './listPermissionsHydrateContext.types';
+export type { ListPermissionsContext };
+
+
 
 /**
  * HydrateContext step: load contentRef and active shares.

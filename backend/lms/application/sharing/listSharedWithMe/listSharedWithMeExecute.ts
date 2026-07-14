@@ -3,15 +3,10 @@ import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { Email } from '../../../domain/value-objects/index.js';
 import type { SharedWithMeValidatedInput } from './listSharedWithMeValidateInput.js';
 
-export interface SharedWithMeEntry {
-  id: string;
-  content_ref_id: string;
-  shared_by: string;
-  role: string;
-  name: string;
-  content_type: string;
-  created_at: string;
-}
+import type { SharedWithMeEntry } from './listSharedWithMeExecute.types';
+export type { SharedWithMeEntry };
+
+
 
 /**
  * Execute step: fetch all content shared with the current user.

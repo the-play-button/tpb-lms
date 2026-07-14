@@ -4,11 +4,10 @@ import type { ContentRef } from '../../../domain/repositories/ContentRefsReposit
 import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { ShareId } from '../../../domain/value-objects/index.js';
 
-export interface RevokeShareContext {
-  share: ActiveShare;
-  contentRef: ContentRef;
-  isOwner: boolean;
-}
+import type { RevokeShareContext } from './deleteShareHydrateContext.types';
+export type { RevokeShareContext };
+
+
 
 /**
  * HydrateContext step: load the share and its parent contentRef.

@@ -1,8 +1,9 @@
 import type { ProgramRow } from '../../../domain/repositories/LmsProgramRepository.js';
 
-export interface ProgramView {
-  id: string; name: string; description: string | null; media: unknown; is_active: boolean;
-}
+import type { ProgramView } from './createProgramFilter.types';
+export type { ProgramView };
+
+
 
 export const createProgramFilter = (row: ProgramRow): ProgramView => ({
   id: row.id, name: row.name, description: row.description,

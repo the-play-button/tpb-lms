@@ -1,9 +1,13 @@
+
+import type { Jwk } from './_shared.types/Jwk';
+import type { Jwks } from './_shared.types/Jwks';
+export type { Jwk };
+export type { Jwks };
+
 /**
  * Shared auth primitives - JWKS caching, JWT parsing, crypto helpers
  */
 
-export interface Jwk { kty?: string; n?: string; e?: string; kid?: string; [key: string]: unknown; }
-export interface Jwks { keys: Jwk[]; }
 
 export let jwksCache: Jwks | null = null;
 export let jwksCacheTime = 0;

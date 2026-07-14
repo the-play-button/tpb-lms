@@ -12,5 +12,8 @@
 import type { VaultPort, BastionConfig } from './VaultPort.js';
 import type { StorageConnectionsPort } from './StorageConnectionsPort.js';
 
-export type BastionDependencies = VaultPort & StorageConnectionsPort;
+import type { BastionDependencies } from './BastionDependencies.types';
+export type { BastionDependencies };
+
+
 export type { VaultPort, BastionConfig, StorageConnectionsPort };

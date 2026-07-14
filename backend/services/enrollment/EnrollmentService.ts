@@ -8,6 +8,10 @@
 import { generateId, MAX_ACTIVE_ENROLLMENTS } from '../../handlers/enrollment/_shared.js';
 import type { Env } from "../../types/Env.js";
 
+import type { EnrollmentActionResult } from './EnrollmentService.types';
+export type { EnrollmentActionResult };
+
+
 export { MAX_ACTIVE_ENROLLMENTS };
 
 interface CourseRow { id: string; name?: string; is_active?: number; }
@@ -37,9 +41,6 @@ interface ProgressFields {
 }
 
 /** Discriminated result of an enrollment action (error path vs value path). */
-export type EnrollmentActionResult =
-    | { error: { status: number; body: unknown } }
-    | { value: { status: number; body: unknown } };
 
 const findCourseById = (env: Env, courseId: string) =>
     env.DB.prepare('SELECT id, name, is_active FROM lms_course WHERE id = ?')

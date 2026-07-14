@@ -4,7 +4,10 @@ import type { ContentRefProps } from './types.js';
 import type { ActiveShare } from '../Share/ActiveShare.js';
 import { BaseContentRef } from './BaseContentRef.js';
 
-export type ShareRole = 'viewer' | 'editor';
+import type { ShareRole } from './SharedContentRef.types';
+export type { ShareRole };
+
+
 
 /**
  * SharedContentRef Entity

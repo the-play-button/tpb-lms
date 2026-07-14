@@ -3,30 +3,19 @@ import type { DraftContentRef } from '../entities/ContentRef/DraftContentRef.js'
 import type { SharedContentRef } from '../entities/ContentRef/SharedContentRef.js';
 import type { ContentType, ContentUsage } from '../entities/ContentRef/types.js';
 
+import type { FilteredContentRef } from './FieldAccessPolicies.types/FilteredContentRef';
+import type { FullContentRef } from './FieldAccessPolicies.types/FullContentRef';
+export type { FilteredContentRef };
+export type { FullContentRef };
+
+
 /**
  * A filtered view of a ContentRef, safe for non-owner viewers.
  */
-export interface FilteredContentRef {
-  id: string;
-  fileId: string;
-  name: string;
-  contentType: ContentType;
-  courseId: string | null;
-  classId: string | null;
-  usage: ContentUsage | null;
-  lang: string;
-}
 
 /**
  * Full view of a ContentRef, visible only to the owner.
  */
-export interface FullContentRef extends FilteredContentRef {
-  connectionId: string;
-  ownerEmail: string;
-  sourceRefId: string | null;
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 /**
  * Filters ContentRef fields based on whether the viewer is the owner.

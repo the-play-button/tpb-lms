@@ -3,10 +3,10 @@ import type { HandlerContext } from '../../../types/HandlerContext.js';
 import type { GetCloudPitchContext } from './getCloudPitchHydrateContext.js';
 import { contentAccessed } from '../../../domain/events/events/ContentAccessed.js';
 
-export interface GetCloudPitchOutput {
-  binary: ArrayBuffer;
-  fileName: string;
-}
+import type { GetCloudPitchOutput } from './getCloudPitchExecute.types';
+export type { GetCloudPitchOutput };
+
+
 
 /**
  * Execute step: fetch .pitch binary from cloud storage.

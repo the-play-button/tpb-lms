@@ -4,11 +4,10 @@ import { Email } from '../../../domain/value-objects/index.js';
 import { shareRevoked } from '../../../domain/events/events/ShareRevoked.js';
 import type { RevokeShareContext } from './deleteShareHydrateContext.js';
 
-export interface RevokeShareOutput {
-  share_id: string;
-  content_ref_id: string;
-  revoked_at: string;
-}
+import type { RevokeShareOutput } from './deleteShareExecute.types';
+export type { RevokeShareOutput };
+
+
 
 /**
  * Execute step: revoke the share in domain, persist, emit event.

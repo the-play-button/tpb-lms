@@ -4,7 +4,10 @@ import type { CourseRow } from '../../../domain/repositories/LmsCourseRepository
 import type { ClassRow } from '../../../domain/repositories/LmsClassRepository.js';
 import type { CreateClassInput } from './createClassValidateInput.js';
 
-export interface CreateClassContext { input: CreateClassInput; course: CourseRow; parent: ClassRow | null; }
+import type { CreateClassContext } from './createClassHydrateContext.types';
+export type { CreateClassContext };
+
+
 
 export const createClassHydrateContext = async (input: CreateClassInput, ctx: AuthoringContext): Promise<Result<'NOT_FOUND', CreateClassContext>> => {
   const course = await ctx.courseRepo.findById(input.courseId);

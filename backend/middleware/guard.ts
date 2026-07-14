@@ -12,11 +12,10 @@
  */
 import type { HandlerUserContext } from '../types/HandlerContext.js';
 
-export interface RoleGuardError {
-  error: string;
-  requiredRole: string[];
-  actualRole: string;
-}
+import type { RoleGuardError } from './guard.types';
+export type { RoleGuardError };
+
+
 
 export const requireRole = (...allowedRoles: string[]) => {
   return (userContext: HandlerUserContext | null | undefined): RoleGuardError | null => {

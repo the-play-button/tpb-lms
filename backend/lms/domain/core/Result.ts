@@ -1,3 +1,11 @@
+
+import type { Result } from './Result.types/Result';
+import type { Failure } from './Result.types/Failure';
+import type { Success } from './Result.types/Success';
+export type { Result };
+export type { Failure };
+export type { Success };
+
 /**
  * Result type - Either<Failure, Success>
  *
@@ -5,17 +13,8 @@
  * No throw for business cases; throw only for infrastructure errors.
  */
 
-export type Result<F, S> = Failure<F> | Success<S>;
 
-export interface Failure<F> {
-  readonly ok: false;
-  readonly error: F;
-}
 
-export interface Success<S> {
-  readonly ok: true;
-  readonly value: S;
-}
 
 export const fail = <F>(error: F): Failure<F> => {
   return { ok: false, error };

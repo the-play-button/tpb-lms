@@ -5,10 +5,10 @@ import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { ContentRefId } from '../../../domain/value-objects/index.js';
 import type { ShareContentInput } from './createShareValidateInput.js';
 
-export interface ShareContentContext {
-  contentRef: ContentRef;
-  existingShares: ActiveShare[];
-}
+import type { ShareContentContext } from './createShareHydrateContext.types';
+export type { ShareContentContext };
+
+
 
 /**
  * HydrateContext step: load contentRef and existing shares.

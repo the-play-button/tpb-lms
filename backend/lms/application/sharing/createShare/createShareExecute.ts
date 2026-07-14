@@ -7,12 +7,10 @@ import { contentShared } from '../../../domain/events/events/ContentShared.js';
 import type { ShareContentContext } from './createShareHydrateContext.js';
 import type { ShareContentInput } from './createShareValidateInput.js';
 
-export interface ShareContentOutput {
-  share_id: string;
-  content_ref_id: string;
-  shared_with: string;
-  role: string;
-}
+import type { ShareContentOutput } from './createShareExecute.types';
+export type { ShareContentOutput };
+
+
 
 /**
  * Execute step: create the share in domain, persist, emit event.

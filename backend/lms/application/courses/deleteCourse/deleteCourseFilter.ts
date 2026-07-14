@@ -1,3 +1,6 @@
-export interface DeletedView { id: string; deleted: boolean; subtree_count?: number; }
+
+import type { DeletedView } from './deleteCourseFilter.types';
+export type { DeletedView };
+
 
 export const deleteCourseFilter = (row: DeletedView): DeletedView => row;

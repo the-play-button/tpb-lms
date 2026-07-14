@@ -1,13 +1,10 @@
+
+import type { CourseSnapshot } from './Course.types';
+export type { CourseSnapshot };
+
 // Real Course aggregate — replaces Placeholder.ts (Plan 04b).
 // Doctrine : pipelined-ddd § 2.5 rich domain entities with toSnapshot().
 
-export interface CourseSnapshot {
-  id: string;
-  title: string;
-  description: string;
-  enabled: boolean;
-  createdAt: string;
-}
 
 export class Course {
   private constructor(

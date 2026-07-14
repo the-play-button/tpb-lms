@@ -3,7 +3,10 @@ import type { AuthoringContext } from '../../../types/AuthoringContext.js';
 import type { CourseRow } from '../../../domain/repositories/LmsCourseRepository.js';
 import type { UpdateCourseInput } from './updateCourseValidateInput.js';
 
-export interface UpdateCourseContext { input: UpdateCourseInput; course: CourseRow; }
+import type { UpdateCourseContext } from './updateCourseHydrateContext.types';
+export type { UpdateCourseContext };
+
+
 
 export const updateCourseHydrateContext = async (input: UpdateCourseInput, ctx: AuthoringContext): Promise<Result<'NOT_FOUND', UpdateCourseContext>> => {
   const course = await ctx.courseRepo.findById(input.courseId);

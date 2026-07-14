@@ -3,11 +3,10 @@ import type { HandlerContext } from '../../../types/HandlerContext.js';
 import type { GetCloudContentContext } from './getCloudContentHydrateContext.js';
 import { contentAccessed } from '../../../domain/events/events/ContentAccessed.js';
 
-export interface GetCloudContentOutput {
-  content: string;
-  contentType: string;
-  lang?: string;
-}
+import type { GetCloudContentOutput } from './getCloudContentExecute.types';
+export type { GetCloudContentOutput };
+
+
 
 /**
  * Execute step: fetch content from cloud storage.

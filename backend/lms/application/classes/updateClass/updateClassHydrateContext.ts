@@ -3,7 +3,10 @@ import type { AuthoringContext } from '../../../types/AuthoringContext.js';
 import type { ClassRow } from '../../../domain/repositories/LmsClassRepository.js';
 import type { UpdateClassInput } from './updateClassValidateInput.js';
 
-export interface UpdateClassContext { input: UpdateClassInput; current: ClassRow; parent: ClassRow | null; subtreeIds: string[]; }
+import type { UpdateClassContext } from './updateClassHydrateContext.types';
+export type { UpdateClassContext };
+
+
 
 export const updateClassHydrateContext = async (input: UpdateClassInput, ctx: AuthoringContext): Promise<Result<'NOT_FOUND', UpdateClassContext>> => {
   const current = await ctx.classRepo.findById(input.classId);

@@ -1,16 +1,12 @@
+
+import type { GlossaryTermPayload } from './_glossaryShared.types';
+export type { GlossaryTermPayload };
+
 /**
  * Shared helpers for glossary handlers.
  * SSOT for term-id derivation + DB upsert.
  */
 
-export interface GlossaryTermPayload {
-    source_lang?: string;
-    target_lang?: string;
-    source_term?: string;
-    target_term?: string;
-    context?: string;
-    [key: string]: unknown;
-}
 
 export const REQUIRED_FIELDS = ['source_lang', 'target_lang', 'source_term', 'target_term'] as const;
 

@@ -4,11 +4,10 @@ import type { HandlerContext } from '../../../types/HandlerContext.js';
 import { ContentRefId } from '../../../domain/value-objects/index.js';
 import type { GetCloudContentInput } from './getCloudContentValidateInput.js';
 
-export interface GetCloudContentContext {
-  contentRef: ContentRef;
-  isOwner: boolean;
-  isEnrolled: boolean;
-}
+import type { GetCloudContentContext } from './getCloudContentHydrateContext.types';
+export type { GetCloudContentContext };
+
+
 
 /**
  * HydrateContext step: load contentRef and determine access relationship.

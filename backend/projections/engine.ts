@@ -14,36 +14,19 @@ import { QUIZ_RESULT_PROJECTION } from './rules/quiz_result.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { toError } from '../utils/toError.js';
 
-export interface ProjectionKey { user_id: string; class_id: string; }
+import type { ProjectionKey } from './engine.types/ProjectionKey';
+import type { ProjectionState } from './engine.types/ProjectionState';
+import type { ProjectionEvent } from './engine.types/ProjectionEvent';
+import type { Projection } from './engine.types/Projection';
+export type { ProjectionKey };
+export type { ProjectionState };
+export type { ProjectionEvent };
+export type { Projection };
 
-export interface ProjectionState {
-    video_completed?: number;
-    quiz_passed?: number;
-    video_max_position_sec?: number;
-    video_duration_sec?: number;
-    video_completed_at?: string | null;
-    quiz_score?: number;
-    quiz_max_score?: number;
-    quiz_passed_at?: string | null;
-    [key: string]: unknown;
-}
 
-export interface ProjectionEvent {
-    id?: string;
-    type: string;
-    user_id?: string;
-    course_id?: string;
-    class_id?: string;
-    payload_json?: unknown;
-    [key: string]: unknown;
-}
 
-export interface Projection {
-    name: string;
-    eventTypes: string[];
-    getKey: (event: ProjectionEvent) => ProjectionKey;
-    reduce: (state: ProjectionState, event: ProjectionEvent & { payload: unknown }) => ProjectionState;
-}
+
+
 
 const PROJECTIONS: Projection[] = [
     VIDEO_PROGRESS_PROJECTION,
