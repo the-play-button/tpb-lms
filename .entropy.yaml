@@ -112,6 +112,17 @@ tpb_checks:
   direct_import: false
   barrel_imports: false
   barrel_import_bypass: false
+  # cf_abstraction: services access `env.DB.prepare(...)` / `db: D1Database`
+  # directly. This is the SAME architectural decision already carved out above
+  # via `infrastructure_module: false` ("D1 access is via env.DB directly") and
+  # `config_centralization: false` ("CF Worker pattern"). tpb-lms deliberately
+  # does not interpose a repository-port abstraction between services and D1 —
+  # introducing one is a separate multi-day refactor, not a correctness fix.
+  cf_abstraction: false
+  # cli_script_documentation: scripts/skool-import + scripts/masterclass-import
+  # are one-off data-migration importers (not user-facing CLIs with argparse) —
+  # same "scripts/ are migration/devops utilities" carve-out class noted above.
+  cli_script_documentation: false
 
 # Project-specific exceptions
 exceptions:
