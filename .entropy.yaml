@@ -103,6 +103,15 @@ tpb_checks:
   # innerHTML for modals: LMS uses innerHTML for one-time modal renders — safe, no user input
   innerHTML_view_switching: false     # endScreen.js uses innerHTML for static modal content
   # ACK suppress wave: false positive on legitimate ACK patterns
+  # ── Opt-OUT (visible + reviewed, per § ENTROPY ZÉRO OPT-IN) — same precedent as
+  # tpb-it-ops. tpb-lms uses DIRECT relative `.js`-extension ESM imports as its
+  # established convention (Node/Workers ESM requires the extension), NOT the
+  # index.ts barrel-only style. The barrel checks flag the ENTIRE import graph
+  # (~480 imports) — an opinionated code-organisation preference, not a
+  # correctness/security invariant. Converting to barrels = churn without value.
+  direct_import: false
+  barrel_imports: false
+  barrel_import_bypass: false
 
 # Project-specific exceptions
 exceptions:
