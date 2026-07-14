@@ -166,6 +166,7 @@ exceptions:
     - backend/lms/application/connections
     - backend/lms/application/classes
     - backend/lms/application/courses
+    - backend/lms/application/programs
 
   # Files allowed to have high coupling (entry points, orchestrators)
   coupling:

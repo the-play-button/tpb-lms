@@ -90,9 +90,9 @@ const enrichMedia = (media: MediaItem, videoCompleted: boolean, quizPassed: bool
 };
 
 const enrichClass = (cls: CoursesClassRow, currentStep: number): EnrichedClass => {
-    const media: MediaItem[] = cls.media_json ? JSON.parse(cls.media_json) : [];
+    const mediaItems: MediaItem[] = cls.media_json ? JSON.parse(cls.media_json) : [];
     const raw: Record<string, unknown> = cls.raw_json ? JSON.parse(cls.raw_json) : {};
-    const hasQuiz = media.some((m: MediaItem) => m.type === 'QUIZ');
+    const hasQuiz = mediaItems.some((m: MediaItem) => m.type === 'QUIZ');
     const videoCompleted = cls.video_completed === 1;
     const quizPassed = cls.quiz_passed === 1;
     const stepCompleted = videoCompleted && (!hasQuiz || quizPassed);
@@ -102,7 +102,7 @@ const enrichClass = (cls: CoursesClassRow, currentStep: number): EnrichedClass =
         name: cls.name,
         description: cls.description,
         order_index: orderIndex,
-        media: media.map((m: MediaItem) => enrichMedia(m, videoCompleted, quizPassed, cls)),
+        media: mediaItems.map((m: MediaItem) => enrichMedia(m, videoCompleted, quizPassed, cls)),
         step_type: (raw.tpb_step_type as string) || 'CONTENT',
         content_md: (raw.tpb_content_md as string) || '',
         video_completed: videoCompleted,
@@ -248,13 +248,13 @@ const flattenLessonsDFS = (byParent: Adjacency, key = ROOT_KEY, acc: CoursesClas
 // (sys_order_index is now per-sibling, so array position is the true ordinal).
 const enrichLessonSequence = (lessonRows: CoursesClassRow[]): EnrichedClass[] => {
     let currentStep = 0;
-    const enriched = lessonRows.map((cls, i) => {
+    const enrichedSteps = lessonRows.map((cls, i) => {
         const e = enrichClass(cls, currentStep);
         e.order_index = i;
         if (e.step_completed) currentStep = Math.max(currentStep, i);
         return e;
     });
-    return enriched.map((e) => ({ ...e, can_access: e.order_index <= currentStep + 1 }));
+    return enrichedSteps.map((e) => ({ ...e, can_access: e.order_index <= currentStep + 1 }));
 };
 
 // Build the display tree: SECTION folders + LESSON leaves (enriched/localized).
