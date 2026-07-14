@@ -1,3 +1,4 @@
+// entropy-one-export-per-types-file-ok: injected handler-context contract (AuthzBastionClient + LmsActor + HandlerContext) consumed by 84 sites — a de-facto port contract, .port.ts-class cohesion; splitting churns 84 .js imports
 /**
  * HandlerContext - Injected into BYOC handlers
  *

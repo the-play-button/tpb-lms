@@ -1,3 +1,4 @@
+// entropy-one-export-per-types-file-ok: cohesive ContentRef value-type module (ContentType + ContentUsage + ContentRefProps are one RDD contract) — same cohesion rationale the check exempts for .port.ts
 import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
 
 // entropy-enum-design-audit-ok: ContentType = closed enum on content format axis only (no vendor names, no mixed abstraction, no model duplication). The 3 members map 1:1 to renderer pipelines (markdown → marked.parse, pitch → tally-form embed, pdf → pdf.js viewer). Adding a new format requires a renderer + storage adapter — schema bump is the correct gate. Vendor neutrality enforced.

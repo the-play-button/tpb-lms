@@ -1,3 +1,4 @@
+// entropy-one-export-per-types-file-ok: cohesive storage wire-shape pair (StorageFile + StoragePermission returned together by the storage port)
 /**
  * StorageFile - Represents a file in cloud storage
  *

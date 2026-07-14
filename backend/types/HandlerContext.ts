@@ -1,3 +1,4 @@
+// entropy-one-export-per-types-file-ok: legacy handler user-context contract (ContactRecord + HandlerUserContext) — cohesive auth-context pair injected together
 /**
  * HandlerUserContext — the per-request context object the router injects as the
  * 3rd argument of every route handler (`c.var.userContext`).

@@ -1,3 +1,4 @@
+// entropy-one-export-per-types-file-ok: the canonical HTTP error-class module (6 Error subclasses forming one throwable hierarchy) — a cohesive error taxonomy, not a DTO drawer
 /**
  * Typed error classes for the BYOC layer
  */
