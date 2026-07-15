@@ -14,4 +14,4 @@ export const THRESHOLDS = {
     VIDEO_COMPLETION: 90,    // % to consider video completed
     QUIZ_PASS: 80,           // % to consider quiz passed
     LEVEL_XP: 1000           // XP per level
-};
+} as const;
