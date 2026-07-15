@@ -50,7 +50,11 @@ export const getPassThreshold = (quizClass: QuizClassRow | null | undefined): nu
 /**
  * Build list of wrong answers for corrections modal
  */
-export const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: CorrectAnswers) => {
+export const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: CorrectAnswers): {
+    question: unknown;
+    yourAnswer: unknown;
+    correctAnswer: unknown;
+}[] | null  => {
     const wrongAnswers: Array<{ question: unknown; yourAnswer: unknown; correctAnswer: unknown }> = [];
     if (!Array.isArray(answers)) return null;
 
@@ -73,7 +77,11 @@ export const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: Corr
 /**
  * Extract user/course/answers from Tally fields
  */
-export const extractFieldsFromPayload = (fields: TallyField[]) => {
+export const extractFieldsFromPayload = (fields: TallyField[]): {
+    userId: unknown;
+    courseId: unknown;
+    answers: Record<string, unknown>;
+}  => {
     let userId: unknown = null;
     let courseId: unknown = null;
     const answers: Record<string, unknown> = {};
@@ -156,7 +164,7 @@ interface StoreQuizEventInput {
 export const storeQuizEvent = async (
     env: Env,
     { userId, quizId, courseId, classId, score, maxScore, percentage, passed }: StoreQuizEventInput
-) => {
+): Promise<string>  => {
     const eventId = generateEventId();
     const now = new Date().toISOString();
     const payload = { quiz_id: quizId, score, max_score: maxScore, percentage, passed };
@@ -180,7 +188,14 @@ export const storeQuizEvent = async (
 /**
  * Handle badges for passed quiz
  */
-export const handleQuizBadges = async (db: D1Database, userId: string, isPerfect: boolean) => {
+export const handleQuizBadges = async (db: D1Database, userId: string, isPerfect: boolean): Promise<{
+    id: unknown;
+    name: unknown;
+    description: unknown;
+    icon_url: unknown;
+    points_reward: unknown;
+    rarity: unknown;
+} | null>  => {
     let badge = await checkQuizBadges(db, userId, isPerfect);
     if (!badge) badge = await checkStreakBadges(db, userId);
     return badge;
@@ -199,7 +214,7 @@ interface QuizSubmissionData {
 /**
  * Process quiz submission (main logic)
  */
-export const processQuizSubmission = async (data: QuizSubmissionData, env: Env, request: Request, quizClass: QuizClassRow | null = null) => {
+export const processQuizSubmission = async (data: QuizSubmissionData, env: Env, request: Request, quizClass: QuizClassRow | null = null): Promise<Response>  => {
     const { userId, quizId, courseId, classId, score, maxScore, answers } = data;
 
     if (!userId || !quizId || score === undefined || !maxScore) {

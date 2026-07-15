@@ -50,7 +50,40 @@ const schemas = {
  * @param {object} body - Raw request body
  * @returns {{ success: boolean, data?: object, error?: string }}
  */
-export const validateEvent = (body: unknown) => {
+export const validateEvent = (body: unknown): {
+    success: false;
+    error: string;
+    data?: undefined;
+} | {
+    success: true;
+    data: {
+        type: "VIDEO_PLAY" | "VIDEO_PAUSE";
+        payload: {
+            video_id?: string | undefined;
+        };
+        course_id: string;
+        class_id: string;
+    } | {
+        type: "VIDEO_PING";
+        payload: {
+            position_sec: number;
+            duration_sec: number;
+            video_id?: string | undefined;
+        };
+        course_id: string;
+        class_id: string;
+    } | {
+        type: "QUIZ_SUBMIT";
+        payload: {
+            score: number;
+            max_score: number;
+            quiz_id?: string | undefined;
+        };
+        course_id: string;
+        class_id: string;
+    };
+    error?: undefined;
+}  => {
   const typed = body as { type?: string } | null;
   if (!typed?.type) {
     return { success: false as const, error: 'type is required' };

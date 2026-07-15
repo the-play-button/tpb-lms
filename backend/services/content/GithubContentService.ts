@@ -66,7 +66,10 @@ const getTokenDebug = (env: Env): TokenDebug => ({
     vaultError: null,
 });
 
-export const getGitHubTokenWithDebug = async (env: Env) => {
+export const getGitHubTokenWithDebug = async (env: Env): Promise<{
+    token: string;
+    debug: TokenDebug;
+}>  => {
     const debug = getTokenDebug(env);
     if (cachedToken && Date.now() < tokenExpiry) {
         debug.cached = true;
@@ -78,7 +81,7 @@ export const getGitHubTokenWithDebug = async (env: Env) => {
     return { token, debug };
 };
 
-export const getGitHubToken = async (env: Env) => (await getGitHubTokenWithDebug(env)).token;
+export const getGitHubToken = async (env: Env): Promise<string>  => (await getGitHubTokenWithDebug(env)).token;
 
 export const injectI18nIntoPath = (path: string, lang: string): string => {
     if (!lang) return path;
@@ -102,10 +105,17 @@ export const parseGitHubUrl = (url: string): GitHubUrlParts | null => {
     return null;
 };
 
-export const buildGitHubApiUrl = ({ owner, repo, branch, path }: GitHubUrlParts = {}) =>
+export const buildGitHubApiUrl = ({ owner, repo, branch, path }: GitHubUrlParts = {}): string  =>
     `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
 
-export const fetchRawContent = async (env: Env, params: GitHubUrlParts) => {
+export const fetchRawContent = async (env: Env, params: GitHubUrlParts): Promise<{
+    response: Response;
+    tokenResult: {
+        token: string;
+        debug: TokenDebug;
+    };
+    apiUrl: string;
+}>  => {
     const tokenResult = await getGitHubTokenWithDebug(env);
     const apiUrl = buildGitHubApiUrl(params);
     const headers: Record<string, string> = {
@@ -117,7 +127,7 @@ export const fetchRawContent = async (env: Env, params: GitHubUrlParts) => {
     return { response, tokenResult, apiUrl };
 };
 
-export const fetchDirectoryListing = async (env: Env, params: GitHubUrlParts) => {
+export const fetchDirectoryListing = async (env: Env, params: GitHubUrlParts): Promise<Response>  => {
     const token = await getGitHubToken(env);
     const apiUrl = buildGitHubApiUrl(params);
     const headers: Record<string, string> = {

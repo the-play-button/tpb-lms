@@ -17,10 +17,10 @@ export const isValidTermPayload = (payload: unknown): payload is GlossaryTermPay
         return typeof v === 'string' && v.length > 0;
     });
 
-export const deriveTermId = (orgId: string, sourceLang: string, targetLang: string, sourceTerm: string) =>
+export const deriveTermId = (orgId: string, sourceLang: string, targetLang: string, sourceTerm: string): string  =>
     `${orgId}-${sourceLang}-${targetLang}-${sourceTerm.toLowerCase().replace(/\s+/g, '_')}`;
 
-export const upsertGlossaryTerm = async (db: D1Database, orgId: string, payload: GlossaryTermPayload) => {
+export const upsertGlossaryTerm = async (db: D1Database, orgId: string, payload: GlossaryTermPayload): Promise<string>  => {
     const { source_lang = '', target_lang = '', source_term = '', target_term = '', context } = payload;
     const id = deriveTermId(orgId, source_lang, target_lang, source_term);
 
@@ -37,7 +37,7 @@ export const upsertGlossaryTerm = async (db: D1Database, orgId: string, payload:
     return id;
 };
 
-export const extractOrgIdFromUrl = (request: Request) => {
+export const extractOrgIdFromUrl = (request: Request): string | null  => {
     const pathParts = new URL(request.url).pathname.split('/');
     return pathParts[2] || null;
 };

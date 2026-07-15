@@ -9,7 +9,7 @@ import { listByContent } from '../../services/translations/TranslationsService.j
 import type { Env } from "../../types/Env.js";
 import { toError } from "../../utils/toError.js";
 
-export const getTranslations = async (request: Request, env: Env, _ctx?: unknown) => {
+export const getTranslations = async (request: Request, env: Env, _ctx?: unknown): Promise<Response>  => {
     const pathParts = new URL(request.url).pathname.split('/');
     const contentType = pathParts[2];
     const contentId = pathParts[3];

@@ -13,14 +13,14 @@ export const MAX_ACTIVE_ENROLLMENTS = 3;
  * § insufficiently-random-values, Math.random is predictable enough that
  * an attacker observing one ID can correlate adjacent ones.
  */
-export const generateId = () => {
+export const generateId = (): string  => {
     return `enr_${Date.now()}_${crypto.randomUUID().replace(/-/g, '').slice(0, 9)}`;
 };
 
 /**
  * Extract userId from userContext
  */
-export const getUserId = (userContext: HandlerUserContext) => {
+export const getUserId = (userContext: HandlerUserContext): string | undefined  => {
     return userContext.contact?.id || userContext.employee?.id;
 };
 

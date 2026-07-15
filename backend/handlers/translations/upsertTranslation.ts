@@ -13,7 +13,7 @@ import { toError } from "../../utils/toError.js";
 
 interface UpsertTranslationBody { field?: string; value?: string; source?: string; }
 
-export const upsertTranslation = async (request: Request, env: Env, ctx: HandlerUserContext) => {
+export const upsertTranslation = async (request: Request, env: Env, ctx: HandlerUserContext): Promise<Response>  => {
     const pathParts = new URL(request.url).pathname.split('/');
     const contentType = pathParts[2];
     const contentId = pathParts[3];

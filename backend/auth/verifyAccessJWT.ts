@@ -10,7 +10,19 @@ import { toError } from "../utils/toError.js";
 interface JwtPayload { exp?: number; email?: string; sub?: string; [key: string]: unknown; }
 interface JwtHeader { kid?: string; [key: string]: unknown; }
 
-export const verifyAccessJWT = async (token: string | null | undefined, env: Env) => {
+export const verifyAccessJWT = async (token: string | null | undefined, env: Env): Promise<{
+    valid: boolean;
+    error: string;
+    email?: undefined;
+    payload?: undefined;
+    authMethod?: undefined;
+} | {
+    valid: boolean;
+    email: string | undefined;
+    payload: JwtPayload;
+    authMethod: string;
+    error?: undefined;
+}>  => {
     if (!token) {
         return { valid: false, error: 'No token provided' };
     }

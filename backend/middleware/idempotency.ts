@@ -71,7 +71,7 @@ export const checkIdempotency = request => {
  * @param {Response} response - The response to cache
  * @returns {Response} - The response with idempotency header
  */
-export const cacheIdempotencyResponse = async (request, response) => {
+export const cacheIdempotencyResponse = async (request, response): Promise<Response> => {
     const idempotencyKey = request.headers.get('X-Idempotency-Key');
     
     if (!idempotencyKey) return response;

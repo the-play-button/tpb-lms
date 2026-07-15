@@ -16,7 +16,23 @@ interface ApiKeyRow {
     is_active?: number;
 }
 
-export const verifyAPIKey = async (apiKey: string | null | undefined, env: Env) => {
+export const verifyAPIKey = async (apiKey: string | null | undefined, env: Env): Promise<{
+    valid: boolean;
+    error: string;
+    keyId?: undefined;
+    keyName?: undefined;
+    userId?: undefined;
+    scopes?: undefined;
+    authMethod?: undefined;
+} | {
+    valid: boolean;
+    keyId: string;
+    keyName: string | undefined;
+    userId: string | undefined;
+    scopes: string | undefined;
+    authMethod: string;
+    error?: undefined;
+}>  => {
     if (!apiKey) {
         return { valid: false, error: 'No API key provided' };
     }

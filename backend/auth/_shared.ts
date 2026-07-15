@@ -39,7 +39,7 @@ export const getJWKS = async (teamDomain: string): Promise<Jwks> => {
 /**
  * Decode base64url to Uint8Array
  */
-export const base64urlDecode = (str: string) => {
+export const base64urlDecode = (str: string): Uint8Array<ArrayBuffer>  => {
     str = str.replace(/-/g, '+').replace(/_/g, '/');
     while (str.length % 4) str += '=';
     const binary = atob(str);
@@ -53,7 +53,7 @@ export const base64urlDecode = (str: string) => {
 /**
  * Import RSA public key from JWK
  */
-export const importPublicKey = async (jwk: Jwk) => {
+export const importPublicKey = async (jwk: Jwk): Promise<CryptoKey>  => {
     return await crypto.subtle.importKey(
         'jwk',
         { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: 'RS256', use: 'sig' } as JsonWebKey,
@@ -66,7 +66,7 @@ export const importPublicKey = async (jwk: Jwk) => {
 /**
  * Compute SHA256 hash of a string
  */
-export const sha256 = async (str: string) => {
+export const sha256 = async (str: string): Promise<string>  => {
     const hashBuffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
     return Array.from(new Uint8Array(hashBuffer)).map(b => b.toString(16).padStart(2, '0')).join('');
 };

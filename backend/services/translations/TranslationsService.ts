@@ -39,7 +39,7 @@ interface TranslationPayload {
 const translationId = (contentType: string, contentId: string, field: string, lang: string) =>
     `${contentType}:${contentId}:${field}:${lang}`;
 
-export const listByContent = async (env: Env, contentType: string, contentId: string) => {
+export const listByContent = async (env: Env, contentType: string, contentId: string): Promise<Record<string, Record<string, unknown>>>  => {
     const result = await env.DB.prepare(`
         SELECT field, lang, value, source, reviewed_at, reviewed_by, updated_at
         FROM translations
@@ -61,7 +61,7 @@ export const listByContent = async (env: Env, contentType: string, contentId: st
     return byLang;
 };
 
-export const upsertOne = async (env: Env, params: UpsertParams) => {
+export const upsertOne = async (env: Env, params: UpsertParams): Promise<string>  => {
     const { contentType, contentId, field, lang, value, source, userId } = params;
     const id = translationId(contentType, contentId, field, lang);
     await env.DB.prepare(`
@@ -73,7 +73,7 @@ export const upsertOne = async (env: Env, params: UpsertParams) => {
     return id;
 };
 
-export const listForReview = async (env: Env, source: string, limit: number) => {
+export const listForReview = async (env: Env, source: string, limit: number): Promise<Record<string, unknown>[]>  => {
     const result = await env.DB.prepare(`
         SELECT id, content_type, content_id, field, lang, value, source, created_at
         FROM translations
@@ -104,7 +104,10 @@ const upsertBatchOne = async (env: Env, payload: TranslationPayload, userId: str
     }
 };
 
-export const bulkUpsert = async (env: Env, translations: TranslationPayload[], userId: string) => {
+export const bulkUpsert = async (env: Env, translations: TranslationPayload[], userId: string): Promise<{
+    successCount: number;
+    errorCount: number;
+}>  => {
     let successCount = 0;
     let errorCount = 0;
     for (const t of translations) {

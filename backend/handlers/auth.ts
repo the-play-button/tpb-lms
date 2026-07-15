@@ -32,7 +32,7 @@ const validateJWT = async (jwt: string | null | undefined, env: Env, request: Re
 /**
  * GET /api/auth/session
  */
-export const getSession = async (request: Request, env: Env) => {
+export const getSession = async (request: Request, env: Env): Promise<Response | undefined>  => {
     // SDK primitive — centralized JWT extraction (CLAUDE.md § BASTION AUTH).
     const validation = await validateJWT(extractCallerJwt(request), env, request);
     if ('error' in validation) return validation.error;

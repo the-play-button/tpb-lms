@@ -5,7 +5,17 @@
 import { log } from './_shared.js';
 import { toError } from '../../utils/toError.js';
 
-export const verifyTallySignature = async (request: Request, signingSecret: string) => {
+export const verifyTallySignature = async (request: Request, signingSecret: string): Promise<{
+    isValid: boolean;
+    body: string;
+    noSignature: boolean;
+    error?: undefined;
+} | {
+    isValid: boolean;
+    body: string;
+    noSignature: boolean;
+    error: string;
+}>  => {
     const signature = request.headers.get('Tally-Signature');
     const body = await request.text();
 

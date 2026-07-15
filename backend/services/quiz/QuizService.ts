@@ -25,7 +25,7 @@ const findQuizClassByTallyFormId = (env: Env, tallyFormId: string) =>
         WHERE json_extract(je.value, '$.tally_form_id') = ?
     `).bind(tallyFormId).first<QuizClassRow>();
 
-export const submitQuizFromUser = async (env: Env, request: Request, body: QuizSubmissionInput) => {
+export const submitQuizFromUser = async (env: Env, request: Request, body: QuizSubmissionInput): Promise<Response>  => {
     const quizClass = await findQuizClassByTallyFormId(env, body.quizId);
     const { score, maxScore } = calculateScore((body.answers as never) || [], quizClass);
     const enriched = {

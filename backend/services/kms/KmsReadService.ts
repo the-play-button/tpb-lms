@@ -63,12 +63,23 @@ const projectPage = (row: KmsPageRow) => ({
     updated_at: row.updated_at,
 });
 
-export const listSpaces = async (env: Env) => {
+export const listSpaces = async (env: Env): Promise<{
+    spaces: Record<string, unknown>[];
+}>  => {
     const result = await queryActiveSpaces(env);
     return { spaces: result.results || [] };
 };
 
-export const getSpace = async (env: Env, spaceId: string) => {
+export const getSpace = async (env: Env, spaceId: string): Promise<{
+    pages: {
+        id: string | undefined;
+        title: string | undefined;
+        type: string | undefined;
+        metadata: unknown;
+        created_at: string | null | undefined;
+        updated_at: string | null | undefined;
+    }[];
+} | null>  => {
     const space = await querySpaceById(env, spaceId);
     if (!space) return null;
     const pagesResult = await querySpacePages(env, spaceId);
@@ -78,7 +89,19 @@ export const getSpace = async (env: Env, spaceId: string) => {
     };
 };
 
-export const getPage = async (env: Env, pageId: string) => {
+export const getPage = async (env: Env, pageId: string): Promise<{
+    id: string | undefined;
+    title: string | undefined;
+    type: string | undefined;
+    space_id: string | undefined;
+    space_name: string | null | undefined;
+    content_md: string;
+    metadata: unknown;
+    download_url: string | null | undefined;
+    web_url: string | null | undefined;
+    created_at: string | null | undefined;
+    updated_at: string | null | undefined;
+} | null>  => {
     const page = await queryPageById(env, pageId);
     if (!page) return null;
     const metadata = page.metadata_json ? JSON.parse(page.metadata_json) : {};

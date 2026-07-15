@@ -46,7 +46,23 @@ const queryRecentQuizzes = (env: Env, userId: string) =>
         ORDER BY created_at DESC LIMIT 20
     `).bind(userId).all();
 
-export const fetchLearnerProgress = async (env: Env, userId: string, userEmail: string | null) => {
+export const fetchLearnerProgress = async (env: Env, userId: string, userEmail: string | null): Promise<{
+    user: {
+        id: string;
+        email: string | null;
+        total_points: number;
+        level: number;
+        level_progress: number;
+        current_streak: number;
+        videos_completed: number;
+        quizzes_completed: number;
+        badges_earned: number;
+    };
+    stats: Record<string, unknown>;
+    badges: Record<string, unknown>[];
+    recentVideos: Record<string, unknown>[];
+    recentQuizzes: Record<string, unknown>[];
+}>  => {
     const [stats, leaderboard, badges, videos, quizzes, currentStreak] = await Promise.all([
         queryUserStats(env, userId),
         queryUserLeaderboardRow(env, userId),

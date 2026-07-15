@@ -16,7 +16,7 @@ interface CreateApiKeyBody {
     expiresAt?: string | null;
 }
 
-export const createAPIKeyHandler = async (request: Request, env: Env, auth: HandlerUserContext) => {
+export const createAPIKeyHandler = async (request: Request, env: Env, auth: HandlerUserContext): Promise<Response>  => {
     try {
         const body = await request.json() as CreateApiKeyBody;
 

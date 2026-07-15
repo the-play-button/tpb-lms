@@ -14,7 +14,7 @@ import { toError } from "../utils/toError.js";
  * Get admin overview statistics
  * GET /api/admin/stats
  */
-export const getAdminStats = async (request: Request, env: Env, userContext: HandlerUserContext) => {
+export const getAdminStats = async (request: Request, env: Env, userContext: HandlerUserContext): Promise<Response>  => {
     const guardResult = requireRole('admin')(userContext);
     if (guardResult) {
         return jsonResponse({

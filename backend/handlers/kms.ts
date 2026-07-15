@@ -9,7 +9,7 @@ import type { Env } from "../types/Env.js";
 import type { HandlerUserContext } from "../types/HandlerContext.js";
 import { toError } from "../utils/toError.js";
 
-export const listSpaces = async (request: Request, env: Env, _userContext?: HandlerUserContext) => {
+export const listSpaces = async (request: Request, env: Env, _userContext?: HandlerUserContext): Promise<Response>  => {
     try {
         const body = await svcListSpaces(env);
         return jsonResponse(body, 200, request);
@@ -19,7 +19,7 @@ export const listSpaces = async (request: Request, env: Env, _userContext?: Hand
     }
 };
 
-export const getSpace = async (request: Request, env: Env, _userContext: HandlerUserContext | undefined, spaceId: string) => {
+export const getSpace = async (request: Request, env: Env, _userContext: HandlerUserContext | undefined, spaceId: string): Promise<Response>  => {
     try {
         const space = await svcGetSpace(env, spaceId);
         if (!space) return jsonResponse({ error: 'Space not found' }, 404, request);
@@ -30,7 +30,7 @@ export const getSpace = async (request: Request, env: Env, _userContext: Handler
     }
 };
 
-export const getPage = async (request: Request, env: Env, _userContext: HandlerUserContext | undefined, pageId: string) => {
+export const getPage = async (request: Request, env: Env, _userContext: HandlerUserContext | undefined, pageId: string): Promise<Response>  => {
     try {
         const page = await svcGetPage(env, pageId);
         if (!page) return jsonResponse({ error: 'Page not found' }, 404, request);

@@ -97,7 +97,7 @@ const hasCorruptedState = (steps: Step[]) =>
         return nextStep && !nextStep.can_access;
     });
 
-export const resetProgress = async (env: Env, userId: string, courseId: string) => {
+export const resetProgress = async (env: Env, userId: string, courseId: string): Promise<void>  => {
     const db = env.DB;
     await db.prepare('DELETE FROM v_user_progress WHERE user_id = ? AND course_id = ?')
         .bind(userId, courseId).run();
@@ -115,7 +115,32 @@ const collectVideoPosition = (row: StepRow) => {
     };
 };
 
-export const fetchCourseSignals = async (env: Env, userId: string, courseId: string) => {
+export const fetchCourseSignals = async (env: Env, userId: string, courseId: string): Promise<{
+    corrupted: boolean;
+    body?: undefined;
+} | {
+    corrupted: boolean;
+    body: {
+        course_id: string;
+        progression_mode: string;
+        steps: Step[];
+        current_step: number;
+        can_access_step: number;
+        total_steps: number;
+        course_completed: boolean;
+        course_progress: {
+            completed: number;
+            total: number;
+            percent: number;
+        };
+        video_positions: Record<string, {
+            position: number;
+            duration: number;
+            percentage: number;
+        }>;
+        badges_earned: unknown[];
+    };
+}>  => {
     const [result, courseRow] = await Promise.all([
         queryCourseSteps(env, userId, courseId),
         queryCourseRaw(env, courseId),
@@ -172,7 +197,26 @@ export const fetchCourseSignals = async (env: Env, userId: string, courseId: str
     };
 };
 
-export const fetchStepSignals = async (env: Env, userId: string, courseId: string, classId: string) => {
+export const fetchStepSignals = async (env: Env, userId: string, courseId: string, classId: string): Promise<{
+    notFound: boolean;
+    body?: undefined;
+} | {
+    notFound: boolean;
+    body: {
+        class_id: string;
+        class_name: string | undefined;
+        order_index: number | undefined;
+        has_quiz: boolean;
+        video_completed: boolean;
+        quiz_passed: boolean;
+        step_completed: boolean;
+        progress: {
+            video_max_position_sec: number;
+            video_duration_sec: number;
+            video_coverage_pct: number;
+        };
+    };
+}>  => {
     const [cls, progress] = await Promise.all([
         queryClassMeta(env, classId, courseId),
         queryStepProgress(env, userId, classId),

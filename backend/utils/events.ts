@@ -13,5 +13,5 @@
  * (Math.random is predictable per bearer § insufficiently-random-values).
  * Format: evt_{timestamp}_{random}
  */
-export const generateEventId = () =>
+export const generateEventId = (): string  =>
     `evt_${Date.now()}_${crypto.randomUUID().replace(/-/g, '').slice(0, 9)}`;

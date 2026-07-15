@@ -10,7 +10,7 @@ import type { Env } from "../../types/Env.js";
 import type { HandlerUserContext } from "../../types/HandlerContext.js";
 import { toError } from "../../utils/toError.js";
 
-export const deleteAPIKeyHandler = async (request: Request, env: Env, auth: HandlerUserContext, keyId: string) => {
+export const deleteAPIKeyHandler = async (request: Request, env: Env, auth: HandlerUserContext, keyId: string): Promise<Response>  => {
     try {
         const userId = auth.contact?.id;
         if (!userId) return jsonResponse({ error: 'User not found' }, 400, request);

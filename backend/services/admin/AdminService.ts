@@ -25,7 +25,15 @@ const projectAdminStats = (stats: AdminStatsRow) => ({
     avgQuizScore: stats.avg_quiz_score ? Math.round(stats.avg_quiz_score * 10) / 10 : null,
 });
 
-export const fetchAdminStats = async (env: Env) => {
+export const fetchAdminStats = async (env: Env): Promise<{
+    totalStudents: number;
+    active24h: number;
+    active7d: number;
+    coursesCompleted: number;
+    videosCompleted: number;
+    quizzesPassed: number;
+    avgQuizScore: number | null;
+} | null>  => {
     const stats = await env.DB.prepare('SELECT * FROM v_admin_overview').first<AdminStatsRow>();
     if (!stats) return null;
     return projectAdminStats(stats);

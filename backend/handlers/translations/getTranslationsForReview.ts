@@ -9,7 +9,7 @@ import { listForReview } from '../../services/translations/TranslationsService.j
 import type { Env } from "../../types/Env.js";
 import { toError } from "../../utils/toError.js";
 
-export const getTranslationsForReview = async (request: Request, env: Env, _ctx?: unknown) => {
+export const getTranslationsForReview = async (request: Request, env: Env, _ctx?: unknown): Promise<Response>  => {
     const url = new URL(request.url);
     const source = url.searchParams.get('source') || 'ai';
     const limit = parseInt(url.searchParams.get('limit') || '50', 10);

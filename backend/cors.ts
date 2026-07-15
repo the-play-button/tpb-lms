@@ -23,7 +23,19 @@ const SECURITY_HEADERS = {
  * Generate CORS headers based on request origin
  * With credentials: 'include', we cannot use '*' for origin
  */
-export const getCorsHeaders = (request: Request) => {
+export const getCorsHeaders = (request: Request): {
+    'X-Content-Type-Options': string;
+    'X-Frame-Options': string;
+    'X-XSS-Protection': string;
+    'Referrer-Policy': string;
+    'Strict-Transport-Security': string;
+    'Access-Control-Allow-Origin': string;
+    'Access-Control-Allow-Methods': string;
+    'Access-Control-Allow-Headers': string;
+    'Access-Control-Expose-Headers': string;
+    'Access-Control-Allow-Credentials': string;
+    'Access-Control-Max-Age': string;
+}  => {
     const origin = request.headers.get('Origin') || '';
     const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : PRIMARY_ORIGIN;
     

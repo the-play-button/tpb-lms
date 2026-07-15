@@ -4,7 +4,7 @@ import type { Env } from "../types/Env.js";
  * Get or create contact in crm_contact (Unified.to aligned)
  */
 
-export const getOrCreateContact = async (email: string, env: Env) => {
+export const getOrCreateContact = async (email: string, env: Env): Promise<Record<string, unknown>>  => {
     let contact = await env.DB.prepare(`
         SELECT * FROM crm_contact
         WHERE id IN (

@@ -7,7 +7,17 @@ import type { Env } from "../../types/Env.js";
 interface BadgeRow { id: string; criteria_json?: string | null; [key: string]: unknown; }
 interface AwardRow { badge_id: string; awarded_at?: string | null; }
 
-export const listBadgesWithUserStatus = async (env: Env, userId: string) => {
+export const listBadgesWithUserStatus = async (env: Env, userId: string): Promise<{
+    badges: {
+        criteria: unknown;
+        earned: boolean;
+        earned_at: string | null;
+        id: string;
+        criteria_json?: string | null;
+    }[];
+    earnedCount: number;
+    totalCount: number;
+}>  => {
     const badges = await env.DB.prepare(`
         SELECT id, name, description, icon_url, type, category, rarity, points_reward, criteria_json
         FROM gamification_badge

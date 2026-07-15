@@ -9,7 +9,7 @@ import { deleteTerm } from '../../services/glossary/GlossaryService.js';
 import type { Env } from "../../types/Env.js";
 import { toError } from "../../utils/toError.js";
 
-export const deleteGlossaryTerm = async (request: Request, env: Env, _ctx?: unknown) => {
+export const deleteGlossaryTerm = async (request: Request, env: Env, _ctx?: unknown): Promise<Response>  => {
     const pathParts = new URL(request.url).pathname.split('/');
     const orgId = pathParts[2];
     const termId = pathParts[3];

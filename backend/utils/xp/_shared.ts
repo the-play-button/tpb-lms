@@ -5,7 +5,14 @@
 /**
  * Award a badge to a user
  */
-export const awardBadge = async (db: D1Database, userId: string, badgeId: string, courseId: string | null = null, classId: string | null = null) => {
+export const awardBadge = async (db: D1Database, userId: string, badgeId: string, courseId: string | null = null, classId: string | null = null): Promise<{
+    id: unknown;
+    name: unknown;
+    description: unknown;
+    icon_url: unknown;
+    points_reward: unknown;
+    rarity: unknown;
+} | null>  => {
     const now = new Date().toISOString();
     const id = `award_${crypto.randomUUID()}`;
 

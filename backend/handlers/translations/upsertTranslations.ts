@@ -11,7 +11,7 @@ import type { HandlerUserContext } from "../../types/HandlerContext.js";
 
 interface UpsertTranslationsBody { translations?: unknown[]; }
 
-export const upsertTranslations = async (request: Request, env: Env, ctx: HandlerUserContext) => {
+export const upsertTranslations = async (request: Request, env: Env, ctx: HandlerUserContext): Promise<Response>  => {
     let body: UpsertTranslationsBody;
     try {
         body = await request.json() as UpsertTranslationsBody;

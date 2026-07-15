@@ -37,8 +37,8 @@ const processTallyPayload = async (payload: TallyWebhookPayload, env: Env, reque
     }, env, request, quizClass);
 };
 
-export const handleTallyWebhookWithBody = (bodyText: string, env: Env, request: Request) =>
+export const handleTallyWebhookWithBody = (bodyText: string, env: Env, request: Request): Promise<Response>  =>
     processTallyPayload(JSON.parse(bodyText) as TallyWebhookPayload, env, request);
 
-export const handleTallyWebhook = async (request: Request, env: Env) =>
+export const handleTallyWebhook = async (request: Request, env: Env): Promise<Response>  =>
     processTallyPayload(await request.json() as TallyWebhookPayload, env, request);

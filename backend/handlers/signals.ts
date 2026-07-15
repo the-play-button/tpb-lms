@@ -11,7 +11,7 @@ import type { HandlerUserContext } from "../types/HandlerContext.js";
 /**
  * GET /api/signals/:courseId
  */
-export const getCourseSignalsHandler = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string) => {
+export const getCourseSignalsHandler = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string): Promise<Response>  => {
     const userId = resolveUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
@@ -29,7 +29,7 @@ export const getCourseSignalsHandler = async (request: Request, env: Env, userCo
 /**
  * GET /api/signals/:courseId/:classId
  */
-export const getStepSignals = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string, classId: string) => {
+export const getStepSignals = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string, classId: string): Promise<Response>  => {
     const userId = resolveUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 
@@ -41,7 +41,7 @@ export const getStepSignals = async (request: Request, env: Env, userContext: Ha
 /**
  * DELETE /api/signals/:courseId
  */
-export const deleteCourseSignals = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string) => {
+export const deleteCourseSignals = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string): Promise<Response>  => {
     const userId = resolveUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 

@@ -8,7 +8,15 @@ import type { Env } from "../types/Env.js";
 
 interface GenerateApiKeyOptions { scopes?: string; expiresAt?: string | null; }
 
-export const generateAPIKey = async (name: string, userId: string | null, env: Env, options: GenerateApiKeyOptions = {}) => {
+export const generateAPIKey = async (name: string, userId: string | null, env: Env, options: GenerateApiKeyOptions = {}): Promise<{
+    id: string;
+    key: string;
+    prefix: string;
+    name: string;
+    scopes: string;
+    expiresAt: string | null;
+    createdAt: string;
+}>  => {
     const key = 'tpb_' + crypto.randomUUID().replace(/-/g, '');
     const keyHash = await sha256(key);
     const keyPrefix = key.substring(0, 12); // tpb_ + 8 chars

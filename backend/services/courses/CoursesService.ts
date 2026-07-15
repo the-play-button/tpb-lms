@@ -170,7 +170,22 @@ const enrichCourseSummary = async (env: Env, course: CoursesCourseRow, userId: s
     return result;
 };
 
-export const listCoursesForUser = async (env: Env, userId: string, lang: string) => {
+export const listCoursesForUser = async (env: Env, userId: string, lang: string): Promise<{
+    courses: {
+        id: string;
+        title: string | undefined;
+        description: string | undefined;
+        categories: unknown;
+        is_private: boolean;
+        cover_image_url: string | null;
+        program_id: string | null;
+        total_steps: number;
+        progress: {
+            videos_completed: number;
+            quizzes_passed: number;
+        };
+    }[];
+}>  => {
     const courses = await queryActiveCourses(env);
     const rows = (courses.results || []) as unknown as CoursesCourseRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
     const enriched = await Promise.all(
@@ -288,7 +303,27 @@ const translateSectionNames = async (env: Env, sectionRows: CoursesClassRow[], l
     return map;
 };
 
-export const getCourseForUser = async (env: Env, userId: string, courseId: string, lang: string) => {
+export const getCourseForUser = async (env: Env, userId: string, courseId: string, lang: string): Promise<{
+    notFound: boolean;
+    body?: undefined;
+} | {
+    notFound: boolean;
+    body: {
+        id: string;
+        title: string | undefined;
+        description: string | undefined;
+        categories: unknown;
+        progression_mode: string;
+        nodes: unknown[];
+        classes: EnrichedClass[];
+        progress: {
+            total_steps: number;
+            completed_steps: number;
+            current_step: number;
+            can_access_step: number;
+        };
+    };
+}>  => {
     const course = await queryCourseById(env, courseId);
     if (!course) return { notFound: true };
 

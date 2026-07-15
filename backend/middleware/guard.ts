@@ -17,7 +17,7 @@ export type { RoleGuardError };
 
 
 
-export const requireRole = (...allowedRoles: string[]) => {
+export const requireRole = (...allowedRoles: string[]): (userContext: HandlerUserContext | null | undefined) => RoleGuardError | null  => {
   return (userContext: HandlerUserContext | null | undefined): RoleGuardError | null => {
     const role = userContext?.user?.role ?? 'student';
 

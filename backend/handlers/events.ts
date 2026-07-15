@@ -61,7 +61,7 @@ const createBatchEvents = async (request: Request, env: Env, userId: string, eve
  * (body { events: [...] }). Tier 1 create accepting single-or-array — no separate
  * /batch endpoint (cf. crud_list_only_endpoint_design § Q3 bulk-create).
  */
-export const createEvents = async (request: Request, env: Env, userContext: HandlerUserContext) => {
+export const createEvents = async (request: Request, env: Env, userContext: HandlerUserContext): Promise<Response>  => {
     const authed = await resolveAuthedJsonBody(request, userContext);
     if ('errorResponse' in authed) return authed.errorResponse;
     const { userId, body } = authed;

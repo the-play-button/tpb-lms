@@ -21,7 +21,7 @@ interface GlossaryTermBody {
     context?: string;
 }
 
-export const createGlossaryTerm = async (request: Request, env: Env, _ctx?: unknown) => {
+export const createGlossaryTerm = async (request: Request, env: Env, _ctx?: unknown): Promise<Response>  => {
     const orgId = extractOrgIdFromUrl(request);
     if (!orgId) return errorResponse('Missing org_id', 400);
 

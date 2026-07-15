@@ -9,7 +9,7 @@ import { abandonUserCourse, completeUserCourse } from '../../services/enrollment
 import type { Env } from "../../types/Env.js";
 import type { HandlerUserContext } from "../../types/HandlerContext.js";
 
-export const updateEnrollment = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string) => {
+export const updateEnrollment = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string): Promise<Response>  => {
     const userId = getUserId(userContext);
     if (!userId) return jsonResponse({ error: 'User not authenticated' }, 401, request);
 

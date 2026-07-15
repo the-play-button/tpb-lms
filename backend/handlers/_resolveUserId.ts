@@ -8,5 +8,5 @@ import type { HandlerUserContext } from "../types/HandlerContext.js";
  * (entropy `function_duplication_name`).
  */
 
-export const resolveUserId = (userContext: HandlerUserContext) =>
+export const resolveUserId = (userContext: HandlerUserContext): string | null  =>
     userContext?.contact?.id || userContext?.employee?.id || null;

@@ -46,7 +46,7 @@ const constantTimeSecretEquals = async (a: string | null | undefined, b: string 
  * Note: email is optional but HIGHLY RECOMMENDED for clean_slate to work properly.
  * The system uses both CF Access user_id AND contact_id (resolved from email).
  */
-export const handleTestSeed = async (request: Request, env: Env) => {
+export const handleTestSeed = async (request: Request, env: Env): Promise<Response>  => {
     const secret = request.headers.get('X-Test-Secret');
     if (!await constantTimeSecretEquals(secret, env.TEST_SECRET)) {
         return jsonResponse({ error: 'Forbidden' }, 403, request);

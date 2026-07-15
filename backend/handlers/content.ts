@@ -64,7 +64,7 @@ const buildAuthErrorResponse = (request: Request, response: Response, errorBody:
 /**
  * GET /api/content/github
  */
-export const getGitHubContent = async (request: Request, env: Env, _userContext?: unknown) => {
+export const getGitHubContent = async (request: Request, env: Env, _userContext?: unknown): Promise<Response>  => {
     const url = new URL(request.url);
     const langParam = url.searchParams.get('lang');
     const resolved = resolveGitHubParams(url);
@@ -128,7 +128,7 @@ const projectDirectoryItem = (item: DirectoryItem) => ({
 /**
  * GET /api/content/github/tree
  */
-export const listGitHubDirectory = async (request: Request, env: Env, _userContext?: unknown) => {
+export const listGitHubDirectory = async (request: Request, env: Env, _userContext?: unknown): Promise<Response>  => {
     const url = new URL(request.url);
     const owner = url.searchParams.get('owner');
     const repo = url.searchParams.get('repo');

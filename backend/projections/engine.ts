@@ -41,7 +41,7 @@ const PROJECTIONS: Projection[] = [
  * @param {Object} event - { id, type, user_id, course_id, class_id, payload_json }
  * @returns {Object} - { video_completed, quiz_passed }
  */
-export const applyProjections = async (db: D1Database, event: ProjectionEvent) => {
+export const applyProjections = async (db: D1Database, event: ProjectionEvent): Promise<Record<string, unknown>>  => {
     const result: Record<string, unknown> = {};
 
     for (const projection of PROJECTIONS) {
@@ -126,7 +126,7 @@ const upsertState = async (db: D1Database, key: ProjectionKey, courseId: string 
 /**
  * Get progress for a user/class
  */
-export const getProgress = async (db: D1Database, userId: string, classId: string) => {
+export const getProgress = async (db: D1Database, userId: string, classId: string): Promise<Record<string, unknown> | null>  => {
     return await db.prepare(`
         SELECT * FROM v_user_progress 
         WHERE user_id = ? AND class_id = ?

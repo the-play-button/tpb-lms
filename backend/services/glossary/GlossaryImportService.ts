@@ -8,7 +8,10 @@ import { isValidTermPayload } from '../../handlers/glossary/_glossaryShared.js';
 import type { Env } from "../../types/Env.js";
 import { toError } from "../../utils/toError.js";
 
-export const bulkImportTerms = async (env: Env, orgId: string, terms: unknown[]) => {
+export const bulkImportTerms = async (env: Env, orgId: string, terms: unknown[]): Promise<{
+    successCount: number;
+    errorCount: number;
+}>  => {
     let successCount = 0;
     let errorCount = 0;
 

@@ -28,7 +28,12 @@ const queryRecentActivity = (db: D1Database, userId: string) =>
         FROM crm_event WHERE user_id = ? ORDER BY created_at DESC LIMIT 10
     `).bind(userId).all();
 
-export const fetchUserData = async (db: D1Database, contactId: string) => {
+export const fetchUserData = async (db: D1Database, contactId: string): Promise<{
+    stats: Record<string, unknown> | null;
+    badges: Record<string, unknown>[];
+    recentActivity: Record<string, unknown>[];
+    currentStreak: number;
+}>  => {
     const [stats, badges, recentActivity, currentStreak] = await Promise.all([
         queryLeaderboardRow(db, contactId),
         queryUserBadges(db, contactId),
@@ -55,7 +60,25 @@ interface SessionUserData {
     [key: string]: unknown;
 }
 
-export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionContact, userData: SessionUserData) => {
+export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionContact, userData: SessionUserData): {
+    user: {
+        email: string | undefined;
+        name: string | null;
+        groups: unknown[];
+    };
+    profile: {
+        id: string | undefined;
+        total_points: number;
+        level: number;
+        videos_completed: number;
+        quizzes_completed: number;
+        badges_earned: {};
+        current_streak: unknown;
+        created_at: unknown;
+    };
+    badges: unknown;
+    recentActivity: unknown;
+}  => {
     const totalPoints = userData.stats?.total_points || 0;
     return {
         user: {

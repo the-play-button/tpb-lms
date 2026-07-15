@@ -5,7 +5,14 @@
 import { awardBadge } from './_shared.js';
 import { getCurrentStreak } from './getCurrentStreak.js';
 
-export const checkStreakBadges = async (db: D1Database, userId: string) => {
+export const checkStreakBadges = async (db: D1Database, userId: string): Promise<{
+    id: unknown;
+    name: unknown;
+    description: unknown;
+    icon_url: unknown;
+    points_reward: unknown;
+    rarity: unknown;
+} | null>  => {
     const streak = await getCurrentStreak(db, userId);
 
     if (streak >= 30) {

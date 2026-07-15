@@ -5,7 +5,7 @@
 
 import { awardBadge } from './_shared.js';
 
-export const checkCourseCompletionBadges = async (db: D1Database, userId: string, courseId: string) => {
+export const checkCourseCompletionBadges = async (db: D1Database, userId: string, courseId: string): Promise<unknown[]>  => {
     const badges: unknown[] = [];
 
     const completeBadge = await awardBadge(db, userId, 'course_complete', courseId);

@@ -24,7 +24,15 @@ const extractCoverImageUrl = (mediaJson: string | null | undefined): string | nu
  * List active programs with cover + course count. Cheap: one query for programs, one
  * grouped count for course membership.
  */
-export const listProgramsForUser = async (env: Env) => {
+export const listProgramsForUser = async (env: Env): Promise<{
+    programs: {
+        id: string;
+        name: string | undefined;
+        description: string | undefined;
+        cover_image_url: string | null;
+        course_count: number;
+    }[];
+}>  => {
     const [programsRes, countsRes] = await Promise.all([
         env.DB.prepare('SELECT id, name, description, media_json FROM lms_program WHERE is_active = 1 ORDER BY name ASC').all<ProgramsProgramRow>(),
         env.DB.prepare("SELECT program_id, COUNT(*) AS n FROM lms_course WHERE is_active = 1 AND program_id IS NOT NULL GROUP BY program_id").all<ProgramsProgramCountRow>(),

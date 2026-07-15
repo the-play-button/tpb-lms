@@ -85,7 +85,30 @@ const enrichLeaderboardEntry = async (db: D1Database, entry: LeaderboardRow, ind
     user: await fetchUserInfo(db, entry.user_id ?? ''),
 });
 
-export const fetchLeaderboard = async (env: Env, userId: string, limit: number) => {
+export const fetchLeaderboard = async (env: Env, userId: string, limit: number): Promise<{
+    leaderboard: {
+        rank: number;
+        user_id: string | undefined;
+        total_points: number;
+        video_completed_count: number;
+        quiz_passed_count: number;
+        badges_count: number;
+        user: {
+            id: unknown;
+            name: unknown;
+            email: unknown;
+        } | {
+            id: string;
+            name?: undefined;
+            email?: undefined;
+        };
+    }[];
+    currentUser: {
+        id: string;
+        rank: number | null;
+        total_points: number;
+    };
+}>  => {
     const results = await env.DB.prepare(`
         SELECT user_id, user_type, total_points, videos_completed, quizzes_completed, badges_earned
         FROM v_leaderboard LIMIT ?
@@ -122,7 +145,24 @@ const fetchUserStatsParallel = (env: Env, userId: string) => Promise.all([
     `).bind(userId).all(),
 ]);
 
-export const fetchUserStats = async (env: Env, userId: string) => {
+export const fetchUserStats = async (env: Env, userId: string): Promise<{
+    user_id: string;
+    stats: {
+        video_completed_count: number;
+        quiz_passed_count: number;
+        step_completed_count: number;
+        course_completed_count: number;
+    };
+    activity: {
+        last_event_at: string | null;
+        events_24h: number;
+        total_events: number;
+    };
+    badges: Record<string, unknown>[];
+    xp: {
+        total: number;
+    };
+}>  => {
     const [stats, activity, badges] = await fetchUserStatsParallel(env, userId);
     return {
         user_id: userId,

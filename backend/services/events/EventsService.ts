@@ -18,7 +18,10 @@ type ValidateEventFn = (evt: unknown) => ValidateEventResult;
 
 interface BatchEntry { data?: ValidatedEvent; error?: unknown; }
 
-export const persistValidatedEvent = async (env: Env, userId: string, validatedData: ValidatedEvent) => {
+export const persistValidatedEvent = async (env: Env, userId: string, validatedData: ValidatedEvent): Promise<{
+    eventId: string;
+    class_id: string;
+}>  => {
     const { type, course_id, class_id, payload } = validatedData;
     const eventId = generateEventId();
     const now = new Date().toISOString();
@@ -40,7 +43,7 @@ export const persistValidatedEvent = async (env: Env, userId: string, validatedD
     return { eventId, class_id };
 };
 
-export const classHasQuiz = async (env: Env, classId: string) => {
+export const classHasQuiz = async (env: Env, classId: string): Promise<boolean>  => {
     const cls = await env.DB.prepare('SELECT media_json FROM lms_class WHERE id = ?')
         .bind(classId).first<{ media_json?: string | null }>();
     if (!cls?.media_json) return false;
@@ -48,7 +51,11 @@ export const classHasQuiz = async (env: Env, classId: string) => {
     return media.some((m) => m?.type === 'QUIZ');
 };
 
-export const deriveCompletionState = async (env: Env, userId: string, classId: string) => {
+export const deriveCompletionState = async (env: Env, userId: string, classId: string): Promise<{
+    video_completed: boolean;
+    quiz_passed: boolean;
+    step_completed: boolean;
+}>  => {
     const progress = await getProgress(env.DB, userId, classId);
     const hasQuiz = await classHasQuiz(env, classId);
     const videoCompleted = progress?.video_completed === 1;
@@ -69,7 +76,14 @@ export const validateBatch = (events: unknown[], validateEvent: ValidateEventFn)
     return out;
 };
 
-export const persistBatch = async (env: Env, userId: string, validatedEntries: BatchEntry[]) => {
+export const persistBatch = async (env: Env, userId: string, validatedEntries: BatchEntry[]): Promise<{
+    results: {
+        success: boolean;
+        error?: unknown;
+        event_id?: string;
+    }[];
+    succeeded: number;
+}>  => {
     const results: Array<{ success: boolean; error?: unknown; event_id?: string }> = [];
     let succeeded = 0;
     for (const entry of validatedEntries) {
