@@ -13,6 +13,11 @@ database_name = "lms-db"
 database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
 migrations_dir = "../db/migrations"
 
+# PAM login-as anti-replay jti store (DPoP). Dedicated per-app PAM_JTI_KV (flat-terrain canonical).
+[[kv_namespaces]]
+binding = "PAM_JTI_KV"
+id = "c7ab8bcafe9642c983cdf13ff520422e"
+
 # Authentication configuration
 [vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"

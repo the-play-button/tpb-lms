@@ -231,6 +231,7 @@ app.use('/api/*', async (c, next) => {
   return createBastionAuthMiddleware((ctx) => ({
     bastionUrl: ctx.env.BASTION_URL,
     serviceToken: ctx.env.BASTION_TOKEN,
+    jtiReplayKv: ctx.env.PAM_JTI_KV,
   }))(c, next);
 });
 

@@ -10,6 +10,7 @@
 import type { BastionClientEnv } from '@the-play-button/tpb-sdk-js';
 
 export interface Env extends BastionClientEnv {
+  PAM_JTI_KV: KVNamespace;  // PAM login-as anti-replay (DPoP jti store)
   // --- D1 Database ---
   DB: D1Database;
 
