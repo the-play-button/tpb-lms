@@ -7,14 +7,14 @@
     "dev": "wrangler dev --config backend/wrangler.toml",
     "db:migrate:remote": "wrangler d1 migrations apply lms-db --remote --config backend/wrangler.toml",
     "deploy": "npm run db:migrate:remote && wrangler deploy --config backend/wrangler.toml",
-    "deploy:prod": "echo '\\n✗ Direct wrangler deploy --config backend/wrangler.toml --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
+    "deploy:prod": "echo '\\n\u2717 Direct wrangler deploy --config backend/wrangler.toml --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit -p backend/tsconfig.json"
   },
   "dependencies": {
-    "@the-play-button/tpb-sdk-js": "^18.1.0",
+    "@the-play-button/tpb-sdk-js": "21.15.0",
     "hono": "^4.7.10",
     "zod": "^3.25.76"
   },
