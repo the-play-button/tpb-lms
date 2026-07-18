@@ -28,7 +28,6 @@ export interface Env extends BastionClientEnv {
   TEST_SECRET?: string;
 
   // --- Legacy (to be removed post-migration) ---
-  BASTION_BACKEND_SECRET_KEY?: string;
   TALLY_WEBHOOK_SECRET?: string;
   TALLY_SIGNING_SECRET?: string;
 }
