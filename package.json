@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit -p backend/tsconfig.json"
   },
   "dependencies": {
-    "@the-play-button/tpb-sdk-js": "21.21.0",
+    "@the-play-button/tpb-sdk-js": "21.22.0",
     "hono": "^4.7.10",
     "zod": "^3.25.76"
   },
