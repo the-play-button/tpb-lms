@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@the-play-button/tpb-sdk-js':
-        specifier: 21.22.0
-        version: 21.22.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
+        specifier: 21.55.0
+        version: 21.55.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
       hono:
         specifier: ^4.7.10
         version: 4.12.14
@@ -473,13 +473,19 @@ packages:
   '@the-play-button/tpb-enrichment-contracts@1.1.9':
     resolution: {integrity: sha512-ydU2DCg96b6+F6m7NOYDkAODsejNfZvRP6O2GPU4wTqv2akkYsW/O23oFj79l2+xuA8nlpEMcPzP9KtLBJD2fA==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-enrichment-contracts/-/1.1.9/tpb-enrichment-contracts-1.1.9.tgz}
 
+  '@the-play-button/tpb-inventory-contracts@0.1.1':
+    resolution: {integrity: sha512-uagSGEwA8Ruj9d0MWLoneoLD4Ua4pa+ojHMJwk9s3Wu5sVI7+Ss6+6A/Vc/L7lJQPNi4NGrmH66ZQWQLreX6PQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-inventory-contracts/-/0.1.1/tpb-inventory-contracts-0.1.1.tgz}
+
+  '@the-play-button/tpb-pim-contracts@0.2.1':
+    resolution: {integrity: sha512-v0h69vIpRVcZS1vD2fGfobCD32V/ilLVS5JwQiejxRAW/ilrC8VLSr/n5ya3/7aS00SqIifxU/AgAHyG902kNA==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-pim-contracts/-/0.2.1/tpb-pim-contracts-0.2.1.tgz}
+
   '@the-play-button/tpb-sdk-eslint@0.4.0':
     resolution: {integrity: sha512-yWHxAPmbQF8/VZlRiPZiMIZrOTjaPktV1ISZwIT4neM5+UT3AMfuUfI67xLdvexBApnX7KPmPPyt4WWvT9gnDQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-eslint/-/0.4.0/tpb-sdk-eslint-0.4.0.tgz}
     peerDependencies:
       eslint: '>=9'
 
-  '@the-play-button/tpb-sdk-js@21.22.0':
-    resolution: {integrity: sha512-+ZuXxtKD3sPOvSRiHkMXtH46Ek0X4q1dpEJi0nAbIaBC4dyQA3j2jcHWvPyzvQGWZbwxJoxIDJJLgJ412NeGcg==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/21.22.0/tpb-sdk-js-21.22.0.tgz}
+  '@the-play-button/tpb-sdk-js@21.55.0':
+    resolution: {integrity: sha512-bloaS1WdyRm3jwn82W2CJiDtrL8lK3T94mPniYXedqLyf2CsOlxcA4SMnlIgrXxOnmttxvYkRQHdJ2LeEGK1DA==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/21.55.0/tpb-sdk-js-21.55.0.tgz}
     hasBin: true
     peerDependencies:
       '@aws-sdk/client-s3': ^3.0.0
@@ -1898,6 +1904,9 @@ packages:
   zod@3.25.76:
     resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
 
+  zod@4.3.6:
+    resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+
   zod@4.4.3:
     resolution: {integrity: sha512-ytENFjIJFl2UwYglde2jchW2Hwm4GJFLDiSXWdTrJQBIN9Fcyp7n4DhxJEiWNAJMV1/BqWfW/kkg71UDcHJyTQ==}
 
@@ -2426,14 +2435,22 @@ snapshots:
     dependencies:
       zod: 4.4.3
 
-  '@the-play-button/tpb-crm-contracts@0.2.2(@the-play-button/tpb-sdk-js@21.22.0)(zod@4.4.3)':
+  '@the-play-button/tpb-crm-contracts@0.2.2(@the-play-button/tpb-sdk-js@21.55.0)(zod@4.4.3)':
     dependencies:
-      '@the-play-button/tpb-sdk-js': 21.22.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
+      '@the-play-button/tpb-sdk-js': 21.55.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
       zod: 4.4.3
 
   '@the-play-button/tpb-enrichment-contracts@1.1.9':
     dependencies:
       zod: 4.4.3
+
+  '@the-play-button/tpb-inventory-contracts@0.1.1':
+    dependencies:
+      zod: 4.3.6
+
+  '@the-play-button/tpb-pim-contracts@0.2.1':
+    dependencies:
+      zod: 4.3.6
 
   '@the-play-button/tpb-sdk-eslint@0.4.0(eslint@9.39.5)(typescript@5.9.3)':
     dependencies:
@@ -2449,24 +2466,26 @@ snapshots:
       - supports-color
       - typescript
 
-  '@the-play-button/tpb-sdk-js@21.22.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)':
+  '@the-play-button/tpb-sdk-js@21.55.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)':
     dependencies:
       '@aws-sdk/client-s3': 3.1049.0
       '@aws-sdk/s3-request-presigner': 3.1049.0
       '@rollup/rollup-darwin-arm64': 4.62.2
       '@the-play-button/tpb-bastion-contracts': 0.8.5(zod@4.4.3)
-      '@the-play-button/tpb-crm-contracts': 0.2.2(@the-play-button/tpb-sdk-js@21.22.0)(zod@4.4.3)
+      '@the-play-button/tpb-crm-contracts': 0.2.2(@the-play-button/tpb-sdk-js@21.55.0)(zod@4.4.3)
       '@the-play-button/tpb-enrichment-contracts': 1.1.9
-      '@the-play-button/tpb-sdk-react': 2.6.0(@the-play-button/tpb-sdk-js@21.22.0)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)
+      '@the-play-button/tpb-inventory-contracts': 0.1.1
+      '@the-play-button/tpb-pim-contracts': 0.2.1
+      '@the-play-button/tpb-sdk-react': 2.6.0(@the-play-button/tpb-sdk-js@21.55.0)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)
       hono: 4.12.14
       react: 19.2.5
       react-dom: 19.2.5(react@19.2.5)
       shiki: 4.1.0
       zod: 4.4.3
 
-  '@the-play-button/tpb-sdk-react@2.6.0(@the-play-button/tpb-sdk-js@21.22.0)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)':
+  '@the-play-button/tpb-sdk-react@2.6.0(@the-play-button/tpb-sdk-js@21.55.0)(lucide-react@1.14.0(react@19.2.5))(react@19.2.5)':
     dependencies:
-      '@the-play-button/tpb-sdk-js': 21.22.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
+      '@the-play-button/tpb-sdk-js': 21.55.0(@aws-sdk/client-s3@3.1049.0)(@aws-sdk/s3-request-presigner@3.1049.0)(@the-play-button/tpb-sdk-react@2.6.0)(hono@4.12.14)(react-dom@19.2.5(react@19.2.5))(react@19.2.5)(shiki@4.1.0)
       lucide-react: 1.14.0(react@19.2.5)
       react: 19.2.5
 
@@ -4128,6 +4147,8 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   zod@3.25.76: {}
+
+  zod@4.3.6: {}
 
   zod@4.4.3: {}
 

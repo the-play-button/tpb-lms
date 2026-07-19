@@ -69,7 +69,8 @@ const initBastionClient = async (env) => {
 };
 
 // Vault secrets — blessed primitive (cf. CLAUDE.md § HONO — Init lazy des secrets vault).
-const getTelemetryCfAccessSa = createLazyVaultSecret('tpb/infra/cf_access_sa_client_secret');
+// NB — the telemetry reporter composes the CF Access SA internally (§ CF ACCESS = UN SEUL CHEMIN SDK) :
+// no consumer-side SA fetch. We only carry bastionUrl + token to the telemetry config.
 const getTallySigningSecret  = createLazyVaultSecret('tpb/apps/lms/tally_signing_secret');
 const getTallyWebhookSecret  = createLazyVaultSecret('tpb/apps/lms/tally_webhook_secret');
 
@@ -92,7 +93,6 @@ app.use('/*', async (c, next) => {
     // (that turns every request into CF 1101 "Worker threw exception"). Log the
     // failure to the CF tail and mark the logger ready so we don't retry per request.
     try {
-      const cfAccessSecret = await getTelemetryCfAccessSa(c.env);
       configureLogger({
         service: 'tpb-lms',
         telemetry: {
@@ -100,8 +100,6 @@ app.use('/*', async (c, next) => {
           token: c.env.BASTION_TOKEN ?? '',
           projectSlug: 'tpb-lms',
           environment: 'production',
-          cfAccessClientId: c.env.CF_ACCESS_CLIENT_ID,
-          cfAccessClientSecret: cfAccessSecret,
         },
       });
       loggerReady = true;

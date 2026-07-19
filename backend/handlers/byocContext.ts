@@ -53,7 +53,7 @@ export const createByocContext = async (
 
   // PAM guest reads go through the tpb-storage BC (Plan 11b.b) via the SDK StorageClient, not the
   // bastion escape-hatch. The JWT must carry `storage:delegated:read` (granted per B3-live).
-  const pamClient = new PamStorageClientAdapter(new StorageClient(env.TPB_STORAGE_URL, jwt));
+  const pamClient = new PamStorageClientAdapter(new StorageClient(env.TPB_STORAGE_URL, { serviceToken: jwt, env }));
 
   const connectionResolver = new ConnectionResolverAdapter({
     getAllConnections: () => bastionClient.getAllStorageConnections(jwt),
