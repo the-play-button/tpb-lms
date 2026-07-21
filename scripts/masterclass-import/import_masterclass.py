@@ -22,7 +22,9 @@ from tpb_sdk.bastion import BastionClient
 LMS = "https://lms-api.matthieu-marielouise.workers.dev"
 VAULT_PAT_PATH = "tpb/apps/lms/bastion_token"
 
-WS = Path("/Users/wiestitie/labos/the-play-button-business")
+# Derive the workspace root by walking up to the marker dir (§ hardcoded_workspace_root_path :
+# never a machine-specific literal — this script runs on any dev's clone).
+WS = next(p for p in Path(__file__).resolve().parents if p.name == "the-play-button-business")
 CONTENT = WS / "Apps/the-play-button/tpb-lms/plans/2026-07-05_tpb-sales-masterclass-3.0-fresh/_content"
 MC = WS / "Brain/the-play-button/pb05-lead-sales-training-program/inputs/TPB Notion/TPB Sales On-Boarding/Master class"
 NS = WS / "Brain/the-play-button/pb15-customer-marketing-playbook/inputs/sme-sources/nick-saraev/cold-outbound-course"
