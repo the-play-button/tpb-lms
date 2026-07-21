@@ -13,7 +13,7 @@ import { DraftContentRef } from '../../domain/entities/ContentRef/DraftContentRe
 import { SharedContentRef } from '../../domain/entities/ContentRef/SharedContentRef.js';
 import { ActiveShare } from '../../domain/entities/Share/ActiveShare.js';
 import { ContentRefId, ConnectionId, Email, ShareId } from '../../domain/value-objects/index.js';
-import type { ContentType, ContentUsage, ContentRefProps } from '../../domain/entities/ContentRef/types.js';
+import type { ContentType, ContentUsage, ContentRefProps } from '../../domain/entities/ContentRef/ContentRef.types.js';
 import type { ShareRole } from '../../domain/entities/ContentRef/SharedContentRef.js';
 
 /** Raw row shape from the lms_content_ref table */

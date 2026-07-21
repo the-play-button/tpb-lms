@@ -5,8 +5,8 @@
  * with all ports, repositories, and user identity.
  */
 
-import type { HandlerContext, AuthzBastionClient, LmsActor } from '../lms/types/HandlerContext.js';
-import type { Env } from '../types/Env.js';
+import type { HandlerContext, AuthzBastionClient, LmsActor } from '../lms/types/HandlerContext.types.js';
+import type { Env } from '../types/Env.types.js';
 import { BastionCloudflareAdapter } from '../services/bastion/adapters/BastionCloudflareAdapter.js';
 import { TpbStorageHttpAdapter } from '../services/storage/adapters/TpbStorageHttpAdapter.js';
 import { PamStorageClientAdapter } from '../services/pam/adapters/PamStorageClientAdapter.js';

@@ -4,8 +4,8 @@
 
 import { jsonResponse } from '../cors.js';
 import { fetchLeaderboard, fetchUserStats } from '../services/leaderboard/LeaderboardService.js';
-import type { Env } from "../types/Env.js";
-import type { HandlerUserContext } from "../types/HandlerContext.js";
+import type { Env } from "../types/Env.types.js";
+import type { HandlerUserContext } from "../types/HandlerContext.types.js";
 
 export const getLeaderboard = async (request: Request, env: Env, userContext: HandlerUserContext): Promise<Response>  => {
     const limit = parseInt(new URL(request.url).searchParams.get('limit') || '10', 10);

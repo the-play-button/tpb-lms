@@ -1,4 +1,4 @@
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { deleteShareHandle } from './deleteShareHandle.js';
 
 export const deleteShareController = async (request: Request, ctx: HandlerContext, _refId: string, shareId: string): Promise<Response> => {

@@ -3,7 +3,7 @@
  */
 
 import { getCurrentStreak } from '../../utils/xp/index.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 const queryUserStats = (env: Env, userId: string) =>
     env.DB.prepare('SELECT * FROM v_user_stats WHERE user_id = ?').bind(userId).first();

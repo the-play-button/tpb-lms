@@ -1,5 +1,5 @@
 import type { ConnectionResolverConfig, ResolveConnectionOptions } from '../../ConnectionResolverPort.js';
-import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../../types/ConnectionInfo.types.js';
 import { findWorkingConnection } from './findWorkingConnection.js';
 
 /**

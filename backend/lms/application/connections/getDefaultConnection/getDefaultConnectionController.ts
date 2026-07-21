@@ -1,4 +1,4 @@
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { getDefaultConnectionHandle } from './getDefaultConnectionHandle.js';
 
 export const getDefaultConnectionController = async (_request: Request, ctx: HandlerContext): Promise<Response> => {

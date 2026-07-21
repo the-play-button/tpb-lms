@@ -6,7 +6,7 @@
  */
 
 import { generateId, MAX_ACTIVE_ENROLLMENTS } from '../../handlers/enrollment/_shared.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 import type { EnrollmentActionResult } from './EnrollmentService.types';
 export type { EnrollmentActionResult };

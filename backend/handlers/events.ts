@@ -13,8 +13,8 @@ import { validateEvent } from '../schemas/events.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { persistValidatedEvent, deriveCompletionState, persistBatch, validateBatch } from '../services/events/EventsService.js';
 import { resolveUserId } from './_resolveUserId.js';
-import type { Env } from "../types/Env.js";
-import type { HandlerUserContext } from "../types/HandlerContext.js";
+import type { Env } from "../types/Env.types.js";
+import type { HandlerUserContext } from "../types/HandlerContext.types.js";
 import { toError } from "../utils/toError.js";
 
 interface EventBody { events?: unknown[]; [key: string]: unknown; }

@@ -3,7 +3,7 @@
  */
 
 import { jsonResponse } from '../../cors.js';
-import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
 
 export const MAX_ACTIVE_ENROLLMENTS = 3;
 

@@ -6,7 +6,7 @@
  */
 
 import type { BastionDependencies, BastionConfig } from '../BastionDependencies.js';
-import type { ConnectionInfo } from '../../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../types/ConnectionInfo.types.js';
 import { bastionFetch } from './BastionCloudflareAdapter.functions/bastionFetch.js';
 import { getSecret } from './BastionCloudflareAdapter.functions/getSecret.js';
 import { getAllStorageConnections } from './BastionCloudflareAdapter.functions/getAllStorageConnections.js';

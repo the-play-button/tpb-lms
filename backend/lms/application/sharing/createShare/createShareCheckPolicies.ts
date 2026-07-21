@@ -2,7 +2,7 @@ import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import { Email } from '../../../domain/value-objects/index.js';
 import { onlyOwnerCanSharePolicy, maxSharesPolicy } from '../../../domain/policies/SharingPolicies.js';
 import type { ShareContentContext } from './createShareHydrateContext.js';
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { hasScope } from '@the-play-button/tpb-sdk-js';
 
 /**

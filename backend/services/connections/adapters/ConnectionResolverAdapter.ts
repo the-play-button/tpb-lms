@@ -8,7 +8,7 @@
  */
 
 import type { ConnectionResolverPort, ConnectionResolverConfig, ResolveConnectionOptions } from '../ConnectionResolverPort.js';
-import type { ConnectionInfo } from '../../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../types/ConnectionInfo.types.js';
 import { testAccess } from './ConnectionResolverAdapter.functions/testAccess.js';
 import { findWorkingConnection } from './ConnectionResolverAdapter.functions/findWorkingConnection.js';
 import { resolveConnection } from './ConnectionResolverAdapter.functions/resolveConnection.js';

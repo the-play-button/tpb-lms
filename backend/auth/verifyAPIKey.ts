@@ -4,7 +4,7 @@
 
 import { sha256 } from './_shared.js';
 import { log } from '@the-play-button/tpb-sdk-js';
-import type { Env } from "../types/Env.js";
+import type { Env } from "../types/Env.types.js";
 import { toError } from "../utils/toError.js";
 
 interface ApiKeyRow {

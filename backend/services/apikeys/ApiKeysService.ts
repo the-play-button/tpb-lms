@@ -1,4 +1,4 @@
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 /**
  * ApiKeysService — list/revoke API keys per user.

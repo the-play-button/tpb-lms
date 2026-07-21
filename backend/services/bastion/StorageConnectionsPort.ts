@@ -8,7 +8,7 @@
  * because tpb-lms specifically consumes storage-flavored connections.
  * Aligns with intention-domain pattern (tpb-storage `StorageTokenResolverPort`).
  */
-import type { ConnectionInfo } from '../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../types/ConnectionInfo.types.js';
 
 import type { StorageConnectionsPort } from './StorageConnectionsPort.types';
 export type { StorageConnectionsPort };

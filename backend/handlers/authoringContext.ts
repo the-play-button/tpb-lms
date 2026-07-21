@@ -4,9 +4,9 @@
  * Called from index.js for POST/PATCH/DELETE /api/courses + /api/classes.
  * Builds the AuthoringContext (D1 + actor + repositories).
  */
-import type { AuthoringContext } from '../lms/types/AuthoringContext.js';
-import type { LmsActor } from '../lms/types/HandlerContext.js';
-import type { Env } from '../types/Env.js';
+import type { AuthoringContext } from '../lms/types/AuthoringContext.types.js';
+import type { LmsActor } from '../lms/types/HandlerContext.types.js';
+import type { Env } from '../types/Env.types.js';
 import { LmsCourseDatabaseRepository } from '../lms/infrastructure/repositories/LmsCourseDatabaseRepository.js';
 import { LmsClassDatabaseRepository } from '../lms/infrastructure/repositories/LmsClassDatabaseRepository.js';
 import { LmsProgramDatabaseRepository } from '../lms/infrastructure/repositories/LmsProgramDatabaseRepository.js';

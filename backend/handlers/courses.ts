@@ -5,8 +5,8 @@
 import { jsonResponse } from '../cors.js';
 import { listCoursesForUser, getCourseForUser } from '../services/courses/CoursesService.js';
 import { resolveUserId } from './_resolveUserId.js';
-import type { Env } from "../types/Env.js";
-import type { HandlerUserContext } from "../types/HandlerContext.js";
+import type { Env } from "../types/Env.types.js";
+import type { HandlerUserContext } from "../types/HandlerContext.types.js";
 
 /**
  * GET /api/courses

@@ -6,7 +6,7 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listByContent } from '../../services/translations/TranslationsService.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 import { toError } from "../../utils/toError.js";
 
 export const getTranslations = async (request: Request, env: Env, _ctx?: unknown): Promise<Response>  => {

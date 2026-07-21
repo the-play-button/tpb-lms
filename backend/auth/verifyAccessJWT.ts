@@ -4,7 +4,7 @@
 
 import { base64urlDecode, importPublicKey, getJWKS } from './_shared.js';
 import { log } from '@the-play-button/tpb-sdk-js';
-import type { Env } from "../types/Env.js";
+import type { Env } from "../types/Env.types.js";
 import { toError } from "../utils/toError.js";
 
 interface JwtPayload { exp?: number; email?: string; sub?: string; [key: string]: unknown; }

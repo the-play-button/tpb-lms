@@ -1,6 +1,6 @@
 import { fail, succeed, type Result } from '../../core/Result.js';
 import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
-import type { ContentRefProps, ContentType, ContentUsage } from './types.js';
+import type { ContentRefProps, ContentType, ContentUsage } from './ContentRef.types.js';
 import { BaseContentRef } from './BaseContentRef.js';
 
 /**

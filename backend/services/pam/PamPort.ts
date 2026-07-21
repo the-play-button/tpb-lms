@@ -10,7 +10,7 @@
  * Owner's token is NEVER exposed - all access goes through PAM.
  */
 
-import type { StorageFile } from '../types/StorageFile.js';
+import type { StorageFile } from '../types/StorageFile.types.js';
 
 import type { PamVerifyResult } from './PamPort.types/PamVerifyResult';
 import type { PamPort } from './PamPort.types/PamPort';

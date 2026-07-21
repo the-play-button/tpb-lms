@@ -3,7 +3,7 @@
  */
 
 import { resolveProgressionMode } from './_progressionMode.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 type Translations = Record<string, string>;
 

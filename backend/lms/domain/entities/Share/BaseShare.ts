@@ -1,6 +1,6 @@
 import type { ShareId, ContentRefId, Email } from '../../value-objects/index.js';
 import type { ShareRole } from '../ContentRef/SharedContentRef.js';
-import type { ShareProps } from './types.js';
+import type { ShareProps } from './Share.types.js';
 
 export abstract class BaseShare<TProps extends ShareProps = ShareProps> {
   protected constructor(protected readonly props: TProps) {}

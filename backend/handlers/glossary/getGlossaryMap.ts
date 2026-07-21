@@ -4,7 +4,7 @@
  */
 
 import { buildLookupMap } from '../../services/glossary/GlossaryService.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 export const getGlossaryMap = (env: Env, orgId: string, sourceLang: string, targetLang: string): Promise<Map<string, string | undefined>>  =>
     buildLookupMap(env, orgId, sourceLang, targetLang);

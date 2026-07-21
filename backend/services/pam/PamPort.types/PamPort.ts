@@ -1,4 +1,4 @@
-import type { StorageFile } from '../../types/StorageFile.js';
+import type { StorageFile } from '../../types/StorageFile.types.js';
 import type { PamVerifyResult } from './PamVerifyResult';
 
 export interface PamPort {

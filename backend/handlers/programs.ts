@@ -3,7 +3,7 @@
  */
 import { jsonResponse } from '../cors.js';
 import { listProgramsForUser } from '../services/programs/ProgramsService.js';
-import type { Env } from "../types/Env.js";
+import type { Env } from "../types/Env.types.js";
 
 /** GET /api/programs — list active programs (grouping level above courses). */
 export const listPrograms = async (request: Request, env: Env): Promise<Response>  => {

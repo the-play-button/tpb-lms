@@ -7,8 +7,8 @@
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { upsertOne } from '../../services/translations/TranslationsService.js';
-import type { Env } from "../../types/Env.js";
-import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import type { Env } from "../../types/Env.types.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
 import { toError } from "../../utils/toError.js";
 
 interface UpsertTranslationBody { field?: string; value?: string; source?: string; }

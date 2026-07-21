@@ -1,4 +1,4 @@
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { getCloudContentHandle } from './getCloudContentHandle.js';
 
 export const getCloudContentController = async (request: Request, ctx: HandlerContext): Promise<Response> => {

@@ -1,5 +1,5 @@
 import type { ConnectionResolverConfig } from '../../ConnectionResolverPort.js';
-import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../../types/ConnectionInfo.types.js';
 import { NotFoundError } from '../../../../types/errors.js';
 import { testAccess } from './testAccess.js';
 

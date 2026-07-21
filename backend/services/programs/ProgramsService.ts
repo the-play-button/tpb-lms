@@ -1,4 +1,4 @@
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 /**
  * ProgramsService — read model for lms_program (Plan 10). A program groups N courses

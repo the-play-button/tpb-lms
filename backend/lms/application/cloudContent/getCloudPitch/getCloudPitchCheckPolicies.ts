@@ -1,6 +1,6 @@
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 import type { GetCloudPitchContext } from './getCloudPitchHydrateContext.js';
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { hasScope } from '@the-play-button/tpb-sdk-js';
 
 /**

@@ -6,8 +6,8 @@
 import { jsonResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { findKeyByIdAndUser, revokeKey } from '../../services/apikeys/ApiKeysService.js';
-import type { Env } from "../../types/Env.js";
-import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import type { Env } from "../../types/Env.types.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
 import { toError } from "../../utils/toError.js";
 
 export const deleteAPIKeyHandler = async (request: Request, env: Env, auth: HandlerUserContext, keyId: string): Promise<Response>  => {

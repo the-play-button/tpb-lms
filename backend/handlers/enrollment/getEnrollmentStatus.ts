@@ -5,8 +5,8 @@
 
 import { jsonResponse, getUserId } from './_shared.js';
 import { getUserEnrollmentStatus } from '../../services/enrollment/EnrollmentService.js';
-import type { Env } from "../../types/Env.js";
-import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import type { Env } from "../../types/Env.types.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
 
 export const getEnrollmentStatus = async (request: Request, env: Env, userContext: HandlerUserContext, courseId: string): Promise<Response>  => {
     const userId = getUserId(userContext);

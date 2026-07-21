@@ -12,7 +12,7 @@
  * - Fallback to default connection
  */
 
-import type { ConnectionInfo } from '../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../types/ConnectionInfo.types.js';
 
 import type { ResolveConnectionOptions } from './ConnectionResolverPort.types/ResolveConnectionOptions';
 import type { ConnectionResolverConfig } from './ConnectionResolverPort.types/ConnectionResolverConfig';

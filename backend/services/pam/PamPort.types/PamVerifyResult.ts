@@ -1,4 +1,4 @@
-import type { StorageFile } from '../../types/StorageFile.js';
+import type { StorageFile } from '../../types/StorageFile.types.js';
 
 export interface PamVerifyResult {
   allowed: boolean;

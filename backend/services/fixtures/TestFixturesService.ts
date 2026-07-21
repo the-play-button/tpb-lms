@@ -1,4 +1,4 @@
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 /**
  * TestFixturesService — seed canned learner-progress states for QA.

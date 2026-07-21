@@ -1,6 +1,6 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { listSharedWithMeValidateInput } from './listSharedWithMeValidateInput.js';
 import { listSharedWithMeHydrateContext } from './listSharedWithMeHydrateContext.js';
 import { listSharedWithMeValidateContext } from './listSharedWithMeValidateContext.js';

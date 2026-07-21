@@ -1,5 +1,5 @@
 import { succeed, type Result } from '../../../domain/core/Result.js';
-import type { AuthoringContext } from '../../../types/AuthoringContext.js';
+import type { AuthoringContext } from '../../../types/AuthoringContext.types.js';
 import type { ClassRow } from '../../../domain/repositories/LmsClassRepository.js';
 import type { CreateClassContext } from './createClassHydrateContext.js';
 

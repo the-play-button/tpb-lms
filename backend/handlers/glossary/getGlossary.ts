@@ -7,7 +7,7 @@ import { jsonResponse, errorResponse } from '../../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listTerms } from '../../services/glossary/GlossaryService.js';
 import { extractOrgIdFromUrl } from './_glossaryShared.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 import { toError } from "../../utils/toError.js";
 
 export const getGlossary = async (request: Request, env: Env, _ctx?: unknown): Promise<Response>  => {

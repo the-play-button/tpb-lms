@@ -1,4 +1,4 @@
-import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../../types/ConnectionInfo.types.js';
 import { bastionFetch } from './bastionFetch.js';
 
 export const getAllStorageConnections = async (bastionUrl: string, jwt: string): Promise<ConnectionInfo[]> => {

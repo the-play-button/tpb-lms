@@ -4,7 +4,7 @@
 
 import { jsonResponse, extractFieldsFromPayload, calculateScore, processQuizSubmission } from './_shared.js';
 import { findQuizClassByTallyFormId } from '../../services/quiz/QuizService.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 interface TallyWebhookPayload {
     eventType?: string;

@@ -9,7 +9,7 @@ import { log } from '@the-play-button/tpb-sdk-js';
 import { upsertTerm } from '../../services/glossary/GlossaryService.js';
 import { bulkImportTerms } from '../../services/glossary/GlossaryImportService.js';
 import { extractOrgIdFromUrl, isValidTermPayload } from './_glossaryShared.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 import { toError } from "../../utils/toError.js";
 
 interface GlossaryTermBody {

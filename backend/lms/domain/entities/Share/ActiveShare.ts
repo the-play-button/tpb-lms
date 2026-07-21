@@ -1,7 +1,7 @@
 import { fail, succeed, type Result } from '../../core/Result.js';
 import type { ShareId, ContentRefId, Email } from '../../value-objects/index.js';
 import type { ShareRole } from '../ContentRef/SharedContentRef.js';
-import type { ShareProps } from './types.js';
+import type { ShareProps } from './Share.types.js';
 import { BaseShare } from './BaseShare.js';
 import { RevokedShare } from './RevokedShare.js';
 

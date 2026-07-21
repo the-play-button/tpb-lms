@@ -1,6 +1,6 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { listPermissionsValidateInput } from './listPermissionsValidateInput.js';
 import { listPermissionsHydrateContext } from './listPermissionsHydrateContext.js';
 import { listPermissionsValidateContext } from './listPermissionsValidateContext.js';

@@ -6,8 +6,8 @@
 
 import { jsonResponse, errorResponse } from '../../cors.js';
 import { bulkUpsert } from '../../services/translations/TranslationsService.js';
-import type { Env } from "../../types/Env.js";
-import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import type { Env } from "../../types/Env.types.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
 
 interface UpsertTranslationsBody { translations?: unknown[]; }
 

@@ -1,6 +1,6 @@
 import type { Result } from '../../../domain/core/Result.js';
 import { fail } from '../../../domain/core/Result.js';
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { getCloudContentValidateInput } from './getCloudContentValidateInput.js';
 import { getCloudContentHydrateContext } from './getCloudContentHydrateContext.js';
 import { getCloudContentValidateContext } from './getCloudContentValidateContext.js';

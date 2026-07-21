@@ -8,7 +8,7 @@
 import { jsonResponse } from '../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { applyFixture, VALID_FIXTURES } from '../services/fixtures/TestFixturesService.js';
-import type { Env } from "../types/Env.js";
+import type { Env } from "../types/Env.types.js";
 import { toError } from "../utils/toError.js";
 
 interface TestSeedBody { fixture?: string; user_id?: string; email?: string; }

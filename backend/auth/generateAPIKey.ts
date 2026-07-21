@@ -4,7 +4,7 @@
  */
 
 import { sha256 } from './_shared.js';
-import type { Env } from "../types/Env.js";
+import type { Env } from "../types/Env.types.js";
 
 interface GenerateApiKeyOptions { scopes?: string; expiresAt?: string | null; }
 

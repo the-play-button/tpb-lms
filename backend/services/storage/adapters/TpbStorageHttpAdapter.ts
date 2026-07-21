@@ -9,7 +9,7 @@
  */
 
 import type { StoragePort } from '../StoragePort.js';
-import type { StorageFile } from '../../types/StorageFile.js';
+import type { StorageFile } from '../../types/StorageFile.types.js';
 
 import type { TpbStorageHttpAdapterConfig } from './TpbStorageHttpAdapter.types';
 export type { TpbStorageHttpAdapterConfig };

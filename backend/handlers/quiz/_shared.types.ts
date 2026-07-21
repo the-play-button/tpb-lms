@@ -3,7 +3,7 @@ import { recordQuizEvent, checkQuizBadges, checkStreakBadges } from '../../utils
 import { applyProjections } from '../../projections/engine.js';
 import { generateEventId } from '../../utils/events.js';
 import { log } from '@the-play-button/tpb-sdk-js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 export interface QuizClassRow {
     id?: string;

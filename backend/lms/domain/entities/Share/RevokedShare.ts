@@ -1,5 +1,5 @@
 import type { Email } from '../../value-objects/index.js';
-import type { RevokedShareProps } from './types.js';
+import type { RevokedShareProps } from './Share.types.js';
 import { BaseShare } from './BaseShare.js';
 
 /**

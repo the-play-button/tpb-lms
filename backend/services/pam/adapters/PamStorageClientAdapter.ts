@@ -10,7 +10,7 @@
 import { StorageClient } from '@the-play-button/tpb-sdk-js';
 import type { StorageFileResponse } from '@the-play-button/tpb-sdk-js';
 import type { PamPort, PamVerifyResult } from '../PamPort.js';
-import type { StorageFile } from '../../types/StorageFile.js';
+import type { StorageFile } from '../../types/StorageFile.types.js';
 import { ValidationError, NotFoundError, ServiceUnavailableError } from '../../../types/errors.js';
 
 const FOLDER_MIME_TYPE = 'application/vnd.folder';

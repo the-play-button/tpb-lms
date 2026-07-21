@@ -1,4 +1,4 @@
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { listPermissionsHandle } from './listPermissionsHandle.js';
 
 export const listPermissionsController = async (request: Request, ctx: HandlerContext, refId: string): Promise<Response> => {

@@ -1,5 +1,5 @@
 import type { ContentRefId, ConnectionId, Email } from '../../value-objects/index.js';
-import type { ContentRefProps, ContentType, ContentUsage } from './types.js';
+import type { ContentRefProps, ContentType, ContentUsage } from './ContentRef.types.js';
 
 export abstract class BaseContentRef {
   protected constructor(protected readonly props: ContentRefProps) {}

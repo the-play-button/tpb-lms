@@ -10,7 +10,7 @@
  * @param {...string} allowedRoles - Roles that are allowed (e.g., 'admin', 'instructor', 'student')
  * @returns {Function} Guard function that takes userContext
  */
-import type { HandlerUserContext } from '../types/HandlerContext.js';
+import type { HandlerUserContext } from '../types/HandlerContext.types.js';
 
 import type { RoleGuardError } from './guard.types';
 export type { RoleGuardError };

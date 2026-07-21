@@ -1,4 +1,4 @@
-import type { ConnectionInfo } from '../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../types/ConnectionInfo.types.js';
 
 export interface StorageConnectionsPort {
   /** Get ALL storage connections for the user. */

@@ -3,7 +3,7 @@ import { createCourseExecute } from '../courses/createCourse/createCourseExecute
 import { updateCourseExecute } from '../courses/updateCourse/updateCourseExecute.js';
 import { createClassExecute } from './createClass/createClassExecute.js';
 import { updateClassExecute } from './updateClass/updateClassExecute.js';
-import type { AuthoringContext } from '../../types/AuthoringContext.js';
+import type { AuthoringContext } from '../../types/AuthoringContext.types.js';
 
 const actor = { id: 'a', email: 'creator@x', type: 'user' as const, bastionUserId: null, scopes: [], organizationId: null, roles: [] };
 

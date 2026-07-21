@@ -1,4 +1,4 @@
-import type { AuthoringContext } from '../../../types/AuthoringContext.js';
+import type { AuthoringContext } from '../../../types/AuthoringContext.types.js';
 import { createProgramHandle } from './createProgramHandle.js';
 import { toErrorStatus } from '../../_shared/httpStatus.js';
 

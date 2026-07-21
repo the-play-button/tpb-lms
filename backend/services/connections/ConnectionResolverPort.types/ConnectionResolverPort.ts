@@ -1,4 +1,4 @@
-import type { ConnectionInfo } from '../../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../types/ConnectionInfo.types.js';
 import type { ResolveConnectionOptions } from './ResolveConnectionOptions';
 
 export interface ConnectionResolverPort {

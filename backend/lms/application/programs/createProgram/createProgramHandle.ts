@@ -1,5 +1,5 @@
 import { fail, type Result } from '../../../domain/core/Result.js';
-import type { AuthoringContext } from '../../../types/AuthoringContext.js';
+import type { AuthoringContext } from '../../../types/AuthoringContext.types.js';
 import { createProgramValidateInput } from './createProgramValidateInput.js';
 import { createProgramHydrateContext } from './createProgramHydrateContext.js';
 import { createProgramValidateContext } from './createProgramValidateContext.js';

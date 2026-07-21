@@ -4,7 +4,7 @@
 
 import { checkCourseCompletionBadges, recordCourseCompletion } from '../../utils/xp/index.js';
 import { resolveProgressionMode } from '../courses/_progressionMode.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 interface MediaEntry { type?: string; [key: string]: unknown; }
 

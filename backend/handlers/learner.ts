@@ -4,8 +4,8 @@
 
 import { jsonResponse } from '../cors.js';
 import { fetchLearnerProgress } from '../services/learner/LearnerProgressService.js';
-import type { Env } from "../types/Env.js";
-import type { HandlerUserContext } from "../types/HandlerContext.js";
+import type { Env } from "../types/Env.types.js";
+import type { HandlerUserContext } from "../types/HandlerContext.types.js";
 
 export const getLearnerProgress = async (request: Request, env: Env, userContext: HandlerUserContext): Promise<Response>  => {
     const userId = userContext.contact?.id ?? '';

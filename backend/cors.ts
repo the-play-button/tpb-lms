@@ -5,10 +5,13 @@
 
 const PRIMARY_ORIGIN = 'https://lms-viewer.matthieu-marielouise.workers.dev';  // Frontend (Workers)
 
+/** Local dev server port for the LMS viewer (Vite/static preview). */
+const LOCAL_DEV_PORT = 8080;
+
 export const ALLOWED_ORIGINS = [
     PRIMARY_ORIGIN,
-    'http://localhost:8080',
-    'http://127.0.0.1:8080'
+    `http://localhost:${LOCAL_DEV_PORT}`,
+    `http://127.0.0.1:${LOCAL_DEV_PORT}`
 ];
 
 const SECURITY_HEADERS = {

@@ -6,7 +6,7 @@ import { jsonResponse } from '../cors.js';
 import { verifyAccessJWT, getOrCreateContact } from '../auth/index.js';
 import { extractCallerJwt } from '@the-play-button/tpb-sdk-js';
 import { fetchUserData, buildSessionResponse } from '../services/auth/SessionService.js';
-import type { Env } from "../types/Env.js";
+import type { Env } from "../types/Env.types.js";
 
 const validateJWT = async (jwt: string | null | undefined, env: Env, request: Request) => {
     if (!jwt) {

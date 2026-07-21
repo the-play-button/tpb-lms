@@ -1,4 +1,4 @@
-import type { HandlerUserContext } from '../types/HandlerContext.js';
+import type { HandlerUserContext } from '../types/HandlerContext.types.js';
 
 export interface RoleGuardError {
   error: string;

@@ -14,7 +14,7 @@ import {
     fetchRawContent,
     fetchDirectoryListing,
 } from '../services/content/GithubContentService.js';
-import type { Env } from "../types/Env.js";
+import type { Env } from "../types/Env.types.js";
 
 interface GitHubParams {
     owner?: string | null;

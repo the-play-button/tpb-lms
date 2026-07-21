@@ -3,7 +3,7 @@
  */
 
 import { upsertGlossaryTerm } from '../../handlers/glossary/_glossaryShared.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 import type { GlossaryTermPayload } from '../../handlers/glossary/_glossaryShared.js';
 
 interface GlossaryFilters { sourceLang?: string | null; targetLang?: string | null; }

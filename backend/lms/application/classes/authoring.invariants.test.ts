@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { createClassValidateContext } from './createClass/createClassValidateContext.js';
 import { updateClassValidateContext } from './updateClass/updateClassValidateContext.js';
 import { createClassCheckPolicies } from './createClass/createClassCheckPolicies.js';
-import type { AuthoringContext } from '../../types/AuthoringContext.js';
+import type { AuthoringContext } from '../../types/AuthoringContext.types.js';
 
 const sectionRow = (over = {}) => ({
   id: 'sec1', course_id: 'c1', parent_class_id: null, node_kind: 'SECTION' as const,

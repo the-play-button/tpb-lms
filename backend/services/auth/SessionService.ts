@@ -31,7 +31,7 @@ const queryRecentActivity = (db: D1Database, userId: string) =>
 export const fetchUserData = async (db: D1Database, contactId: string): Promise<{
     stats: Record<string, unknown> | null;
     badges: Record<string, unknown>[];
-    recentActivity: Record<string, unknown>[];
+    recentActivities: Record<string, unknown>[];
     currentStreak: number;
 }>  => {
     const [stats, badges, recentActivity, currentStreak] = await Promise.all([
@@ -43,7 +43,7 @@ export const fetchUserData = async (db: D1Database, contactId: string): Promise<
     return {
         stats,
         badges: badges.results || [],
-        recentActivity: recentActivity.results || [],
+        recentActivities: recentActivity.results || [],
         currentStreak,
     };
 };
@@ -97,6 +97,6 @@ export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionConta
             created_at: contact.created_at,
         },
         badges: userData.badges,
-        recentActivity: userData.recentActivity,
+        recentActivity: userData.recentActivities,
     };
 };

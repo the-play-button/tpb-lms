@@ -9,7 +9,7 @@
 
 import { calculateScore, processQuizSubmission } from '../../handlers/quiz/_shared.js';
 import type { QuizClassRow } from '../../handlers/quiz/_shared.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 
 interface QuizSubmissionInput {
     quizId: string;

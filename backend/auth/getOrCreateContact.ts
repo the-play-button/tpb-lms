@@ -1,4 +1,4 @@
-import type { Env } from "../types/Env.js";
+import type { Env } from "../types/Env.types.js";
 
 /**
  * Get or create contact in crm_contact (Unified.to aligned)

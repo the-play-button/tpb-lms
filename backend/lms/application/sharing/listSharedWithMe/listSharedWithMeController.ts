@@ -1,4 +1,4 @@
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { listSharedWithMeHandle } from './listSharedWithMeHandle.js';
 
 export const listSharedWithMeController = async (_request: Request, ctx: HandlerContext): Promise<Response> => {

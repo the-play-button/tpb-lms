@@ -1,4 +1,4 @@
-import type { HandlerContext } from '../../../types/HandlerContext.js';
+import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { createShareHandle } from './createShareHandle.js';
 
 export const createShareController = async (request: Request, ctx: HandlerContext, refId: string): Promise<Response> => {

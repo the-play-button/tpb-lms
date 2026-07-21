@@ -6,8 +6,8 @@
 import { jsonResponse } from '../../cors.js';
 import { generateAPIKey, getOrCreateContact } from '../../auth/index.js';
 import { log } from '@the-play-button/tpb-sdk-js';
-import type { Env } from "../../types/Env.js";
-import type { HandlerUserContext } from "../../types/HandlerContext.js";
+import type { Env } from "../../types/Env.types.js";
+import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
 import { toError } from "../../utils/toError.js";
 
 interface AdminCreateApiKeyBody {

@@ -5,7 +5,7 @@
 import { log } from '@the-play-button/tpb-sdk-js';
 import { upsertTerm } from './GlossaryService.js';
 import { isValidTermPayload } from '../../handlers/glossary/_glossaryShared.js';
-import type { Env } from "../../types/Env.js";
+import type { Env } from "../../types/Env.types.js";
 import { toError } from "../../utils/toError.js";
 
 export const bulkImportTerms = async (env: Env, orgId: string, terms: unknown[]): Promise<{

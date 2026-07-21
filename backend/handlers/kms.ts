@@ -5,8 +5,8 @@
 import { jsonResponse } from '../cors.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import { listSpaces as svcListSpaces, getSpace as svcGetSpace, getPage as svcGetPage } from '../services/kms/KmsReadService.js';
-import type { Env } from "../types/Env.js";
-import type { HandlerUserContext } from "../types/HandlerContext.js";
+import type { Env } from "../types/Env.types.js";
+import type { HandlerUserContext } from "../types/HandlerContext.types.js";
 import { toError } from "../utils/toError.js";
 
 export const listSpaces = async (request: Request, env: Env, _userContext?: HandlerUserContext): Promise<Response>  => {

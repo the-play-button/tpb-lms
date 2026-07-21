@@ -1,4 +1,4 @@
-import type { HandlerUserContext } from "../types/HandlerContext.js";
+import type { HandlerUserContext } from "../types/HandlerContext.types.js";
 
 /**
  * Shared SSOT helper for extracting the LMS user id from a CF Access userContext.

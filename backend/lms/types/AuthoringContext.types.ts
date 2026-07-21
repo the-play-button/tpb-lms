@@ -6,7 +6,7 @@
  * scope checks on the actor (hasScope), not ReBAC delegated authz (cf. CLAUDE.md
  * § AUTHZ — PBAC FIRST). No storage/pam/connection ports needed.
  */
-import type { LmsActor } from './HandlerContext.js';
+import type { LmsActor } from './HandlerContext.types.js';
 import type { LmsCourseRepository } from '../domain/repositories/LmsCourseRepository.js';
 import type { LmsClassRepository } from '../domain/repositories/LmsClassRepository.js';
 import type { LmsProgramRepository } from '../domain/repositories/LmsProgramRepository.js';

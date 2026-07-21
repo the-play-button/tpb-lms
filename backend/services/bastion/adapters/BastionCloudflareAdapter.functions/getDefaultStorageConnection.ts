@@ -1,4 +1,4 @@
-import type { ConnectionInfo } from '../../../types/ConnectionInfo.js';
+import type { ConnectionInfo } from '../../../types/ConnectionInfo.types.js';
 import { NotFoundError, ServiceUnavailableError } from '../../../../types/errors.js';
 import { bastionFetch } from './bastionFetch.js';
 
