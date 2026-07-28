@@ -128,7 +128,7 @@ class LmsApi:
         if not pat:
             print(f"FATAL: no PAT at {VAULT_PAT_PATH}", file=sys.stderr)
             sys.exit(2)
-        self.h = {**dict(bc.headers), "Authorization": f"Bearer {pat}", "Content-Type": "application/json"}
+        self.h = {**dict(bc.effective_headers), "Authorization": f"Bearer {pat}", "Content-Type": "application/json"}
         self.cl = httpx.Client(timeout=40, headers=self.h)
 
     def _req(self, method: str, url: str, json_body: dict) -> httpx.Response | None:
