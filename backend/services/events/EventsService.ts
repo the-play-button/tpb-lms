@@ -43,7 +43,7 @@ export const persistValidatedEvent = async (env: Env, userId: string, validatedD
     return { eventId, class_id };
 };
 
-export const classHasQuiz = async (env: Env, classId: string): Promise<boolean>  => {
+const classHasQuiz = async (env: Env, classId: string): Promise<boolean>  => {
     const cls = await env.DB.prepare('SELECT media_json FROM lms_class WHERE id = ?')
         .bind(classId).first<{ media_json?: string | null }>();
     if (!cls?.media_json) return false;

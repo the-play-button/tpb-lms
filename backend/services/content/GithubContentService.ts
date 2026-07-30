@@ -66,7 +66,7 @@ const getTokenDebug = (env: Env): TokenDebug => ({
     vaultError: null,
 });
 
-export const getGitHubTokenWithDebug = async (env: Env): Promise<{
+const getGitHubTokenWithDebug = async (env: Env): Promise<{
     token: string;
     debug: TokenDebug;
 }>  => {
@@ -81,7 +81,7 @@ export const getGitHubTokenWithDebug = async (env: Env): Promise<{
     return { token, debug };
 };
 
-export const getGitHubToken = async (env: Env): Promise<string>  => (await getGitHubTokenWithDebug(env)).token;
+const getGitHubToken = async (env: Env): Promise<string>  => (await getGitHubTokenWithDebug(env)).token;
 
 export const injectI18nIntoPath = (path: string, lang: string): string => {
     if (!lang) return path;
@@ -105,7 +105,7 @@ export const parseGitHubUrl = (url: string): GitHubUrlParts | null => {
     return null;
 };
 
-export const buildGitHubApiUrl = ({ owner, repo, branch, path }: GitHubUrlParts = {}): string  =>
+const buildGitHubApiUrl = ({ owner, repo, branch, path }: GitHubUrlParts = {}): string  =>
     `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
 
 export const fetchRawContent = async (env: Env, params: GitHubUrlParts): Promise<{

@@ -19,7 +19,7 @@ export interface StorageFile {
 /**
  * StoragePermission - Permission on a cloud storage file
  */
-export interface StoragePermission {
+interface StoragePermission {
   id: string;
   fileId: string;
   email: string;

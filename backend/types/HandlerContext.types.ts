@@ -8,7 +8,7 @@
  */
 
 /** A resolved CRM contact / learner record (shape varies by query). */
-export interface ContactRecord {
+interface ContactRecord {
     id?: string;
     [key: string]: unknown;
 }

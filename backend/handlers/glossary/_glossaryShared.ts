@@ -8,7 +8,7 @@ export type { GlossaryTermPayload };
  */
 
 
-export const REQUIRED_FIELDS = ['source_lang', 'target_lang', 'source_term', 'target_term'] as const;
+const REQUIRED_FIELDS = ['source_lang', 'target_lang', 'source_term', 'target_term'] as const;
 
 export const isValidTermPayload = (payload: unknown): payload is GlossaryTermPayload =>
     !!payload &&
@@ -17,7 +17,7 @@ export const isValidTermPayload = (payload: unknown): payload is GlossaryTermPay
         return typeof v === 'string' && v.length > 0;
     });
 
-export const deriveTermId = (orgId: string, sourceLang: string, targetLang: string, sourceTerm: string): string  =>
+const deriveTermId = (orgId: string, sourceLang: string, targetLang: string, sourceTerm: string): string  =>
     `${orgId}-${sourceLang}-${targetLang}-${sourceTerm.toLowerCase().replace(/\s+/g, '_')}`;
 
 export const upsertGlossaryTerm = async (db: D1Database, orgId: string, payload: GlossaryTermPayload): Promise<string>  => {

@@ -14,7 +14,7 @@ export type { QuizClassRow };
 
 
 export { log };
-export const XP_QUIZ_PASS = 100;
+const XP_QUIZ_PASS = 100;
 
 export { jsonResponse, recordQuizEvent, checkQuizBadges, checkStreakBadges, applyProjections, generateEventId };
 
@@ -38,7 +38,7 @@ const toError = (e: unknown): Error => (e instanceof Error ? e : new Error(Strin
 /**
  * Get pass threshold from quiz class media_json
  */
-export const getPassThreshold = (quizClass: QuizClassRow | null | undefined): number => {
+const getPassThreshold = (quizClass: QuizClassRow | null | undefined): number => {
     if (!quizClass?.media_json) {
         return 80;
     }
@@ -50,7 +50,7 @@ export const getPassThreshold = (quizClass: QuizClassRow | null | undefined): nu
 /**
  * Build list of wrong answers for corrections modal
  */
-export const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: CorrectAnswers): {
+const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: CorrectAnswers): {
     question: unknown;
     yourAnswer: unknown;
     correctAnswer: unknown;
@@ -161,7 +161,7 @@ interface StoreQuizEventInput {
     passed: boolean;
 }
 
-export const storeQuizEvent = async (
+const storeQuizEvent = async (
     env: Env,
     { userId, quizId, courseId, classId, score, maxScore, percentage, passed }: StoreQuizEventInput
 ): Promise<string>  => {
@@ -188,7 +188,7 @@ export const storeQuizEvent = async (
 /**
  * Handle badges for passed quiz
  */
-export const handleQuizBadges = async (db: D1Database, userId: string, isPerfect: boolean): Promise<{
+const handleQuizBadges = async (db: D1Database, userId: string, isPerfect: boolean): Promise<{
     id: unknown;
     name: unknown;
     description: unknown;

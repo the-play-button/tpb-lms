@@ -11,7 +11,7 @@ export type { Jwks };
 
 export let jwksCache: Jwks | null = null;
 export let jwksCacheTime = 0;
-export const JWKS_CACHE_TTL = 3600000; // 1 hour
+const JWKS_CACHE_TTL = 3600000; // 1 hour
 
 /**
  * Fetch and cache JWKS from Cloudflare Access

@@ -7,7 +7,7 @@
 
 import { z } from 'zod';
 
-export const videoPlaySchema = z.object({
+const videoPlaySchema = z.object({
   type: z.enum(['VIDEO_PLAY', 'VIDEO_PAUSE']),
   course_id: z.string().min(1),
   class_id: z.string().min(1),
@@ -16,7 +16,7 @@ export const videoPlaySchema = z.object({
   }).optional().default({})
 });
 
-export const videoPingSchema = z.object({
+const videoPingSchema = z.object({
   type: z.literal('VIDEO_PING'),
   course_id: z.string().min(1),
   class_id: z.string().min(1),
@@ -27,7 +27,7 @@ export const videoPingSchema = z.object({
   })
 });
 
-export const quizSubmitSchema = z.object({
+const quizSubmitSchema = z.object({
   type: z.literal('QUIZ_SUBMIT'),
   course_id: z.string().min(1),
   class_id: z.string().min(1),
