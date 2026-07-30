@@ -8,8 +8,7 @@ import type {
   CreateProgramData,
   UpdateProgramPatch,
 } from '../../domain/repositories/LmsProgramRepository.js';
-
-const j = (v: unknown): string | null => (v === undefined || v === null ? null : JSON.stringify(v));
+import { j, runPatchUpdate } from './_shared/patchUpdate.js';
 
 export class LmsProgramDatabaseRepository implements LmsProgramRepository {
   constructor(private readonly db: D1Database) {}
@@ -32,18 +31,13 @@ export class LmsProgramDatabaseRepository implements LmsProgramRepository {
   }
 
   async update(id: string, patch: UpdateProgramPatch): Promise<void> {
-    const sets: string[] = [];
-    const vals: unknown[] = [];
-    const add = (col: string, v: unknown) => { sets.push(`${col} = ?`); vals.push(v); };
-    if (patch.name !== undefined) add('name', patch.name);
-    if (patch.description !== undefined) add('description', patch.description);
-    if (patch.mediaJson !== undefined) add('media_json', j(patch.mediaJson));
-    if (patch.isActive !== undefined) add('is_active', patch.isActive ? 1 : 0);
-    if (patch.rawJson !== undefined) add('raw_json', j(patch.rawJson));
-    if (sets.length === 0) return;
-    sets.push("updated_at = datetime('now')");
-    vals.push(id);
-    await this.db.prepare(`UPDATE lms_program SET ${sets.join(', ')} WHERE id = ?`).bind(...vals).run();
+    await runPatchUpdate(this.db, 'lms_program', id, (add) => {
+      if (patch.name !== undefined) add('name', patch.name);
+      if (patch.description !== undefined) add('description', patch.description);
+      if (patch.mediaJson !== undefined) add('media_json', j(patch.mediaJson));
+      if (patch.isActive !== undefined) add('is_active', patch.isActive ? 1 : 0);
+      if (patch.rawJson !== undefined) add('raw_json', j(patch.rawJson));
+    });
   }
 
   async delete(id: string): Promise<void> {
