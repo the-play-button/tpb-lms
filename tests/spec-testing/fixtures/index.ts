@@ -12,14 +12,4 @@ export {
   NOW,
 } from './mothers';
 
-export {
-  InMemoryContentRefsRepository,
-  InMemorySharesRepository,
-  StubAuthzBastionClient,
-  StubStorageService,
-  StubPamClient,
-  StubConnectionResolver,
-  StubDomainEvents,
-} from './stubs';
-
 export { createTestContext } from './test-context';

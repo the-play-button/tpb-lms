@@ -1,4 +1,4 @@
-// entropy-one-export-per-types-file-ok: the canonical HTTP error-class module (6 Error subclasses forming one throwable hierarchy) — a cohesive error taxonomy, not a DTO drawer
+// entropy-one-export-per-types-file-ok: the canonical HTTP error-class module (NotFoundError + ValidationError + ServiceUnavailableError — a cohesive throwable hierarchy, not a DTO drawer)
 /**
  * Typed error classes for the BYOC layer
  */
@@ -20,33 +20,6 @@ export class ValidationError extends Error {
     super(message);
     this.name = 'ValidationError';
     this.details = details;
-  }
-}
-
-export class ForbiddenError extends Error {
-  readonly code = 'FORBIDDEN' as const;
-  readonly statusCode = 403;
-  constructor(message = 'Access denied') {
-    super(message);
-    this.name = 'ForbiddenError';
-  }
-}
-
-export class UnauthorizedError extends Error {
-  readonly code = 'UNAUTHORIZED' as const;
-  readonly statusCode = 401;
-  constructor(message = 'Authentication required') {
-    super(message);
-    this.name = 'UnauthorizedError';
-  }
-}
-
-export class ConflictError extends Error {
-  readonly code = 'CONFLICT' as const;
-  readonly statusCode = 409;
-  constructor(message: string) {
-    super(message);
-    this.name = 'ConflictError';
   }
 }
 

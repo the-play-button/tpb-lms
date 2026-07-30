@@ -15,8 +15,5 @@ export type { UpdateClassPatch };
 export type { LmsClassRepository };
 
 
-export type { NodeKind };
-
-
 
 
