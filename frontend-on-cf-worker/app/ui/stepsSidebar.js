@@ -43,7 +43,7 @@ export const buildLessonCtx = (course, signals, currentStepIndex) => {
 
 /**
  * Render a course's lessons as a `<nav class="steps-list">` tree (SECTION folders +
- * LESSON items). Uses `course.nodes` when present, else falls back to the legacy
+ * LESSON items). Uses `course.nodes` when present, else falls back to the
  * `tpb_section` grouping. Returns a safe HTML string (empty when no classes).
  */
 export const renderCourseLessons = (course, ctx, { showSections = true } = {}) => {
@@ -138,7 +138,7 @@ export const toggleSection = (header) => {
 };
 
 /**
- * Group flat classes by their legacy `tpb_section` raw_json label (fallback when
+ * Group flat classes by their `tpb_section` raw_json label (fallback when
  * the backend hasn't sent a `nodes` tree).
  */
 const groupBySection = (classes) => {

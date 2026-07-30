@@ -10,9 +10,8 @@ export const stopVideoTracking = () => {
         try { trackingState.activeTracker.destroy?.(); } catch { /* element already gone */ }
         trackingState.activeTracker = null;
     }
-    // Legacy holders populated by adapters (CF Stream) — drop refs.
+    // Holders populated by adapters (CF Stream) — drop refs on teardown.
     trackingState.streamPlayer = null;
-    trackingState.youtubePlayer = null;
     trackingState.lastPingPosition = -10;
     trackingState.isPlaying = false;
     trackingState.videoCompletedHandled = false;

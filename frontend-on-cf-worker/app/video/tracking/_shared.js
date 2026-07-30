@@ -9,7 +9,6 @@ import { log } from '../../log.js';
 
 export const trackingState = {
     streamPlayer: null,       // CF Stream player (populated by cloudflareProvider — pause/speed)
-    youtubePlayer: null,      // legacy holder (kept for back-compat clears)
     activeTracker: null,      // { destroy() } returned by the active VideoProvider adapter
     lastPingPosition: -10,
     isPlaying: false,

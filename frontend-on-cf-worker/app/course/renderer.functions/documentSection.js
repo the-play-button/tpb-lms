@@ -26,7 +26,7 @@ export const renderDocumentSection = cls => {
 
 // Inline step body stored in raw_json.tpb_content_md (self-contained, no
 // DOCUMENT-media fetch). Rendered with the same marked.parse pipeline as the
-// KMS modal + the DOCUMENT path. The legacy cloudflarestream sentinel is NOT
+// KMS modal + the DOCUMENT path. The cloudflarestream sentinel is NOT
 // markdown (it's a video embed handled elsewhere) so it is excluded here.
 const renderInlineContentMd = cls => {
     const md = cls.content_md;

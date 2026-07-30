@@ -101,7 +101,7 @@
     flex: 1;
     height: 5px;
     background: var(--border);
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     overflow: hidden;
 }
 
@@ -109,7 +109,7 @@
     display: block;
     height: 100%;
     background: var(--accent-primary);
-    border-radius: 999px;
+    border-radius: var(--radius-full);
 }
 
 .course-card-progress-text {
