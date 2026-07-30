@@ -252,3 +252,12 @@ exceptions:
   # tpb-cock's `doctor_framework.py` + `_forgejo_client.py`.
   mega-semgrep-python-lang-security-audit-httpsconnection-detected:
     - scripts/devops/verify_deploy.py
+
+  # ── Situation 3 — bearer FP: the message handler DOES validate origin ──
+  # loomProvider.initTracking's `handler` guards with
+  # `if (String(e.origin) !== LOOM_ORIGIN) return;` as its FIRST statement
+  # (LOOM_ORIGIN = 'https://www.loom.com'). Bearer flags the
+  # `window.addEventListener('message', handler)` registration but cannot
+  # follow the origin guard inside the handler body. Scope = single file.
+  mega-bearer-javascript-lang-message-handler-origin:
+    - frontend-on-cf-worker/app/video/providers/loomProvider.js

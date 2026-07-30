@@ -47,7 +47,7 @@ const renderCourseNode = (course, { currentCourse, courseData, signals, currentS
     const ctx = buildLessonCtx(courseData, signals, currentStepIndex);
     return safeHtml`
         <li class="tree-course expanded">
-            <button type="button" class="tree-course-row current" data-open-course="${course.id}">
+            <button type="button" class="tree-course-row current" data-open-course="${course.id}" data-testid="tree-course-row">
                 <span class="tree-caret">▾</span>
                 <span class="tree-label">${course.title || course.name}</span>
                 <span class="tree-badges">${raw(courseBadges(course))}</span>
@@ -87,7 +87,7 @@ export const buildSidebarTreeHtml = ({
         const ctx = buildLessonCtx(courseData, signals, currentStepIndex);
         return safeHtml`
             <button type="button" class="tree-back" data-back-to-classroom data-testid="tree-back">← ${t('nav.allPrograms')}</button>
-            <button type="button" class="tree-program-title" data-open-course="${currentCourseObj.id}">${courseData?.title || currentCourseObj.title}</button>
+            <button type="button" class="tree-program-title" data-open-course="${currentCourseObj.id}" data-testid="tree-program-title">${courseData?.title || currentCourseObj.title}</button>
             ${raw(renderCourseLessons(courseData || {}, ctx))}
         `;
     }

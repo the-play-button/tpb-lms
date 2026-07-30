@@ -134,7 +134,7 @@ export const renderProgram = async (programId) => {
 
     setSafeHtml(viewer, safeHtml`
         <div class="classroom classroom-program">
-            <button type="button" class="classroom-back" data-back>← ${t('classroom.title')}</button>
+            <button type="button" class="classroom-back" data-back data-testid="classroom-back">← ${t('classroom.title')}</button>
             <h1 class="classroom-title">${program.name}</h1>
             <div class="course-grid loading"><div class="loading-spinner"></div></div>
         </div>
@@ -146,7 +146,7 @@ export const renderProgram = async (programId) => {
     const cards = courses.map((course) => renderCard(course, progressById[course.id])).join('');
     setSafeHtml(viewer, safeHtml`
         <div class="classroom classroom-program">
-            <button type="button" class="classroom-back" data-back>← ${t('classroom.title')}</button>
+            <button type="button" class="classroom-back" data-back data-testid="classroom-back">← ${t('classroom.title')}</button>
             <h1 class="classroom-title">${program.name}</h1>
             <div class="course-grid">${raw(cards)}</div>
         </div>
