@@ -13,7 +13,7 @@
   "workspaces": {
     ".": {
       "entry": [
-        "backend/index.js",
+        "backend/index.ts",
         "frontend-on-cf-worker/_worker.js",
         "scripts/**/*.{ts,mts}",
         "**/cron/**/*.ts",
