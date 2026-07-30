@@ -9,8 +9,8 @@ export type { Jwks };
  */
 
 
-export let jwksCache: Jwks | null = null;
-export let jwksCacheTime = 0;
+let jwksCache: Jwks | null = null;
+let jwksCacheTime = 0;
 const JWKS_CACHE_TTL = 3600000; // 1 hour
 
 /**
