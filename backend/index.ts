@@ -11,7 +11,7 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { configureLogger, setLoggerWaitUntil, log, createBastionAuthMiddleware, createBastionClient, createLazyVaultSecret } from '@the-play-button/tpb-sdk-js';
+import { configureLogger, setLoggerWaitUntil, log, createBastionAuthMiddleware, createBastionClient, createLazyVaultSecret, emitAnonReturned5xx, isErrorHandled, markErrorHandled } from '@the-play-button/tpb-sdk-js';
 import { ALLOWED_ORIGINS, jsonResponse } from './cors.js';
 import { verifyAPIKey } from './auth/verifyAPIKey.js';
 import { getOrCreateContact } from './auth/getOrCreateContact.js';
@@ -124,9 +124,23 @@ app.use('/*', async (c, next) => {
   c.header('X-Frame-Options', 'DENY');
   c.header('Referrer-Policy', 'strict-origin-when-cross-origin');
   c.header('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  // § fleet-wide observability — RETURNED 5xx reporter. app.onError below only sees THROWS ; a controller
+  // that maps a failure to `return c.json({ error }, 5xx)` is a RETURNED response → invisible in telemetry.
+  // isErrorHandled(c) skips throw-500s already reported by onError → each failure reported ONCE. Bearer-free,
+  // fire-and-forget. Same SSOT primitive createTpbHonoApp uses.
+  if (c.res.status >= 500 && !isErrorHandled(c)) {
+    emitAnonReturned5xx({ service: 'tpb-lms' }, {
+      method: c.req.method,
+      path: new URL(c.req.url).pathname,
+      status: c.res.status,
+      env: c.env,
+    });
+  }
 });
 
 app.onError((err, c) => {
+  // Mark this request so the returned-5xx reporter above SKIPS it — onError owns the throw report → ONCE.
+  markErrorHandled(c);
   log.error('unhandled error', err, { file: 'index.js' });
   return c.json({ error: 'Internal Server Error' }, 500);
 });
