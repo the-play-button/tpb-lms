@@ -89,7 +89,7 @@ During execution, investigation revealed:
 - [x] Build `wrangler deploy --dry-run` OK — passes with 0 errors
 - [x] Dead Logto code fully removed (6 files deleted, 7 files cleaned)
 - [x] `TODO.md` route inventory updated (Auth/Logto row removed, 43→40)
-- [ ] Entropy: 1 remaining HIGH violation (`backend_structure`: missing `utils/` directory) — pre-existing structural gap, not a regression from this plan. The `utils/` directory became empty when `utils/log.js` was deleted; the `helpers/` directory serves the same purpose but entropy checker expects both.
+- Entropy: 1 remaining HIGH violation (`backend_structure`: missing `utils/` directory) — pre-existing structural gap, not a regression from this plan. The `utils/` directory became empty when `utils/log.js` was deleted; the `helpers/` directory serves the same purpose but entropy checker expects both.
 
 ### Post-deploy cleanup (deferred)
 - `wrangler secret delete LOGTO_APP_SECRET --name lms-api` — the wrangler secret is now orphaned (no code reads it), should be cleaned up after deploy
