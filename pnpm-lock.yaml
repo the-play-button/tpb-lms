@@ -1207,38 +1207,38 @@ packages:
     resolution: {integrity: sha512-h0/Ebo18CkOrChlQIhNtQkM5ySUnh/GumQ/D1st3hG2HWUPEF+ILUc2k29UtivCi/9G7w7G3/f7Xyd5cCFbKBw==}
 
   '@the-play-button/tpb-ads-contracts@0.1.1':
-    resolution: {integrity: sha512-oxrt7EzhJlxVh9dqxjrVGJ//GRe5SwM0kMQN2aa6cmvmTgxKRKzEwaGcFWBvOKse3E2xQYXwhXOtK0JdYem0pQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-ads-contracts/-/0.1.1/tpb-ads-contracts-0.1.1.tgz}
+    resolution: {integrity: sha512-oxrt7EzhJlxVh9dqxjrVGJ//GRe5SwM0kMQN2aa6cmvmTgxKRKzEwaGcFWBvOKse3E2xQYXwhXOtK0JdYem0pQ==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-ads-contracts/-/0.1.1/tpb-ads-contracts-0.1.1.tgz}
 
   '@the-play-button/tpb-bastion-contracts@0.8.5':
-    resolution: {integrity: sha512-dDanR/Ov9RQtv1SolYUw+8ZmT/8qkonFA0JIaYdoDmcImX583GP+DjhHPxsGMTqRoGGqcjv0mr+eUtepu614sw==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-bastion-contracts/-/0.8.5/tpb-bastion-contracts-0.8.5.tgz}
+    resolution: {integrity: sha512-dDanR/Ov9RQtv1SolYUw+8ZmT/8qkonFA0JIaYdoDmcImX583GP+DjhHPxsGMTqRoGGqcjv0mr+eUtepu614sw==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-bastion-contracts/-/0.8.5/tpb-bastion-contracts-0.8.5.tgz}
     peerDependencies:
       zod: '>=3.22.0 <5.0.0'
 
   '@the-play-button/tpb-calendar-contracts@0.1.2':
-    resolution: {integrity: sha512-pRM/G/Mv9Q6wvCB8J8z7znuy9CNst7FdmnFCKUlmJeFSqBnl4GdqBPBlXUsR2hQnqvh8HTw1nRN1HATZBLQSMg==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-calendar-contracts/-/0.1.2/tpb-calendar-contracts-0.1.2.tgz}
+    resolution: {integrity: sha512-pRM/G/Mv9Q6wvCB8J8z7znuy9CNst7FdmnFCKUlmJeFSqBnl4GdqBPBlXUsR2hQnqvh8HTw1nRN1HATZBLQSMg==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-calendar-contracts/-/0.1.2/tpb-calendar-contracts-0.1.2.tgz}
 
   '@the-play-button/tpb-crm-contracts@0.2.2':
-    resolution: {integrity: sha512-75mR3Lz1Og9XmFEhUUdLQX8jO3zAPh6A3oQom0JEndblKyjRzYj8ihy+jWqc4F6sq5UF4fRUkllpsZCmfaRu7Q==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-crm-contracts/-/0.2.2/tpb-crm-contracts-0.2.2.tgz}
+    resolution: {integrity: sha512-75mR3Lz1Og9XmFEhUUdLQX8jO3zAPh6A3oQom0JEndblKyjRzYj8ihy+jWqc4F6sq5UF4fRUkllpsZCmfaRu7Q==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-crm-contracts/-/0.2.2/tpb-crm-contracts-0.2.2.tgz}
     peerDependencies:
       '@the-play-button/tpb-sdk-js': '>=8.0.0'
       zod: '>=3.22.0 <5.0.0'
 
   '@the-play-button/tpb-enrichment-contracts@2.15.0':
-    resolution: {integrity: sha512-wlfLfVWzH63uJcpHT75MnGsb4GotKbmnkQGEHVyKTMlD0ZFDncsy7lSUB/odLpLoatFBX3O+1r0boKTdBkP3ug==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-enrichment-contracts/-/2.15.0/tpb-enrichment-contracts-2.15.0.tgz}
+    resolution: {integrity: sha512-wlfLfVWzH63uJcpHT75MnGsb4GotKbmnkQGEHVyKTMlD0ZFDncsy7lSUB/odLpLoatFBX3O+1r0boKTdBkP3ug==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-enrichment-contracts/-/2.15.0/tpb-enrichment-contracts-2.15.0.tgz}
 
   '@the-play-button/tpb-inventory-contracts@0.1.2':
-    resolution: {integrity: sha512-nyr6eGyTEuJvGy3Nv02b6A76Y/SX990aXchemvTuxD4CmMeSgeAjAv8+OpPlffhpltUC47QdbpqUjfQKfOIlNw==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-inventory-contracts/-/0.1.2/tpb-inventory-contracts-0.1.2.tgz}
+    resolution: {integrity: sha512-nyr6eGyTEuJvGy3Nv02b6A76Y/SX990aXchemvTuxD4CmMeSgeAjAv8+OpPlffhpltUC47QdbpqUjfQKfOIlNw==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-inventory-contracts/-/0.1.2/tpb-inventory-contracts-0.1.2.tgz}
 
   '@the-play-button/tpb-pim-contracts@0.2.2':
-    resolution: {integrity: sha512-73GwYH3JkFz8Dn1FgO6iywrDVJe4OP0ruIuPcxOrkD1v5HiX7QsaxIOc3mV7ll41ZZmrgJGW6avjb05ReK7r1Q==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-pim-contracts/-/0.2.2/tpb-pim-contracts-0.2.2.tgz}
+    resolution: {integrity: sha512-73GwYH3JkFz8Dn1FgO6iywrDVJe4OP0ruIuPcxOrkD1v5HiX7QsaxIOc3mV7ll41ZZmrgJGW6avjb05ReK7r1Q==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-pim-contracts/-/0.2.2/tpb-pim-contracts-0.2.2.tgz}
 
   '@the-play-button/tpb-sdk-eslint@0.4.0':
-    resolution: {integrity: sha512-yWHxAPmbQF8/VZlRiPZiMIZrOTjaPktV1ISZwIT4neM5+UT3AMfuUfI67xLdvexBApnX7KPmPPyt4WWvT9gnDQ==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-eslint/-/0.4.0/tpb-sdk-eslint-0.4.0.tgz}
+    resolution: {integrity: sha512-yWHxAPmbQF8/VZlRiPZiMIZrOTjaPktV1ISZwIT4neM5+UT3AMfuUfI67xLdvexBApnX7KPmPPyt4WWvT9gnDQ==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-eslint/-/0.4.0/tpb-sdk-eslint-0.4.0.tgz}
     peerDependencies:
       eslint: '>=9'
 
   '@the-play-button/tpb-sdk-js@21.119.4':
-    resolution: {integrity: sha512-vtMMUl8eZbBSHYjCxNUl1KifFbpPsypwIWjAw7ajfALImiGMKHGUsFyPWGQZTmf/SXawMM5L8Y59/mVCOEr06g==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/21.119.4/tpb-sdk-js-21.119.4.tgz}
+    resolution: {integrity: sha512-vtMMUl8eZbBSHYjCxNUl1KifFbpPsypwIWjAw7ajfALImiGMKHGUsFyPWGQZTmf/SXawMM5L8Y59/mVCOEr06g==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/21.119.4/tpb-sdk-js-21.119.4.tgz}
     hasBin: true
     peerDependencies:
       '@aws-sdk/client-s3': ^3.0.0
@@ -1250,7 +1250,7 @@ packages:
       shiki: '>=1.0.0'
 
   '@the-play-button/tpb-sdk-react@13.6.0':
-    resolution: {integrity: sha512-xGdke+/B+n90T5nkKaHO+qNK4/8ifrpEK60o81xmGX4Q8KXp2cs5Nqt1hq4SAaBIjP1y2y4q59HVOGvfbwg/sw==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-react/-/13.6.0/tpb-sdk-react-13.6.0.tgz}
+    resolution: {integrity: sha512-xGdke+/B+n90T5nkKaHO+qNK4/8ifrpEK60o81xmGX4Q8KXp2cs5Nqt1hq4SAaBIjP1y2y4q59HVOGvfbwg/sw==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-react/-/13.6.0/tpb-sdk-react-13.6.0.tgz}
     peerDependencies:
       '@assistant-ui/react': '>=0.12.0'
       '@radix-ui/react-checkbox': '>=1.0.0'
@@ -1277,7 +1277,7 @@ packages:
       web-vitals: '>=4.0.0'
 
   '@the-play-button/tpb-tasks-contracts@1.25.0':
-    resolution: {integrity: sha512-/G03Dw1oeEZMsr3L4Np1ck2J/HqSoPNlAWxcyueVjp4mVLg+IuJkgrSEheLvoG49rK387FUgKNu9IWJdJTfoiA==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-tasks-contracts/-/1.25.0/tpb-tasks-contracts-1.25.0.tgz}
+    resolution: {integrity: sha512-/G03Dw1oeEZMsr3L4Np1ck2J/HqSoPNlAWxcyueVjp4mVLg+IuJkgrSEheLvoG49rK387FUgKNu9IWJdJTfoiA==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-tasks-contracts/-/1.25.0/tpb-tasks-contracts-1.25.0.tgz}
 
   '@total-typescript/ts-reset@0.6.1':
     resolution: {integrity: sha512-cka47fVSo6lfQDIATYqb/vO1nvFfbPw7uWLayIXIhGETj0wcOOlrlkobOMDNQOFr9QOafegUPq13V2+6vtD7yg==}
