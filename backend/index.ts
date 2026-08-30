@@ -147,6 +147,8 @@ app.onError((err, c) => {
 
 app.get('/health', (c) => c.json({ status: 'ok', service: 'tpb-lms' }));
 app.get('/api/health', async (c) => {
+  // entropy-promise-catch-arrow-swallow-ok: health-check ping — a null result IS the signal (DB down),
+  // surfaced right below as `isDbUp = false` in the health response. The failure is the observable output.
   const dbCheck = await c.env.DB.prepare('SELECT 1 as ok').first().catch(() => null);
   const isDbUp = dbCheck?.ok === 1;
   return c.json({
