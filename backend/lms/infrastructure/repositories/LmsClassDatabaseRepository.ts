@@ -9,6 +9,7 @@ import type {
   CreateClassData,
   UpdateClassPatch,
 } from '../../domain/repositories/LmsClassRepository.js';
+import { runByIdsChunked } from '@the-play-button/tpb-sdk-js';
 import { j, runPatchUpdate } from './_shared/patchUpdate.js';
 
 export class LmsClassDatabaseRepository implements LmsClassRepository {
@@ -83,10 +84,10 @@ export class LmsClassDatabaseRepository implements LmsClassRepository {
   async deleteSubtree(id: string): Promise<number> {
     const ids = await this.collectSubtreeIds(id);
     if (ids.length === 0) return 0;
-    await this.db
-      .prepare(`DELETE FROM lms_class WHERE id IN (${ids.map(() => '?').join(',')})`)
-      .bind(...ids)
-      .run();
+    await runByIdsChunked(this.db, {
+      ids,
+      sql: (ph) => `DELETE FROM lms_class WHERE id IN (${ph})`,
+    });
     return ids.length;
   }
 

@@ -36,8 +36,8 @@ importers:
   .:
     dependencies:
       '@the-play-button/tpb-sdk-js':
-        specifier: 21.119.4
-        version: 21.119.4(@aws-sdk/client-s3@3.1095.0)(@aws-sdk/s3-request-presigner@3.1095.0)(@the-play-button/tpb-sdk-react@13.6.0)(hono@4.12.32)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(shiki@4.3.1)
+        specifier: 21.131.20
+        version: 21.131.20(@aws-sdk/client-s3@3.1095.0)(@aws-sdk/s3-request-presigner@3.1095.0)(@the-play-button/tpb-sdk-react@13.6.0)(hono@4.12.32)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(shiki@4.3.1)
       hono:
         specifier: '>=4.12.25'
         version: 4.12.32
@@ -1071,42 +1071,36 @@ packages:
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   '@rolldown/binding-linux-arm64-musl@1.1.5':
     resolution: {integrity: sha512-lAryqH7IteztmCXQXk0etKj4wBQ7Gx5S6LjKhsgp9zb8I5bsuvU/2llH1hDQcjsFeqIsovMVN339/8pUDDBXxA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   '@rolldown/binding-linux-ppc64-gnu@1.1.5':
     resolution: {integrity: sha512-fsK/sNBnxzBlL4O1JNrZakVQxPspqpED5dLtNsZS9oOKmtSpdNIzxH2kkol5HYTWJN47sE20ztMJPxfZ89qGOg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [ppc64]
     os: [linux]
-    libc: [glibc]
 
   '@rolldown/binding-linux-s390x-gnu@1.1.5':
     resolution: {integrity: sha512-gLYb4BIadlfTOYT5gO503n8zQjXflgzpD0FcyKh0Mzx3rqCZKnHoJWV9xe1KXUJ5lx2JfcSHr/mhzS0PC/McAA==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [s390x]
     os: [linux]
-    libc: [glibc]
 
   '@rolldown/binding-linux-x64-gnu@1.1.5':
     resolution: {integrity: sha512-FjcpEKUyJygHgs1o50VYNvkt5+7Le/VEdYt0AkRpkL33MnyQfwr8l5mXwMmfmTbyMPr5vJLC+8/Gd9gXnwU1QQ==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   '@rolldown/binding-linux-x64-musl@1.1.5':
     resolution: {integrity: sha512-Me+PfPI2TMeOQk0gYWfLQZtTktrmzbr8cDboqX83XKc7UrgAi55gF+2dUkWdxd19n55Essp2yeca+O9N5rBxHg==}
     engines: {node: ^20.19.0 || >=22.12.0}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   '@rolldown/binding-openharmony-arm64@1.1.5':
     resolution: {integrity: sha512-yc5WrLzXks6zCQfn9Oxr8pORKyl/pF+QjHmW/Qx3qu0oyrrNC+y2JLTU1E2rcWYAmzlnqngWXHQjy51VzW70Vw==}
@@ -1209,8 +1203,11 @@ packages:
   '@the-play-button/tpb-ads-contracts@0.1.1':
     resolution: {integrity: sha512-oxrt7EzhJlxVh9dqxjrVGJ//GRe5SwM0kMQN2aa6cmvmTgxKRKzEwaGcFWBvOKse3E2xQYXwhXOtK0JdYem0pQ==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-ads-contracts/-/0.1.1/tpb-ads-contracts-0.1.1.tgz}
 
-  '@the-play-button/tpb-bastion-contracts@0.8.5':
-    resolution: {integrity: sha512-dDanR/Ov9RQtv1SolYUw+8ZmT/8qkonFA0JIaYdoDmcImX583GP+DjhHPxsGMTqRoGGqcjv0mr+eUtepu614sw==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-bastion-contracts/-/0.8.5/tpb-bastion-contracts-0.8.5.tgz}
+  '@the-play-button/tpb-ats-contracts@0.2.1':
+    resolution: {integrity: sha512-572prCP7QVm01LLO+nJclwxYZa7i4O77MfZSrr3LlWKaZMJQmBV63wyaDQ9Nri8spjz1hfx9U/TPEc/WEtSAVg==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-ats-contracts/-/0.2.1/tpb-ats-contracts-0.2.1.tgz}
+
+  '@the-play-button/tpb-bastion-contracts@0.18.1':
+    resolution: {integrity: sha512-QizMu+hJik5AI+mWzjej10xU4a/HQc/PD5hdnYehWgDKz17GtAUbojFYxOBp9R5Sz9/0+Sc47YG7mpFstxXmDA==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-bastion-contracts/-/0.18.1/tpb-bastion-contracts-0.18.1.tgz}
     peerDependencies:
       zod: '>=3.22.0 <5.0.0'
 
@@ -1223,22 +1220,22 @@ packages:
       '@the-play-button/tpb-sdk-js': '>=8.0.0'
       zod: '>=3.22.0 <5.0.0'
 
-  '@the-play-button/tpb-enrichment-contracts@2.15.0':
-    resolution: {integrity: sha512-wlfLfVWzH63uJcpHT75MnGsb4GotKbmnkQGEHVyKTMlD0ZFDncsy7lSUB/odLpLoatFBX3O+1r0boKTdBkP3ug==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-enrichment-contracts/-/2.15.0/tpb-enrichment-contracts-2.15.0.tgz}
+  '@the-play-button/tpb-enrichment-contracts@2.17.0':
+    resolution: {integrity: sha512-wv7NZ56LP6YdVW7eEO5rRcC7CmgXAF2DP0f0pxojIuiA2K5nPt7SmWBCpCntGls1r87s10qMkDa5QA27/JW8qQ==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-enrichment-contracts/-/2.17.0/tpb-enrichment-contracts-2.17.0.tgz}
 
-  '@the-play-button/tpb-inventory-contracts@0.1.2':
-    resolution: {integrity: sha512-nyr6eGyTEuJvGy3Nv02b6A76Y/SX990aXchemvTuxD4CmMeSgeAjAv8+OpPlffhpltUC47QdbpqUjfQKfOIlNw==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-inventory-contracts/-/0.1.2/tpb-inventory-contracts-0.1.2.tgz}
+  '@the-play-button/tpb-inventory-contracts@0.1.4':
+    resolution: {integrity: sha512-dxX16+6RmXHaVbnvOV9do75mI4tkU5PN7JaJzEcib/ek/9UJIQbV7GpNcZKh+VcZjrMknksTtVNghlZeP2UtLQ==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-inventory-contracts/-/0.1.4/tpb-inventory-contracts-0.1.4.tgz}
 
-  '@the-play-button/tpb-pim-contracts@0.2.2':
-    resolution: {integrity: sha512-73GwYH3JkFz8Dn1FgO6iywrDVJe4OP0ruIuPcxOrkD1v5HiX7QsaxIOc3mV7ll41ZZmrgJGW6avjb05ReK7r1Q==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-pim-contracts/-/0.2.2/tpb-pim-contracts-0.2.2.tgz}
+  '@the-play-button/tpb-pim-contracts@0.2.4':
+    resolution: {integrity: sha512-KZah7EeZsgJulS4uyjpfwcAeUasShDSG6t6Pq254BebR5pS6vvrdQvgW8+o2O9FN5TihiAVJnExYWmy4NdWjUA==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-pim-contracts/-/0.2.4/tpb-pim-contracts-0.2.4.tgz}
 
   '@the-play-button/tpb-sdk-eslint@0.4.0':
     resolution: {integrity: sha512-yWHxAPmbQF8/VZlRiPZiMIZrOTjaPktV1ISZwIT4neM5+UT3AMfuUfI67xLdvexBApnX7KPmPPyt4WWvT9gnDQ==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-eslint/-/0.4.0/tpb-sdk-eslint-0.4.0.tgz}
     peerDependencies:
       eslint: '>=9'
 
-  '@the-play-button/tpb-sdk-js@21.119.4':
-    resolution: {integrity: sha512-vtMMUl8eZbBSHYjCxNUl1KifFbpPsypwIWjAw7ajfALImiGMKHGUsFyPWGQZTmf/SXawMM5L8Y59/mVCOEr06g==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/21.119.4/tpb-sdk-js-21.119.4.tgz}
+  '@the-play-button/tpb-sdk-js@21.131.20':
+    resolution: {integrity: sha512-bNInq9VdIp8+vlEbZrDSfi7yoySt6e84BuRnZxIa0HpLwjNKknm9pZmqyDAAEQstH7VW9sr3nSar/vI4mvJOMw==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-js/-/21.131.20/tpb-sdk-js-21.131.20.tgz}
     hasBin: true
     peerDependencies:
       '@aws-sdk/client-s3': ^3.0.0
@@ -1276,8 +1273,8 @@ packages:
       use-stick-to-bottom: '>=1.1.0'
       web-vitals: '>=4.0.0'
 
-  '@the-play-button/tpb-tasks-contracts@1.25.0':
-    resolution: {integrity: sha512-/G03Dw1oeEZMsr3L4Np1ck2J/HqSoPNlAWxcyueVjp4mVLg+IuJkgrSEheLvoG49rK387FUgKNu9IWJdJTfoiA==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-tasks-contracts/-/1.25.0/tpb-tasks-contracts-1.25.0.tgz}
+  '@the-play-button/tpb-tasks-contracts@1.27.1':
+    resolution: {integrity: sha512-VRrKWvZUr6zA2tQE8AqgnJG21AM3TVii29tZLU7/QX+IHU6ScklWNGrT3N4fSXPbPEZMqUk5ditz9M0vvAgS6g==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-tasks-contracts/-/1.27.1/tpb-tasks-contracts-1.27.1.tgz}
 
   '@total-typescript/ts-reset@0.6.1':
     resolution: {integrity: sha512-cka47fVSo6lfQDIATYqb/vO1nvFfbPw7uWLayIXIhGETj0wcOOlrlkobOMDNQOFr9QOafegUPq13V2+6vtD7yg==}
@@ -2198,28 +2195,24 @@ packages:
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
-    libc: [glibc]
 
   lightningcss-linux-arm64-musl@1.33.0:
     resolution: {integrity: sha512-yiO5ROMuYQgXbC60yjZU5CYSFZGKXL0HFATXt9mHJn1+zW55oCtMI9NfcVhYLMFDL7gV7oBPon/EmMMGg2OvtQ==}
     engines: {node: '>= 12.0.0'}
     cpu: [arm64]
     os: [linux]
-    libc: [musl]
 
   lightningcss-linux-x64-gnu@1.33.0:
     resolution: {integrity: sha512-ar+Ju7LmcN0Jo4FpL4hpFybwNG9/3A/Br5KW2n2jyODg3MEZXaDYADdemoNS+BDNfMgKvylJLj4S5tyRActuAg==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
-    libc: [glibc]
 
   lightningcss-linux-x64-musl@1.33.0:
     resolution: {integrity: sha512-RYiYbkokw0trfKqqzfF55lginwEPrD3OJDfTuJzFs1MK6iFnDenaz1fqLLtX4ITG3OktJQXOeTaw1awrBAlZPw==}
     engines: {node: '>= 12.0.0'}
     cpu: [x64]
     os: [linux]
-    libc: [musl]
 
   lightningcss-win32-arm64-msvc@1.33.0:
     resolution: {integrity: sha512-1K+MPfLSFVpphzpdbfkhlWk6wBrTObBzS2T6db10PNOZgR9GoVsAWzwNyuhUYYbTp23j+4RrncfujZ4uAzXvwA==}
@@ -4372,7 +4365,11 @@ snapshots:
     dependencies:
       zod: 4.4.3
 
-  '@the-play-button/tpb-bastion-contracts@0.8.5(zod@4.4.3)':
+  '@the-play-button/tpb-ats-contracts@0.2.1':
+    dependencies:
+      zod: 4.4.3
+
+  '@the-play-button/tpb-bastion-contracts@0.18.1(zod@4.4.3)':
     dependencies:
       zod: 4.4.3
 
@@ -4380,20 +4377,20 @@ snapshots:
     dependencies:
       zod: 4.4.3
 
-  '@the-play-button/tpb-crm-contracts@0.2.2(@the-play-button/tpb-sdk-js@21.119.4)(zod@4.4.3)':
+  '@the-play-button/tpb-crm-contracts@0.2.2(@the-play-button/tpb-sdk-js@21.131.20)(zod@4.4.3)':
     dependencies:
-      '@the-play-button/tpb-sdk-js': 21.119.4(@aws-sdk/client-s3@3.1095.0)(@aws-sdk/s3-request-presigner@3.1095.0)(@the-play-button/tpb-sdk-react@13.6.0)(hono@4.12.32)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(shiki@4.3.1)
+      '@the-play-button/tpb-sdk-js': 21.131.20(@aws-sdk/client-s3@3.1095.0)(@aws-sdk/s3-request-presigner@3.1095.0)(@the-play-button/tpb-sdk-react@13.6.0)(hono@4.12.32)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(shiki@4.3.1)
       zod: 4.4.3
 
-  '@the-play-button/tpb-enrichment-contracts@2.15.0':
-    dependencies:
-      zod: 4.4.3
-
-  '@the-play-button/tpb-inventory-contracts@0.1.2':
+  '@the-play-button/tpb-enrichment-contracts@2.17.0':
     dependencies:
       zod: 4.4.3
 
-  '@the-play-button/tpb-pim-contracts@0.2.2':
+  '@the-play-button/tpb-inventory-contracts@0.1.4':
+    dependencies:
+      zod: 4.4.3
+
+  '@the-play-button/tpb-pim-contracts@0.2.4':
     dependencies:
       zod: 4.4.3
 
@@ -4411,20 +4408,21 @@ snapshots:
       - supports-color
       - typescript
 
-  '@the-play-button/tpb-sdk-js@21.119.4(@aws-sdk/client-s3@3.1095.0)(@aws-sdk/s3-request-presigner@3.1095.0)(@the-play-button/tpb-sdk-react@13.6.0)(hono@4.12.32)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(shiki@4.3.1)':
+  '@the-play-button/tpb-sdk-js@21.131.20(@aws-sdk/client-s3@3.1095.0)(@aws-sdk/s3-request-presigner@3.1095.0)(@the-play-button/tpb-sdk-react@13.6.0)(hono@4.12.32)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(shiki@4.3.1)':
     dependencies:
       '@aws-sdk/client-s3': 3.1095.0
       '@aws-sdk/s3-request-presigner': 3.1095.0
       '@rollup/rollup-darwin-arm64': 4.62.3
       '@the-play-button/tpb-ads-contracts': 0.1.1
-      '@the-play-button/tpb-bastion-contracts': 0.8.5(zod@4.4.3)
+      '@the-play-button/tpb-ats-contracts': 0.2.1
+      '@the-play-button/tpb-bastion-contracts': 0.18.1(zod@4.4.3)
       '@the-play-button/tpb-calendar-contracts': 0.1.2
-      '@the-play-button/tpb-crm-contracts': 0.2.2(@the-play-button/tpb-sdk-js@21.119.4)(zod@4.4.3)
-      '@the-play-button/tpb-enrichment-contracts': 2.15.0
-      '@the-play-button/tpb-inventory-contracts': 0.1.2
-      '@the-play-button/tpb-pim-contracts': 0.2.2
-      '@the-play-button/tpb-sdk-react': 13.6.0(5a6808ca45d27fb315be2234d584aa56)
-      '@the-play-button/tpb-tasks-contracts': 1.25.0
+      '@the-play-button/tpb-crm-contracts': 0.2.2(@the-play-button/tpb-sdk-js@21.131.20)(zod@4.4.3)
+      '@the-play-button/tpb-enrichment-contracts': 2.17.0
+      '@the-play-button/tpb-inventory-contracts': 0.1.4
+      '@the-play-button/tpb-pim-contracts': 0.2.4
+      '@the-play-button/tpb-sdk-react': 13.6.0(f4f156d0cfe5ae05a4806e2260f471e9)
+      '@the-play-button/tpb-tasks-contracts': 1.27.1
       escape-html: 1.0.3
       hono: 4.12.32
       liquidjs: 10.29.0
@@ -4433,7 +4431,7 @@ snapshots:
       shiki: 4.3.1
       zod: 4.4.3
 
-  '@the-play-button/tpb-sdk-react@13.6.0(5a6808ca45d27fb315be2234d584aa56)':
+  '@the-play-button/tpb-sdk-react@13.6.0(f4f156d0cfe5ae05a4806e2260f471e9)':
     dependencies:
       '@assistant-ui/react': 0.14.28(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(use-sync-external-store@1.6.0(react@19.2.8))
       '@radix-ui/react-checkbox': 1.3.11(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -4443,7 +4441,7 @@ snapshots:
       '@radix-ui/react-switch': 1.3.7(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@radix-ui/react-tooltip': 1.2.16(@types/react@19.2.17)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tanstack/react-virtual': 3.14.8(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
-      '@the-play-button/tpb-sdk-js': 21.119.4(@aws-sdk/client-s3@3.1095.0)(@aws-sdk/s3-request-presigner@3.1095.0)(@the-play-button/tpb-sdk-react@13.6.0)(hono@4.12.32)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(shiki@4.3.1)
+      '@the-play-button/tpb-sdk-js': 21.131.20(@aws-sdk/client-s3@3.1095.0)(@aws-sdk/s3-request-presigner@3.1095.0)(@the-play-button/tpb-sdk-react@13.6.0)(hono@4.12.32)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)(shiki@4.3.1)
       class-variance-authority: 0.7.1
       clsx: 2.1.1
       dompurify: 3.4.13
@@ -4462,7 +4460,7 @@ snapshots:
       use-stick-to-bottom: 1.1.6(react@19.2.8)
       web-vitals: 6.0.0
 
-  '@the-play-button/tpb-tasks-contracts@1.25.0':
+  '@the-play-button/tpb-tasks-contracts@1.27.1':
     dependencies:
       zod: 4.4.3
 
