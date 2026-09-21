@@ -1,0 +1,21 @@
+# LMS Worker — PRODUCTION (Cf-production account). Deploy: wrangler deploy --config wrangler-production.toml
+name = "lms-api"
+main = "index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lms-db-production"
+database_id = "0e0f3adb-d9a7-4a94-a8e5-a9ac6f48ff67"
+migrations_dir = "../db/migrations"
+
+[[kv_namespaces]]
+binding = "PAM_JTI_KV"
+id = "fb006b0826e5447e9d3a04837e102f31"
+
+[vars]
+ACCESS_TEAM_DOMAIN = "tpb-production"
+BASTION_URL = "https://bastion-backend.theplaybutton.ai"
+TPB_STORAGE_URL = "https://tpb-storage.theplaybutton.ai"
+CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
