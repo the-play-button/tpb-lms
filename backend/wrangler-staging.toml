@@ -1,0 +1,21 @@
+# LMS Worker — STAGING (Cf-staging account, no zone → workers.dev). Deploy: wrangler deploy --config wrangler-staging.toml
+name = "lms-api"
+main = "index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lms-db-staging"
+database_id = "dbd94319-1575-4c11-8cc4-638a8c2ecbc7"
+migrations_dir = "../db/migrations"
+
+[[kv_namespaces]]
+binding = "PAM_JTI_KV"
+id = "5184257691654a91bb86872dc20ab866"
+
+[vars]
+ACCESS_TEAM_DOMAIN = "theplaybutton"
+BASTION_URL = "https://tpb-bastion-backend-staging.tpb-staging.workers.dev"
+TPB_STORAGE_URL = "https://tpb-storage.tpb-staging.workers.dev"
+CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
