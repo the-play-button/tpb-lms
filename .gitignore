@@ -52,3 +52,6 @@ temp/
 **/backup_before_iam_migration.yaml
 *.backup.yaml
 package-lock.json
+
+# Skool lesson file attachments (course content) — deployed as viewer static assets, mastered in the skool mirror
+frontend-on-cf-worker/resources/
