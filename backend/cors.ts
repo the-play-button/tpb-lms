@@ -3,13 +3,18 @@
  * GAP-1406: Security headers
  */
 
-const PRIMARY_ORIGIN = 'https://lms-viewer.matthieu-marielouise.workers.dev';  // Frontend (Workers)
+const PRIMARY_ORIGIN = 'https://lms-viewer.matthieu-marielouise.workers.dev';  // Frontend (Workers) — dev
 
 /** Local dev server port for the LMS viewer (Vite/static preview). */
 const LOCAL_DEV_PORT = 8080;
 
 export const ALLOWED_ORIGINS = [
     PRIMARY_ORIGIN,
+    // Production viewer (Cf-production account)
+    'https://lms.theplaybutton.ai',
+    'https://lms-viewer.tpb-production.workers.dev',
+    // Staging viewer (Cf-staging account — no zone, workers.dev only)
+    'https://lms-viewer.tpb-staging.workers.dev',
     `http://localhost:${LOCAL_DEV_PORT}`,
     `http://127.0.0.1:${LOCAL_DEV_PORT}`
 ];
