@@ -81,6 +81,19 @@ describe('createClassExecute — content routed to raw_json (not deprecated colu
     expect(inserted.contentMd).toBeUndefined();
     expect(inserted.stepType).toBeUndefined();
   });
+
+  it('stores transcriptMd as raw_json.tpb_transcript_md', async () => {
+    let inserted: Record<string, unknown> = {};
+    const ctx = {
+      actor,
+      classRepo: { insert: async (d: Record<string, unknown>) => { inserted = d; return classRow(JSON.stringify(d.rawJson)); } },
+    } as unknown as AuthoringContext;
+    const r = await createClassExecute({ input: { courseId: 'c1', nodeKind: 'LESSON', name: 'L', contentMd: 'b', transcriptMd: 'FR transcript' } } as never, ctx);
+    expect(r.ok).toBe(true);
+    expect((inserted.rawJson as Record<string, unknown>).tpb_transcript_md).toBe('FR transcript');
+    expect((inserted.rawJson as Record<string, unknown>).tpb_content_md).toBe('b');
+    expect(inserted.transcriptMd).toBeUndefined();
+  });
 });
 
 describe('updateClassExecute — read-modify-write merge for inline content', () => {
@@ -96,5 +109,19 @@ describe('updateClassExecute — read-modify-write merge for inline content', ()
     const r = await updateClassExecute({ input: { classId: 'les1', contentMd: 'new body' } } as never, ctx);
     expect(r.ok).toBe(true);
     expect(patched).toEqual({ tpb_created_by: 'orig', tpb_step_type: 'VIDEO', tpb_content_md: 'new body' });
+  });
+
+  it('merges transcriptMd into raw_json without dropping existing keys', async () => {
+    let patched: Record<string, unknown> | undefined;
+    const ctx = {
+      actor,
+      classRepo: {
+        findById: async () => classRow(JSON.stringify({ tpb_created_by: 'orig', tpb_content_md: 'body' })),
+        update: async (_id: string, p: { rawJson?: Record<string, unknown> }) => { patched = p.rawJson; },
+      },
+    } as unknown as AuthoringContext;
+    const r = await updateClassExecute({ input: { classId: 'les1', transcriptMd: 'FR' } } as never, ctx);
+    expect(r.ok).toBe(true);
+    expect(patched).toEqual({ tpb_created_by: 'orig', tpb_content_md: 'body', tpb_transcript_md: 'FR' });
   });
 });

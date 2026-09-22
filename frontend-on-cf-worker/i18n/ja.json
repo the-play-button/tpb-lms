@@ -32,7 +32,9 @@
     "linearProgression": "線形進行：戻ることはできません。",
     "completeStep": "続行する前にこのステップを完了する必要があります。",
     "videoLocked": "クイズ後は動画にアクセスできません。",
-    "watchVideo": "動画を90%以上視聴"
+    "watchVideo": "動画を90%以上視聴",
+    "seeTranscript": "文字起こしを表示",
+    "transcript": "文字起こし"
   },
   "quiz": {
     "title": "確認クイズ",

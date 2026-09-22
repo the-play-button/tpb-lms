@@ -13,6 +13,7 @@ const Schema = z.object({
   mediaJson: z.array(MediaSchema).optional(),
   sysOrderIndex: z.number().int().optional(),
   contentMd: z.string().optional(),
+  transcriptMd: z.string().optional(),
   stepType: z.string().optional(),
   rawJson: z.record(z.string(), z.unknown()).optional(),
 });

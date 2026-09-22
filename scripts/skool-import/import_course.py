@@ -132,6 +132,33 @@ def _load_resources_by_id(data_root: Path) -> None:
     _RESOURCES_LOADED_FROM = data_root
 
 
+# lesson id → Whisper transcript text, from `_raw/transcripts_index.json` + `_raw/transcripts/*.txt`
+# (produced by `skool-scraping transcribe`). Surfaced in the LMS via the "See transcript" button.
+_TRANSCRIPTS_BY_ID: dict[str, str] = {}
+_TRANSCRIPTS_LOADED_FROM: Path | None = None
+
+
+def _load_transcripts_by_id(data_root: Path) -> None:
+    global _TRANSCRIPTS_LOADED_FROM
+    if _TRANSCRIPTS_LOADED_FROM == data_root:
+        return
+    _TRANSCRIPTS_BY_ID.clear()
+    idx_p = data_root / "_raw" / "transcripts_index.json"
+    if idx_p.exists():
+        try:
+            idx = json.loads(idx_p.read_text())
+        except Exception:
+            idx = {}
+        for leaf_id, meta in idx.items():
+            if meta.get("status") == "ok" and meta.get("text_path"):
+                tp = data_root / meta["text_path"]
+                if tp.exists():
+                    text = tp.read_text().strip()
+                    if text:
+                        _TRANSCRIPTS_BY_ID[leaf_id] = text
+    _TRANSCRIPTS_LOADED_FROM = data_root
+
+
 def render_resources(resources_raw: str | None, report: dict | None = None) -> str:
     """Render a lesson's Skool "Ressources" tab as a `## Ressources` markdown block.
 
@@ -269,6 +296,7 @@ def import_one_course(course: dict, classroom_dir: Path, api: LmsApi, data_root:
               "res_links": 0, "res_files": 0, "warnings": [], "errors": []}
 
     _load_resources_by_id(data_root)
+    _load_transcripts_by_id(data_root)
     course_id = f"course_{course['id']}"
     sets = [c for c in course.get("children", []) if c.get("type") == "set"]
     section_dirs = sorted(d for d in classroom_dir.iterdir() if d.is_dir()) if classroom_dir.is_dir() else []
@@ -342,11 +370,15 @@ def import_one_course(course: dict, classroom_dir: Path, api: LmsApi, data_root:
                 report["no_vid"] += 1
             media = [{"type": "VIDEO", "url": vid, "name": m["title"]}] if vid else []
 
-            api.upsert("classes", {
+            payload = {
                 "id": f"les_{m['id']}", "courseId": course_id, "parentClassId": sec_id,
                 "nodeKind": "LESSON", "name": m["title"], "sysOrderIndex": mi + 1,
                 "stepType": "MIXED" if vid else "CONTENT", "contentMd": body_md, "mediaJson": media,
-            }, report)
+            }
+            transcript_md = _TRANSCRIPTS_BY_ID.get(m["id"])
+            if transcript_md:
+                payload["transcriptMd"] = transcript_md
+            api.upsert("classes", payload, report)
             report["lessons"] += 1
 
     return report

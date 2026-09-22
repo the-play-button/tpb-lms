@@ -32,7 +32,9 @@
     "linearProgression": "Progressione lineare: non puoi tornare indietro.",
     "completeStep": "Devi completare questo passo prima di continuare.",
     "videoLocked": "Il video non è più accessibile dopo il quiz.",
-    "watchVideo": "Guarda il video al 90%+"
+    "watchVideo": "Guarda il video al 90%+",
+    "seeTranscript": "Mostra trascrizione",
+    "transcript": "Trascrizione"
   },
   "quiz": {
     "title": "Quiz di validazione",

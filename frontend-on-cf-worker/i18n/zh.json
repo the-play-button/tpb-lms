@@ -32,7 +32,9 @@
     "linearProgression": "线性进度：无法返回。",
     "completeStep": "您必须完成此步骤才能继续。",
     "videoLocked": "测验后无法访问视频。",
-    "watchVideo": "观看视频至90%+"
+    "watchVideo": "观看视频至90%+",
+    "seeTranscript": "查看文字记录",
+    "transcript": "文字记录"
   },
   "quiz": {
     "title": "验证测验",

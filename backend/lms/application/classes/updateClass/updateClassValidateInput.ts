@@ -11,6 +11,7 @@ const Schema = z.object({
   parentClassId: z.string().min(1).nullable().optional(),
   nodeKind: z.enum(NODE_KINDS).optional(),
   contentMd: z.string().optional(),
+  transcriptMd: z.string().optional(),
   stepType: z.string().optional(),
   rawJson: z.record(z.string(), z.unknown()).optional(),
 });

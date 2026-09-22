@@ -61,7 +61,9 @@
     "errorRetry": "Error - Retry",
     "abandonConfirm": "Are you sure you want to drop this course? Your progress will be kept.",
     "abandoning": "Dropping...",
-    "nextStep": "Next step"
+    "nextStep": "Next step",
+    "seeTranscript": "See transcript",
+    "transcript": "Transcript"
   },
   "quiz": {
     "title": "Validation Quiz",

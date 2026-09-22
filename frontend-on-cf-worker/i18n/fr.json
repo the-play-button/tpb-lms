@@ -61,7 +61,9 @@
     "errorRetry": "Erreur - Réessayer",
     "abandonConfirm": "Êtes-vous sûr de vouloir abandonner ce cours ? Votre progression sera conservée.",
     "abandoning": "Abandon...",
-    "nextStep": "Étape suivante"
+    "nextStep": "Étape suivante",
+    "seeTranscript": "Voir la transcription",
+    "transcript": "Transcription"
   },
   "quiz": {
     "title": "Quiz de validation",

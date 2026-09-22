@@ -105,6 +105,7 @@ const enrichClass = (cls: CoursesClassRow, currentStep: number): EnrichedClass =
         media: mediaItems.map((m: MediaItem) => enrichMedia(m, videoCompleted, quizPassed, cls)),
         step_type: (raw.tpb_step_type as string) || 'CONTENT',
         content_md: (raw.tpb_content_md as string) || '',
+        transcript_md: (raw.tpb_transcript_md as string) || '',
         video_completed: videoCompleted,
         quiz_passed: quizPassed,
         step_completed: stepCompleted,
