@@ -33,8 +33,10 @@
     "completeStep": "您必须完成此步骤才能继续。",
     "videoLocked": "测验后无法访问视频。",
     "watchVideo": "观看视频至90%+",
-    "seeTranscript": "查看文字记录",
-    "transcript": "文字记录"
+    "transcript": "文字记录",
+    "copyTranscript": "复制",
+    "copied": "已复制 ✓",
+    "copyFailed": "失败"
   },
   "quiz": {
     "title": "验证测验",

@@ -33,8 +33,10 @@
     "completeStep": "Sie müssen diesen Schritt abschließen, bevor Sie fortfahren.",
     "videoLocked": "Video ist nach dem Quiz nicht mehr zugänglich.",
     "watchVideo": "Video zu 90%+ ansehen",
-    "seeTranscript": "Transkript anzeigen",
-    "transcript": "Transkript"
+    "transcript": "Transkript",
+    "copyTranscript": "Kopieren",
+    "copied": "Kopiert ✓",
+    "copyFailed": "Fehler"
   },
   "quiz": {
     "title": "Validierungs-Quiz",

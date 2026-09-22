@@ -33,8 +33,10 @@
     "completeStep": "Devi completare questo passo prima di continuare.",
     "videoLocked": "Il video non è più accessibile dopo il quiz.",
     "watchVideo": "Guarda il video al 90%+",
-    "seeTranscript": "Mostra trascrizione",
-    "transcript": "Trascrizione"
+    "transcript": "Trascrizione",
+    "copyTranscript": "Copia",
+    "copied": "Copiato ✓",
+    "copyFailed": "Errore"
   },
   "quiz": {
     "title": "Quiz di validazione",

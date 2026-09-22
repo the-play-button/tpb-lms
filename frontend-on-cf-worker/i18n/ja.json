@@ -33,8 +33,10 @@
     "completeStep": "続行する前にこのステップを完了する必要があります。",
     "videoLocked": "クイズ後は動画にアクセスできません。",
     "watchVideo": "動画を90%以上視聴",
-    "seeTranscript": "文字起こしを表示",
-    "transcript": "文字起こし"
+    "transcript": "文字起こし",
+    "copyTranscript": "コピー",
+    "copied": "コピーしました ✓",
+    "copyFailed": "失敗"
   },
   "quiz": {
     "title": "確認クイズ",

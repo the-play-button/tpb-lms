@@ -42,7 +42,14 @@ const renderTranscript = (ctx) => {
     const md = ctx.cls.transcript_md;
     if (!md) return '';
     const body = `<div class="markdown-body transcript-body">${marked.parse(md)}</div>`;
-    return `<details class="transcript-panel"><summary class="transcript-summary" data-testid="transcript-toggle">📝 ${t('course.seeTranscript')}</summary>${body}</details>`;
+    // Collapsed panel. Primary action = COPY (paste into an LLM/notes) ; the row toggles to read.
+    // The copy click is owned by ONE delegated listener on #somViewer (setupEventListeners) which
+    // reads the transcript from state — no per-render wiring, no transcript text baked into the DOM.
+    return `<details class="transcript-panel">`
+        + `<summary class="transcript-summary" data-testid="transcript-toggle">`
+        + `<span class="transcript-label">${t('course.transcript')}</span>`
+        + `<button type="button" class="transcript-copy" data-testid="transcript-copy" title="${t('course.copyTranscript')}">${t('course.copyTranscript')}</button>`
+        + `</summary>${body}</details>`;
 };
 
 export const renderVideoContent = (ctx, videoHtml) => {

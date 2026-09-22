@@ -14,9 +14,28 @@ import { showBadgeModal, refreshUserData } from '../notifications.js';
 import { initMobileTabs } from '../ui/mobileTabs.js';
 import { initUserMenu } from '../ui/userMenu.js';
 import { updateBadgesGrid } from '../ui/badges.js';
+import { copyTextToClipboard } from '../ui/clipboard.js';
 
 export const setupEventListeners = () => {
     initMobileTabs();
+
+    // SINGLE AUTHORITY for the transcript copy action: one delegated listener on the stable
+    // step container (#somViewer persists across renders — only its innerHTML changes). It reads
+    // the transcript from state (SSOT), so no per-render wiring and no huge text in the DOM.
+    // preventDefault stops the click from toggling the <details> open.
+    document.getElementById('somViewer')?.addEventListener('click', async (e) => {
+        const btn = e.target.closest('.transcript-copy');
+        if (!btn) return;
+        e.preventDefault();
+        const cls = getState('courseData')?.classes?.[getState('currentStepIndex')];
+        const ok = await copyTextToClipboard(cls?.transcript_md);
+        const restore = btn.dataset.label || btn.textContent;
+        btn.dataset.label = restore;
+        btn.textContent = ok ? t('course.copied') : t('course.copyFailed');
+        btn.classList.toggle('copied', ok);
+        clearTimeout(btn._t);
+        btn._t = setTimeout(() => { btn.textContent = restore; btn.classList.remove('copied'); }, 1500);
+    });
 
     // The left-rail course tree (#courseTree) is wired in app/ui/sidebar.js
     // (program picker + course open + lesson navigation). Nothing to do here.

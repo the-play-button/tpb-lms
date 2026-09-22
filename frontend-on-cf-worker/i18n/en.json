@@ -62,8 +62,10 @@
     "abandonConfirm": "Are you sure you want to drop this course? Your progress will be kept.",
     "abandoning": "Dropping...",
     "nextStep": "Next step",
-    "seeTranscript": "See transcript",
-    "transcript": "Transcript"
+    "transcript": "Transcript",
+    "copyTranscript": "Copy",
+    "copied": "Copied ✓",
+    "copyFailed": "Failed"
   },
   "quiz": {
     "title": "Validation Quiz",

@@ -44,6 +44,64 @@
     border-radius: var(--radius-md);
 }
 
+/* Transcript panel — collapsed by default; primary action is COPY, secondary is expand-to-read.
+   Minimalist: no default disclosure triangle, a header row (label + copy pill), scrollable body. */
+.transcript-panel {
+    margin: var(--space-lg) 0;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg-secondary);
+}
+
+.transcript-summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+
+.transcript-summary::-webkit-details-marker { display: none; }
+
+.transcript-label {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.transcript-copy {
+    flex-shrink: 0;
+    padding: 0.25rem 0.7rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    background: var(--bg-card);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.transcript-copy:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+.transcript-copy.copied {
+    border-color: var(--success);
+    color: var(--success);
+}
+
+.transcript-body {
+    padding: 0 var(--space-md) var(--space-md);
+    font-size: 0.9rem;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
 .markdown-body ul, .markdown-body ol {
     margin-bottom: var(--space-md);
     padding-left: var(--space-xl);

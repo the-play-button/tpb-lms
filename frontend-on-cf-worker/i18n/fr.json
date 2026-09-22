@@ -62,8 +62,10 @@
     "abandonConfirm": "Êtes-vous sûr de vouloir abandonner ce cours ? Votre progression sera conservée.",
     "abandoning": "Abandon...",
     "nextStep": "Étape suivante",
-    "seeTranscript": "Voir la transcription",
-    "transcript": "Transcription"
+    "transcript": "Transcription",
+    "copyTranscript": "Copier",
+    "copied": "Copié ✓",
+    "copyFailed": "Échec"
   },
   "quiz": {
     "title": "Quiz de validation",
