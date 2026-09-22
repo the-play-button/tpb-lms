@@ -27,6 +27,7 @@ import sys
 from pathlib import Path
 
 from import_course import LmsApi, slugify  # reuse the env-driven API client + slug
+from import_all import _program_id  # SAME program id as the classroom → ONE program per community
 
 
 # ── Skool markup → Markdown ────────────────────────────────────────────────────
@@ -89,8 +90,11 @@ def _sort_key(p: dict):
 
 def import_posts(posts: list[dict], community: str, api: LmsApi) -> dict:
     report = {"program": community, "courses": 0, "lessons": 0, "errors": []}
-    prog_id = f"program_communaute_{slugify(community)}"
-    api.create_program(prog_id, f"Communauté — {community}", None)
+    # Attach the post-courses to the SAME program as the classroom (ONE program per community),
+    # not a separate "Communauté — …" program. create_program is idempotent (already created by
+    # the classroom import); this just guarantees it exists if posts are imported standalone.
+    prog_id = _program_id(community)
+    api.create_program(prog_id, community, None)
 
     substantive = [p for p in posts if len((p.get("content") or "")) > 50 or p.get("attachments")]
     resources = sorted([p for p in substantive if p.get("pinned") or p.get("attachments")], key=_sort_key)
