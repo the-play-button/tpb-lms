@@ -28,7 +28,7 @@ const indentPx = (depth) => INDENT_BASE_PX + depth * INDENT_STEP_PX;
  * Build the render context (completed set + reachable ceiling) for a course's
  * lessons from its progress signals.
  */
-export const buildLessonCtx = (course, signals, currentStepIndex) => {
+export const buildLessonCtx = (course, signals, currentStepIndex, viewMode = 'step') => {
     const completedSteps = new Set(
         (signals?.steps || [])
             .filter(({ step_completed } = {}) => step_completed)
@@ -38,7 +38,10 @@ export const buildLessonCtx = (course, signals, currentStepIndex) => {
     // mark clickable always actually navigates (no silent clamp). Hyper-linear:
     // only completed + current steps are reachable until the current one is done.
     const maxAccessibleIndex = (signals?.can_access_step ?? 1) - 1;
-    return { course, completedSteps, currentStepIndex, maxAccessibleIndex };
+    // viewMode 'overview' = the main pane shows the course overview, not a lesson → the
+    // resume ▶ lesson must stay CLICKABLE (you are not "on" it). 'step' = you are inside a
+    // lesson → that lesson is the non-clickable current step.
+    return { course, completedSteps, currentStepIndex, maxAccessibleIndex, viewMode };
 };
 
 /**
@@ -107,9 +110,12 @@ export const renderLessonItem = (step, ctx, depth) => {
     const isAccessible = index <= ceiling;
     const isLocked = !isAccessible;
 
+    const onOverview = ctx.viewMode === 'overview';
     const statusClass = isCurrent ? 'current' : isCompleted ? 'completed' : isLocked ? 'locked' : 'pending';
     const statusIcon = isCurrent ? '▶' : isCompleted ? '✓' : isLocked ? '🔒' : '○';
-    const clickable = isAccessible && !isCurrent ? ' clickable' : '';
+    // On the overview the ▶ resume lesson stays clickable (you're not on it); inside a
+    // lesson the current step is non-clickable (you're already there).
+    const clickable = isAccessible && (onOverview || !isCurrent) ? ' clickable' : '';
 
     const stepType = (step.raw_json ? JSON.parse(step.raw_json) : {}).tpb_step_type || step.step_type || 'CONTENT';
     const typeIcon = getStepTypeIcon(stepType);

@@ -35,24 +35,20 @@ const renderInlineContentMd = cls => {
 };
 
 // Whisper transcript stored in raw_json.tpb_transcript_md (recovered by the
-// skool-scraping `transcribe` phase). During the LMS transition phase the videos
-// are not re-hosted yet → when the lesson has NO playable video, the transcript
-// IS the content, so we render it OPEN/prominent. When a video is present, the
-// transcript is a collapsed "See transcript" panel below it.
-const renderTranscript = (ctx, hasVideo) => {
+// skool-scraping `transcribe` phase). A transcript is a large wall of text, so it is
+// ALWAYS rendered collapsed — the learner opens it on demand (never expanded by default,
+// with OR without a video).
+const renderTranscript = (ctx) => {
     const md = ctx.cls.transcript_md;
     if (!md) return '';
     const body = `<div class="markdown-body transcript-body">${marked.parse(md)}</div>`;
-    const label = hasVideo ? t('course.seeTranscript') : t('course.transcript');
-    const openAttr = hasVideo ? '' : ' open';
-    return `<details class="transcript-panel"${openAttr}><summary class="transcript-summary" data-testid="transcript-toggle">📝 ${label}</summary>${body}</details>`;
+    return `<details class="transcript-panel"><summary class="transcript-summary" data-testid="transcript-toggle">📝 ${t('course.seeTranscript')}</summary>${body}</details>`;
 };
 
 export const renderVideoContent = (ctx, videoHtml) => {
     const documentHtml = renderDocumentSection(ctx.cls);
     const inlineMd = renderInlineContentMd(ctx.cls);
-    const hasVideo = !!(ctx.hasVideo || (videoHtml && String(videoHtml).length > 0));
-    const transcriptHtml = renderTranscript(ctx, hasVideo);
+    const transcriptHtml = renderTranscript(ctx);
 
     const parts = [videoHtml, inlineMd, documentHtml, transcriptHtml].filter(Boolean);
     if (parts.length === 0) return safeHtml`<p>${t('course.noContent')}</p>`;

@@ -44,7 +44,7 @@ const renderCourseRow = (course, currentCourse) => {
 /** A course node in a program tree: expanded (with lessons) when it is the open course. */
 const renderCourseNode = (course, { currentCourse, courseData, signals, currentStepIndex }) => {
     if (course.id !== currentCourse) return renderCourseRow(course, currentCourse);
-    const ctx = buildLessonCtx(courseData, signals, currentStepIndex);
+    const ctx = buildLessonCtx(courseData, signals, currentStepIndex, getState('viewMode'));
     return safeHtml`
         <li class="tree-course expanded">
             <button type="button" class="tree-course-row current" data-open-course="${course.id}" data-testid="tree-course-row">
@@ -84,7 +84,7 @@ export const buildSidebarTreeHtml = ({
 
     // --- A standalone course is open (no program) ---
     if (currentCourseObj) {
-        const ctx = buildLessonCtx(courseData, signals, currentStepIndex);
+        const ctx = buildLessonCtx(courseData, signals, currentStepIndex, getState('viewMode'));
         return safeHtml`
             <button type="button" class="tree-back" data-back-to-classroom data-testid="tree-back">← ${t('nav.allPrograms')}</button>
             <button type="button" class="tree-program-title" data-open-course="${currentCourseObj.id}" data-testid="tree-program-title">${courseData?.title || currentCourseObj.title}</button>

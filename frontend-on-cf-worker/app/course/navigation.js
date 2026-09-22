@@ -27,7 +27,8 @@ export const navigateToStep = stepIndex => {
         courseData.classes.length - 1
     );
     const targetStep = Math.max(0, Math.min(stepIndex, maxStep));
-    
+
+    setState('viewMode', 'step');   // navigating into a lesson (from overview outline / sidebar / prev-next)
     setState('currentStepIndex', targetStep);
     stopVideoTracking();
     

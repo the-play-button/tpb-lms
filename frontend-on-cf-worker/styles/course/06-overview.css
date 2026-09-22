@@ -149,6 +149,22 @@
     color: var(--text-muted);
 }
 
+/* Clickable outline lessons open the lesson directly from the overview. */
+.outline-lesson.clickable {
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.outline-lesson.clickable:hover {
+    background: var(--hover-bg);
+    color: var(--text-primary);
+}
+
+.outline-lesson.clickable:hover::before {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
 /* Actions */
 .overview-actions {
     display: flex;

@@ -3,7 +3,8 @@
    ============================================= */
 
 .step-viewer {
-    max-width: 900px;
+    /* Narrower reading column for comfortable line length (Skool-like ~760px). */
+    max-width: 760px;
     margin: 0 auto;
     padding: var(--space-xl);
 }

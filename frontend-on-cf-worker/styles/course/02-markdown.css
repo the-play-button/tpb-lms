@@ -34,6 +34,16 @@
     color: var(--text-secondary);
 }
 
+/* Images render constrained to the reading column (Skool-like), never at intrinsic
+   pixel size (which overflowed / looked random). */
+.markdown-body img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: var(--space-lg) 0;
+    border-radius: var(--radius-md);
+}
+
 .markdown-body ul, .markdown-body ol {
     margin-bottom: var(--space-md);
     padding-left: var(--space-xl);

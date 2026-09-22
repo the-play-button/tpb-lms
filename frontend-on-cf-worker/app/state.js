@@ -22,6 +22,9 @@ const state = {
     currentProgram: null,
     currentCourse: null,
     currentStepIndex: 0,
+    // 'overview' = main pane shows the course overview (resume ▶ lesson stays clickable) ;
+    // 'step' = inside a lesson (current step is the non-clickable ▶). See stepsSidebar.
+    viewMode: 'step',
     courseData: null,
     signals: null
 };

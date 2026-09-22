@@ -47,14 +47,18 @@
     cursor: default;
 }
 
+/* Minimalist: the chevron is a subtle affordance, not visual weight. */
 .section-chevron {
-    font-size: var(--fs-nav-meta);
+    font-size: 0.6rem;
     color: var(--text-muted);
+    opacity: 0.55;
     flex-shrink: 0;
 }
 
 .section-name {
     flex: 1;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 /* Lesson items */
@@ -84,10 +88,10 @@
     white-space: nowrap;
 }
 
+/* Per-lesson type emoji (📄📦🎬) removed from the rail — it added clutter without
+   signal. The lesson name + status dot carry the meaning (Skool-minimal). */
 .step-item .step-type-icon {
-    flex-shrink: 0;
-    opacity: 0.6;
-    font-size: var(--fs-nav-meta);
+    display: none;
 }
 
 .step-item.clickable {

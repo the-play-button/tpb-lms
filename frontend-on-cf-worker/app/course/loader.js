@@ -79,10 +79,11 @@ export const loadCourse = async (courseId, initialStepIndex = null) => {
         }
 
         stepIndex = Math.max(0, Math.min(stepIndex, lastIndex));
+        setState('viewMode', 'step');   // inside a lesson → the current step is the non-clickable ▶
         setState('currentStepIndex', stepIndex);
-        
+
         updateURL(courseId, stepIndex);
-        
+
         renderCurrentStep();
         
     } catch (error) {

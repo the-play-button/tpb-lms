@@ -104,7 +104,9 @@
 /* Main layout */
 .lms-main {
     display: grid;
-    grid-template-columns: 280px 1fr 280px;
+    /* Wider left rail + a reading column that is constrained (see .step-viewer max-width)
+       — Skool-like: more room for the lesson tree, a narrower, more readable content column. */
+    grid-template-columns: 320px minmax(0, 1fr) 280px;
     flex: 1;
 }
 

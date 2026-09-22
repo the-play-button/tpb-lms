@@ -19,17 +19,25 @@ import { t, getLanguage } from '../../i18n/index.js';
  * SECTION → LESSON tree when present, else the flat lesson list.
  */
 const renderCourseOutline = (course) => {
+    const classes = course.classes || [];
+    // A LESSON is clickable when its index resolves in the flat `classes` sequence (what
+    // navigateToStep expects) → clicking it in the overview opens that lesson directly.
+    const lessonItem = (node) => {
+        const index = classes.findIndex(({ id } = {}) => id === node.id);
+        if (index < 0) return safeHtml`<li class="outline-lesson">${node.name}</li>`;
+        return safeHtml`<li class="outline-lesson clickable" role="button" tabindex="0" data-step="${index}">${node.name}</li>`;
+    };
     const renderNodes = (list) => list.map((node) => {
         if (node.node_kind === 'SECTION') {
             return safeHtml`<li class="outline-section"><span class="outline-section-name">${node.name}</span><ul class="outline-lessons">${raw(renderNodes(node.children || []))}</ul></li>`;
         }
-        return safeHtml`<li class="outline-lesson">${node.name}</li>`;
+        return lessonItem(node);
     }).join('');
 
     const nodes = Array.isArray(course.nodes) && course.nodes.length ? course.nodes : null;
     const inner = nodes
         ? renderNodes(nodes)
-        : (course.classes || []).map((c) => safeHtml`<li class="outline-lesson">${c.name}</li>`).join('');
+        : classes.map((c) => lessonItem(c)).join('');
     if (!inner) return '';
     return safeHtml`
         <section class="course-outline-wrap">
@@ -198,6 +206,23 @@ const setupOverviewHandlers = (courseId) => {
         await loadCourse(courseId);
     });
 
+    // Outline lessons are clickable → open that lesson directly (delegated).
+    const openOutlineLesson = async (el) => {
+        const step = Number(el.dataset.step);
+        if (!Number.isInteger(step)) return;
+        const { navigateToStep } = await import('./navigation.js');
+        navigateToStep(step);
+    };
+    document.querySelector('.course-outline')?.addEventListener('click', (e) => {
+        const li = e.target.closest('.outline-lesson.clickable');
+        if (li) openOutlineLesson(li);
+    });
+    document.querySelector('.course-outline')?.addEventListener('keydown', (e) => {
+        if (e.key !== 'Enter' && e.key !== ' ') return;
+        const li = e.target.closest('.outline-lesson.clickable');
+        if (li) { e.preventDefault(); openOutlineLesson(li); }
+    });
+
     // Secondary : add to "my active courses" (optional curation). Does NOT force
     // loadCourse — the primary CTA owns that. Refresh the overview to reflect state.
     document.querySelector('[data-action="enroll"]')?.addEventListener('click', async (e) => {
@@ -269,6 +294,10 @@ export const showCourseOverview = async courseId => {
         setState('currentCourse', courseId);
         setState('courseData', course);
         setState('signals', signals);
+        // We are on the OVERVIEW, not inside a lesson → the ▶ resume marker points at the
+        // resume lesson but that lesson stays CLICKABLE (the sidebar honours viewMode so it
+        // is not treated as the non-clickable "current" step). See stepsSidebar.renderLessonItem.
+        setState('viewMode', 'overview');
         setState('currentStepIndex', resumeStepIndex(course.classes || [], signals));
 
         await renderCourseOverview(course, enrollmentStatus);
