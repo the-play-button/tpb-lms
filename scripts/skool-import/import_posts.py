@@ -6,8 +6,10 @@ link in a post…). This imports the captured posts (`_raw/community_posts_full.
 standard **program → course → section → lesson** structure, so posts are browsable in the LMS
 exactly like course content.
 
-Design (v1):
-- Program  "Communauté — <Community>".
+Design (v2):
+- Program: the community's EXISTING program (same `_program_id` as the classroom → ONE program
+  per community, e.g. `program_g-n-ration-ia`). NOT a separate "Communauté — <name>" program
+  (that produced two confusing top-level entries for one community).
 - Course 1 "📌 Épinglés & Ressources" : pinned posts + posts that carry an attachment
   (the high-signal "the info is in a post" case), sorted pinned-first then by upvotes.
 - Course 2 "💬 Discussions"           : the remaining substantive posts (content > 50 chars),
