@@ -19,7 +19,7 @@ import { t } from '../../i18n/index.js';
 import { renderMasteryBadge, getMasteryLevel, injectMasteryStyles } from './masteryBadge.js';
 import { buildLessonCtx, renderCourseLessons, toggleSection } from './stepsSidebar.js';
 
-const SUBSCRIBED_KEYS = ['programs', 'courses', 'currentProgram', 'currentCourse', 'courseData', 'signals', 'currentStepIndex'];
+const SUBSCRIBED_KEYS = ['programs', 'courses', 'currentProgram', 'currentCourse', 'courseData', 'signals', 'currentStepIndex', 'viewMode'];
 
 const courseBadges = (course) => {
     const mastery = renderMasteryBadge(getMasteryLevel(course.progress?.progress_percent || 0), { size: 'small' });

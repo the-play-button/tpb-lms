@@ -55,7 +55,12 @@ const renderCourseOutline = (course) => {
 export const renderCourseOverview = async (course, enrollmentStatus = null) => {
     const viewer = document.getElementById('somViewer');
     if (!viewer) return;
-    
+
+    // SINGLE AUTHORITY over the view mode: renderCourseOverview is the ONLY thing that shows the
+    // overview surface, so it owns viewMode='overview' (renderCurrentStep owns 'step'). The sidebar
+    // subscribes to viewMode → the resume ▶ lesson becomes clickable here. See renderCurrentStep.
+    setState('viewMode', 'overview');
+
     setSafeHtml(viewer, safeHtml`
         <div class="course-overview loading">
             <div class="loading-spinner"></div>
@@ -294,12 +299,9 @@ export const showCourseOverview = async courseId => {
         setState('currentCourse', courseId);
         setState('courseData', course);
         setState('signals', signals);
-        // We are on the OVERVIEW, not inside a lesson → the ▶ resume marker points at the
-        // resume lesson but that lesson stays CLICKABLE (the sidebar honours viewMode so it
-        // is not treated as the non-clickable "current" step). See stepsSidebar.renderLessonItem.
-        setState('viewMode', 'overview');
         setState('currentStepIndex', resumeStepIndex(course.classes || [], signals));
 
+        // viewMode is owned by renderCourseOverview (single authority) — not set here.
         await renderCourseOverview(course, enrollmentStatus);
     } catch (error) {
         log.error('Failed to show overview:', error);

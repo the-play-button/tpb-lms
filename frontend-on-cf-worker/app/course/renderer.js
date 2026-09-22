@@ -10,7 +10,7 @@
  * - Fetches content from media[].url for DOCUMENT type
  */
 
-import { getState } from '../state.js';
+import { getState, setState } from '../state.js';
 import { setupVideoTracking, getResumePosition } from '../video/tracking/index.js';
 import { getDocumentMedia } from './renderer.functions/_mediaHelpers.js';
 import { getStepContext } from './renderer.functions/stepContext.js';
@@ -27,6 +27,12 @@ import { t } from '../../i18n/index.js';
 export const renderCurrentStep = () => {
     const ctx = getStepContext();
     if (!ctx) return;
+
+    // SINGLE AUTHORITY over the view mode: renderCurrentStep is the ONLY thing that shows a
+    // lesson (loader, all navigation, quiz handler, event listeners all route through it), so it
+    // owns viewMode='step'. renderCourseOverview owns 'overview'. No navigation entry point sets
+    // viewMode itself → no scattered writers, no forgotten path (§ lifecycle-contract fracture).
+    setState('viewMode', 'step');
 
     const { cls, stepIndex, totalSteps, stepCompleted, quizMedia } = ctx;
     const isLastStep = stepIndex === totalSteps - 1;

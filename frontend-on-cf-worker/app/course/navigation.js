@@ -28,9 +28,9 @@ export const navigateToStep = stepIndex => {
     );
     const targetStep = Math.max(0, Math.min(stepIndex, maxStep));
 
-    setState('viewMode', 'step');   // navigating into a lesson (from overview outline / sidebar / prev-next)
     setState('currentStepIndex', targetStep);
     stopVideoTracking();
+    // viewMode='step' is owned by renderCurrentStep (single authority) — set on render below.
     
     const params = new URLSearchParams(window.location.search);
     params.set('som', courseId);
