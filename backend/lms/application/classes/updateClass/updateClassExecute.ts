@@ -11,7 +11,7 @@ export const updateClassExecute = async (context: UpdateClassContext, ctx: Autho
   // already stored (tpb_created_by, etc.). Only computed when the caller touches
   // one of them, otherwise raw_json is left untouched.
   let rawJson: Record<string, unknown> | undefined;
-  if (input.rawJson !== undefined || input.contentMd !== undefined || input.stepType !== undefined || input.transcriptMd !== undefined) {
+  if (input.rawJson !== undefined || input.contentMd !== undefined || input.stepType !== undefined || input.transcriptMd !== undefined || input.resourcesJson !== undefined) {
     const existing = await ctx.classRepo.findById(input.classId);
     if (!existing) return fail('NOT_FOUND');
     const current = existing.raw_json ? (JSON.parse(existing.raw_json) as Record<string, unknown>) : {};
@@ -21,6 +21,7 @@ export const updateClassExecute = async (context: UpdateClassContext, ctx: Autho
       ...(input.stepType ? { tpb_step_type: input.stepType } : {}),
       ...(input.contentMd ? { tpb_content_md: input.contentMd } : {}),
       ...(input.transcriptMd ? { tpb_transcript_md: input.transcriptMd } : {}),
+      ...(input.resourcesJson?.length ? { tpb_resources_json: input.resourcesJson } : {}),
     };
   }
 

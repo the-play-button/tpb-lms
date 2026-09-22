@@ -14,6 +14,10 @@ const Schema = z.object({
   sysOrderIndex: z.number().int().optional(),
   contentMd: z.string().optional(),
   transcriptMd: z.string().optional(),
+  // Copyable resource/prompt panels (e.g. mined toolkit: Google Docs, harvested GPT prompts).
+  // Stored in raw_json.tpb_resources_json — rendered as collapsed copy-first panels, NOT inline
+  // in the lesson body. Mirrors transcriptMd (zero-migration).
+  resourcesJson: z.array(z.object({ title: z.string(), content: z.string() })).optional(),
   stepType: z.string().optional(),
   rawJson: z.record(z.string(), z.unknown()).optional(),
 });

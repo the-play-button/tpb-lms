@@ -51,6 +51,7 @@ interface EnrichedClass {
     media: MediaItem[];
     step_type: string;
     content_md: string;
+    resources_json: Array<{ title: string; content: string }>;
     video_completed: boolean;
     quiz_passed: boolean;
     step_completed: boolean;
@@ -106,6 +107,7 @@ const enrichClass = (cls: CoursesClassRow, currentStep: number): EnrichedClass =
         step_type: (raw.tpb_step_type as string) || 'CONTENT',
         content_md: (raw.tpb_content_md as string) || '',
         transcript_md: (raw.tpb_transcript_md as string) || '',
+        resources_json: Array.isArray(raw.tpb_resources_json) ? (raw.tpb_resources_json as Array<{ title: string; content: string }>) : [],
         video_completed: videoCompleted,
         quiz_passed: quizPassed,
         step_completed: stepCompleted,

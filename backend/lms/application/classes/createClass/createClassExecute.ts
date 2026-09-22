@@ -17,6 +17,7 @@ export const createClassExecute = async (context: CreateClassContext, ctx: Autho
     ...(input.stepType ? { tpb_step_type: input.stepType } : {}),
     ...(input.contentMd ? { tpb_content_md: input.contentMd } : {}),
     ...(input.transcriptMd ? { tpb_transcript_md: input.transcriptMd } : {}),
+    ...(input.resourcesJson?.length ? { tpb_resources_json: input.resourcesJson } : {}),
     tpb_created_by: ctx.actor.email ?? ctx.actor.id,
   };
   const row = await ctx.classRepo.insert({

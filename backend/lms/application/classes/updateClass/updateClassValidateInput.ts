@@ -12,6 +12,7 @@ const Schema = z.object({
   nodeKind: z.enum(NODE_KINDS).optional(),
   contentMd: z.string().optional(),
   transcriptMd: z.string().optional(),
+  resourcesJson: z.array(z.object({ title: z.string(), content: z.string() })).optional(),
   stepType: z.string().optional(),
   rawJson: z.record(z.string(), z.unknown()).optional(),
 });

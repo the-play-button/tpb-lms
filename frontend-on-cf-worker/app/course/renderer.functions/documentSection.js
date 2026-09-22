@@ -52,12 +52,31 @@ const renderTranscript = (ctx) => {
         + `</summary>${body}</details>`;
 };
 
+// Mined toolkit resources stored in raw_json.tpb_resources_json — an array of {title, content}
+// (e.g. the master Google Doc, each harvested custom-GPT prompt system). Rendered as ONE collapsed
+// copy-first panel per item — like the transcript, NOT dumped inline as course content. Each panel's
+// "Copier" is owned by the SAME single delegated listener on #somViewer (reads from state by index),
+// so no per-render wiring and no huge text kept live in the DOM until opened.
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const renderResources = (ctx) => {
+    const items = ctx.cls.resources_json;
+    if (!Array.isArray(items) || items.length === 0) return '';
+    return items.map((r, i) =>
+        `<details class="transcript-panel resource-panel">`
+        + `<summary class="transcript-summary" data-testid="resource-toggle">`
+        + `<span class="transcript-label">🧰 ${escapeHtml(r.title || t('course.resources'))}</span>`
+        + `<button type="button" class="transcript-copy resource-copy" data-resource-index="${i}" data-testid="resource-copy" title="${t('course.copyResource')}">${t('course.copyResource')}</button>`
+        + `</summary><div class="markdown-body transcript-body">${marked.parse(r.content || '')}</div></details>`
+    ).join('');
+};
+
 export const renderVideoContent = (ctx, videoHtml) => {
     const documentHtml = renderDocumentSection(ctx.cls);
     const inlineMd = renderInlineContentMd(ctx.cls);
     const transcriptHtml = renderTranscript(ctx);
+    const resourcesHtml = renderResources(ctx);
 
-    const parts = [videoHtml, inlineMd, documentHtml, transcriptHtml].filter(Boolean);
+    const parts = [videoHtml, inlineMd, documentHtml, transcriptHtml, resourcesHtml].filter(Boolean);
     if (parts.length === 0) return safeHtml`<p>${t('course.noContent')}</p>`;
 
     const sep = '<hr style="margin: 1.5rem 0; border: none; border-top: 1px solid var(--border);">';

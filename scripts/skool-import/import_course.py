@@ -81,6 +81,33 @@ def align(titles: list[str], candidates: list) -> list:
     return result
 
 
+def course_sections(course: dict) -> list[dict]:
+    """Ordered SECTION nodes for a course — the single source of truth for how a
+    course's children map to LMS sections, shared by the importer and import_all's
+    empty-check (§ SINGLE-WRITER, one path for both).
+
+    A real `set` child passes through unchanged. A direct top-level `module` child
+    (FLAT course→module tree, no enclosing set) becomes its own synthetic section
+    titled after the module — mirroring exactly what `build-md` writes on disk
+    (`build_md.py` renders a top-level module as its own section dir with one lesson).
+    This is the at-source resolution of the AP7 "FLAT COURSE TREE" skip class:
+    flat courses no longer need a manual synthetic-set wrap in course_trees.json.
+    """
+    out: list[dict] = []
+    for c in course.get("children", []) or []:
+        t = c.get("type")
+        if t == "set":
+            out.append(c)
+        elif t == "module":
+            out.append({
+                "id": f"{c['id']}_defaultsec",
+                "type": "set",
+                "title": c.get("title"),
+                "children": [c],
+            })
+    return out
+
+
 def classify_video(url: str | None) -> str | None:
     """loom | youtube | other | None — mirrors the frontend parseMediaUrl sources."""
     if not url:
@@ -298,7 +325,7 @@ def import_one_course(course: dict, classroom_dir: Path, api: LmsApi, data_root:
     _load_resources_by_id(data_root)
     _load_transcripts_by_id(data_root)
     course_id = f"course_{course['id']}"
-    sets = [c for c in course.get("children", []) if c.get("type") == "set"]
+    sets = course_sections(course)
     section_dirs = sorted(d for d in classroom_dir.iterdir() if d.is_dir()) if classroom_dir.is_dir() else []
 
     cover = course.get("coverImage")

@@ -18,7 +18,7 @@ import re
 import sys
 from pathlib import Path
 
-from import_course import LmsApi, import_one_course, _classroom_dir_for
+from import_course import LmsApi, import_one_course, _classroom_dir_for, course_sections
 
 
 def _program_id(name: str) -> str:
@@ -54,7 +54,9 @@ def main() -> int:
         if k in args.skip:
             continue
         c = tree[k]
-        n_mod = sum(len(s.get("children", [])) for s in c.get("children", []) if s.get("type") == "set")
+        # Count modules across real sets AND direct top-level modules (flat course→module
+        # trees), via the shared course_sections() SSOT — mirrors the importer exactly.
+        n_mod = sum(len(s.get("children", [])) for s in course_sections(c))
         if n_mod == 0:
             print(f"skip empty course {k} ({c.get('title')})")
             continue

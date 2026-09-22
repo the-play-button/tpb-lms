@@ -28,7 +28,14 @@ export const setupEventListeners = () => {
         if (!btn) return;
         e.preventDefault();
         const cls = getState('courseData')?.classes?.[getState('currentStepIndex')];
-        const ok = await copyTextToClipboard(cls?.transcript_md);
+        // Same single listener serves the transcript panel AND the resource/prompt panels.
+        // A resource button carries data-resource-index → copy that item's content from state
+        // (SSOT, by index) ; otherwise it is the transcript button.
+        const resIdx = btn.dataset.resourceIndex;
+        const text = resIdx !== undefined
+            ? cls?.resources_json?.[Number(resIdx)]?.content
+            : cls?.transcript_md;
+        const ok = await copyTextToClipboard(text);
         const restore = btn.dataset.label || btn.textContent;
         btn.dataset.label = restore;
         btn.textContent = ok ? t('course.copied') : t('course.copyFailed');

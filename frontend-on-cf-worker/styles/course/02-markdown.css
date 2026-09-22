@@ -102,6 +102,12 @@
     overflow-y: auto;
 }
 
+/* Resource/prompt panels reuse the transcript panel (both classes on the element) — a subtle
+   accent border distinguishes a copyable toolkit resource/prompt from the lesson transcript. */
+.resource-panel {
+    border-left: 3px solid var(--accent-primary);
+}
+
 .markdown-body ul, .markdown-body ol {
     margin-bottom: var(--space-md);
     padding-left: var(--space-xl);
