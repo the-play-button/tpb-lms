@@ -16,4 +16,4 @@ import type { BastionDependencies } from './BastionDependencies.types';
 export type { BastionDependencies };
 
 
-export type { VaultPort, BastionConfig, StorageConnectionsPort };
+export type { BastionConfig };

@@ -12,7 +12,6 @@ import type { EnrollmentActionResult } from './EnrollmentService.types';
 export type { EnrollmentActionResult };
 
 
-export { MAX_ACTIVE_ENROLLMENTS };
 
 interface EnrollmentCourseRow { id: string; name?: string; is_active?: number; }
 interface EnrollmentBasic { id: string; status?: string; }

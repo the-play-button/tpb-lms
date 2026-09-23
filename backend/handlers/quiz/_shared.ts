@@ -16,7 +16,7 @@ export type { QuizClassRow };
 export { log };
 const XP_QUIZ_PASS = 100;
 
-export { jsonResponse, recordQuizEvent, checkQuizBadges, checkStreakBadges, applyProjections, generateEventId };
+export { jsonResponse };
 
 /** Row shape of the quiz `lms_class` (media_json + raw_json carry the quiz config). */
 

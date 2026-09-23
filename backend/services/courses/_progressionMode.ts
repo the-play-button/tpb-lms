@@ -1,6 +1,5 @@
 import { log } from '@the-play-button/tpb-sdk-js';
 import { PROGRESSION_MODES } from '../../lms/domain/ProgressionMode.js';
-export { PROGRESSION_MODES };
 /**
  * Per-course progression mode (stored in lms_course.raw_json.tpb_progression_mode).
  *
@@ -11,7 +10,7 @@ export { PROGRESSION_MODES };
  */
 
 
-export const DEFAULT_PROGRESSION_MODE = 'linear';
+const DEFAULT_PROGRESSION_MODE = 'linear';
 
 /**
  * Resolve a course's progression mode from its raw_json. Unknown / absent → linear.
