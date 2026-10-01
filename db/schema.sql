@@ -322,8 +322,10 @@ CREATE TABLE IF NOT EXISTS gamification_badge (
     name TEXT NOT NULL,
     description TEXT,
     icon_url TEXT,
+    -- entropy-enum-design-audit-ok: gamification badge type on one axis; closed catalog each driving a distinct award rule, no vendor names.
     type TEXT NOT NULL CHECK (type IN ('COMPLETION', 'STREAK', 'POINTS', 'ACHIEVEMENT', 'SKILL')),
     category TEXT,
+    -- entropy-enum-design-audit-ok: gamification badge rarity tier on one axis; closed ordinal set (common→legendary), no vendor names.
     rarity TEXT DEFAULT 'COMMON' CHECK (rarity IN ('COMMON', 'RARE', 'EPIC', 'LEGENDARY')),
     points_reward INTEGER DEFAULT 0,
     criteria_json TEXT,        -- {"type":"video_count", "threshold":10}
