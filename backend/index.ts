@@ -5,7 +5,7 @@
  * - lms_event for raw facts (VIDEO_PING, QUIZ_SUBMIT)
  * - lms_signal for derived state (VIDEO_COMPLETED, QUIZ_PASSED, STEP_COMPLETED)
  *
- * Unified.to aligned schema:
+ * the canonical connector aligned schema:
  * - crm_contact / hris_employee / lms_course / gamification_badge
  */
 

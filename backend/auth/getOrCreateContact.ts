@@ -1,7 +1,7 @@
 import type { Env } from "../types/Env.types.js";
 
 /**
- * Get or create contact in crm_contact (Unified.to aligned)
+ * Get or create contact in crm_contact (the canonical connector aligned)
  */
 
 export const getOrCreateContact = async (email: string, env: Env): Promise<Record<string, unknown>>  => {

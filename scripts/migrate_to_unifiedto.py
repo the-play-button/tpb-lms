@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Migrate LMS Data to Unified.to Conformity
+Migrate LMS Data to canonical-connector-schema conformity
 
-This script migrates existing lms_class data to the new unified.to compliant format:
+This script migrates existing lms_class data to the new canonical connector compliant format:
 1. Reads step_type and content_md from each class
 2. Stores them in raw_json under tpb_step_type and tpb_content_md
-3. Updates media_json with unified.to compliant format (with url field)
+3. Updates media_json with the canonical connector compliant format (with url field)
 
 Prerequisites:
 - Run migration 004_unifiedto_conformity.sql first
@@ -103,7 +103,7 @@ def fetch_classes() -> list[dict[str, Any]]:
 
 
 def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:
-    """Migrate a single class to unified.to format.
+    """Migrate a single class to the canonical connector format.
 
     Args:
         cls: Class record dict from the database.
@@ -142,7 +142,7 @@ def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:
         raw["tpb_content_md"] = content_md
         changes.append(f"Added tpb_content_md ({len(content_md)} chars)")
     
-    # 3. Update media_json to unified.to format
+    # 3. Update media_json to the canonical connector format
     updated_media = []
     for m in media:
         new_m = dict(m)
@@ -195,8 +195,8 @@ def migrate_class(cls: dict[str, Any], dry_run: bool = True) -> dict[str, Any]:
 
 
 def main() -> int:
-    """ Parse CLI args and migrate LMS class data to unified.to format."""
-    parser = argparse.ArgumentParser(description="Migrate LMS data to unified.to format")
+    """ Parse CLI args and migrate LMS class data to the canonical connector format."""
+    parser = argparse.ArgumentParser(description="Migrate LMS data to the canonical connector format")
     parser.add_argument("--dry-run", action="store_true", help="Preview changes without applying")
     parser.add_argument("--execute", action="store_true", help="Apply changes to database")
     args = parser.parse_args()
@@ -205,7 +205,7 @@ def main() -> int:
         print("❌ Please specify --dry-run or --execute")
         return 1
     
-    print("🔄 LMS Unified.to Migration")
+    print("🔄 LMS the canonical connector Migration")
     print("=" * _CLI_SEPARATOR_WIDTH)
     
     if args.dry_run:

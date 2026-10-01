@@ -5,7 +5,7 @@
  * doctrine « SPLIT into folder with barrel export. MECHANICAL REFACTORING
  * ONLY: never change logic during split. »
  *
- * Unified.to Conformity:
+ * the canonical connector Conformity:
  * - Reads step_type from raw_json.tpb_step_type
  * - Fetches content from media[].url for DOCUMENT type
  */

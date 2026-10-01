@@ -1,7 +1,7 @@
 /**
  * Badges Handler
  *
- * Uses gamification_badge and gamification_award (Unified.to extension)
+ * Uses gamification_badge and gamification_award (the canonical connector extension)
  */
 
 import { jsonResponse } from '../cors.js';

@@ -7,7 +7,7 @@ import {
 /**
  * Factory to create Storage service.
  *
- * Plan 13.b of plans/2026-05-26_exit-unifiedto-runtime-final/ — backed by
+ * Plan 13.b of the direct-HTTP-client migration (2026-05-26) — backed by
  * `TpbStorageHttpAdapter` which forwards to the tpb-storage Worker (native
  * Microsoft Graph / Google Drive adapters).
  */

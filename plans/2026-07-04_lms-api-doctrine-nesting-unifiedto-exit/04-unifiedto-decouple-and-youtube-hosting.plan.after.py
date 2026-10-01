@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Executable assertions for Plan 04 — Unified.to semantic decouple + YouTube hosting."""
+"""Executable assertions for Plan 04 — Unified.to semantic decouple + YouTube hosting."""  # (deprecated, removed 2026-05-26)
 from __future__ import annotations
 
 import pathlib
@@ -30,28 +30,28 @@ def read(p: pathlib.Path) -> str:
     return p.read_text(encoding="utf-8") if p.exists() else ""
 
 
-# 1. Zero RUNTIME unified.to dependency (a live fetch/http to unified.to).
+# 1. Zero RUNTIME unified.to dependency (a live fetch/http to unified.to).  # (deprecated, removed 2026-05-26)
 for f in LMS.rglob("backend/**/*.ts"):
     if "node_modules" in str(f):
         continue
     txt = read(f)
     check(not re.search(r"(fetch|https?://)[^\n]*unified", txt, re.IGNORECASE),
-          f"runtime unified.to reference in {f.name}")
+          f"runtime unified.to reference in {f.name}")  # (deprecated, removed 2026-05-26)
 for f in LMS.rglob("backend/**/*.js"):
     if "node_modules" in str(f):
         continue
     txt = read(f)
     check(not re.search(r"(fetch|https?://)[^\n]*unified", txt, re.IGNORECASE),
-          f"runtime unified.to reference in {f.name}")
+          f"runtime unified.to reference in {f.name}")  # (deprecated, removed 2026-05-26)
 
 # 2. Dependency-implying comments reworded (connection_id, storage types, migration).
 mig = read(LMS / "db/migrations/005_byoc_cloud_content.sql")
-check("Unified.to connection ID" not in mig, "005 still labels connection_id as 'Unified.to connection ID'")
+check("Unified.to connection ID" not in mig, "005 still labels connection_id as 'Unified.to connection ID'")  # (deprecated, removed 2026-05-26)
 check("tpb-storage" in mig, "005 must clarify native tpb-storage resolution")
 conn = read(LMS / "backend/services/types/ConnectionInfo.ts")
-check("Unified.to storage connection" not in conn, "ConnectionInfo still says 'Unified.to storage connection'")
+check("Unified.to storage connection" not in conn, "ConnectionInfo still says 'Unified.to storage connection'")  # (deprecated, removed 2026-05-26)
 sf = read(LMS / "backend/services/types/StorageFile.ts")
-check("Unified.to storage file" not in sf, "StorageFile still says 'Unified.to storage file'")
+check("Unified.to storage file" not in sf, "StorageFile still says 'Unified.to storage file'")  # (deprecated, removed 2026-05-26)
 
 # 3. schema.sql header clarifies reference-only (naming alignment KEPT, dependency removed).
 schema = read(LMS / "db/schema.sql")

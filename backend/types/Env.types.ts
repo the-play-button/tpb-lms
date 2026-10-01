@@ -20,8 +20,8 @@ export interface Env extends BastionClientEnv {
 
   /** tpb-storage Worker URL — used by `TpbStorageHttpAdapter` to forward
    *  storage queries through the native StorageFilePort (microsoft / google
-   *  native adapters) instead of unified.to. Plan 13.b of
-   *  plans/2026-05-26_exit-unifiedto-runtime-final/. */
+   *  native adapters) instead of the canonical connector. Plan 13.b of
+   *  the direct-HTTP-client migration (2026-05-26). */
   TPB_STORAGE_URL: string;
 
   // --- Test fixtures (dev/QA seed endpoint auth) ---
