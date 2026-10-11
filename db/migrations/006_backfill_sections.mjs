@@ -15,12 +15,12 @@
  *   node db/migrations/006_backfill_sections.mjs --local     # local D1
  *   node db/migrations/006_backfill_sections.mjs --remote    # remote D1
  *
- * Must be run from the repo root (where backend/wrangler.toml is reachable).
+ * Must be run from the repo root (where backend/wrangler-dev.toml is reachable).
  */
 import { execFileSync } from 'node:child_process';
 
 const SCOPE = process.argv.includes('--remote') ? '--remote' : '--local';
-const CONFIG = 'backend/wrangler.toml';
+const CONFIG = 'backend/wrangler-dev.toml';
 const DB = 'lms-db';
 
 const sql = (command) => {

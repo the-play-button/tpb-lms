@@ -19,14 +19,14 @@
  *
  * Content untouched — only grouping changes.
  *
- * Usage (from repo root, where backend/wrangler.toml is reachable):
+ * Usage (from repo root, where backend/wrangler-dev.toml is reachable):
  *   node db/migrations/007_seed_pa06_sections.mjs --local
  *   node db/migrations/007_seed_pa06_sections.mjs --remote
  */
 import { execFileSync } from 'node:child_process';
 
 const SCOPE = process.argv.includes('--remote') ? '--remote' : '--local';
-const CONFIG = 'backend/wrangler.toml';
+const CONFIG = 'backend/wrangler-dev.toml';
 const DB = 'lms-db';
 const COURSE_ID = 'pa06-2';
 
