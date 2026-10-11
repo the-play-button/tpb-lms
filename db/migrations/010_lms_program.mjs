@@ -19,7 +19,7 @@
 import { execFileSync } from 'node:child_process';
 
 const SCOPE = process.argv.includes('--remote') ? '--remote' : '--local';
-const CONFIG = 'backend/wrangler.toml';
+const CONFIG = 'backend/wrangler-dev.toml';
 const DB = 'lms-db';
 
 const sql = (command, { tolerateDuplicateColumn = false } = {}) => {
