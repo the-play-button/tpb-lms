@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "wrangler dev --config backend/wrangler-dev.toml",
     "db:migrate:remote": "wrangler d1 migrations apply lms-db --remote --config backend/wrangler-dev.toml",
-    "deploy": "pnpm run typecheck && pnpm run db:migrate:remote && PYTHONPATH=${TPB_SDK_PYTHONPATH:-../tpb-sdk/python/src} python3 -m tpb_sdk.d1_parity assert-deployed --wrangler backend/wrangler-dev.toml --target dev && wrangler deploy --config backend/wrangler-dev.toml --var COMMIT_SHA:$(git rev-parse HEAD)",
+    "deploy": "bash scripts/deploy.sh dev",
     "deploy:prod": "pnpm run typecheck && echo '\\n✗ Direct wrangler deploy --config backend/wrangler-dev.toml --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
     "test": "vitest run",
     "test:watch": "vitest",
