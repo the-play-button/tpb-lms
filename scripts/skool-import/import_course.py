@@ -421,14 +421,22 @@ def _classroom_dir_for(root: Path, course_key: str, tree: dict, override: str | 
     return dirs[idx] if idx < len(dirs) else (root / "classroom" / course_key)
 
 
+def add_common_run_args(ap: argparse.ArgumentParser) -> None:
+    """Register the run-control flags shared verbatim by import_course + import_all (§ BIG BANG factoriser).
+
+    Added LAST in both parsers → ``--help`` ordering stays byte-identical to the prior inline copies.
+    """
+    ap.add_argument("--sleep-ms", type=int, default=60)
+    ap.add_argument("--dry-run", action="store_true")
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--data-root", required=True)
     ap.add_argument("--course-key", required=True)
     ap.add_argument("--classroom-subdir", default=None, help="override the auto-mapped subdir")
     ap.add_argument("--progression-mode", default="free", choices=["free", "linear"])
-    ap.add_argument("--sleep-ms", type=int, default=60)
-    ap.add_argument("--dry-run", action="store_true")
+    add_common_run_args(ap)
     args = ap.parse_args()
 
     root = Path(args.data_root)

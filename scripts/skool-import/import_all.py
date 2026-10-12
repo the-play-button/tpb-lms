@@ -18,7 +18,7 @@ import re
 import sys
 from pathlib import Path
 
-from import_course import LmsApi, import_one_course, _classroom_dir_for, course_sections
+from import_course import LmsApi, import_one_course, _classroom_dir_for, course_sections, add_common_run_args
 
 
 def _program_id(name: str) -> str:
@@ -34,8 +34,7 @@ def main() -> int:
     ap.add_argument("--from", dest="from_key", default=None, help="resume from this key (tree order)")
     ap.add_argument("--progression-mode", default="free", choices=["free", "linear"])
     ap.add_argument("--program-name", default=None, help="group the imported courses under this Program (Plan 10)")
-    ap.add_argument("--sleep-ms", type=int, default=60)
-    ap.add_argument("--dry-run", action="store_true")
+    add_common_run_args(ap)
     args = ap.parse_args()
 
     root = Path(args.data_root)
