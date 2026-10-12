@@ -52,6 +52,7 @@ def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:
     Returns:
         Parsed query result dict.
     """
+    cwd = cwd or Path(__file__).parent.parent
     result = _exec_wrangler_d1(sql, cwd)
 
     if result.returncode != 0:
@@ -80,6 +81,7 @@ def run_d1_command(sql: str, cwd: Path | None = None) -> bool:
     Returns:
         True if the command succeeded.
     """
+    cwd = cwd or Path(__file__).parent.parent
     result = _exec_wrangler_d1(sql, cwd)
 
     if result.returncode != 0:
