@@ -145,6 +145,23 @@ def get_configured_secrets(worker_name: Optional[str] = None) -> Set[str]:
 # MAIN
 # =============================================================================
 
+def _report_secret_group(secrets: dict, configured: Set[str], color: str, absent_icon: str) -> list:
+    """Print each secret in a group (✅ if configured, else <color><absent_icon>…) and return the missing ones.
+
+    Factored from the three near-identical required/recommended/optional loops (§ BIG BANG — three similar
+    blocks = one function). `absent_icon` carries its own trailing spacing so the output is byte-identical
+    to the prior inline loops.
+    """
+    missing = []
+    for secret, description in secrets.items():
+        if secret in configured:
+            print(f"   {GREEN}✅ {secret}{RESET}")
+        else:
+            print(f"   {color}{absent_icon}{secret} - {description}{RESET}")
+            missing.append(secret)
+    return missing
+
+
 def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> bool:
     """
     Check that all required secrets are configured.
@@ -179,32 +196,16 @@ def check_secrets(worker_name: Optional[str] = None, verbose: bool = False) -> b
     
     # Check required secrets
     print(f"{CYAN}📋 Required secrets:{RESET}")
-    missing_required = []
-    for secret, description in REQUIRED_SECRETS.items():
-        if secret in configured:
-            print(f"   {GREEN}✅ {secret}{RESET}")
-        else:
-            print(f"   {RED}❌ {secret} - {description}{RESET}")
-            missing_required.append(secret)
-    
+    missing_required = _report_secret_group(REQUIRED_SECRETS, configured, RED, "❌ ")
+
     # Check recommended secrets
     print(f"\n{CYAN}📋 Recommended secrets:{RESET}")
-    missing_recommended = []
-    for secret, description in RECOMMENDED_SECRETS.items():
-        if secret in configured:
-            print(f"   {GREEN}✅ {secret}{RESET}")
-        else:
-            print(f"   {YELLOW}⚠️  {secret} - {description}{RESET}")
-            missing_recommended.append(secret)
-    
+    missing_recommended = _report_secret_group(RECOMMENDED_SECRETS, configured, YELLOW, "⚠️  ")
+
     # Check optional secrets (verbose only)
     if verbose:
         print(f"\n{CYAN}📋 Optional secrets:{RESET}")
-        for secret, description in OPTIONAL_SECRETS.items():
-            if secret in configured:
-                print(f"   {GREEN}✅ {secret}{RESET}")
-            else:
-                print(f"   {DIM}○  {secret} - {description}{RESET}")
+        _report_secret_group(OPTIONAL_SECRETS, configured, DIM, "○  ")
     
     # Summary
     print()

@@ -25,6 +25,23 @@ from typing import Any
 _CLI_SEPARATOR_WIDTH = 50
 
 
+def _exec_wrangler_d1(sql: str, cwd: Path | None = None) -> subprocess.CompletedProcess:
+    """Run one D1 statement via wrangler (shared by run_d1_query/run_d1_command — § BIG BANG factoriser).
+
+    Keeps `check=True` and the exact command shape of the prior inline copies; callers handle the
+    result (parse JSON vs boolean) themselves.
+    """
+    cmd = [
+        "npx", "wrangler", "d1", "execute", "lms-db", "--remote",
+        "--command", sql
+    ]
+    return subprocess.run(
+        cmd,
+        capture_output=True,
+        text=True,
+        cwd=cwd or Path(__file__).parent.parent, check=True)
+
+
 def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:
     """Execute a D1 query via wrangler.
 
@@ -35,17 +52,8 @@ def run_d1_query(sql: str, cwd: Path | None = None) -> dict[str, Any]:
     Returns:
         Parsed query result dict.
     """
-    cmd = [
-        "npx", "wrangler", "d1", "execute", "lms-db", "--remote",
-        "--command", sql
-    ]
-    
-    result = subprocess.run(
-        cmd, 
-        capture_output=True, 
-        text=True, 
-        cwd=cwd or Path(__file__).parent.parent, check=True)
-    
+    result = _exec_wrangler_d1(sql, cwd)
+
     if result.returncode != 0:
         raise RuntimeError(f"D1 query failed: {result.stderr}")
     
@@ -72,17 +80,8 @@ def run_d1_command(sql: str, cwd: Path | None = None) -> bool:
     Returns:
         True if the command succeeded.
     """
-    cmd = [
-        "npx", "wrangler", "d1", "execute", "lms-db", "--remote",
-        "--command", sql
-    ]
-    
-    result = subprocess.run(
-        cmd, 
-        capture_output=True, 
-        text=True, 
-        cwd=cwd or Path(__file__).parent.parent, check=True)
-    
+    result = _exec_wrangler_d1(sql, cwd)
+
     if result.returncode != 0:
         print(f"⚠️ Command failed: {result.stderr}")
         return False
