@@ -67,7 +67,13 @@ def _verify_route(app_dir: Path, target: str) -> str:
 
 
 def _local_html(app_dir: Path, route: str) -> Path:
+    # Next classique → frontend/out ; root-next (next à la racine, ex. showcase) → out/. On rend le PREMIER
+    # existant ; défaut frontend/out pour le message "absent → SKIP".
     rel = route.strip("/")
+    for out in (app_dir / "frontend" / "out", app_dir / "out"):
+        cand = (out / rel / "index.html") if rel else (out / "index.html")
+        if cand.is_file():
+            return cand
     out = app_dir / "frontend" / "out"
     return (out / rel / "index.html") if rel else (out / "index.html")
 
