@@ -92,7 +92,12 @@ if [[ "$HAS_COHERENCE" == "1" ]]; then
 fi
 
 # ── 6. D1 migrations + parité déployée (si l'app a des migrations) ────────────
-if [[ -n "$MIG_DIR" ]]; then
+# Détection d1 : dir hardcodé (db/migrations | backend/db/migrations) OU `migrations_dir` déclaré dans le WF toml
+# (gère les configs nested, ex. ticketing backend/wrangler-dev.toml → migrations_dir="ticketing-gateway/db/migrations").
+# wrangler résout le chemin réel depuis le toml ; cette détection ne décide QUE si on applique les migrations.
+HAS_D1="$MIG_DIR"
+[[ -z "$HAS_D1" && -n "$WF" ]] && grep -qE '^[[:space:]]*migrations_dir[[:space:]]*=' "$WF" 2>/dev/null && HAS_D1="toml"
+if [[ -n "$HAS_D1" ]]; then
   # D1_NAME depuis le manifest (backend.D1_NAME) si présent, sinon depuis le wrangler toml
   D1_NAME=""
   if [[ "$HAS_MANIFEST" == "1" ]]; then
