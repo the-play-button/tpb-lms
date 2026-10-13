@@ -16,6 +16,11 @@ import { initUserMenu } from '../ui/userMenu.js';
 import { updateBadgesGrid } from '../ui/badges.js';
 import { copyTextToClipboard } from '../ui/clipboard.js';
 
+// How long the transcript/resource copy button shows its "Copied" confirmation before reverting to
+// the original label. A UI label-revert debounce (not a timing hack) — cancelled on re-click via the
+// clearTimeout(btn._t) below, so a rapid second copy never leaves a stale label.
+const COPIED_LABEL_REVERT_MS = 1500;
+
 export const setupEventListeners = () => {
     initMobileTabs();
 
@@ -41,7 +46,7 @@ export const setupEventListeners = () => {
         btn.textContent = ok ? t('course.copied') : t('course.copyFailed');
         btn.classList.toggle('copied', ok);
         clearTimeout(btn._t);
-        btn._t = setTimeout(() => { btn.textContent = restore; btn.classList.remove('copied'); }, 1500);
+        btn._t = setTimeout(() => { btn.textContent = restore; btn.classList.remove('copied'); }, COPIED_LABEL_REVERT_MS);
     });
 
     // The left-rail course tree (#courseTree) is wired in app/ui/sidebar.js
