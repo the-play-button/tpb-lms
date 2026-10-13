@@ -16,6 +16,6 @@ id = "5184257691654a91bb86872dc20ab866"
 
 [vars]
 ACCESS_TEAM_DOMAIN = "theplaybutton"
-BASTION_URL = "https://tpb-bastion-backend-staging.matthieu-marielouise.workers.dev"
-TPB_STORAGE_URL = "https://tpb-storage.matthieu-marielouise.workers.dev"
+BASTION_URL = "https://bastion-backend-staging.theplaybutton.dev"
+TPB_STORAGE_URL = "https://storage.theplaybutton.dev"
 CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
