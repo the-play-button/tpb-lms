@@ -33,7 +33,7 @@ jobs:
       - name: Setup pnpm via corepack
         run: |
           corepack enable
-          corepack prepare pnpm@9 --activate
+          corepack prepare pnpm@10.17.1 --activate
 
       - name: Inject npm auth token (global ~/.npmrc)
         env:
