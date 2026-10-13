@@ -40,7 +40,7 @@ jobs:
           EOF
 
       - name: Install dependencies
-        run: pnpm install --ignore-workspace --frozen-lockfile
+        run: pnpm install --frozen-lockfile
 
       - name: Gate — Typecheck (tsc --noEmit)
         run: pnpm typecheck
