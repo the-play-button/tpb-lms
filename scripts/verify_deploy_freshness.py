@@ -110,8 +110,8 @@ def _clear_wrangler_cache(app_dir: Path) -> None:
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("target", choices=["dev", "staging", "production"])
-    ap.add_argument("--wrangler", required=True)
-    ap.add_argument("--app-dir", default=".")
+    ap.add_argument("--wrangler", required=True, help="Path to the env's wrangler-<target>.toml (relative to --app-dir or absolute).")
+    ap.add_argument("--app-dir", default=".", help="App repo root (default: current dir).")
     args = ap.parse_args()
     app_dir = Path(args.app_dir).resolve()
     wf = Path(args.wrangler)
