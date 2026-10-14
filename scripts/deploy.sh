@@ -113,6 +113,30 @@ if [[ -n "$HAS_D1" ]]; then
   fi
 fi
 
+# ── 6.5 DEPLOY-PARITY: a prod deploy MUST ship code that is ON origin/main ───
+# POST-MORTEM 2026-10-14 (bi mono-BC): the mono-BC was deployed to prod via wrangler while NEVER pushed to
+# origin/main → "déployé" ≠ "sur origin/main" → a later reset --hard origin/main regressed prod. `pnpm exec
+# wrangler` (below) BYPASSES the ~/bin/wrangler alias guard, so the invariant prod==origin/main is enforced HERE
+# too. Blocks a PROD deploy whose HEAD isn't an ancestor of origin/main, or with uncommitted TRACKED changes.
+if [[ "${TARGET:-}" == prod* || "${TARGET:-}" == production || "$WF" == *production* ]]; then
+  git fetch origin main --quiet 2>/dev/null || true
+  _dp_head="$(git rev-parse HEAD 2>/dev/null || true)"
+  _dp_block=""
+  if [[ -n "$_dp_head" ]] && git rev-parse --verify --quiet origin/main >/dev/null 2>&1; then
+    git merge-base --is-ancestor "$_dp_head" origin/main 2>/dev/null \
+      || _dp_block="HEAD ${_dp_head:0:10} is NOT an ancestor of origin/main"
+  fi
+  if [[ -n "$(git status --porcelain --untracked-files=no 2>/dev/null)" ]]; then
+    _dp_block="${_dp_block:+$_dp_block; }uncommitted TRACKED changes in the working tree"
+  fi
+  if [[ -n "$_dp_block" && "${TPB_ALLOW_OFFMAIN_DEPLOY:-0}" != "1" ]]; then
+    echo "❌ BLOQUÉ (§prod==origin/main, POST-MORTEM 2026-10-14): $_dp_block." >&2
+    echo "   On ne déploie JAMAIS en prod un commit absent d'origin/main. → git push origin HEAD:main, puis redeploy." >&2
+    echo "   Escape délibéré (rare): TPB_ALLOW_OFFMAIN_DEPLOY=1" >&2
+    exit 1
+  fi
+fi
+
 # ── 7. DEPLOY + PROVENANCE-STAMP (axe 51 : bundle==source vérifiable) ─────────
 COMMIT_SHA="$(git rev-parse HEAD 2>/dev/null || echo nogit)"
 n "deploy Worker (-c ${WF}) + provenance COMMIT_SHA=${COMMIT_SHA:0:12}…"
