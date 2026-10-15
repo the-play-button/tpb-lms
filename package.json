@@ -7,13 +7,13 @@
     "dev": "wrangler dev --config backend/wrangler-dev.toml",
     "db:migrate:remote": "wrangler d1 migrations apply lms-db --remote --config backend/wrangler-dev.toml",
     "deploy": "bash scripts/deploy.sh dev",
-    "deploy:prod": "pnpm run typecheck && echo '\\n✗ Direct wrangler deploy --config backend/wrangler-dev.toml --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
+    "deploy:prod": "pnpm run typecheck && echo '\\n\u2717 Direct wrangler deploy --config backend/wrangler-dev.toml --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit -p backend/tsconfig.json",
-    "deploy:staging": "echo '\\n✗ Direct wrangler deploy --env staging INTERDIT. Push main→staging (git push origin main:staging → deploy-staging.yml).' && exit 1",
-    "deploy:production": "echo '\\n✗ Direct wrangler deploy --env production INTERDIT. Use the weekly release train.' && exit 1"
+    "deploy:staging": "echo '\\n\u2717 Direct wrangler deploy --env staging INTERDIT. Push main\u2192staging (git push origin main:staging \u2192 deploy-staging.yml).' && exit 1",
+    "deploy:production": "echo '\\n\u2717 Direct wrangler deploy --env production INTERDIT. Use the weekly release train.' && exit 1"
   },
   "dependencies": {
     "@the-play-button/tpb-sdk-js": "24.1.0",
@@ -28,7 +28,8 @@
     "eslint": "^9.39.5",
     "eslint-plugin-unused-imports": "^4.4.1",
     "typescript": "^5.9.3",
-    "vitest": "^4.1.0"
+    "vitest": "^4.1.0",
+    "wrangler": "4.149.0"
   },
   "packageManager": "pnpm@10.17.1",
   "pnpm": {
