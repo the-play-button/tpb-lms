@@ -12,7 +12,7 @@
 
 ### 1. Accès Direct
 ```
-https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2
+https://lms-viewer.theplaybutton.dev?som=pw05-2
 ```
 
 ### 2. Login Process

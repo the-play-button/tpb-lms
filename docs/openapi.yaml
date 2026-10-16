@@ -23,7 +23,7 @@ info:
     email: tech@theplaybutton.ai
 
 servers:
-  - url: https://lms-api.matthieu-marielouise.workers.dev
+  - url: https://lms-api.theplaybutton.dev
     description: Production server
   - url: http://localhost:8787
     description: Local development

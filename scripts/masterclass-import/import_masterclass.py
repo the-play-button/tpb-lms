@@ -19,7 +19,7 @@ from pathlib import Path
 import httpx
 from tpb_sdk.bastion import BastionClient
 
-LMS = "https://lms-api.matthieu-marielouise.workers.dev"
+LMS = "https://lms-api.theplaybutton.dev"
 VAULT_PAT_PATH = "tpb/apps/lms/bastion_token"
 
 # Derive the workspace root by walking up to the marker dir (§ hardcoded_workspace_root_path :
@@ -40,7 +40,7 @@ PROGRAM = ("prog_mc_sales_academy", "TPB Sales Academy")
 
 # Course cover images (served by the lms-viewer worker /thumbnails/). Carried on the
 # course mediaJson so re-imports PRESERVE the covers instead of wiping them.
-VIEWER = "https://lms-viewer.matthieu-marielouise.workers.dev/thumbnails"
+VIEWER = "https://lms-viewer.theplaybutton.dev/thumbnails"
 COURSE_COVERS = {
     "course_mc_1": "course-1-vision",
     "course_mc_2": "course-2-outbound",

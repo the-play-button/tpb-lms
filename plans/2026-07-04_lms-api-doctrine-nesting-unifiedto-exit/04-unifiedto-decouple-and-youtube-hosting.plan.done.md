@@ -28,7 +28,7 @@ de service live**.
   - **CORRECTION (post-review user 2026-07-04)** : mon affirmation initiale « le
     frontend tpb-lms est vide » était **FAUSSE**. `frontend/` est vide, mais
     `frontend-on-cf-worker/` est le vrai frontend déployé (worker `lms-viewer`,
-    https://lms-viewer.matthieu-marielouise.workers.dev/). Son renderer vidéo ne
+    https://lms-viewer.theplaybutton.dev/). Son renderer vidéo ne
     gérait que Cloudflare Stream + MP4 natif — une URL YouTube tombait dans
     `<video src>` (cassé). **Corrigé** : support YouTube end-to-end
     (embed `/embed/` + tracking via YouTube IFrame API). Commit `8a6b095` :

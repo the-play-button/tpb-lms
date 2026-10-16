@@ -125,7 +125,7 @@ côté scripts.
 
 **Chemin** : `Apps/the-play-button/tpb-lms/plans/2026-07-05_tpb-sales-masterclass-3.0-fresh/_content/` (27 fichiers · 11 729 mots) + `scripts/masterclass-import/import_masterclass.py`.
 
-6 cours live (Program « TPB Sales Academy », `lms-viewer.matthieu-marielouise.workers.dev`) :
+6 cours live (Program « TPB Sales Academy », `lms-viewer.theplaybutton.dev`) :
 1. Vision & Context · 2. Outbound Mastery (Nick Saraev, vidéo) · 3. Sales Conversation ·
 4. The Offer · 5. Practice & Reinforcement · 6. Onboarding & Daily Rhythm.
 **C'est la direction actuelle** (one offer / five products, ICP mid-market B2B, WGE-like).

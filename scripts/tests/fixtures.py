@@ -29,7 +29,7 @@ import requests
 from tpb_sdk.bastion import BastionClient
 
 # Configuration
-API_BASE = "https://lms-api.matthieu-marielouise.workers.dev"
+API_BASE = "https://lms-api.theplaybutton.dev"
 LMS_ROOT = Path(__file__).parent.parent.parent
 
 _FIXTURE_TIMEOUT = 30

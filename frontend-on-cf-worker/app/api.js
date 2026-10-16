@@ -15,7 +15,7 @@
 
 import { sessionId } from './state.js';
 
-export const API_BASE = 'https://lms-api.matthieu-marielouise.workers.dev/api';
+export const API_BASE = 'https://lms-api.theplaybutton.dev/api';
 
 let authToken = null;
 

@@ -37,7 +37,7 @@ from pathlib import Path
 
 _BUILD_ID_RE = re.compile(r'<meta\b[^>]*\bname=["\']tpb-build-id["\'][^>]*\bcontent=["\']([^"\']*)["\']', re.I)
 _BUILD_ID_RE2 = re.compile(r'<meta\b[^>]*\bcontent=["\']([^"\']*)["\'][^>]*\bname=["\']tpb-build-id["\']', re.I)
-_DEV_HOST_SUFFIX = ".matthieu-marielouise.workers.dev"
+_DEV_HOST_SUFFIX = ".theplaybutton.dev"
 MAX_RETRIES = 2
 
 

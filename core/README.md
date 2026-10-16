@@ -10,7 +10,7 @@ Briques réutilisables du framework TPB, destinées à être extraites vers un r
 ┌─────────────────────────────────────────────────────────────┐
 │                    tpb-bastion-backend                           │
 │  Secrets d'infrastructure partagés                          │
-│  URL: https://tpb-bastion-backend.matthieu-marielouise.workers.dev
+│  URL: https://tpb-bastion-backend.theplaybutton.dev
 │  ─────────────────────────────────────────────────────────  │
 │  CLOUDFLARE_ACCOUNT_ID        # Account Cloudflare          │
 │  CLOUDFLARE_API_TOKEN         # Token API principal         │
@@ -76,7 +76,7 @@ def get_secret(name: str, vault_url: str = None) -> str:
     """Fetch secret from TPB Vault."""
     vault_url = vault_url or os.environ.get(
         "TPB_VAULT_URL", 
-        "https://tpb-bastion-backend.matthieu-marielouise.workers.dev"
+        "https://tpb-bastion-backend.theplaybutton.dev"
     )
     
     resp = requests.get(

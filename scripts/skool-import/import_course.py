@@ -33,7 +33,7 @@ from _asset_urls import resolve_asset_url
 import os
 
 # Target env override — default is dev. For prod/staging, set LMS_API_URL + LMS_BASTION_TOKEN.
-LMS = os.environ.get("LMS_API_URL", "https://lms-api.matthieu-marielouise.workers.dev")
+LMS = os.environ.get("LMS_API_URL", "https://lms-api.theplaybutton.dev")
 VAULT_PAT_PATH = "tpb/apps/lms/bastion_token"
 
 _IMG_RE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)(\s+\"[^\"]*\")?\)")

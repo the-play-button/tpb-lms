@@ -3,7 +3,7 @@
  * GAP-1406: Security headers
  */
 
-const PRIMARY_ORIGIN = 'https://lms-viewer.matthieu-marielouise.workers.dev';  // Frontend (Workers) — dev
+const PRIMARY_ORIGIN = 'https://lms-viewer.theplaybutton.dev';  // Frontend (Workers) — dev
 
 /** Local dev server port for the LMS viewer (Vite/static preview). */
 const LOCAL_DEV_PORT = 8080;

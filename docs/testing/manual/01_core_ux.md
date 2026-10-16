@@ -16,7 +16,7 @@ python scripts/tests/fixtures.py clean_slate --profile student_alice
 ```
 
 ### Actions (Humain)
-1. Ouvre https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2
+1. Ouvre https://lms-viewer.theplaybutton.dev?som=pw05-2
 2. **Cmd+Shift+R** (hard refresh)
 
 ### Validation (Humain reporte)

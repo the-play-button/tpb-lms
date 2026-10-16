@@ -48,7 +48,7 @@ Aucune création/push de repo GitHub → l'**action outward-facing du plan (Step
   - `strip_metadata_header` (drop le bloc extractor jusqu'au 1er `---`), `inline_relative_images`
     (relatif → data-URI base64), media VIDEO Loom/YouTube, cover Skool CDN.
 
-## Vérif live (tpb-browser, `lms-viewer.matthieu-marielouise.workers.dev`)
+## Vérif live (tpb-browser, `lms-viewer.theplaybutton.dev`)
 
 - Classroom : la carte « Pre-Program: Start Here » apparaît (data-course-id présent).
 - Cours ouvert : arbre **3 sections** (« Maker School 101 » / « What will you build? » /

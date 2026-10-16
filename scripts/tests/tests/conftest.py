@@ -15,7 +15,7 @@ from tpb_sdk.bastion import BastionClient
 # Configuration
 # ============================================
 
-PROD_URL = "https://lms-api.matthieu-marielouise.workers.dev"
+PROD_URL = "https://lms-api.theplaybutton.dev"
 LOCAL_URL = "http://localhost:8787"
 
 # Default to prod

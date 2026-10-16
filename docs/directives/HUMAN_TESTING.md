@@ -95,7 +95,7 @@ Voir [`docs/testing/HITL_SESSION_TEMPLATE.md`](../testing/HITL_SESSION_TEMPLATE.
 
 | Environment | Frontend | API |
 |-------------|----------|-----|
-| Production | https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2 | https://lms-api.matthieu-marielouise.workers.dev |
+| Production | https://lms-viewer.theplaybutton.dev?som=pw05-2 | https://lms-api.theplaybutton.dev |
 
 **Note**: Toujours utiliser `?som=pw05-2` pour les tests (cours de test).
 
@@ -292,7 +292,7 @@ npx wrangler d1 execute lms-db --remote --command \
 >
 > Fixture `clean_slate` appliquée. DB vérifiée : 0 progression.
 >
-> **Action**: Ouvre https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2 (Cmd+Shift+R)
+> **Action**: Ouvre https://lms-viewer.theplaybutton.dev?som=pw05-2 (Cmd+Shift+R)
 >
 > **Dis-moi** (je ne peux PAS voir ton écran) :
 > 1. XP affiché en haut ? (devrait être 0)
@@ -360,7 +360,7 @@ npx wrangler d1 execute lms-db --remote --command \
 > 3. Lance la vidéo, regarde 10-15 secondes
 > 4. Note la position (ex: 0:45)
 > 5. Ferme l'onglet complètement
-> 6. Rouvre https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2
+> 6. Rouvre https://lms-viewer.theplaybutton.dev?som=pw05-2
 >
 > **Dis-moi** :
 > 1. XP affiché ? (devrait être > 0)
@@ -407,7 +407,7 @@ python3 scripts/tests/fixtures.py step3 --user-id <USER_ID> --email <EMAIL>
 #### 2. Observe (Agent MCP)
 
 ```python
-browser_navigate("https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2")
+browser_navigate("https://lms-viewer.theplaybutton.dev?som=pw05-2")
 snapshot = browser_snapshot()
 xp_before = extract_xp(snapshot)  # Noter XP avant quiz
 ```
@@ -475,7 +475,7 @@ python3 scripts/tests/fixtures.py step3 --user-id <USER_ID> --email <EMAIL>
 #### 2. Observe (Agent MCP - resize mobile)
 
 ```python
-browser_navigate("https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2")
+browser_navigate("https://lms-viewer.theplaybutton.dev?som=pw05-2")
 browser_resize(width=390, height=844)  # iPhone 12 Pro
 snapshot = browser_snapshot()
 # Vérifier structure DOM en mobile
@@ -528,7 +528,7 @@ python3 scripts/tests/fixtures.py step3 --user-id <USER_ID> --email <EMAIL>
 #### 2. Observe (Agent MCP - deep link)
 
 ```python
-browser_navigate("https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2&step=1")
+browser_navigate("https://lms-viewer.theplaybutton.dev?som=pw05-2&step=1")
 snapshot = browser_snapshot()
 # Vérifier: sur étape 2 (index 1)
 ```
@@ -540,7 +540,7 @@ snapshot = browser_snapshot()
 > J'ai ouvert `?step=1` via MCP et je vois l'étape correspondante.
 >
 > **Actions** (toi pour tester history browser) :
-> 1. Ouvre `https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2&step=1`
+> 1. Ouvre `https://lms-viewer.theplaybutton.dev?som=pw05-2&step=1`
 > 2. Clique "Suivant"
 > 3. Regarde si l'URL change à `?step=2`
 > 4. Clique Back dans le navigateur
@@ -554,7 +554,7 @@ snapshot = browser_snapshot()
 
 ```python
 # Après navigation humaine
-browser_navigate("https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2")
+browser_navigate("https://lms-viewer.theplaybutton.dev?som=pw05-2")
 # L'URL devrait maintenant avoir ?step=N
 ```
 
@@ -588,7 +588,7 @@ python3 scripts/tests/fixtures.py step3 --user-id <USER_ID> --email <EMAIL>
 #### 2. Observe (Agent MCP - état initial)
 
 ```python
-browser_navigate("https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2")
+browser_navigate("https://lms-viewer.theplaybutton.dev?som=pw05-2")
 snapshot_before = browser_snapshot()
 xp_before = extract_xp(snapshot_before)
 ```
@@ -647,7 +647,7 @@ python3 scripts/tests/fixtures.py step3 --user-id <USER_ID> --email <EMAIL>
 #### 2. Observe (Agent MCP)
 
 ```python
-browser_navigate("https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2")
+browser_navigate("https://lms-viewer.theplaybutton.dev?som=pw05-2")
 snapshot = browser_snapshot()
 ```
 
@@ -706,7 +706,7 @@ python3 scripts/tests/fixtures.py clean_slate --user-id <USER_ID> --email <EMAIL
 #### 2. Observe (Agent MCP)
 
 ```python
-browser_navigate("https://lms-viewer.matthieu-marielouise.workers.dev?som=pw05-2")
+browser_navigate("https://lms-viewer.theplaybutton.dev?som=pw05-2")
 snapshot = browser_snapshot()
 # XP = 0, fresh state
 ```

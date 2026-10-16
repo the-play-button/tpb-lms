@@ -289,6 +289,6 @@ Fichiers modifiés :
 
 *Second Speedrun: 2024-12-29*
 *6 GAPs implémentés en ~3h30*
-*Deploy verified: https://lms-api.matthieu-marielouise.workers.dev*
-*Frontend verified: https://lms-viewer.matthieu-marielouise.workers.dev*
+*Deploy verified: https://lms-api.theplaybutton.dev*
+*Frontend verified: https://lms-viewer.theplaybutton.dev*
 *Tests: 17/17 passing*

@@ -95,7 +95,7 @@ python scripts/tests/fixtures.py setup_instructor --profile instructor_bob
 ```bash
 # Vérifier que l'API retourne le bon rôle
 curl -H "Authorization: Bearer <instructor_token>" \
-  "https://lms-api.matthieu-marielouise.workers.dev/api/auth/session"
+  "https://lms-api.theplaybutton.dev/api/auth/session"
 ```
 
 ---

@@ -20,8 +20,8 @@ from typing import Tuple
 # Per CLAUDE.md § CF ACCESS doctrine : use `http.client.HTTPSConnection`
 # instead of `urllib.request` (= preserves header casing, doesn't trigger
 # the semgrep dynamic-urllib detector on hardcoded constants).
-_BACKEND_HOST = "lms-api.matthieu-marielouise.workers.dev"
-_FRONTEND_HOST = "lms-viewer.matthieu-marielouise.workers.dev"
+_BACKEND_HOST = "lms-api.theplaybutton.dev"
+_FRONTEND_HOST = "lms-viewer.theplaybutton.dev"
 _BACKEND_HEALTH_PATH = "/api/health"
 _FRONTEND_ROOT_PATH = "/"
 # Public URLs kept for logs (= human-readable echo) ; not used as request inputs.
