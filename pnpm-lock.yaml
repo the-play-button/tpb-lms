@@ -1612,7 +1612,7 @@ packages:
         optional: true
 
   '@the-play-button/tpb-sdk-react@13.6.0':
-    resolution: {integrity: sha512-xGdke+/B+n90T5nkKaHO+qNK4/8ifrpEK60o81xmGX4Q8KXp2cs5Nqt1hq4SAaBIjP1y2y4q59HVOGvfbwg/sw==, tarball: https://tpb-npm-registry-proxy.matthieu-marielouise.workers.dev/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-react/-/13.6.0/tpb-sdk-react-13.6.0.tgz}
+    resolution: {integrity: sha512-xGdke+/B+n90T5nkKaHO+qNK4/8ifrpEK60o81xmGX4Q8KXp2cs5Nqt1hq4SAaBIjP1y2y4q59HVOGvfbwg/sw==, tarball: https://npm.tpb.sh/api/packages/the-play-button/npm/%40the-play-button%2Ftpb-sdk-react/-/13.6.0/tpb-sdk-react-13.6.0.tgz}
     peerDependencies:
       '@assistant-ui/react': '>=0.12.0'
       '@radix-ui/react-checkbox': '>=1.0.0'
