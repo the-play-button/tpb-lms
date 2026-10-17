@@ -9,8 +9,8 @@ compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
 # D1 Database binding
 [[d1_databases]]
 binding = "DB"
-database_name = "lms-db"
-database_id = "ef408d5f-f191-4743-98b5-cb73429c8283"
+database_name = "lms-db-dev"
+database_id = "597a891e-09c0-4ff8-a9be-ec4faac9f395"
 migrations_dir = "../db/migrations"
 
 # PAM login-as anti-replay jti store (DPoP). Dedicated per-app PAM_JTI_KV (flat-terrain canonical).
