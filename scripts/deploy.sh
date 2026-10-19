@@ -43,8 +43,10 @@ if [[ -f "wrangler-${TARGET}.toml" ]]; then
 elif [[ -f "backend/wrangler-${TARGET}.toml" ]]; then
   WF="backend/wrangler-${TARGET}.toml"
 else
-  echo "✗ ni wrangler-${TARGET}.toml ni backend/wrangler-${TARGET}.toml (materialize d'abord ?)" >&2
-  WF=""   # peut être matérialisé ci-dessous à partir du template
+  WF=""   # racine/backend absents → tente un sous-dir backend/*/ (worker nested, ex. ticketing-gateway) ;
+          # sinon peut être matérialisé ci-dessous à partir du template.
+  for _cand in backend/*/wrangler-${TARGET}.toml; do [[ -f "$_cand" ]] && { WF="$_cand"; break; }; done
+  [[ -z "$WF" ]] && echo "✗ ni wrangler-${TARGET}.toml ni backend/[*/]wrangler-${TARGET}.toml (materialize d'abord ?)" >&2
 fi
 
 # ── Presence-detection (chaque app ne fait QUE ce qui s'applique) ─────────────
@@ -78,6 +80,7 @@ if [[ "$HAS_MATERIALIZE" == "1" ]]; then
   # (re-résout WF si le template vient de le produire)
   [[ -z "$WF" && -f "wrangler-${TARGET}.toml" ]] && WF="wrangler-${TARGET}.toml"
   [[ -z "$WF" && -f "backend/wrangler-${TARGET}.toml" ]] && WF="backend/wrangler-${TARGET}.toml"
+  if [[ -z "$WF" ]]; then for _cand in backend/*/wrangler-${TARGET}.toml; do [[ -f "$_cand" ]] && { WF="$_cand"; break; }; done; fi
 fi
 [[ -n "$WF" ]] || { echo "✗ wrangler config introuvable après materialize" >&2; exit 1; }
 
