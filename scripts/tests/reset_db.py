@@ -574,7 +574,7 @@ def main():
         success, output = run_frontend_deploy()
         if success:
             print(f"{GREEN}✓ Déployé{RESET}")
-            print(f"     {CYAN}https://lms-viewer.theplaybutton.dev{RESET}")
+            print(f"     {CYAN}https://lms.theplaybutton.dev{RESET}")
         else:
             print(f"{RED}✗ Erreur{RESET}")
             print(f"     {output}")
