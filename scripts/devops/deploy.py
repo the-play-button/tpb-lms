@@ -30,7 +30,7 @@ RESET = "\033[0m"
 BACKEND_WORKER = "lms-api"
 FRONTEND_WORKER = "lms-viewer"
 BACKEND_URL = "https://lms-api.theplaybutton.dev"
-FRONTEND_URL = "https://lms-viewer.theplaybutton.dev"
+FRONTEND_URL = "https://lms.theplaybutton.dev"
 
 _SUBPROCESS_TIMEOUT = 120
 _CLI_SEPARATOR_WIDTH = 50

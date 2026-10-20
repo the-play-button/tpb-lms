@@ -264,7 +264,7 @@ def main():
 
     print("🎯 Next Steps:")
     print("1. Users can now login via CF Access at:")
-    print("   https://lms-viewer.theplaybutton.dev")
+    print("   https://lms.theplaybutton.dev")
     print("2. They will have the correct roles in LMS")
     print("3. Use these accounts for manual testing")
 

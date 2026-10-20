@@ -40,7 +40,7 @@ PROGRAM = ("prog_mc_sales_academy", "TPB Sales Academy")
 
 # Course cover images (served by the lms-viewer worker /thumbnails/). Carried on the
 # course mediaJson so re-imports PRESERVE the covers instead of wiping them.
-VIEWER = "https://lms-viewer.theplaybutton.dev/thumbnails"
+VIEWER = "https://lms.theplaybutton.dev/thumbnails"
 COURSE_COVERS = {
     "course_mc_1": "course-1-vision",
     "course_mc_2": "course-2-outbound",
