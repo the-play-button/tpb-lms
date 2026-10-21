@@ -94,6 +94,9 @@ BACKEND_KEY_ALLOWLIST = frozenset(
         # in _KEY (a secret suffix the nomenclature regex rejects by design) — only this documented public DSN key
         # is excepted; every other *_KEY stays rejected → vault.
         "CLIENT_INGEST_KEY",
+        # tpb-cli arguments of the env's authenticated smoke read (smoke_canonical.py, axis 107) — a command line,
+        # never a credential (the identity is BASTION_TOKEN, from the runner).
+        "SMOKE_TPB_ARGS",
     }
 )
 # Whitelist by nomenclature — KNOWN public wrangler [vars] categories. A secret
@@ -384,12 +387,11 @@ def _ensure_workers_dev_false(wrangler_text: str, target: str) -> str:
     wrong answer becomes FALSE. One injection point → every app inherits, zero per-app
     template edit (mirror of `_ensure_environment_var`).
 
-    DEV keeps its `*.theplaybutton.dev` subdomain (Matthieu's + the
-    agents' working env — sacred, § feedback_dev_workers_sacred) → skip target 'dev'.
+    DEV too (2026-10-21): the "dev workers.dev is sacred" premise was a phantom, revoked by the user on
+    2026-10-14 ("workers.dev = FLÉAU") and again 2026-10-21 ("KILL"). Dev serves via `<app>.theplaybutton.dev`
+    custom domains; the removed dev-only twin re-enabled the subdomain on every dev deploy.
     Idempotent: no-op if the template already declares `workers_dev`. Injected as a
     ROOT-table key (right after `name = `) so it never binds to a `[table]` below."""
-    if target not in ("staging", "production"):
-        return wrangler_text
     for line in wrangler_text.splitlines():
         stripped = line.strip()
         if stripped.startswith("workers_dev") and "=" in stripped and not stripped.startswith("#"):
@@ -401,33 +403,6 @@ def _ensure_workers_dev_false(wrangler_text: str, target: str) -> str:
             lines.insert(i + 1, inject)
             return "\n".join(lines) + ("\n" if wrangler_text.endswith("\n") else "")
     # No `name =` line (unexpected) → prepend at the very top (still a root-table key).
-    return inject + "\n" + wrangler_text
-
-
-def _ensure_workers_dev_true(wrangler_text: str, target: str) -> str:
-    """Force top-level `workers_dev = true` on DEV so the Worker's `*.theplaybutton.dev` subdomain
-    is SERVED (Matthieu's + the agents' working env — sacred, § feedback_dev_workers_sacred).
-
-    SYMÉTRIQUE de `_ensure_workers_dev_false` — et le CHAÎNON MANQUANT (incident 2026-10-07, Alex) : le commit
-    `32bf3fc` a supprimé les wrangler.toml concrets qui portaient `workers_dev = true` au profit du template partagé
-    (qui ne le porte pas). Le materializer SKIPPAIT dev (le laissait non-déclaré) au lieu de l'INJECTER → au prochain
-    `wrangler deploy` dev, le subdomain se COUPE → la connexion §4g dev pointe vers du 404 → ensureBankAccounting 500
-    (bank-tx storage) ; tpb-martech/tpb-repository re-cassent. Le fix durable = injecter `workers_dev = true` DEV-ONLY
-    en source (via ce materializer per-env), PAS un ajout global (staging/prod gardent `false` via la fonction sœur).
-
-    Idempotent : no-op si le template déclare déjà `workers_dev`. Injecté comme clé ROOT (après `name = `)."""
-    if target != "dev":
-        return wrangler_text
-    for line in wrangler_text.splitlines():
-        stripped = line.strip()
-        if stripped.startswith("workers_dev") and "=" in stripped and not stripped.startswith("#"):
-            return wrangler_text
-    inject = "workers_dev = true"
-    lines = wrangler_text.splitlines()
-    for i, line in enumerate(lines):
-        if line.strip().startswith("name ") or line.strip().startswith("name="):
-            lines.insert(i + 1, inject)
-            return "\n".join(lines) + ("\n" if wrangler_text.endswith("\n") else "")
     return inject + "\n" + wrangler_text
 
 
@@ -529,10 +504,9 @@ def materialize(
             _fail(str(exc))
         # Auto-inject the ENVIRONMENT env-name signal (SDK telemetry SSOT resolution).
         substituted = _ensure_environment_var(substituted, target)
-        # Force workers_dev=false on staging/prod → reachable only via custom domain,
-        # never the ugly `*.<account>.workers.dev` (§ no_workers_dev_prod_url). Dev keeps it.
+        # Force workers_dev=false on EVERY env → reachable only via its custom domain, never the ugly
+        # `*.<account>.workers.dev` (§ no_workers_dev_prod_url ; dev included since 2026-10-21, user: KILL).
         substituted = _ensure_workers_dev_false(substituted, target)
-        substituted = _ensure_workers_dev_true(substituted, target)   # dev-only (symétrique) — subdomain dev sacré (§ 32bf3fc fix 2026-10-07)
         if not check_only:
             out_path = template_path.parent / f"wrangler-{target}.toml"
             out_path.write_text(substituted, encoding="utf-8")
