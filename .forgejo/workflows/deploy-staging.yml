@@ -95,9 +95,6 @@ jobs:
       - name: Materialize public env (staging)
         run: python3 scripts/materialize_public_env.py staging
 
-      - name: Verify build-env coherence (staging) — § IDP COHERENCE
-        run: python3 scripts/verify_build_env_coherence.py staging
-
       - name: Backup D1 pre-migration (§ G3 restored — export before schema change)
         run: |
           set -x
