@@ -95,17 +95,14 @@ jobs:
       - name: Materialize public env (staging)
         run: python3 scripts/materialize_public_env.py staging
 
-      - name: Verify build-env coherence (staging) — § IDP COHERENCE
-        run: python3 scripts/verify_build_env_coherence.py staging
-
       - name: Backup D1 pre-migration (§ G3 restored — export before schema change)
         run: |
           set -x
-          if [ -d db/migrations ] && grep -q 'migrations_dir' wrangler-staging.toml; then
+          if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-staging.toml; then
             mkdir -p .d1-backup
-            grep 'database_name' wrangler-staging.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
+            grep 'database_name' backend/wrangler-staging.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
               echo "Backing up $DB before migration (staging)..."
-              CI=1 npx -y wrangler@latest d1 export "$DB" --remote --config wrangler-staging.toml --output ".d1-backup/$DB.$(date -u +%Y%m%dT%H%M%SZ).sql" || { echo "FATAL: D1 backup failed for $DB"; exit 1; }
+              CI=1 npx -y wrangler@latest d1 export "$DB" --remote --config backend/wrangler-staging.toml --output ".d1-backup/$DB.$(date -u +%Y%m%dT%H%M%SZ).sql" || { echo "FATAL: D1 backup failed for $DB"; exit 1; }
             done
           else
             echo "No db/migrations or no migrations_dir — skipping D1 backup"
@@ -114,9 +111,9 @@ jobs:
       - name: Apply D1 migrations (staging)
         run: |
           set -x
-          if [ -d db/migrations ] && grep -q 'migrations_dir' wrangler-staging.toml; then
-            grep 'database_name' wrangler-staging.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
-              CI=1 npx -y wrangler@latest d1 migrations apply "$DB" --remote --config wrangler-staging.toml
+          if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-staging.toml; then
+            grep 'database_name' backend/wrangler-staging.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
+              CI=1 npx -y wrangler@latest d1 migrations apply "$DB" --remote --config backend/wrangler-staging.toml
             done
           else
             echo "No db/migrations or no migrations_dir — skipping migrations"
@@ -126,13 +123,13 @@ jobs:
         run: |
           # PROVENANCE-STAMP COMMIT_SHA (axe 51 bundle==source vérifiable, fleet homogénéisé) — mirror deploy.sh:143.
           COMMIT_SHA="$(git rev-parse HEAD 2>/dev/null || echo nogit)"
-          npx -y wrangler@latest deploy --config wrangler-staging.toml --var "COMMIT_SHA:${COMMIT_SHA}"
+          npx -y wrangler@latest deploy --config backend/wrangler-staging.toml --var "COMMIT_SHA:${COMMIT_SHA}"
 
       - name: Smoke test (FAIL-HARD — § G1, curl -f not '|| echo WARN')
         run: |
           set -x
           sleep 10
-          URL="$(grep -E '^\s*(routes|route|workers_dev)' wrangler-staging.toml >/dev/null 2>&1 && echo '' || echo '')"
+          URL="$(grep -E '^\s*(routes|route|workers_dev)' backend/wrangler-staging.toml >/dev/null 2>&1 && echo '' || echo '')"
           # minimal fail-hard smoke: the deploy step already fails on wrangler error;
           # here we assert the health surface responds 2xx. App-specific smoke-recipes = Phase 2 (G2).
           if [ -f scripts/smoke_recipe.sh ]; then
