@@ -79,7 +79,16 @@ jobs:
       - name: Gate — Pre-deploy secrets check (§ J3 restored)
         env:
           BASTION_TOKEN: ${{ secrets.BASTION_TOKEN_PRODUCTION }}
-        run: python3 scripts/pre_deploy_secrets_check.py --app-path . --target production --bastion-token "$BASTION_TOKEN"
+          FORGEJO_PYPI_TOKEN: ${{ secrets.FORGEJO_PYPI_TOKEN }}
+        run: |
+          set -eu
+          # The check calls `tpb bastion check-secret` (tpb-cli >= 0.12.0) : the runner has no `tpb`, install it in a
+          # job-unique venv removed on EXIT (no /tmp leak, no PATH side effect on later steps) — same index as tpb-cli CI.
+          VENVROOT="$(mktemp -d)"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"
+          python3 -m venv "$VENV" 2>/dev/null || { apt-get install -y -qq python3-venv >/dev/null 2>&1 && python3 -m venv "$VENV"; }
+          SCHEME="${GITHUB_SERVER_URL%%://*}"; HOSTPORT="${GITHUB_SERVER_URL#*://}"
+          "$VENV/bin/pip" install --quiet             --index-url "${SCHEME}://token:${FORGEJO_PYPI_TOKEN}@${HOSTPORT}/api/packages/the-play-button/pypi/simple/"             --extra-index-url https://pypi.org/simple/             --trusted-host "${HOSTPORT%%:*}" --trusted-host "$HOSTPORT"             "tpb-cli>=0.12.0"
+          PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target production --bastion-token "$BASTION_TOKEN"
 
       - name: Gate — Shutdown window (prod, § G3 restored)
         run: bash scripts/check_shutdown_window.sh
