@@ -26,17 +26,25 @@ if ! [[ "$DAY_OF_WEEK" =~ ^[1-7]$ ]]; then
   echo "ERROR: SHUTDOWN_WINDOW_DAY_OF_WEEK='$DAY_OF_WEEK' invalid (expected 1-7)" >&2
   exit 2
 fi
-if ! [[ "$UTC_START" =~ ^[0-2]?[0-9]$ ]] || [[ "$UTC_START" -gt 23 ]]; then
+if ! [[ "$UTC_START" =~ ^[0-2]?[0-9]$ ]] || (( 10#$UTC_START > 23 )); then
   echo "ERROR: SHUTDOWN_WINDOW_UTC_START='$UTC_START' invalid (expected 0-23)" >&2
   exit 2
 fi
-if ! [[ "$UTC_END" =~ ^[0-2]?[0-9]$ ]] || [[ "$UTC_END" -gt 23 ]]; then
+if ! [[ "$UTC_END" =~ ^[0-2]?[0-9]$ ]] || (( 10#$UTC_END > 23 )); then
   echo "ERROR: SHUTDOWN_WINDOW_UTC_END='$UTC_END' invalid (expected 0-23)" >&2
   exit 2
 fi
-if [[ "$UTC_START" -ge "$UTC_END" ]]; then
+if (( 10#$UTC_START >= 10#$UTC_END )); then
   echo "ERROR: SHUTDOWN_WINDOW_UTC_START ($UTC_START) >= UTC_END ($UTC_END)" >&2
   exit 2
+fi
+
+# Documented override (header): the commit bearing the go-live tag carries `--hotfix : <reason>` → bypass.
+# It used to live in the old deploy-prod.yml and was lost when workflows were regenerated (2026-10-22).
+HOTFIX_REASON=$(git log -1 --format=%B 2>/dev/null | sed -n 's/.*--hotfix[[:space:]]*:[[:space:]]*\(.*[^[:space:]]\).*/\1/p' | head -1)
+if [[ -n "$HOTFIX_REASON" ]]; then
+  echo "[shutdown_window] ⚠ HOTFIX override — outside-window deploy allowed. Reason: $HOTFIX_REASON"
+  exit 0
 fi
 
 CURRENT_DOW=$(date -u +%u)   # 1-7 ISO 8601
