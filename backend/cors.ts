@@ -14,7 +14,7 @@ export const ALLOWED_ORIGINS = [
     'https://lms.theplaybutton.ai',
     'https://lms.theplaybutton.ai',
     // Staging viewer (Cf-staging account — no zone, workers.dev only)
-    'https://lms-viewer.tpb-staging.workers.dev',
+    'https://lms.theplaybutton.dev',
     `http://localhost:${LOCAL_DEV_PORT}`,
     `http://127.0.0.1:${LOCAL_DEV_PORT}`
 ];
