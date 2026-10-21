@@ -99,7 +99,7 @@ app.use('/*', async (c, next) => {
           bastionUrl: c.env.BASTION_URL,
           token: c.env.BASTION_TOKEN ?? '',
           projectSlug: 'tpb-lms',
-          environment: 'production',
+          environment: c.env.ENVIRONMENT,
         },
       });
       loggerReady = true;

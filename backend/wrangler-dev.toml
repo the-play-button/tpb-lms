@@ -20,6 +20,7 @@ id = "c7ab8bcafe9642c983cdf13ff520422e"
 
 # Authentication configuration
 [vars]
+ENVIRONMENT = "dev"
 ACCESS_TEAM_DOMAIN = "theplaybutton"
 BASTION_URL = "https://bastion-backend.theplaybutton.dev"
 TPB_STORAGE_URL = "https://storage-backend.theplaybutton.dev"

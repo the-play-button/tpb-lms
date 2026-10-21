@@ -15,6 +15,7 @@ binding = "PAM_JTI_KV"
 id = "fb006b0826e5447e9d3a04837e102f31"
 
 [vars]
+ENVIRONMENT = "production"
 ACCESS_TEAM_DOMAIN = "tpb-production"
 BASTION_URL = "https://bastion-backend.theplaybutton.ai"
 TPB_STORAGE_URL = "https://storage-backend.theplaybutton.ai"
