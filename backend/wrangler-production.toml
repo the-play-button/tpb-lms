@@ -17,5 +17,5 @@ id = "fb006b0826e5447e9d3a04837e102f31"
 [vars]
 ACCESS_TEAM_DOMAIN = "tpb-production"
 BASTION_URL = "https://bastion-backend.theplaybutton.ai"
-TPB_STORAGE_URL = "https://storage.theplaybutton.ai"
+TPB_STORAGE_URL = "https://storage-backend.theplaybutton.ai"
 CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
