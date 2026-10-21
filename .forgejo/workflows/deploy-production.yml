@@ -86,9 +86,15 @@ jobs:
           # job-unique venv removed on EXIT (no /tmp leak, no PATH side effect on later steps) — same index as tpb-cli CI.
           VENVROOT="$(mktemp -d)"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"
           python3 -m venv "$VENV" 2>/dev/null || { apt-get install -y -qq python3-venv >/dev/null 2>&1 && python3 -m venv "$VENV"; }
-          # Org index through npm.tpb.sh (same host as the npm registry above) : the runner-local Forgejo index
-          # links its files to the public root URL behind CF Access -> pip downloads the login page (hash mismatch).
-          "$VENV/bin/pip" install --quiet             --index-url "https://token:${FORGEJO_PYPI_TOKEN}@npm.tpb.sh/api/packages/the-play-button/pypi/simple/"             --extra-index-url https://pypi.org/simple/             "tpb-cli>=0.12.0"
+          # Org index MIRRORED with wheel links rewritten to npm.tpb.sh : Forgejo lists files on its ROOT_URL
+          # (git.theplaybutton.ai, behind CF Access) even when the index is read via npm.tpb.sh -> pip would download
+          # the CF login page (hash mismatch). The rewrite keeps each link's #sha256 (pip still verifies).
+          ORG_IDX="$VENVROOT/org-simple"; H="Authorization: token ${FORGEJO_PYPI_TOKEN}"
+          for p in $(curl -fsS -H "$H" "https://npm.tpb.sh/api/v1/packages/the-play-button?type=pypi&limit=50" | python3 -c 'import json,sys; print(" ".join(sorted({x["name"] for x in json.load(sys.stdin)})))'); do
+            mkdir -p "$ORG_IDX/$p"
+            curl -fsS -H "$H" "https://npm.tpb.sh/api/packages/the-play-button/pypi/simple/$p/"               | sed "s#https://git.theplaybutton.ai/#https://token:${FORGEJO_PYPI_TOKEN}@npm.tpb.sh/#g" > "$ORG_IDX/$p/index.html"
+          done
+          "$VENV/bin/pip" install --quiet             --index-url "file://$ORG_IDX/"             --extra-index-url https://pypi.org/simple/             "tpb-cli>=0.12.0"
           PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target production --bastion-token "$BASTION_TOKEN"
 
       - name: Gate — Shutdown window (prod, § G3 restored)
