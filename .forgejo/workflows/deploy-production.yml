@@ -79,7 +79,23 @@ jobs:
       - name: Gate — Pre-deploy secrets check (§ J3 restored)
         env:
           BASTION_TOKEN: ${{ secrets.BASTION_TOKEN_PRODUCTION }}
-        run: python3 scripts/pre_deploy_secrets_check.py --app-path . --target production --bastion-token "$BASTION_TOKEN"
+          FORGEJO_PYPI_TOKEN: ${{ secrets.FORGEJO_PYPI_TOKEN }}
+        run: |
+          set -eu
+          # The check calls `tpb bastion check-secret` (tpb-cli >= 0.12.0) : the runner has no `tpb`, install it in a
+          # job-unique venv removed on EXIT (no /tmp leak, no PATH side effect on later steps) — same index as tpb-cli CI.
+          VENVROOT="$(mktemp -d)"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"
+          python3 -m venv "$VENV" 2>/dev/null || { apt-get install -y -qq python3-venv >/dev/null 2>&1 && python3 -m venv "$VENV"; }
+          # Org index MIRRORED with wheel links rewritten to npm.tpb.sh : Forgejo lists files on its ROOT_URL
+          # (git.theplaybutton.ai, behind CF Access) even when the index is read via npm.tpb.sh -> pip would download
+          # the CF login page (hash mismatch). The rewrite keeps each link's #sha256 (pip still verifies).
+          ORG_IDX="$VENVROOT/org-simple"; H="Authorization: token ${FORGEJO_PYPI_TOKEN}"
+          for p in $(curl -fsS -H "$H" "https://npm.tpb.sh/api/v1/packages/the-play-button?type=pypi&limit=50" | python3 -c 'import json,sys; print(" ".join(sorted({x["name"] for x in json.load(sys.stdin)})))'); do
+            mkdir -p "$ORG_IDX/$p"
+            curl -fsS -H "$H" "https://npm.tpb.sh/api/packages/the-play-button/pypi/simple/$p/"               | sed "s#https://git.theplaybutton.ai/#https://token:${FORGEJO_PYPI_TOKEN}@npm.tpb.sh/#g" > "$ORG_IDX/$p/index.html"
+          done
+          "$VENV/bin/pip" install --quiet             --index-url "file://$ORG_IDX/"             --extra-index-url https://pypi.org/simple/             "tpb-cli>=0.12.0"
+          PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target production --bastion-token "$BASTION_TOKEN"
 
       - name: Gate — Shutdown window (prod, § G3 restored)
         run: bash scripts/check_shutdown_window.sh
@@ -93,11 +109,11 @@ jobs:
       - name: Backup D1 pre-migration (§ G3 restored — export before schema change)
         run: |
           set -x
-          if [ -d db/migrations ] && grep -q 'migrations_dir' wrangler-production.toml; then
+          if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-production.toml; then
             mkdir -p .d1-backup
-            grep 'database_name' wrangler-production.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
+            grep 'database_name' backend/wrangler-production.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
               echo "Backing up $DB before migration (production)..."
-              CI=1 npx -y wrangler@latest d1 export "$DB" --remote --config wrangler-production.toml --output ".d1-backup/$DB.$(date -u +%Y%m%dT%H%M%SZ).sql" || { echo "FATAL: D1 backup failed for $DB"; exit 1; }
+              CI=1 npx -y wrangler@latest d1 export "$DB" --remote --config backend/wrangler-production.toml --output ".d1-backup/$DB.$(date -u +%Y%m%dT%H%M%SZ).sql" || { echo "FATAL: D1 backup failed for $DB"; exit 1; }
             done
           else
             echo "No db/migrations or no migrations_dir — skipping D1 backup"
@@ -106,9 +122,9 @@ jobs:
       - name: Apply D1 migrations (production)
         run: |
           set -x
-          if [ -d db/migrations ] && grep -q 'migrations_dir' wrangler-production.toml; then
-            grep 'database_name' wrangler-production.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
-              CI=1 npx -y wrangler@latest d1 migrations apply "$DB" --remote --config wrangler-production.toml
+          if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-production.toml; then
+            grep 'database_name' backend/wrangler-production.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
+              CI=1 npx -y wrangler@latest d1 migrations apply "$DB" --remote --config backend/wrangler-production.toml
             done
           else
             echo "No db/migrations or no migrations_dir — skipping migrations"
@@ -118,13 +134,13 @@ jobs:
         run: |
           # PROVENANCE-STAMP COMMIT_SHA (axe 51 bundle==source vérifiable, fleet homogénéisé) — mirror deploy.sh:143.
           COMMIT_SHA="$(git rev-parse HEAD 2>/dev/null || echo nogit)"
-          npx -y wrangler@latest deploy --config wrangler-production.toml --var "COMMIT_SHA:${COMMIT_SHA}"
+          npx -y wrangler@latest deploy --config backend/wrangler-production.toml --var "COMMIT_SHA:${COMMIT_SHA}"
 
       - name: Smoke test (FAIL-HARD — § G1, curl -f not '|| echo WARN')
         run: |
           set -x
           sleep 10
-          URL="$(grep -E '^\s*(routes|route|workers_dev)' wrangler-production.toml >/dev/null 2>&1 && echo '' || echo '')"
+          URL="$(grep -E '^\s*(routes|route|workers_dev)' backend/wrangler-production.toml >/dev/null 2>&1 && echo '' || echo '')"
           # minimal fail-hard smoke: the deploy step already fails on wrangler error;
           # here we assert the health surface responds 2xx. App-specific smoke-recipes = Phase 2 (G2).
           if [ -f scripts/smoke_recipe.sh ]; then
