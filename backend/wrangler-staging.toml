@@ -15,6 +15,7 @@ binding = "PAM_JTI_KV"
 id = "5184257691654a91bb86872dc20ab866"
 
 [vars]
+ENVIRONMENT = "staging"
 ACCESS_TEAM_DOMAIN = "theplaybutton"
 BASTION_URL = "https://bastion-backend-staging.theplaybutton.dev"
 TPB_STORAGE_URL = "https://storage-backend.theplaybutton.dev"
