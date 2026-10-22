@@ -55,3 +55,8 @@ package-lock.json
 
 # Skool lesson file attachments (course content) — deployed as viewer static assets, mastered in the skool mirror
 frontend-on-cf-worker/resources/
+
+# § PUBLIC-ENV — generated from backend/wrangler.template.toml + env/<env>.public.json
+backend/wrangler-dev.toml
+backend/wrangler-staging.toml
+backend/wrangler-production.toml

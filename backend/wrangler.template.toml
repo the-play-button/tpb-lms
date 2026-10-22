@@ -1,0 +1,31 @@
+# CI TEMPLATE (§ PUBLIC-ENV doctrine 2026-07-15). Placeholders substituted by
+# scripts/materialize_public_env.py from env/<env>.public.json. CF_ACCESS_CLIENT_ID
+# hardcoded (env-invariant SA). Big-bang: this template is the SINGLE source — the
+# former concrete wrangler-{dev,staging,production}.toml are generated (gitignored).
+
+name = "{{WORKER_NAME}}"
+main = "index.ts"
+compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
+
+# Secrets (provisioned via rotate_bastion_tokens.py fix lms) : BASTION_TOKEN
+
+[[d1_databases]]
+binding = "DB"
+database_name = "{{D1_NAME}}"
+database_id = "{{D1_ID}}"
+migrations_dir = "../db/migrations"
+
+[[kv_namespaces]]
+binding = "PAM_JTI_KV"
+id = "{{PAM_JTI_KV_ID}}"
+
+[vars]
+ACCESS_TEAM_DOMAIN = "{{ACCESS_TEAM_DOMAIN}}"
+BASTION_URL = "{{BASTION_URL}}"
+TPB_STORAGE_URL = "{{TPB_STORAGE_URL}}"
+CF_ACCESS_CLIENT_ID = "1d40e1d5596067ac01ddca098c6396da.access"
+
+[dev]
+port = 8787
+local_protocol = "http"
