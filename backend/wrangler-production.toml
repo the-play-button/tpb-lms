@@ -1,5 +1,5 @@
 # LMS Worker — PRODUCTION (Cf-production account). Deploy: wrangler deploy --config wrangler-production.toml
-name = "lms-api"
+name = "lms-api-production"
 main = "index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
