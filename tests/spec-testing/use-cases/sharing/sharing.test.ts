@@ -128,9 +128,8 @@ describe('createShare', () => {
       expect(result.ok).toBe(true);
     });
 
-    it('denies when authz fails', async () => {
-      const { handlerContext, authz } = createTestContext();
-      authz.deny();
+    it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
+      const { handlerContext } = createTestContext({ scopes: [] });
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
       const result = await createShareCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
@@ -276,9 +275,8 @@ describe('deleteShare', () => {
       expect(result.ok).toBe(true);
     });
 
-    it('denies when authz fails', async () => {
-      const { handlerContext, authz } = createTestContext();
-      authz.deny();
+    it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
+      const { handlerContext } = createTestContext({ scopes: [] });
       const context = { share: ShareMother.active(), contentRef: ContentRefMother.draft(), isOwner: true };
       const result = await deleteShareCheckPolicies(context as any, handlerContext as any);
       expect(result.ok).toBe(false);
@@ -368,9 +366,8 @@ describe('listPermissions', () => {
       expect(result.ok).toBe(true);
     });
 
-    it('denies when authz fails', async () => {
-      const { handlerContext, authz } = createTestContext();
-      authz.deny();
+    it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
+      const { handlerContext } = createTestContext({ scopes: [] });
       const context = { contentRef: ContentRefMother.draft(), shares: [], isOwner: true };
       const result = await listPermissionsCheckPolicies(context as any, handlerContext as any);
       expect(result.ok).toBe(false);
@@ -435,9 +432,8 @@ describe('listSharedWithMe', () => {
       expect(result.ok).toBe(true);
     });
 
-    it('denies when authz fails', async () => {
-      const { handlerContext, authz } = createTestContext();
-      authz.deny();
+    it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
+      const { handlerContext } = createTestContext({ scopes: [] });
       const result = await listSharedWithMeCheckPolicies(handlerContext as any);
       expect(result.ok).toBe(false);
     });
@@ -495,9 +491,8 @@ describe('listSharedByMe', () => {
       expect(result.ok).toBe(true);
     });
 
-    it('denies when authz fails', async () => {
-      const { handlerContext, authz } = createTestContext();
-      authz.deny();
+    it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
+      const { handlerContext } = createTestContext({ scopes: [] });
       const result = await listSharedByMeCheckPolicies(handlerContext as any);
       expect(result.ok).toBe(false);
     });

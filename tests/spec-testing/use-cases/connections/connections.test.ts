@@ -40,9 +40,8 @@ describe('listConnections', () => {
       expect(result.ok).toBe(true);
     });
 
-    it('denies when authz fails', async () => {
-      const { handlerContext, authz } = createTestContext();
-      authz.deny();
+    it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
+      const { handlerContext } = createTestContext({ scopes: [] });
       const result = await listConnectionsCheckPolicies(handlerContext as any);
       expect(result.ok).toBe(false);
     });
@@ -97,9 +96,8 @@ describe('getDefaultConnection', () => {
       expect(result.ok).toBe(true);
     });
 
-    it('denies when authz fails', async () => {
-      const { handlerContext, authz } = createTestContext();
-      authz.deny();
+    it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
+      const { handlerContext } = createTestContext({ scopes: [] });
       const result = await getDefaultConnectionCheckPolicies(handlerContext as any);
       expect(result.ok).toBe(false);
     });

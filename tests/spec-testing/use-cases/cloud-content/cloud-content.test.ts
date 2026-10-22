@@ -123,9 +123,8 @@ describe('getCloudContent', () => {
       expect(result.ok).toBe(false);
     });
 
-    it('denies when authz fails', async () => {
-      const { handlerContext, authz } = createTestContext();
-      authz.deny();
+    it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
+      const { handlerContext } = createTestContext({ scopes: [] });
       const context = { contentRef: ContentRefMother.draft(), isOwner: true, isEnrolled: false };
       const result = await getCloudContentCheckPolicies(context as any, handlerContext as any);
       expect(result.ok).toBe(false);
