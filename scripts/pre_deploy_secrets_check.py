@@ -141,9 +141,9 @@ def main() -> int:
     parser.add_argument("--app-path", required=True, type=Path,
                         help="Path to the consumer app directory whose secrets are being checked.")
     parser.add_argument("--bastion-url", required=False, default=None,
-                        help="Bastion base URL. If omitted, derived from --target "
-                        "via the canonical BASTION_URL_PER_ENV matrix (§ PUBLIC-ENV — "
-                        "no Forgejo BASTION_URL_* secret needed).")
+                        help="Bastion base URL. If omitted, derived from --target via the app's "
+                        "env/<target>.public.json backend.BASTION_URL (§ PUBLIC-ENV SSOT, shipped in "
+                        "every repo — no Forgejo BASTION_URL_* secret, no unvendored helper).")
     parser.add_argument("--bastion-token", default=os.environ.get("BASTION_TOKEN"),
                         help="Bearer PAT used to probe the bastion vault for the required secret paths.")
     parser.add_argument(
@@ -166,8 +166,13 @@ def main() -> int:
         if not args.target:
             print("ERROR: provide --bastion-url OR --target (to derive it).", file=sys.stderr)
             return 2
-        from lib.canonical_bastion_url import canonical_bastion_url
-        args.bastion_url = canonical_bastion_url(args.target)
+        manifest = args.app_path / "env" / f"{args.target}.public.json"
+        try:
+            args.bastion_url = str(json.loads(manifest.read_text())["backend"]["BASTION_URL"]).rstrip("/")
+        except (OSError, ValueError, KeyError, TypeError) as error:
+            print(f"ERROR: cannot derive the bastion URL from {manifest} (backend.BASTION_URL): "
+                  f"{type(error).__name__}: {error}", file=sys.stderr)
+            return 2
 
     if not args.app_path.is_dir():
         print(f"ERROR: app path is not a directory: {args.app_path}", file=sys.stderr)
