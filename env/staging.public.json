@@ -1,0 +1,16 @@
+{
+  "env": "staging",
+  "app": "lms-api",
+  "public": {
+    "NEXT_PUBLIC_ENV": "staging"
+  },
+  "backend": {
+    "WORKER_NAME": "lms-api-staging",
+    "D1_NAME": "lms-db-staging",
+    "D1_ID": null,
+    "PAM_JTI_KV_ID": null,
+    "ACCESS_TEAM_DOMAIN": "theplaybutton",
+    "BASTION_URL": "https://bastion-backend-staging.theplaybutton.dev",
+    "TPB_STORAGE_URL": "https://storage-backend-staging.theplaybutton.dev"
+  }
+}

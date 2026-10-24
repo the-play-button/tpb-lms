@@ -11,6 +11,10 @@ __pycache__/
 .venv/
 venv/
 ENV/
+# env/<target>.public.json = tracked public-env manifests (§ PUBLIC-ENV) — not a Python venv;
+# needed explicitly because git ignores case on macOS and ENV/ would match env/.
+!env/
+!env/*.public.json
 
 # Cloudflare Wrangler
 .wrangler/

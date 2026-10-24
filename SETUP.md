@@ -47,7 +47,7 @@ cd tpb_system/04.Execution/lms && source venv/bin/activate && python scripts/tes
 
 ### 📁 DevOps (`scripts/devops/`)
 - `check_secrets.py` - Verify Cloudflare Worker secrets
-- `deploy.py` - Full deployment script
+- `../deploy.sh` - Deployment (canonical deploy kit, `bash scripts/deploy.sh <env>`)
 - `verify_deploy.py` - Post-deployment verification
 
 ### 📁 Tests (`scripts/tests/`)

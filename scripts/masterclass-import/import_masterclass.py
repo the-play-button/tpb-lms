@@ -17,10 +17,10 @@ import time
 from pathlib import Path
 
 import httpx
-from tpb_sdk.bastion import BastionClient
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from lms_api_client import authenticated_lms_client, request_with_backoff  # noqa: E402
 
 LMS = "https://lms-api.theplaybutton.dev"
-VAULT_PAT_PATH = "tpb/apps/lms/bastion_token"
 
 # Derive the workspace root by walking up to the marker dir (§ hardcoded_workspace_root_path :
 # never a machine-specific literal — this script runs on any dev's clone).
@@ -132,29 +132,11 @@ class LmsApi:
     def __init__(self, dry_run: bool, sleep_ms: int = 80) -> None:
         self.dry_run = dry_run
         self.sleep_s = sleep_ms / 1000.0
-        bc = BastionClient.from_devcontainer()
-        pat = bc.get_secret(VAULT_PAT_PATH)
-        if not pat:
-            print(f"FATAL: no PAT at {VAULT_PAT_PATH}", file=sys.stderr)
-            sys.exit(2)
-        self.h = {**dict(bc.effective_headers), "Authorization": f"Bearer {pat}", "Content-Type": "application/json"}
-        self.cl = httpx.Client(timeout=40, headers=self.h)
+        self.cl = authenticated_lms_client()
         self.errors: list[str] = []
 
     def _req(self, method: str, url: str, body: dict) -> httpx.Response | None:
-        transient, rate = 2, 12
-        while True:
-            try:
-                r = self.cl.request(method, url, json=body)
-            except (httpx.TimeoutException, httpx.TransportError) as e:
-                if transient <= 0:
-                    print(f"    ! {method} {url} transport: {e}"); return None
-                transient -= 1; time.sleep(0.5); continue
-            if r.status_code == 429 and rate > 0:
-                time.sleep(min(max(int(r.headers.get("Retry-After") or "5"), 1), 60) + 1); rate -= 1; continue
-            if r.status_code >= 500 and transient > 0:
-                transient -= 1; time.sleep(0.5); continue
-            return r
+        return request_with_backoff(self.cl, method, url, body)
 
     def upsert(self, coll: str, body: dict) -> None:
         if self.dry_run:

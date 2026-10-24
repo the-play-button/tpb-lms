@@ -1,0 +1,16 @@
+{
+  "env": "dev",
+  "app": "lms-api",
+  "public": {
+    "NEXT_PUBLIC_ENV": "dev"
+  },
+  "backend": {
+    "WORKER_NAME": "lms-api",
+    "D1_NAME": "lms-db-dev",
+    "D1_ID": "597a891e-09c0-4ff8-a9be-ec4faac9f395",
+    "PAM_JTI_KV_ID": "c7ab8bcafe9642c983cdf13ff520422e",
+    "ACCESS_TEAM_DOMAIN": "theplaybutton",
+    "BASTION_URL": "https://bastion-backend.theplaybutton.dev",
+    "TPB_STORAGE_URL": "https://storage-backend.theplaybutton.dev"
+  }
+}

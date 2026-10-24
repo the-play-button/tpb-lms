@@ -12,7 +12,6 @@ export const ALLOWED_ORIGINS = [
     PRIMARY_ORIGIN,
     // Production viewer (Cf-production account)
     'https://lms.theplaybutton.ai',
-    'https://lms.theplaybutton.ai',
     // Staging viewer (Cf-staging account — no zone, workers.dev only)
     'https://lms.theplaybutton.dev',
     `http://localhost:${LOCAL_DEV_PORT}`,

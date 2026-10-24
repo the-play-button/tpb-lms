@@ -26,15 +26,15 @@ import time
 from pathlib import Path
 
 import httpx
-from tpb_sdk.bastion import BastionClient
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from lms_api_client import authenticated_lms_client, request_with_backoff  # noqa: E402
 
 from _asset_urls import resolve_asset_url
 
 import os
 
-# Target env override — default is dev. For prod/staging, set LMS_API_URL + LMS_BASTION_TOKEN.
+# Target env override — default is dev. For prod/staging, set LMS_API_URL (the PAT comes from the vault).
 LMS = os.environ.get("LMS_API_URL", "https://lms-api.theplaybutton.dev")
-VAULT_PAT_PATH = "tpb/apps/lms/bastion_token"
 
 _IMG_RE = re.compile(r"!\[([^\]]*)\]\(([^)\s]+)(\s+\"[^\"]*\")?\)")
 _PREFIX_RE = re.compile(r"^\d+_")
@@ -244,39 +244,10 @@ class LmsApi:
     def __init__(self, dry_run: bool, sleep_ms: int = 60) -> None:
         self.dry_run = dry_run
         self.sleep_s = sleep_ms / 1000.0
-        bc = BastionClient.from_devcontainer()
-        pat = os.environ.get("LMS_BASTION_TOKEN") or bc.get_secret(VAULT_PAT_PATH)
-        if not pat:
-            print(f"FATAL: no PAT (set LMS_BASTION_TOKEN or vault {VAULT_PAT_PATH})", file=sys.stderr)
-            sys.exit(2)
-        self.h = {**dict(bc.effective_headers), "Authorization": f"Bearer {pat}", "Content-Type": "application/json"}
-        self.cl = httpx.Client(timeout=40, headers=self.h)
+        self.cl = authenticated_lms_client()
 
     def _req(self, method: str, url: str, json_body: dict) -> httpx.Response | None:
-        """One request that backs off on 429 (respecting Retry-After — the LMS limits
-        POST /api/{coll} to 100/min per IP) and retries transient failures (timeout / 5xx)."""
-        transient_left = 2
-        rate_waits_left = 12
-        while True:
-            try:
-                r = self.cl.request(method, url, json=json_body)
-            except (httpx.TimeoutException, httpx.TransportError) as e:
-                if transient_left <= 0:
-                    print(f"      ! {method} {url} transport error: {e}")
-                    return None
-                transient_left -= 1
-                time.sleep(0.5)
-                continue
-            if r.status_code == 429 and rate_waits_left > 0:
-                retry_after = int(r.headers.get("Retry-After") or "5")
-                time.sleep(min(max(retry_after, 1), 60) + 1)
-                rate_waits_left -= 1
-                continue
-            if r.status_code >= 500 and transient_left > 0:
-                transient_left -= 1
-                time.sleep(0.5)
-                continue
-            return r
+        return request_with_backoff(self.cl, method, url, json_body, log_prefix="      ")
 
     def upsert(self, coll: str, body: dict, report: dict) -> None:
         """POST (create-if-absent, idempotent by id) then PATCH (refresh fields)."""

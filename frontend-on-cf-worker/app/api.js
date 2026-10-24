@@ -15,7 +15,13 @@
 
 import { sessionId } from './state.js';
 
-export const API_BASE = 'https://lms-api.theplaybutton.dev/api';
+// The API host follows the viewer host so each env talks to its own backend:
+// lms.theplaybutton.ai → lms-api.theplaybutton.ai, lms.theplaybutton.dev → lms-api.theplaybutton.dev,
+// lms-staging.theplaybutton.dev → lms-api-staging.theplaybutton.dev. Local preview falls back to dev.
+const apiHostFor = (hostname) =>
+    /^lms[.-]/.test(hostname) ? hostname.replace(/^lms/, 'lms-api') : 'lms-api.theplaybutton.dev';
+
+export const API_BASE = `https://${apiHostFor(window.location.hostname)}/api`;
 
 let authToken = null;
 

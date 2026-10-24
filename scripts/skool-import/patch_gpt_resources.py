@@ -14,11 +14,10 @@ import os
 import sys
 from pathlib import Path
 
-import httpx
-from tpb_sdk.bastion import BastionClient
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from lms_api_client import authenticated_lms_client  # noqa: E402
 
 LMS = os.environ.get("LMS_API_URL", "https://lms-api.theplaybutton.ai")
-VAULT_PAT_PATH = "tpb/apps/lms/bastion_token"
 LESSON_ID = "les_72a7ed15f6cd423e96136c5fb1146862"  # "Chat GPT bots"
 
 GPTS = Path(
@@ -52,14 +51,7 @@ def main() -> None:
         resources.append({"title": title, "content": content})
         print(f"  + {title}  ({len(content)} chars)")
 
-    bc = BastionClient.from_devcontainer()
-    pat = os.environ.get("LMS_BASTION_TOKEN") or bc.get_secret(VAULT_PAT_PATH)
-    if not pat:
-        print(f"FATAL: no PAT (set LMS_BASTION_TOKEN or vault {VAULT_PAT_PATH})", file=sys.stderr)
-        sys.exit(2)
-    h = {**dict(bc.effective_headers), "Authorization": f"Bearer {pat}", "Content-Type": "application/json"}
-
-    with httpx.Client(timeout=60, headers=h) as cl:
+    with authenticated_lms_client(timeout=60) as cl:
         r = cl.patch(f"{LMS}/api/classes/{LESSON_ID}", json={"resourcesJson": resources})
         print(f"\nPATCH /api/classes/{LESSON_ID} -> {r.status_code}")
         if r.status_code != 200:
