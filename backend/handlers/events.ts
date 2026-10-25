@@ -24,7 +24,7 @@ const resolveAuthedJsonBody = async (request: Request, userContext: HandlerUserC
     const userId = resolveUserId(userContext);
     if (!userId) return { errorResponse: jsonResponse({ error: 'User not authenticated' }, 401, request) };
     try {
-        return { userId, body: await request.json() as EventBody };
+        return { userId, body: await request.json() };
     } catch {
         return { errorResponse: jsonResponse({ error: 'Invalid JSON body' }, 400, request) };
     }

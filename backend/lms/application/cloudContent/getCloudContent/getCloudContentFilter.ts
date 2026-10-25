@@ -14,7 +14,7 @@ const getCloudContentToWire = (
 ): GetCloudContentOutput => ({
   content: output.content,
   contentType: output.contentType,
-  lang: filtered.lang as string | undefined,
+  lang: filtered.lang,
 });
 
 export const getCloudContentFilter = (

@@ -11,9 +11,9 @@ interface ProgramsProgramCountRow { program_id: string; n?: number; }
 const extractCoverImageUrl = (mediaJson: string | null | undefined): string | null => {
     if (!mediaJson) return null;
     try {
-        const media = JSON.parse(mediaJson) as unknown;
+        const media = JSON.parse(mediaJson);
         return Array.isArray(media)
-            ? ((media as Array<{ type?: string; url?: string }>).find((m) => m?.type === 'IMAGE')?.url ?? null)
+            ? ((media as { type?: string; url?: string }[]).find((m) => m?.type === 'IMAGE')?.url ?? null)
             : null;
     } catch {
         return null;

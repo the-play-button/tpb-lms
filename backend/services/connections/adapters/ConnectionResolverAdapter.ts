@@ -14,7 +14,7 @@ import { findWorkingConnection } from './ConnectionResolverAdapter.functions/fin
 import { resolveConnection } from './ConnectionResolverAdapter.functions/resolveConnection.js';
 
 export class ConnectionResolverAdapter implements ConnectionResolverPort {
-  private config: ConnectionResolverConfig;
+  private readonly config: ConnectionResolverConfig;
 
   constructor(config: ConnectionResolverConfig) {
     this.config = config;

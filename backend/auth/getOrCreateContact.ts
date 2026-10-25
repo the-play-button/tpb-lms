@@ -5,7 +5,7 @@ import type { Env } from "../types/Env.types.js";
  */
 
 export const getOrCreateContact = async (email: string, env: Env): Promise<Record<string, unknown>>  => {
-    let contact = await env.DB.prepare(`
+    const contact = await env.DB.prepare(`
         SELECT * FROM crm_contact
         WHERE id IN (
             SELECT cc.id FROM crm_contact cc, json_each(cc.emails_json) je

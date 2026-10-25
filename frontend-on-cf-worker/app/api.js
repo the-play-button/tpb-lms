@@ -21,7 +21,7 @@ import { sessionId } from './state.js';
 const apiHostFor = (hostname) =>
     /^lms[.-]/.test(hostname) ? hostname.replace(/^lms/, 'lms-api') : 'lms-api.theplaybutton.dev';
 
-export const API_BASE = `https://${apiHostFor(window.location.hostname)}/api`;
+export const API_BASE = `https://${apiHostFor(globalThis.location?.hostname ?? '')}/api`;
 
 let authToken = null;
 

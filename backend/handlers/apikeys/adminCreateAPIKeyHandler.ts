@@ -23,7 +23,7 @@ export const adminCreateAPIKeyHandler = async (request: Request, env: Env, userC
             return jsonResponse({ error: 'Forbidden: Admin role required' }, 403, request);
         }
 
-        const body = await request.json() as AdminCreateApiKeyBody;
+        const body = await request.json<AdminCreateApiKeyBody>();
 
         if (!body.name || typeof body.name !== 'string' || body.name.trim().length === 0) {
             return jsonResponse({ error: 'Name is required' }, 400, request);

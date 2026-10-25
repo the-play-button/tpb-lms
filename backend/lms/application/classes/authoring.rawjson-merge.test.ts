@@ -34,7 +34,7 @@ describe('createCourseExecute — rawJson merge', () => {
       actor,
       courseRepo: { insert: async (d: { rawJson: Record<string, unknown> }) => { inserted = d.rawJson; return courseRow(null); } },
     } as unknown as AuthoringContext;
-    await createCourseExecute({ input: { name: 'C', rawJson: { tpb_created_by: 'attacker' } } } as never, ctx);
+    await createCourseExecute({ input: { name: 'C', rawJson: { tpb_created_by: 'attacker' } } }, ctx);
     expect(inserted?.tpb_created_by).toBe('creator@x');
   });
 });

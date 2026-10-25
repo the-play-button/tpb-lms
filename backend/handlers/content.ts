@@ -141,7 +141,7 @@ export const listGitHubDirectory = async (request: Request, env: Env, _userConte
         if (!response.ok) {
             return jsonResponse({ error: `GitHub API error: ${response.status}` }, response.status, request);
         }
-        const items = await response.json() as DirectoryItem[];
+        const items = await response.json<DirectoryItem[]>();
         return jsonResponse({
             owner,
             repo,

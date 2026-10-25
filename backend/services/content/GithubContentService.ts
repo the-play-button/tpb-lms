@@ -49,7 +49,7 @@ const fetchVaultToken = async (env: Env, debug: TokenDebug): Promise<string> => 
         const body = await response.text();
         throw new Error(`Vault fetch failed (${response.status}): ${body}`);
     }
-    const result = await response.json() as { value?: string; data?: { value?: string } };
+    const result = await response.json<{ value?: string; data?: { value?: string } }>();
     const token = result.value ?? result.data?.value ?? null;
     if (!token) {
         throw new Error(`Vault response missing value for ${GITHUB_PAT_VAULT_PATH}`);
@@ -86,7 +86,7 @@ const getGitHubToken = async (env: Env): Promise<string>  => (await getGitHubTok
 export const injectI18nIntoPath = (path: string, lang: string): string => {
     if (!lang) return path;
     if (path.includes('/STEPS/')) return path.replace('/STEPS/', `/i18n/${lang}/STEPS/`);
-    const match = path.match(/^(.+\/SOM_[^/]+\/)(.+)$/);
+    const match = /^(.+\/SOM_[^/]+\/)(.+)$/.exec(path);
     if (match) return `${match[1]}i18n/${lang}/${match[2]}`;
     return path;
 };
@@ -96,11 +96,11 @@ const BLOB_PATTERN = /github\.com\/([^/]+)\/([^/]+)\/blob\/([^/]+)\/(.+)/;
 const SIMPLE_PATTERN = /^([^/]+)\/([^/]+)\/(.+)$/;
 
 export const parseGitHubUrl = (url: string): GitHubUrlParts | null => {
-    const raw = url.match(RAW_PATTERN);
+    const raw = RAW_PATTERN.exec(url);
     if (raw) return { owner: raw[1], repo: raw[2], branch: raw[3], path: raw[4] };
-    const blob = url.match(BLOB_PATTERN);
+    const blob = BLOB_PATTERN.exec(url);
     if (blob) return { owner: blob[1], repo: blob[2], branch: blob[3], path: blob[4] };
-    const simple = url.match(SIMPLE_PATTERN);
+    const simple = SIMPLE_PATTERN.exec(url);
     if (simple) return { owner: simple[1], repo: simple[2], branch: 'main', path: simple[3] };
     return null;
 };
@@ -122,7 +122,7 @@ export const fetchRawContent = async (env: Env, params: GitHubUrlParts): Promise
         'Accept': 'application/vnd.github.v3.raw',
         'User-Agent': 'TPB-LMS/1.0',
     };
-    if (tokenResult.token) headers['Authorization'] = `Bearer ${tokenResult.token}`;
+    if (tokenResult.token) headers.Authorization = `Bearer ${tokenResult.token}`;
     const response = await fetch(apiUrl, { headers });
     return { response, tokenResult, apiUrl };
 };
@@ -134,6 +134,6 @@ export const fetchDirectoryListing = async (env: Env, params: GitHubUrlParts): P
         'Accept': 'application/vnd.github.v3+json',
         'User-Agent': 'TPB-LMS/1.0',
     };
-    if (token) headers['Authorization'] = `Bearer ${token}`;
+    if (token) headers.Authorization = `Bearer ${token}`;
     return fetch(apiUrl, { headers });
 };

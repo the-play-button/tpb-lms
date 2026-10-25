@@ -61,7 +61,7 @@ export class TpbStorageHttpAdapter implements StoragePort {
 
   async listFiles(connectionId: string, parentId?: string): Promise<StorageFile[]> {
     const resp = await this.fetchStorage('/api/storage/list', { connectionId, parent_id: parentId }, 'list');
-    const body = (await resp.json()) as TpbStorageListResponse;
+    const body = await resp.json<TpbStorageListResponse>();
     return (body.files ?? []).map((f) => ({
       id: String(f.id ?? ''),
       name: String(f.name ?? ''),
@@ -75,7 +75,7 @@ export class TpbStorageHttpAdapter implements StoragePort {
 
   async getFileContent(connectionId: string, fileId: string): Promise<string> {
     const resp = await this.fetchStorage('/api/storage/file', { connectionId, fileId }, 'download');
-    const body = (await resp.json()) as TpbStorageDownloadResponse;
+    const body = await resp.json<TpbStorageDownloadResponse>();
     return body.content;
   }
 

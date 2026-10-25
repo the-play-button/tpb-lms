@@ -14,7 +14,7 @@ interface UpsertTranslationsBody { translations?: unknown[]; }
 export const upsertTranslations = async (request: Request, env: Env, ctx: HandlerUserContext): Promise<Response>  => {
     let body: UpsertTranslationsBody;
     try {
-        body = await request.json() as UpsertTranslationsBody;
+        body = await request.json();
     } catch {
         return errorResponse('Invalid JSON body', 400);
     }

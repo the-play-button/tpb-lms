@@ -54,7 +54,7 @@ export const handleTestSeed = async (request: Request, env: Env): Promise<Respon
 
     let body: TestSeedBody;
     try {
-        body = await request.json() as TestSeedBody;
+        body = await request.json();
     } catch {
         return jsonResponse({ error: 'Invalid JSON body' }, 400, request);
     }

@@ -1,4 +1,3 @@
-import type { NodeKind } from '../../NodeKind.js';
 import type { ClassRow } from './ClassRow';
 import type { CreateClassData } from './CreateClassData';
 import type { UpdateClassPatch } from './UpdateClassPatch';

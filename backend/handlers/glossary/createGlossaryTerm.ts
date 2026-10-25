@@ -27,7 +27,7 @@ export const createGlossaryTerm = async (request: Request, env: Env, _ctx?: unkn
 
     let body: GlossaryTermBody;
     try {
-        body = await request.json() as GlossaryTermBody;
+        body = await request.json();
     } catch {
         return errorResponse('Invalid JSON body', 400);
     }

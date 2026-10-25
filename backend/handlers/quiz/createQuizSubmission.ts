@@ -7,7 +7,7 @@ import type { Env } from "../../types/Env.types.js";
 import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
 
 export const createQuizSubmission = async (request: Request, env: Env, userContext: HandlerUserContext): Promise<Response>  => {
-    const body = await request.json() as { userId?: string; quizId: string; [key: string]: unknown };
+    const body = await request.json<{ userId?: string; quizId: string; [key: string]: unknown }>();
     body.userId = userContext.contact?.id ?? '';
     return submitQuizFromUser(env, request, body);
 };

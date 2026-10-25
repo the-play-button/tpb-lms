@@ -19,7 +19,7 @@ interface QuizSubmissionInput {
     [key: string]: unknown;
 }
 
-const findQuizClassByTallyFormId = (env: Env, tallyFormId: string) =>
+const findQuizClassByTallyFormId = async (env: Env, tallyFormId: string) =>
     env.DB.prepare(`
         SELECT lc.* FROM lms_class lc, json_each(lc.media_json) je
         WHERE json_extract(je.value, '$.tally_form_id') = ?

@@ -34,7 +34,7 @@ const resolveContactId = async (db: D1Database, email: string | null): Promise<s
     return result?.id || null;
 };
 
-const deleteForUser = (db: D1Database, userId: string) =>
+const deleteForUser = async (db: D1Database, userId: string) =>
     db.batch([
         db.prepare('DELETE FROM v_user_progress WHERE user_id = ?').bind(userId),
         db.prepare('DELETE FROM lms_event WHERE user_id = ?').bind(userId),
@@ -64,7 +64,7 @@ const cleanSlate = async (db: D1Database, userId: string, email: string | null) 
     if (email) await deleteForContactByEmail(db, email);
 };
 
-const insertProgressRow = (db: D1Database, userId: string, courseId: string, classId: string, timestamp: string) =>
+const insertProgressRow = async (db: D1Database, userId: string, courseId: string, classId: string, timestamp: string) =>
     db.prepare(`
         INSERT INTO v_user_progress
         (user_id, class_id, course_id, video_max_position_sec, video_duration_sec,
@@ -73,13 +73,13 @@ const insertProgressRow = (db: D1Database, userId: string, courseId: string, cla
         VALUES (?, ?, ?, 300, 300, 1, ?, 1, 1, 1, ?, ?)
     `).bind(userId, classId, courseId, timestamp, timestamp, timestamp).run();
 
-const insertEvent = (db: D1Database, eventId: string, type: string, userId: string, courseId: string, classId: string, timestamp: string, payload: unknown) =>
+const insertEvent = async (db: D1Database, eventId: string, type: string, userId: string, courseId: string, classId: string, timestamp: string, payload: unknown) =>
     db.prepare(`
         INSERT INTO lms_event (id, type, user_id, course_id, class_id, occurred_at, payload_json)
         VALUES (?, ?, ?, ?, ?, ?, ?)
     `).bind(eventId, type, userId, courseId, classId, timestamp, JSON.stringify(payload)).run();
 
-const awardBadge = (db: D1Database, awardId: string, badgeId: string, userId: string, now: string) =>
+const awardBadge = async (db: D1Database, awardId: string, badgeId: string, userId: string, now: string) =>
     db.prepare(`
         INSERT OR IGNORE INTO gamification_award (id, badge_id, user_id, user_type, awarded_at, created_at)
         VALUES (?, ?, ?, 'contact', ?, ?)

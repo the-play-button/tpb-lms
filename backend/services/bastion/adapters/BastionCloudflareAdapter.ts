@@ -14,7 +14,7 @@ import { getConnectionsByProvider } from './BastionCloudflareAdapter.functions/g
 import { getDefaultStorageConnection } from './BastionCloudflareAdapter.functions/getDefaultStorageConnection.js';
 
 export class BastionCloudflareAdapter implements BastionDependencies {
-  private bastionUrl: string;
+  private readonly bastionUrl: string;
 
   constructor(config: BastionConfig) {
     this.bastionUrl = config.bastionUrl;

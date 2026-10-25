@@ -1,7 +1,3 @@
-import { fail, succeed, type Result } from '../../../domain/core/Result.js';
-import type { HandlerContext } from '../../../types/HandlerContext.types.js';
-import { Email } from '../../../domain/value-objects/index.js';
-import type { SharedWithMeValidatedInput } from './listSharedWithMeValidateInput.js';
 
 export interface SharedWithMeEntry {
   id: string;

@@ -25,7 +25,7 @@ export const upsertTranslation = async (request: Request, env: Env, ctx: Handler
 
     let body: UpsertTranslationBody;
     try {
-        body = await request.json() as UpsertTranslationBody;
+        body = await request.json();
     } catch {
         return errorResponse('Invalid JSON body', 400);
     }

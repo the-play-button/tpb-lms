@@ -33,10 +33,10 @@ export const listKeysForUser = async (env: Env, userId: string): Promise<{
     }));
 };
 
-export const findKeyByIdAndUser = (env: Env, keyId: string, userId: string): Promise<Record<string, unknown> | null>  =>
+export const findKeyByIdAndUser = async (env: Env, keyId: string, userId: string): Promise<Record<string, unknown> | null>  =>
     env.DB.prepare('SELECT id FROM api_key WHERE id = ? AND user_id = ?')
         .bind(keyId, userId).first();
 
-export const revokeKey = (env: Env, keyId: string): Promise<D1Result<Record<string, unknown>>>  =>
+export const revokeKey = async (env: Env, keyId: string): Promise<D1Result<Record<string, unknown>>>  =>
     env.DB.prepare('UPDATE api_key SET is_active = 0 WHERE id = ?')
         .bind(keyId).run();

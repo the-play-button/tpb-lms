@@ -1,5 +1,3 @@
-import { succeed, type Result } from '../../../../domain/core/Result.js';
-import type { ListPermissionsContext } from '../listPermissionsHydrateContext.js';
 import type { PermissionEntry } from './PermissionEntry';
 
 export interface ListPermissionsOutput {

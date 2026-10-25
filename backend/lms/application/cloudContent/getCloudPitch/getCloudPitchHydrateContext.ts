@@ -1,5 +1,4 @@
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
-import type { ContentRef } from '../../../domain/repositories/ContentRefsRepository.js';
 import type { HandlerContext } from '../../../types/HandlerContext.types.js';
 import { ContentRefId } from '../../../domain/value-objects/index.js';
 import type { GetCloudPitchInput } from './getCloudPitchValidateInput.js';

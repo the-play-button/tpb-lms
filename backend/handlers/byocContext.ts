@@ -56,9 +56,9 @@ export const createByocContext = async (
   const pamClient = new PamStorageClientAdapter(new StorageClient(env.TPB_STORAGE_URL, { serviceToken: jwt, env }));
 
   const connectionResolver = new ConnectionResolverAdapter({
-    getAllConnections: () => bastionClient.getAllStorageConnections(jwt),
-    getDefaultConnection: () => bastionClient.getDefaultStorageConnection(jwt),
-    getConnectionsByProvider: (provider: string) =>
+    getAllConnections: async () => bastionClient.getAllStorageConnections(jwt),
+    getDefaultConnection: async () => bastionClient.getDefaultStorageConnection(jwt),
+    getConnectionsByProvider: async (provider: string) =>
       bastionClient.getConnectionsByProvider(jwt, provider),
     testAccess: async (connectionId: string, folderId: string) => {
       await storageService.listFiles(connectionId, folderId);

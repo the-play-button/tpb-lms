@@ -30,7 +30,7 @@ export const getJWKS = async (teamDomain: string): Promise<Jwks> => {
         throw new Error(`Failed to fetch JWKS: ${response.status}`);
     }
 
-    jwksCache = await response.json() as Jwks;
+    jwksCache = await response.json<Jwks>();
     jwksCacheTime = now;
 
     return jwksCache;
@@ -54,7 +54,7 @@ export const base64urlDecode = (str: string): Uint8Array<ArrayBuffer>  => {
  * Import RSA public key from JWK
  */
 export const importPublicKey = async (jwk: Jwk): Promise<CryptoKey>  => {
-    return await crypto.subtle.importKey(
+    return crypto.subtle.importKey(
         'jwk',
         { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: 'RS256', use: 'sig' } as JsonWebKey,
         { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },

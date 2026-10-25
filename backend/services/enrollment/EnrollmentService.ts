@@ -41,15 +41,15 @@ interface ProgressFields {
 
 /** Discriminated result of an enrollment action (error path vs value path). */
 
-const findCourseById = (env: Env, courseId: string) =>
+const findCourseById = async (env: Env, courseId: string) =>
     env.DB.prepare('SELECT id, name, is_active FROM lms_course WHERE id = ?')
         .bind(courseId).first<EnrollmentCourseRow>();
 
-const findEnrollmentByCourse = (env: Env, userId: string, courseId: string) =>
+const findEnrollmentByCourse = async (env: Env, userId: string, courseId: string) =>
     env.DB.prepare('SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ?')
         .bind(userId, courseId).first<EnrollmentBasic>();
 
-const findActiveEnrollmentByCourse = (env: Env, userId: string, courseId: string) =>
+const findActiveEnrollmentByCourse = async (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(
         "SELECT id, status FROM lms_enrollment WHERE user_id = ? AND course_id = ? AND status = 'active'"
     ).bind(userId, courseId).first<EnrollmentBasic>();
@@ -61,7 +61,7 @@ const countActiveEnrollments = async (env: Env, userId: string): Promise<number>
     return row?.count ?? 0;
 };
 
-const reactivateEnrollment = (env: Env, enrollmentId: string) =>
+const reactivateEnrollment = async (env: Env, enrollmentId: string) =>
     env.DB.prepare(`
         UPDATE lms_enrollment
         SET status = 'active',
@@ -73,24 +73,24 @@ const reactivateEnrollment = (env: Env, enrollmentId: string) =>
         WHERE id = ?
     `).bind(enrollmentId).run();
 
-const insertEnrollment = (env: Env, enrollmentId: string, userId: string, courseId: string) =>
+const insertEnrollment = async (env: Env, enrollmentId: string, userId: string, courseId: string) =>
     env.DB.prepare(`
         INSERT INTO lms_enrollment (id, user_id, course_id, status, started_at, created_at, updated_at)
         VALUES (?, ?, ?, 'active', datetime('now'), datetime('now'), datetime('now'))
     `).bind(enrollmentId, userId, courseId).run();
 
-const setEnrollmentStatus = (env: Env, enrollmentId: string, status: string, timestampField: string) =>
+const setEnrollmentStatus = async (env: Env, enrollmentId: string, status: string, timestampField: string) =>
     env.DB.prepare(`
         UPDATE lms_enrollment
         SET status = ?, ${timestampField} = datetime('now'), updated_at = datetime('now')
         WHERE id = ?
     `).bind(status, enrollmentId).run();
 
-const findEnrollmentForProgress = (env: Env, userId: string, enrollmentId: string) =>
+const findEnrollmentForProgress = async (env: Env, userId: string, enrollmentId: string) =>
     env.DB.prepare('SELECT id, course_id, status FROM lms_enrollment WHERE id = ? AND user_id = ?')
         .bind(enrollmentId, userId).first<EnrollmentProgressRow>();
 
-const updateEnrollmentProgressFields = (env: Env, enrollmentId: string, fields: ProgressFields) => {
+const updateEnrollmentProgressFields = async (env: Env, enrollmentId: string, fields: ProgressFields) => {
     const updates = ["last_activity_at = datetime('now')", "updated_at = datetime('now')"];
     const params: (string | number)[] = [];
     if (fields.current_class_id !== undefined) {
@@ -107,7 +107,7 @@ const updateEnrollmentProgressFields = (env: Env, enrollmentId: string, fields: 
     `).bind(...params).run();
 };
 
-const findEnrollmentDetailsByCourse = (env: Env, userId: string, courseId: string) =>
+const findEnrollmentDetailsByCourse = async (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT e.*,
                (SELECT COUNT(*) FROM lms_class WHERE course_id = e.course_id AND node_kind = 'LESSON') as total_classes
@@ -115,7 +115,7 @@ const findEnrollmentDetailsByCourse = (env: Env, userId: string, courseId: strin
         WHERE e.user_id = ? AND e.course_id = ?
     `).bind(userId, courseId).first<EnrollmentRow>();
 
-const queryUserEnrollments = (env: Env, userId: string, status: string | undefined) => {
+const queryUserEnrollments = async (env: Env, userId: string, status: string | undefined) => {
     let query = `
         SELECT e.*, c.name as course_name, c.description as course_description,
                (SELECT COUNT(*) FROM lms_class WHERE course_id = e.course_id AND node_kind = 'LESSON') as total_classes
@@ -154,7 +154,7 @@ const projectEnrollment = (row: EnrollmentRow) => ({
 
 export const enrollUserInCourse = async (env: Env, userId: string, courseId: string): Promise<EnrollmentActionResult> => {
     const course = await findCourseById(env, courseId);
-    if (!course || !course.is_active) {
+    if (!course?.is_active) {
         return { error: { status: 404, body: { error: 'Course not found or inactive' } } };
     }
 

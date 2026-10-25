@@ -9,8 +9,7 @@
  *
  * Future refacto : inject only the ports each use case needs.
  */
-import type { VaultPort, BastionConfig } from './VaultPort.js';
-import type { StorageConnectionsPort } from './StorageConnectionsPort.js';
+import type { BastionConfig } from './VaultPort.js';
 
 import type { BastionDependencies } from './BastionDependencies.types';
 export type { BastionDependencies };

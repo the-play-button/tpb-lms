@@ -47,7 +47,7 @@ const classHasQuiz = async (env: Env, classId: string): Promise<boolean>  => {
     const cls = await env.DB.prepare('SELECT media_json FROM lms_class WHERE id = ?')
         .bind(classId).first<{ media_json?: string | null }>();
     if (!cls?.media_json) return false;
-    const media = JSON.parse(cls.media_json) as Array<{ type?: string }>;
+    const media = JSON.parse(cls.media_json) as { type?: string }[];
     return media.some((m) => m?.type === 'QUIZ');
 };
 
@@ -84,7 +84,7 @@ export const persistBatch = async (env: Env, userId: string, validatedEntries: B
     }[];
     succeeded: number;
 }>  => {
-    const results: Array<{ success: boolean; error?: unknown; event_id?: string }> = [];
+    const results: { success: boolean; error?: unknown; event_id?: string }[] = [];
     let succeeded = 0;
     for (const entry of validatedEntries) {
         if (entry.error || !entry.data) {

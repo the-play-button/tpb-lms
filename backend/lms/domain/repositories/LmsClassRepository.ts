@@ -3,7 +3,6 @@
  * Plan 03). Domain-owned interface; the D1 implementation lives in
  * infrastructure/repositories/LmsClassDatabaseRepository.ts.
  */
-import type { NodeKind } from '../NodeKind.js';
 
 import type { ClassRow } from './LmsClassRepository.types/ClassRow';
 import type { CreateClassData } from './LmsClassRepository.types/CreateClassData';

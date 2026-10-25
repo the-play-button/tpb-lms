@@ -51,7 +51,7 @@ interface EnrichedClass {
     media: MediaItem[];
     step_type: string;
     content_md: string;
-    resources_json: Array<{ title: string; content: string }>;
+    resources_json: { title: string; content: string }[];
     video_completed: boolean;
     quiz_passed: boolean;
     step_completed: boolean;
@@ -106,8 +106,8 @@ const enrichClass = (cls: CoursesClassRow, currentStep: number): EnrichedClass =
         media: mediaItems.map((m: MediaItem) => enrichMedia(m, videoCompleted, quizPassed, cls)),
         step_type: (raw.tpb_step_type as string) || 'CONTENT',
         content_md: (raw.tpb_content_md as string) || '',
-        transcript_md: (raw.tpb_transcript_md as string) || '',
-        resources_json: Array.isArray(raw.tpb_resources_json) ? (raw.tpb_resources_json as Array<{ title: string; content: string }>) : [],
+        transcript_md: (raw.tpb_transcript_md) || '',
+        resources_json: Array.isArray(raw.tpb_resources_json) ? (raw.tpb_resources_json as { title: string; content: string }[]) : [],
         video_completed: videoCompleted,
         quiz_passed: quizPassed,
         step_completed: stepCompleted,
@@ -115,7 +115,7 @@ const enrichClass = (cls: CoursesClassRow, currentStep: number): EnrichedClass =
     };
 };
 
-const queryActiveCourses = (env: Env) =>
+const queryActiveCourses = async (env: Env) =>
     env.DB.prepare(`
         SELECT id, name, description, categories_json, is_private, media_json, program_id, sys_order_index
         FROM lms_course WHERE is_active = 1 ORDER BY sys_order_index ASC, name ASC
@@ -135,10 +135,10 @@ const extractCoverImageUrl = (mediaJson: string | null | undefined): string | nu
     }
 };
 
-const queryCourseStepCount = (env: Env, courseId: string) =>
+const queryCourseStepCount = async (env: Env, courseId: string) =>
     env.DB.prepare("SELECT COUNT(*) as count FROM lms_class WHERE course_id = ? AND node_kind = 'LESSON'").bind(courseId).first<{ count: number }>();
 
-const queryCourseProgress = (env: Env, userId: string, courseId: string) =>
+const queryCourseProgress = async (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT SUM(video_completed) as videos_completed, SUM(quiz_passed) as quizzes_passed
         FROM v_user_progress WHERE user_id = ? AND course_id = ?
@@ -192,16 +192,16 @@ export const listCoursesForUser = async (env: Env, userId: string, lang: string)
     const courses = await queryActiveCourses(env);
     const rows = (courses.results || []) as unknown as CoursesCourseRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
     const enriched = await Promise.all(
-        rows.map((course) => enrichCourseSummary(env, course, userId, lang))
+        rows.map(async (course) => enrichCourseSummary(env, course, userId, lang))
     );
     return { courses: enriched };
 };
 
-const queryCourseById = (env: Env, courseId: string) =>
+const queryCourseById = async (env: Env, courseId: string) =>
     env.DB.prepare('SELECT * FROM lms_course WHERE id = ? AND is_active = 1')
         .bind(courseId).first<CoursesCourseRow>();
 
-const queryCourseClasses = (env: Env, userId: string, courseId: string) =>
+const queryCourseClasses = async (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT c.id, c.name, c.description, c.media_json,
             c.sys_order_index, c.raw_json,

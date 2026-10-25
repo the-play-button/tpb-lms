@@ -6,6 +6,6 @@ export const getSecret = async (bastionUrl: string, jwt: string, path: string): 
   if (!response.ok) {
     throw new ServiceUnavailableError('bastion', `Secret fetch failed for '${path}': HTTP ${response.status}`);
   }
-  const data = (await response.json()) as { data?: { value?: string } };
+  const data = await response.json<{ data?: { value?: string } }>();
   return data.data?.value || null;
 };

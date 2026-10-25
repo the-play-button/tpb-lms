@@ -35,7 +35,7 @@ export const getCloudPitchExecute = async (context: GetCloudPitchContext, ctx: H
     for (let i = 0; i < binaryString.length; i++) {
       bytes[i] = binaryString.charCodeAt(i);
     }
-    binary = bytes.buffer as ArrayBuffer;
+    binary = bytes.buffer;
   }
 
   await ctx.domainEvents.publish(

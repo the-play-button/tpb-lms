@@ -7,7 +7,7 @@
  * tpb-storage decides access from the resource's own permissions ; the owner's token is resolved inside
  * tpb-storage and never exposed here. The client JWT must carry `storage:delegated:read` (B3-live grant).
  */
-import { StorageClient } from '@the-play-button/tpb-sdk-js';
+import type { StorageClient } from '@the-play-button/tpb-sdk-js';
 import type { StorageFileResponse } from '@the-play-button/tpb-sdk-js';
 import type { PamPort, PamVerifyResult } from '../PamPort.js';
 import type { StorageFile } from '../../types/StorageFile.types.js';

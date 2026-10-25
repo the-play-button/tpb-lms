@@ -3,7 +3,7 @@
  * Helper function used by courses handler
  */
 
-type TranslationEntry = { value?: unknown };
+interface TranslationEntry { value?: unknown }
 type TranslationsByLang = Record<string, Record<string, TranslationEntry>>;
 
 export const applyTranslations = (
@@ -11,7 +11,7 @@ export const applyTranslations = (
     translations: TranslationsByLang | null | undefined,
     lang: string,
 ) => {
-    if (!translations || !translations[lang]) return content;
+    if (!translations?.[lang]) return content;
 
     const langTranslations = translations[lang];
     const result: Record<string, unknown> = { ...content };

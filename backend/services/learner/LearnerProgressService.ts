@@ -5,7 +5,7 @@
 import { getCurrentStreak } from '../../utils/xp/index.js';
 import type { Env } from "../../types/Env.types.js";
 
-const queryUserStats = (env: Env, userId: string) =>
+const queryUserStats = async (env: Env, userId: string) =>
     env.DB.prepare('SELECT * FROM v_user_stats WHERE user_id = ?').bind(userId).first();
 
 interface LeaderboardStatsRow {
@@ -16,17 +16,17 @@ interface LeaderboardStatsRow {
     [key: string]: unknown;
 }
 
-const queryUserLeaderboardRow = (env: Env, userId: string) =>
+const queryUserLeaderboardRow = async (env: Env, userId: string) =>
     env.DB.prepare('SELECT * FROM v_leaderboard WHERE user_id = ?').bind(userId).first<LeaderboardStatsRow>();
 
-const queryUserBadges = (env: Env, userId: string) =>
+const queryUserBadges = async (env: Env, userId: string) =>
     env.DB.prepare(`
         SELECT b.*, a.awarded_at FROM gamification_award a
         JOIN gamification_badge b ON b.id = a.badge_id
         WHERE a.user_id = ? ORDER BY a.awarded_at DESC
     `).bind(userId).all();
 
-const queryRecentVideos = (env: Env, userId: string) =>
+const queryRecentVideos = async (env: Env, userId: string) =>
     env.DB.prepare(`
         SELECT id, json_extract(page_view_json, '$.video_id') as video_id,
             json_extract(page_view_json, '$.course_id') as course_id,
@@ -35,7 +35,7 @@ const queryRecentVideos = (env: Env, userId: string) =>
         ORDER BY created_at DESC LIMIT 20
     `).bind(userId).all();
 
-const queryRecentQuizzes = (env: Env, userId: string) =>
+const queryRecentQuizzes = async (env: Env, userId: string) =>
     env.DB.prepare(`
         SELECT id, json_extract(form_json, '$.quiz_id') as quiz_id,
             json_extract(form_json, '$.course_id') as course_id,

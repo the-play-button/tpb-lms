@@ -42,7 +42,7 @@ const getPassThreshold = (quizClass: QuizClassRow | null | undefined): number =>
     if (!quizClass?.media_json) {
         return 80;
     }
-    const media = JSON.parse(quizClass.media_json) as Array<{ type?: string; pass_threshold?: number }>;
+    const media = JSON.parse(quizClass.media_json) as { type?: string; pass_threshold?: number }[];
     const quizMedia = media.find((m) => m?.type === 'QUIZ' || m?.type === 'WEB');
     return quizMedia?.pass_threshold || 80;
 };
@@ -55,7 +55,7 @@ const buildWrongAnswersList = (answers: QuizAnswers, correctAnswers: CorrectAnsw
     yourAnswer: unknown;
     correctAnswer: unknown;
 }[] | null  => {
-    const wrongAnswers: Array<{ question: unknown; yourAnswer: unknown; correctAnswer: unknown }> = [];
+    const wrongAnswers: { question: unknown; yourAnswer: unknown; correctAnswer: unknown }[] = [];
     if (!Array.isArray(answers)) return null;
 
     for (const field of answers) {

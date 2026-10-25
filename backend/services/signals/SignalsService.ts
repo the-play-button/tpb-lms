@@ -49,7 +49,7 @@ interface Step {
     can_access: boolean;
 }
 
-const queryCourseSteps = (env: Env, userId: string, courseId: string) =>
+const queryCourseSteps = async (env: Env, userId: string, courseId: string) =>
     env.DB.prepare(`
         SELECT c.id as class_id, c.name, c.sys_order_index, c.media_json,
             COALESCE(p.video_completed, 0) as video_completed,
@@ -60,14 +60,14 @@ const queryCourseSteps = (env: Env, userId: string, courseId: string) =>
         WHERE c.course_id = ? AND c.node_kind = 'LESSON' ORDER BY c.sys_order_index
     `).bind(userId, courseId).all<StepRow>();
 
-const queryCourseRaw = (env: Env, courseId: string) =>
+const queryCourseRaw = async (env: Env, courseId: string) =>
     env.DB.prepare('SELECT raw_json FROM lms_course WHERE id = ?').bind(courseId).first<{ raw_json?: string | null }>();
 
-const queryClassMeta = (env: Env, classId: string, courseId: string) =>
+const queryClassMeta = async (env: Env, classId: string, courseId: string) =>
     env.DB.prepare('SELECT id, name, sys_order_index, media_json FROM lms_class WHERE id = ? AND course_id = ?')
         .bind(classId, courseId).first<ClassMetaRow>();
 
-const queryStepProgress = (env: Env, userId: string, classId: string) =>
+const queryStepProgress = async (env: Env, userId: string, classId: string) =>
     env.DB.prepare('SELECT * FROM v_user_progress WHERE user_id = ? AND class_id = ?')
         .bind(userId, classId).first<ProgressRow>();
 

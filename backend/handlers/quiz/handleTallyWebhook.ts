@@ -9,7 +9,7 @@ import type { Env } from "../../types/Env.types.js";
 interface TallyWebhookPayload {
     eventType?: string;
     data?: {
-        fields?: Array<{ key?: string; label?: string; title?: string; value?: unknown; answer?: { value?: unknown } }>;
+        fields?: { key?: string; label?: string; title?: string; value?: unknown; answer?: { value?: unknown } }[];
         formId?: string;
     };
 }
@@ -29,16 +29,16 @@ const processTallyPayload = async (payload: TallyWebhookPayload, env: Env, reque
     return processQuizSubmission({
         userId: userId as string,
         quizId: formId,
-        courseId: (courseId as string) || (quizClass?.course_id as string) || '',
-        classId: (quizClass?.id as string) ?? '',
+        courseId: (courseId as string) || (quizClass?.course_id!) || '',
+        classId: (quizClass?.id!) ?? '',
         score,
         maxScore,
         answers,
     }, env, request, quizClass);
 };
 
-export const handleTallyWebhookWithBody = (bodyText: string, env: Env, request: Request): Promise<Response>  =>
+export const handleTallyWebhookWithBody = async (bodyText: string, env: Env, request: Request): Promise<Response>  =>
     processTallyPayload(JSON.parse(bodyText) as TallyWebhookPayload, env, request);
 
 export const handleTallyWebhook = async (request: Request, env: Env): Promise<Response>  =>
-    processTallyPayload(await request.json() as TallyWebhookPayload, env, request);
+    processTallyPayload(await request.json(), env, request);

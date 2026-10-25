@@ -4,7 +4,7 @@ import type { Env } from "../../types/Env.types.js";
  * KmsReadService — read-only access to KMS spaces + pages.
  */
 
-const queryActiveSpaces = (env: Env) =>
+const queryActiveSpaces = async (env: Env) =>
     env.DB.prepare(`
         SELECT id, name, description, parent_space_id, is_active, created_at, updated_at
         FROM kms_space
@@ -12,7 +12,7 @@ const queryActiveSpaces = (env: Env) =>
         ORDER BY name
     `).all();
 
-const querySpaceById = (env: Env, spaceId: string) =>
+const querySpaceById = async (env: Env, spaceId: string) =>
     env.DB.prepare(`
         SELECT id, name, description, parent_space_id, is_active, created_at, updated_at
         FROM kms_space
@@ -36,7 +36,7 @@ interface KmsPageFullRow extends KmsPageRow {
     space_name?: string | null;
 }
 
-const querySpacePages = (env: Env, spaceId: string) =>
+const querySpacePages = async (env: Env, spaceId: string) =>
     env.DB.prepare(`
         SELECT id, title, type, metadata_json, created_at, updated_at
         FROM kms_page
@@ -44,7 +44,7 @@ const querySpacePages = (env: Env, spaceId: string) =>
         ORDER BY title
     `).bind(spaceId).all<KmsPageRow>();
 
-const queryPageById = (env: Env, pageId: string) =>
+const queryPageById = async (env: Env, pageId: string) =>
     env.DB.prepare(`
         SELECT p.id, p.title, p.type, p.space_id, p.metadata_json, p.raw_json,
                p.download_url, p.web_url, p.created_at, p.updated_at,

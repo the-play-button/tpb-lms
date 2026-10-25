@@ -4,7 +4,7 @@
  */
 
 import { jsonResponse } from '../../cors.js';
-import { generateAPIKey, getOrCreateContact } from '../../auth/index.js';
+import { generateAPIKey } from '../../auth/index.js';
 import { log } from '@the-play-button/tpb-sdk-js';
 import type { Env } from "../../types/Env.types.js";
 import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
@@ -18,7 +18,7 @@ interface CreateApiKeyBody {
 
 export const createAPIKeyHandler = async (request: Request, env: Env, auth: HandlerUserContext): Promise<Response>  => {
     try {
-        const body = await request.json() as CreateApiKeyBody;
+        const body = await request.json<CreateApiKeyBody>();
 
         if (!body.name || typeof body.name !== 'string' || body.name.trim().length === 0) {
             return jsonResponse({ error: 'Name is required' }, 400, request);

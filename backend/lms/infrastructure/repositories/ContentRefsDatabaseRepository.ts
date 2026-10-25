@@ -68,7 +68,7 @@ export class ContentRefsDatabaseRepository implements ContentRefsRepository {
       .bind(courseId)
       .all<ContentRefRow>();
 
-    return Promise.all(results.map((row) => this.reconstitute(row)));
+    return Promise.all(results.map(async (row) => this.reconstitute(row)));
   }
 
   async findByClassId(classId: string): Promise<ContentRef[]> {
@@ -77,7 +77,7 @@ export class ContentRefsDatabaseRepository implements ContentRefsRepository {
       .bind(classId)
       .all<ContentRefRow>();
 
-    return Promise.all(results.map((row) => this.reconstitute(row)));
+    return Promise.all(results.map(async (row) => this.reconstitute(row)));
   }
 
   async save(contentRef: DraftContentRef | SharedContentRef): Promise<void> {

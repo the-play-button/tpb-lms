@@ -115,7 +115,7 @@ export const fetchLeaderboard = async (env: Env, userId: string, limit: number):
     `).bind(limit).all<LeaderboardRow>();
 
     const leaderboard = await Promise.all(
-        (results.results || []).map((entry, index) => enrichLeaderboardEntry(env.DB, entry, index))
+        (results.results || []).map(async (entry, index) => enrichLeaderboardEntry(env.DB, entry, index))
     );
 
     const currentUserEntry = leaderboard.find((e) => e.user_id === userId);
@@ -135,7 +135,7 @@ export const fetchLeaderboard = async (env: Env, userId: string, limit: number):
     };
 };
 
-const fetchUserStatsParallel = (env: Env, userId: string) => Promise.all([
+const fetchUserStatsParallel = async (env: Env, userId: string) => Promise.all([
     env.DB.prepare('SELECT * FROM v_signal_summary WHERE user_id = ?').bind(userId).first(),
     env.DB.prepare('SELECT * FROM v_user_activity WHERE user_id = ?').bind(userId).first(),
     env.DB.prepare(`

@@ -9,7 +9,7 @@ import type { DomainEvent } from '../../domain/events/DomainEvent.js';
  * reserved for the audit trail that matters (who accessed what).
  */
 export class StoreAndForwardDomainEventPublisher implements DomainEvents {
-  private db: D1Database;
+  private readonly db: D1Database;
 
   constructor(db: D1Database) {
     this.db = db;
