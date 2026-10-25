@@ -182,7 +182,7 @@ describe('createShare', () => {
 
       await createShareExecute(input, context as any, handlerContext as any);
       expect(domainEvents.published).toHaveLength(1);
-      expect(domainEvents.published[0].type).toBe('content.shared');
+      expect(domainEvents.published[0]?.type).toBe('content.shared');
     });
 
     it('maps WRITE role to editor domain role', async () => {
@@ -193,7 +193,7 @@ describe('createShare', () => {
 
       await createShareExecute(input, context as any, handlerContext as any);
       const saved = [...sharesRepository.shares.values()][0];
-      expect(saved.role).toBe('editor');
+      expect(saved?.role).toBe('editor');
     });
   });
 });
@@ -315,7 +315,7 @@ describe('deleteShare', () => {
 
       await deleteShareExecute(context as any, handlerContext as any);
       expect(domainEvents.published).toHaveLength(1);
-      expect(domainEvents.published[0].type).toBe('share.revoked');
+      expect(domainEvents.published[0]?.type).toBe('share.revoked');
     });
   });
 });
@@ -391,8 +391,8 @@ describe('listPermissions', () => {
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.permissions).toHaveLength(1);
-        expect(result.value.permissions[0].role).toBe('WRITE');
-        expect(result.value.permissions[0].shared_with).toBe(RECIPIENT_EMAIL);
+        expect(result.value.permissions[0]?.role).toBe('WRITE');
+        expect(result.value.permissions[0]?.shared_with).toBe(RECIPIENT_EMAIL);
         expect(result.value.owner_email).toBe(OWNER_EMAIL);
       }
     });
@@ -452,8 +452,8 @@ describe('listSharedWithMe', () => {
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(1);
-        expect(result.value[0].name).toBe('Test Document');
-        expect(result.value[0].content_type).toBe('markdown');
+        expect(result.value[0]?.name).toBe('Test Document');
+        expect(result.value[0]?.content_type).toBe('markdown');
       }
     });
 
@@ -509,8 +509,8 @@ describe('listSharedByMe', () => {
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(1);
-        expect(result.value[0].role).toBe('WRITE');
-        expect(result.value[0].shared_with).toBe(RECIPIENT_EMAIL);
+        expect(result.value[0]?.role).toBe('WRITE');
+        expect(result.value[0]?.shared_with).toBe(RECIPIENT_EMAIL);
       }
     });
 

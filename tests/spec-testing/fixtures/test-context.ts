@@ -27,7 +27,7 @@ export function createTestContext(actorOverrides: ActorOverrides = {}) {
     sharesRepository,
     authzBastionClient: authz,
     storageService,
-    pamClient,
+    pamClient: pamClient as StubPamClient | null,
     connectionResolver,
     bastionClient: {} as any,
     actor,

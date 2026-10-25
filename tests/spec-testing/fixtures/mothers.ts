@@ -3,8 +3,8 @@ import { DraftContentRef } from '../../../backend/lms/domain/entities/ContentRef
 import { SharedContentRef } from '../../../backend/lms/domain/entities/ContentRef/SharedContentRef';
 import { ActiveShare } from '../../../backend/lms/domain/entities/Share/ActiveShare';
 import { RevokedShare } from '../../../backend/lms/domain/entities/Share/RevokedShare';
-import type { ContentRefProps, ContentType, ContentUsage } from '../../../backend/lms/domain/entities/ContentRef/types';
-import type { ShareProps, RevokedShareProps } from '../../../backend/lms/domain/entities/Share/types';
+import type { ContentRefProps, ContentType, ContentUsage } from '../../../backend/lms/domain/entities/ContentRef/ContentRef.types';
+import type { ShareProps, RevokedShareProps } from '../../../backend/lms/domain/entities/Share/Share.types';
 import type { ShareRole } from '../../../backend/lms/domain/entities/ContentRef/SharedContentRef';
 
 // ── Constants ──────────────────────────────────────────────

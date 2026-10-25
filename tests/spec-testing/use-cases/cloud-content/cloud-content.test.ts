@@ -175,7 +175,7 @@ describe('getCloudContent', () => {
 
       await getCloudContentExecute(context as any, handlerContext as any);
       expect(domainEvents.published).toHaveLength(1);
-      expect(domainEvents.published[0].type).toBe('content.accessed');
+      expect(domainEvents.published[0]?.type).toBe('content.accessed');
     });
 
     it('returns correct contentType for pdf', async () => {
@@ -283,7 +283,7 @@ describe('getCloudPitch', () => {
 
       await getCloudPitchExecute(context as any, handlerContext as any);
       expect(domainEvents.published).toHaveLength(1);
-      expect(domainEvents.published[0].type).toBe('content.accessed');
+      expect(domainEvents.published[0]?.type).toBe('content.accessed');
     });
   });
 });

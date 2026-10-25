@@ -59,8 +59,8 @@ describe('listConnections', () => {
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(2);
-        expect(result.value[0].id).toBe('conn_1');
-        expect(result.value[1].integrationType).toBe('onedrive');
+        expect(result.value[0]?.id).toBe('conn_1');
+        expect(result.value[1]?.integrationType).toBe('onedrive');
       }
     });
 

@@ -39,9 +39,12 @@
   },
   "include": [
     "reset.d.ts",
+    "cors.ts",
+    "auth/**/*.ts",
     "lms/**/*.ts",
     "services/**/*.ts",
     "handlers/**/*.ts",
+    "projections/**/*.ts",
     "types/**/*.ts"
   ],
   "exclude": [
