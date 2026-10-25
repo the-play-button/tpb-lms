@@ -131,7 +131,29 @@ jobs:
         run: |
           # PROVENANCE-STAMP COMMIT_SHA (axe 51 bundle==source vérifiable, fleet homogénéisé) — mirror deploy.sh:143.
           COMMIT_SHA="$(git rev-parse HEAD 2>/dev/null || echo nogit)"
-          npx -y wrangler@latest deploy --config backend/wrangler-production.toml --var "COMMIT_SHA:${COMMIT_SHA}"
+          set +e
+          npx -y wrangler@latest deploy --config backend/wrangler-production.toml --var "COMMIT_SHA:${COMMIT_SHA}" 2>&1 | tee .wrangler-deploy.log
+          RC=${PIPESTATUS[0]}
+          set -e
+          if [ "$RC" -ne 0 ]; then
+            # The account has no workers.dev subdomain (deliberately deleted 2026-10-25) and the CF schedules API
+            # then refuses any cron write (code 10063) AFTER the version is uploaded and deployed. That alone is not
+            # a failure when the live schedules already equal the declared crons; any other error, or a cron drift,
+            # fails the job.
+            grep -q 'code: 10063' .wrangler-deploy.log || exit "$RC"
+            python3 - backend/wrangler-production.toml <<'PY'
+          import json, os, sys, tomllib, urllib.request
+          cfg = tomllib.load(open(sys.argv[1], 'rb'))
+          declared = sorted((cfg.get('triggers') or {}).get('crons') or [])
+          req = urllib.request.Request(
+              f"https://api.cloudflare.com/client/v4/accounts/{os.environ['CLOUDFLARE_ACCOUNT_ID']}/workers/scripts/{cfg['name']}/schedules",
+              headers={'Authorization': f"Bearer {os.environ['CLOUDFLARE_API_TOKEN']}"})
+          live = sorted(s['cron'] for s in json.load(urllib.request.urlopen(req, timeout=30))['result']['schedules'])
+          if live != declared:
+              sys.exit(f"cron drift: declared {declared} but live {live}; CF refuses cron writes without a workers.dev subdomain (code 10063)")
+          print(f"crons unchanged ({len(live)}) — CF schedules write refused (10063) is harmless here; version deployed")
+          PY
+          fi
 
       - name: Smoke test (FAIL-HARD — § G1, curl -f not '|| echo WARN')
         run: |
