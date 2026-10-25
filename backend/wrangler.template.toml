@@ -4,6 +4,8 @@
 # former concrete wrangler-{dev,staging,production}.toml are generated (gitignored).
 
 name = "{{WORKER_NAME}}"
+workers_dev = false
+preview_urls = false
 main = "index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat", "global_fetch_strictly_public"]
