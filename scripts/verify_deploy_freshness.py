@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """CANONICAL post-deploy edge-freshness guard (§ BIG BANG — nivelé vers le haut, vendoré byte-identique par app).
 
-SSOT : tpb-devops-cd/scripts/verify_deploy_freshness.py → vendoré dans chaque <app>/scripts/verify_deploy_freshness.py
-(jumeau de deploy.sh + materialize_public_env.py). Gate `vendored_deploy_matches_ssot` verrouille chaque copie.
+SSOT : tpb-devops/scripts/verify_deploy_freshness.py → vendoré dans chaque <app>/scripts/verify_deploy_freshness.py
+par tpb-devops/scripts/revendor_verify_deploy_freshness.py (seul chemin de distribution ; jumeau de deploy.sh et de
+materialize_public_env.py). Le check tpb-entropy `vendored_deploy_freshness_verifier_matches_ssot` (P0, sans ACK)
+verrouille chaque copie sur la référence que l'outil écrit en même temps.
 
 Généralise le `deploy_and_verify_freshness.py` de tpb-lrm (le MEILLEUR CITOYEN, § JAMAIS DOWNGRADER : on ÉLÈVE
 toute la flotte à sa rigueur, on ne la strip pas) en une garde canonique PARAMÉTRÉE, appelée par deploy.sh step 8.
