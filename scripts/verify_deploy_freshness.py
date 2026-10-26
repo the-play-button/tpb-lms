@@ -11,9 +11,13 @@ Background (§ _bugs 2026-07-28 Cause C) : `wrangler deploy` peut répondre SUCC
 re-upload des assets statiques → l'edge sert le bundle du deploy PRÉCÉDENT → l'utilisateur voit un bundle STALE
 malgré un deploy "vert". Cette garde ferme la classe déterministement :
   1. lit le `tpb-build-id` baké dans le LOCAL `frontend/out/<route>/index.html` (le bundle qu'on vient de builder),
-  2. fetch l'HTML DÉPLOYÉ depuis l'edge (CF Access SA) + lit son `tpb-build-id`,
+  2. fetch l'HTML DÉPLOYÉ depuis l'edge (hôte = `PUBLIC_URL` du manifeste de la cible, dev, staging ou production ;
+     SA CF Access de l'environnement, sinon du vault) + lit son `tpb-build-id`,
   3. si différent → l'edge est stale → purge le cache asset-manifest wrangler + re-deploy (provenance COMMIT_SHA),
   4. fail-loud (exit 1) si toujours stale après retries (jamais un deploy vert qui n'a rien shippé).
+  5. un edge que la garde ne peut pas LIRE (login CF Access, erreur, page sans marqueur) est dit INVÉRIFIABLE,
+     fail-loud SANS re-deploy : re-déployer un edge illisible ne prouve rien et masque la cause (sub-31 plan 12.1,
+     2026-10-26 : la racine de bi.theplaybutton.ai renvoie le login CF Access au SA partagé → deux re-deploys à vide).
 
 PRÉSENCE-DÉTECTÉ (un seul chemin, zéro dual-path §BIG BANG) : si l'app ne sert pas de frontend Next avec le
 marqueur `tpb-build-id` (local HTML absent OU pas de meta build-id), la garde SKIP proprement (log) — le deploy du
@@ -34,11 +38,15 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from urllib.parse import urlsplit
 
 _BUILD_ID_RE = re.compile(r'<meta\b[^>]*\bname=["\']tpb-build-id["\'][^>]*\bcontent=["\']([^"\']*)["\']', re.I)
 _BUILD_ID_RE2 = re.compile(r'<meta\b[^>]*\bcontent=["\']([^"\']*)["\'][^>]*\bname=["\']tpb-build-id["\']', re.I)
-_DEV_HOST_SUFFIX = ".theplaybutton.dev"
 MAX_RETRIES = 2
+# The shared CF Access SA (§ CF ACCESS = UN SEUL CHEMIN SDK) ; the dev vault holds it, readable from the workstation.
+_SA_VAULT_PATHS = ("tpb/infra/cf_access_sa_client_id", "tpb/infra/cf_access_sa_client_secret")
+# A bare Python client is challenged by the CF bot filter (1010) : read the edge as a browser would.
+_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
 
 
 def _extract_build_id(html: str) -> str | None:
@@ -46,9 +54,18 @@ def _extract_build_id(html: str) -> str | None:
     return m.group(1) if m else None
 
 
-def _worker_name(wf: Path) -> str | None:
-    m = re.search(r'(?m)^\s*name\s*=\s*"([^"]+)"', wf.read_text(encoding="utf-8", errors="replace"))
-    return m.group(1) if m else None
+def _public_host(app_dir: Path, target: str) -> str | None:
+    """Hôte servi = `PUBLIC_URL` du manifeste `env/<target>.public.json` (SSOT § PUBLIC-ENV). L'ancien calcul
+    `<WORKER_NAME>.theplaybutton.dev` visait un hôte qui n'existe pas quand le domaine diffère du nom du Worker
+    (ex. tpb-enrichment → enrichment.theplaybutton.dev)."""
+    manifest = app_dir / "env" / f"{target}.public.json"
+    if not manifest.is_file():
+        return None
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    url = (data.get("backend") or {}).get("PUBLIC_URL") or (data.get("public") or {}).get("PUBLIC_URL")
+    if not url:
+        return None
+    return urlsplit(url).hostname
 
 
 def _verify_route(app_dir: Path, target: str) -> str:
@@ -78,18 +95,51 @@ def _local_html(app_dir: Path, route: str) -> Path:
     return (out / rel / "index.html") if rel else (out / "index.html")
 
 
-def _edge_build_id(host: str, route: str) -> tuple[str | None, int]:
+def _vault_cf_access_sa(app_dir: Path) -> tuple[str, str] | None:
+    """The shared SA from the vault, through tpb_sdk when it is reachable (`TPB_SDK_PYTHONPATH`, else the sibling
+    `../tpb-sdk/python/src`) ; None when it is not (the edge is then read without it)."""
+    import os
+    for cand in (os.environ.get("TPB_SDK_PYTHONPATH"), str(app_dir.parent / "tpb-sdk" / "python" / "src")):
+        if cand and (Path(cand) / "tpb_sdk").is_dir() and cand not in sys.path:
+            sys.path.insert(0, cand)
+    try:
+        from tpb_sdk.crm.dev_bastion import dev_bastion  # the dev vault, TPB_TARGET stripped
+    except ImportError:
+        print("[deploy-verify] ⚠ tpb_sdk not importable — no CF Access SA from the vault.", file=sys.stderr)
+        return None
+    try:
+        bastion = dev_bastion()
+        cid, csecret = (bastion.get_secret(path) for path in _SA_VAULT_PATHS)
+    except Exception as exc:  # noqa: BLE001 — logged, the edge read below decides the verdict
+        print(f"[deploy-verify] ⚠ CF Access SA not readable from the vault ({type(exc).__name__}: {exc}).", file=sys.stderr)
+        return None
+    return (cid, csecret) if cid and csecret else None
+
+
+def _cf_access_sa(app_dir: Path) -> tuple[str, str] | None:
     import os
     cid, csecret = os.environ.get("BASTION_CLIENT_ID"), os.environ.get("BASTION_CLIENT_SECRET")
-    if not cid or not csecret:
-        sys.exit("[deploy-verify] FATAL: BASTION_CLIENT_ID/SECRET (CF Access SA) missing — source .devcontainer/.env")
+    return (cid, csecret) if cid and csecret else _vault_cf_access_sa(app_dir)
+
+
+def _read_edge(host: str, route: str, sa: tuple[str, str] | None) -> tuple[str | None, str]:
+    """`(build id, "")` when the edge served the page with its marker ; `(None, why)` when the guard cannot read it."""
+    headers = {"Cache-Control": "no-store", "User-Agent": _UA}
+    if sa:
+        headers.update({"CF-Access-Client-Id": sa[0], "CF-Access-Client-Secret": sa[1]})
     conn = http.client.HTTPSConnection(host, timeout=30)
     try:
-        conn.request("GET", f"{route}?_deployverify={int(time.time())}",
-                     headers={"CF-Access-Client-Id": cid, "CF-Access-Client-Secret": csecret, "Cache-Control": "no-store"})
+        conn.request("GET", f"{route}?_deployverify={int(time.time())}", headers=headers)
         resp = conn.getresponse()
         body = resp.read().decode("utf-8", errors="replace")
-        return (_extract_build_id(body) if resp.status == 200 else None), resp.status
+        if resp.status == 200:
+            build_id = _extract_build_id(body)
+            return (build_id, "") if build_id else (None, "HTTP 200 without a tpb-build-id marker (a login or error page?)")
+        location = resp.getheader("Location") or ""
+        if "cloudflareaccess.com" in location:
+            who = "the shared SA is not admitted by this app's CF Access policy" if sa else "no CF Access SA available"
+            return None, f"HTTP {resp.status} to the CF Access login ({who}) : {location.split('?')[0]}"
+        return None, f"HTTP {resp.status}"
     finally:
         conn.close()
 
@@ -114,8 +164,6 @@ def main() -> int:
     ap.add_argument("--app-dir", default=".", help="App repo root (default: current dir).")
     args = ap.parse_args()
     app_dir = Path(args.app_dir).resolve()
-    wf = Path(args.wrangler)
-    wf_abs = wf if wf.is_absolute() else (app_dir / wf)
 
     route = _verify_route(app_dir, args.target)
     local_html = _local_html(app_dir, route)
@@ -128,17 +176,26 @@ def main() -> int:
               f"(Phase 2 : preset SDK universel). Freshness verify SKIP (deploy stays live).")
         return 0
 
-    name = _worker_name(wf_abs)
-    if not name:
-        print(f"[deploy-verify] could not resolve worker name from {wf_abs} — freshness verify SKIP.")
-        return 0
-    host = f"{name}{_DEV_HOST_SUFFIX}"  # dev edge host (staging/prod bloqués par deploy.sh)
+    host = _public_host(app_dir, args.target)
+    if not host:
+        print(f"[deploy-verify] ❌ no PUBLIC_URL in env/{args.target}.public.json — cannot know which host serves this "
+              f"deploy. Add backend.PUBLIC_URL to the manifest.", file=sys.stderr)
+        return 1
     print(f"[deploy-verify] local build-id={local} host={host} route={route}")
+    sa = _cf_access_sa(app_dir)
 
+    edge: str | None = None
     for attempt in range(MAX_RETRIES + 1):
         time.sleep(3)
-        edge, status = _edge_build_id(host, route)
-        print(f"[deploy-verify] attempt {attempt}: edge build-id={edge} (HTTP {status})")
+        edge, why = _read_edge(host, route, sa)
+        if edge is None:
+            if attempt < MAX_RETRIES:
+                print(f"[deploy-verify] attempt {attempt}: edge unreadable ({why}) — reading again.")
+                continue
+            print(f"[deploy-verify] ❌ edge UNVERIFIABLE at https://{host}{route} : {why}. The deploy ran, its freshness "
+                  "is not proven ; not re-deploying (an unreadable edge is not a stale one).", file=sys.stderr)
+            return 1
+        print(f"[deploy-verify] attempt {attempt}: edge build-id={edge}")
         if edge == local:
             print("[deploy-verify] ✅ edge serves the freshly-built bundle — deploy genuinely live.")
             return 0
