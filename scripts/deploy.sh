@@ -84,6 +84,13 @@ if [[ "$HAS_MATERIALIZE" == "1" ]]; then
 fi
 [[ -n "$WF" ]] || { echo "✗ wrangler config introuvable après materialize" >&2; exit 1; }
 
+# ── 3.5 post-materialize hook app-spécifique — no-op si absent ────────────────
+# A second, app-owned stage over the materialized config (e.g. wge-tpb-bridge resolves its [[PUBLIC_CF_*]] KV ids
+# and adds the SDK telemetry bindings : scripts/materialize-telemetry-wrangler.mjs). Gets the target and the config.
+if [[ -f "scripts/post-materialize.sh" ]]; then
+  n "post-materialize hook (app-specific)…"; bash scripts/post-materialize.sh "${TARGET}" "$WF"
+fi
+
 # ── 4. frontend build ─────────────────────────────────────────────────────────
 if [[ "$HAS_FRONTEND" == "1" ]]; then
   n "build frontend (build:frontend)…"; pnpm run build:frontend
