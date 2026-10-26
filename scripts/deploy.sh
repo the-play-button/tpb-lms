@@ -90,8 +90,16 @@ if [[ "$HAS_FRONTEND" == "1" ]]; then
 fi
 
 # ── 5. build-env coherence gate (§ IDP COHERENCE, bundle du bon env) ──────────
+# It verifies the BROWSER bundle : a backend-only Worker (no build:frontend, no bundle dir) has none to verify (sub-31
+# plan 13, 2026-10-26 : the bridge failed « no build output found »). A frontend build that produced nothing still
+# fails loud inside the gate.
 if [[ "$HAS_COHERENCE" == "1" ]]; then
-  n "verify build-env coherence (${TARGET})…"; python3 scripts/verify_build_env_coherence.py "${TARGET}" --app-dir .
+  _BUNDLE=0; for _d in frontend/out frontend/dist out dist build frontend/build; do [[ -d "$_d" ]] && _BUNDLE=1; done
+  if [[ "$HAS_FRONTEND" == "1" || "$_BUNDLE" == "1" ]]; then
+    n "verify build-env coherence (${TARGET})…"; python3 scripts/verify_build_env_coherence.py "${TARGET}" --app-dir .
+  else
+    n "build-env coherence : backend-only Worker, no browser bundle — nothing to verify (SKIP)"
+  fi
 fi
 
 # ── 6. D1 migrations + parité déployée (si l'app a des migrations) ────────────
