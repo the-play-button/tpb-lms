@@ -46,11 +46,15 @@ from pathlib import Path
 #   the helper is called) ;
 # - a data-driven path DECLARED on the call line or the line above :
 #   `// vault-dynamic-path: <prefix> — <reason>` (one secret per portal, subscription…). It is listed, not checked.
+# A resolved path whose absence the code handles itself (a provider credential used only by one connection type, a
+# config table without which a job is a no-op) is DECLARED optional on the call line or the line above :
+#   `// vault-optional: <reason>`. It is checked and its absence printed, but it does not block the deploy.
 # Anything else stays a hard error : an unresolved reference is never silently ignored.
 SECRET_CALL_PATTERN = re.compile(r"(?:\.getSecret|\bcreateLazyVaultSecret)\s*\(\s*([^,)]+)")
 STRING_LITERAL = re.compile(r"^(?:\"([^\"]+)\"|'([^']+)'|`([^`$]+)`)$")
 VAULT_CONSTANT = re.compile(r"\bconst\s+(\w+)\s*=\s*[\"'`](tpb/[^\"'`$]+)[\"'`]")
 DYNAMIC_DECLARATION = re.compile(r"vault-dynamic-path:\s*(\S+)\s*(?:—|-)\s*(.+)")
+OPTIONAL_DECLARATION = re.compile(r"vault-optional:\s*(\S.+)")
 IDENTIFIER = re.compile(r"^[A-Za-z_$][\w$]*$")
 
 # The Worker source only — it never runs a .py (Python admin scripts are not deployed code).
@@ -109,8 +113,9 @@ def _source_files(app_path: Path) -> list[Path]:
     return files
 
 
-def scan_secret_refs(app_path: Path) -> tuple[set[str], list[tuple[str, str, str]]]:
-    """Return (required vault paths, declared dynamic references as (file, prefix, reason)). Raises on the unresolved."""
+def scan_secret_refs(app_path: Path) -> tuple[set[str], list[tuple[str, str, str]], list[tuple[str, str, str]]]:
+    """Return (required vault paths, declared dynamic references as (file, prefix, reason), declared optional paths as
+    (file, path, reason)). Raises on the unresolved."""
     sources: dict[Path, str] = {}
     app_constants: dict[str, set[str]] = {}
     for f in _source_files(app_path):
@@ -123,29 +128,39 @@ def scan_secret_refs(app_path: Path) -> tuple[set[str], list[tuple[str, str, str
             app_constants.setdefault(name, set()).add(value)
     refs: set[str] = set()
     dynamic: list[tuple[str, str, str]] = []
+    optional: list[tuple[str, str, str]] = []
     for f, text in sources.items():
         code = _strip_comments(text)
         local = dict(VAULT_CONSTANT.findall(code))
         raw_lines = text.split("\n")
         for match in SECRET_CALL_PATTERN.finditer(code):
             argument = match.group(1).strip()
+            line = code[: match.start()].count("\n")
+            near = [raw_lines[n] for n in (line, line - 1) if n >= 0]
+            path = None
             literal = STRING_LITERAL.fullmatch(argument)
             if literal:
-                refs.add(next(g for g in literal.groups() if g)); continue
-            if IDENTIFIER.fullmatch(argument):
+                path = next(g for g in literal.groups() if g)
+            elif IDENTIFIER.fullmatch(argument):
                 if argument in local:
-                    refs.add(local[argument]); continue
-                if len(app_constants.get(argument, ())) == 1:
-                    refs.add(next(iter(app_constants[argument]))); continue
-                if _is_forwarded_parameter(code, match.start(), argument):
+                    path = local[argument]
+                elif len(app_constants.get(argument, ())) == 1:
+                    path = next(iter(app_constants[argument]))
+                elif _is_forwarded_parameter(code, match.start(), argument):
                     continue
-            line = code[: match.start()].count("\n")
-            declared = next((m for m in (DYNAMIC_DECLARATION.search(raw_lines[n]) for n in (line, line - 1) if n >= 0) if m), None)
+            if path is not None:
+                why = next((m for m in map(OPTIONAL_DECLARATION.search, near) if m), None)
+                if why:
+                    optional.append((str(f.relative_to(app_path)), path, why.group(1).strip()))
+                else:
+                    refs.add(path)
+                continue
+            declared = next((m for m in map(DYNAMIC_DECLARATION.search, near) if m), None)
             if declared:
                 dynamic.append((str(f.relative_to(app_path)), declared.group(1), declared.group(2).strip())); continue
             raise RuntimeError(f"Unresolved vault reference in {f.relative_to(app_path)}:{line + 1} — use a literal path or "
                                "an app constant, or declare a data-driven path with `// vault-dynamic-path: <prefix> — <reason>`")
-    return refs, dynamic
+    return refs, dynamic, optional
 
 
 def find_secret_refs(app_path: Path) -> set[str]:
@@ -264,12 +279,23 @@ def main() -> int:
             return 1
 
     try:
-        refs, dynamic = scan_secret_refs(args.app_path)
+        refs, dynamic, optional = scan_secret_refs(args.app_path)
     except RuntimeError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
     for file, prefix, reason in dynamic:
         print(f"  ~ {prefix}* (dynamique : {reason}) — {file}")
+    optional = [o for o in optional if o[1] not in refs]  # required elsewhere in the app wins
+    for file, path, reason in optional:
+        print(f"  ? {path} (optionnel : {reason}) — {file}")
+    if optional and args.bastion_token and not args.skip_vault_check:
+        for _, path, reason in optional:
+            try:
+                ready = check_vault_has(args.bastion_url, args.bastion_token, path, args.target)
+            except RuntimeError as e:
+                print(f"ERROR: {e}", file=sys.stderr)
+                return 2
+            print(f"  {'✓' if ready else '⚠'} {path}" + ("" if ready else f" — absent, déployé quand même ({reason})"))
     if not refs:
         print(f"[pre_deploy_secrets_check] No `bastion.getSecret(...)` references found in {args.app_path}")
         return 0
