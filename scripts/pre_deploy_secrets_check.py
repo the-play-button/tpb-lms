@@ -38,43 +38,119 @@ import re
 import sys
 from pathlib import Path
 
-# Literal paths and file-local string constants cover direct and lazy SDK calls.
-SECRET_CALL_PATTERN = re.compile(
-    r"(?:bastion(?:Client)?\.getSecret|createLazyVaultSecret)\s*\(\s*([^,)]+)"
-)
-STRING_LITERAL = re.compile(r"^[\"']([^\"']+)[\"']$")
-LOCAL_CONSTANT = re.compile(r"\bconst\s+(\w+)\s*=\s*[\"']([^\"']+)[\"']")
+# What the deployed Worker reads from the vault. A path is found on any `<receiver>.getSecret(…)` or
+# `createLazyVaultSecret(…)` call (`createOptionalLazyVaultSecret` = optional, not required). Its argument is a
+# string literal, a template literal without interpolation, or a `const NAME = 'tpb/…'` of the app (the file's own
+# constant first). Two cases are not a reference (2026-10-28, six apps could not deploy because of them) :
+# - a FORWARDING helper : the argument is a `string` parameter of the enclosing function (the real path is read where
+#   the helper is called) ;
+# - a data-driven path DECLARED on the call line or the line above :
+#   `// vault-dynamic-path: <prefix> — <reason>` (one secret per portal, subscription…). It is listed, not checked.
+# Anything else stays a hard error : an unresolved reference is never silently ignored.
+SECRET_CALL_PATTERN = re.compile(r"(?:\.getSecret|\bcreateLazyVaultSecret)\s*\(\s*([^,)]+)")
+STRING_LITERAL = re.compile(r"^(?:\"([^\"]+)\"|'([^']+)'|`([^`$]+)`)$")
+VAULT_CONSTANT = re.compile(r"\bconst\s+(\w+)\s*=\s*[\"'`](tpb/[^\"'`$]+)[\"'`]")
+DYNAMIC_DECLARATION = re.compile(r"vault-dynamic-path:\s*(\S+)\s*(?:—|-)\s*(.+)")
+IDENTIFIER = re.compile(r"^[A-Za-z_$][\w$]*$")
 
-# Files types worth scanning
-SCAN_EXTENSIONS = {".ts", ".js", ".mjs", ".cjs", ".tsx", ".jsx", ".py"}
+# The Worker source only — it never runs a .py (Python admin scripts are not deployed code).
+SCAN_EXTENSIONS = {".ts", ".js", ".mjs", ".cjs", ".tsx", ".jsx"}
 
-# Skip dirs (build artifacts, vendored)
-SKIP_DIRS = {"node_modules", "dist", "build", ".wrangler", ".next", "__pycache__", ".git"}
+# Skip dirs (build artifacts, vendored) and tests (their paths are fixtures, not runtime reads)
+SKIP_DIRS = {"node_modules", "dist", "build", ".wrangler", ".next", "__pycache__", ".git", "plans", "__tests__", "__mocks__"}
+SKIP_SUFFIXES = (".test.ts", ".test.tsx", ".test.js", ".spec.ts", ".spec.tsx", ".spec.js")
+
+
+def _strip_comments(text: str) -> str:
+    """Blank `//` and `/* */` comments outside string and template literals, keeping every newline."""
+    out: list[str] = []
+    i, quote = 0, ""
+    while i < len(text):
+        ch = text[i]
+        if quote:
+            out.append(ch)
+            if ch == "\\" and i + 1 < len(text):
+                out.append(text[i + 1]); i += 2; continue
+            if ch == quote:
+                quote = ""
+            i += 1
+        elif ch in "'\"`":
+            quote = ch; out.append(ch); i += 1
+        elif text.startswith("//", i):
+            j = text.find("\n", i)
+            j = len(text) if j == -1 else j
+            out.append(" " * (j - i)); i = j
+        elif text.startswith("/*", i):
+            j = text.find("*/", i + 2)
+            j = len(text) if j == -1 else j + 2
+            out.append("".join(c if c == "\n" else " " for c in text[i:j])); i = j
+        else:
+            out.append(ch); i += 1
+    return "".join(out)
+
+
+def _is_forwarded_parameter(code: str, position: int, name: str) -> bool:
+    """True when `name` is a `string` parameter of a function declared in the 8 lines above the call."""
+    window = "\n".join(code[:position].split("\n")[-8:])
+    n = re.escape(name)
+    return re.search(rf"\b{n}\s*\??\s*:\s*string\b|(?:\basync\s+|[(,]\s*){n}\s*\)?\s*=>", window) is not None
+
+
+def _source_files(app_path: Path) -> list[Path]:
+    files = []
+    for f in app_path.rglob("*"):
+        if not f.is_file() or f.resolve() == Path(__file__).resolve() or f.suffix not in SCAN_EXTENSIONS:
+            continue
+        if any(skip in f.parts for skip in SKIP_DIRS) or f.name.endswith(SKIP_SUFFIXES):
+            continue
+        if any(part == "out" or part.startswith("dist") or part == ".open-next" for part in f.relative_to(app_path).parts[:-1]):
+            continue  # generated bundles (Next export, Vite dist) carry minified SDK code, not app references
+        files.append(f)
+    return files
+
+
+def scan_secret_refs(app_path: Path) -> tuple[set[str], list[tuple[str, str, str]]]:
+    """Return (required vault paths, declared dynamic references as (file, prefix, reason)). Raises on the unresolved."""
+    sources: dict[Path, str] = {}
+    app_constants: dict[str, set[str]] = {}
+    for f in _source_files(app_path):
+        try:
+            text = f.read_text(encoding="utf-8", errors="ignore")
+        except OSError:
+            continue
+        sources[f] = text
+        for name, value in VAULT_CONSTANT.findall(_strip_comments(text)):
+            app_constants.setdefault(name, set()).add(value)
+    refs: set[str] = set()
+    dynamic: list[tuple[str, str, str]] = []
+    for f, text in sources.items():
+        code = _strip_comments(text)
+        local = dict(VAULT_CONSTANT.findall(code))
+        raw_lines = text.split("\n")
+        for match in SECRET_CALL_PATTERN.finditer(code):
+            argument = match.group(1).strip()
+            literal = STRING_LITERAL.fullmatch(argument)
+            if literal:
+                refs.add(next(g for g in literal.groups() if g)); continue
+            if IDENTIFIER.fullmatch(argument):
+                if argument in local:
+                    refs.add(local[argument]); continue
+                if len(app_constants.get(argument, ())) == 1:
+                    refs.add(next(iter(app_constants[argument]))); continue
+                if _is_forwarded_parameter(code, match.start(), argument):
+                    continue
+            line = code[: match.start()].count("\n")
+            declared = next((m for m in (DYNAMIC_DECLARATION.search(raw_lines[n]) for n in (line, line - 1) if n >= 0) if m), None)
+            if declared:
+                dynamic.append((str(f.relative_to(app_path)), declared.group(1), declared.group(2).strip())); continue
+            raise RuntimeError(f"Unresolved vault reference in {f.relative_to(app_path)}:{line + 1} — use a literal path or "
+                               "an app constant, or declare a data-driven path with `// vault-dynamic-path: <prefix> — <reason>`")
+    return refs, dynamic
 
 
 def find_secret_refs(app_path: Path) -> set[str]:
     """Walk app_path, return set of unique secret paths referenced in source."""
-    refs: set[str] = set()
-    for f in app_path.rglob("*"):
-        if not f.is_file() or f.resolve() == Path(__file__).resolve():
-            continue
-        if f.suffix not in SCAN_EXTENSIONS:
-            continue
-        if any(skip in f.parts for skip in SKIP_DIRS):
-            continue
-        try:
-            content = f.read_text(encoding="utf-8", errors="ignore")
-        except OSError:
-            continue
-        constants = dict(LOCAL_CONSTANT.findall(content))
-        for match in SECRET_CALL_PATTERN.finditer(content):
-            argument = match.group(1).strip()
-            literal = STRING_LITERAL.fullmatch(argument)
-            path = literal.group(1) if literal else constants.get(argument)
-            if path is None:
-                raise RuntimeError(f"Unresolved vault reference in {f.relative_to(app_path)}")
-            refs.add(path)
-    return refs
+    return scan_secret_refs(app_path)[0]
 
 
 def check_vault_has(bastion_url: str, bastion_token: str, path: str,
@@ -159,9 +235,6 @@ def main() -> int:
         help="Print refs without querying bastion (debug mode)",
     )
     args = parser.parse_args()
-    if not args.bastion_token:
-        print("ERROR: BASTION_TOKEN is required.", file=sys.stderr)
-        return 2
     if not args.bastion_url:
         if not args.target:
             print("ERROR: provide --bastion-url OR --target (to derive it).", file=sys.stderr)
@@ -191,13 +264,19 @@ def main() -> int:
             return 1
 
     try:
-        refs = find_secret_refs(args.app_path)
+        refs, dynamic = scan_secret_refs(args.app_path)
     except RuntimeError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
+    for file, prefix, reason in dynamic:
+        print(f"  ~ {prefix}* (dynamique : {reason}) — {file}")
     if not refs:
         print(f"[pre_deploy_secrets_check] No `bastion.getSecret(...)` references found in {args.app_path}")
         return 0
+
+    if not args.bastion_token:
+        print("ERROR: BASTION_TOKEN is required.", file=sys.stderr)
+        return 2
 
     print(f"[pre_deploy_secrets_check] {len(refs)} secret refs detected :")
     for ref in sorted(refs):
