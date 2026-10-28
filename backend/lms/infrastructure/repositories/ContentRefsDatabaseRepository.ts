@@ -85,10 +85,17 @@ export class ContentRefsDatabaseRepository implements ContentRefsRepository {
 
     await this.db
       .prepare(
-        `INSERT OR REPLACE INTO lms_content_ref
+        // An upsert, never a REPLACE : SQLite would delete the row first, which breaks the shares and access rows
+        // that reference it (foreign keys, no ON DELETE action).
+        `INSERT INTO lms_content_ref
            (id, connection_id, file_id, name, content_type, owner_email,
             course_id, class_id, usage, lang, source_ref_id, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+         ON CONFLICT(id) DO UPDATE SET
+           connection_id = excluded.connection_id, file_id = excluded.file_id, name = excluded.name,
+           content_type = excluded.content_type, owner_email = excluded.owner_email, course_id = excluded.course_id,
+           class_id = excluded.class_id, usage = excluded.usage, lang = excluded.lang,
+           source_ref_id = excluded.source_ref_id, updated_at = excluded.updated_at`,
       )
       .bind(
         props.id.value,
