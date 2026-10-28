@@ -107,8 +107,11 @@ def _source_files(app_path: Path) -> list[Path]:
             continue
         if any(skip in f.parts for skip in SKIP_DIRS) or f.name.endswith(SKIP_SUFFIXES):
             continue
-        if any(part == "out" or part.startswith("dist") or part == ".open-next" for part in f.relative_to(app_path).parts[:-1]):
+        relative_dirs = f.relative_to(app_path).parts[:-1]
+        if any(part == "out" or part.startswith("dist") or part == ".open-next" for part in relative_dirs):
             continue  # generated bundles (Next export, Vite dist) carry minified SDK code, not app references
+        if relative_dirs[:1] == ("scripts",):
+            continue  # <app>/scripts/ holds operator scripts run by hand, never part of the Worker bundle
         files.append(f)
     return files
 

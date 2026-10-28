@@ -72,7 +72,6 @@ const initBastionClient = async (env) => {
 // NB — the telemetry reporter composes the CF Access SA internally (§ CF ACCESS = UN SEUL CHEMIN SDK) :
 // no consumer-side SA fetch. We only carry bastionUrl + token to the telemetry config.
 const getTallySigningSecret  = createLazyVaultSecret('tpb/apps/lms/tally_signing_secret');
-const getTallyWebhookSecret  = createLazyVaultSecret('tpb/apps/lms/tally_webhook_secret');
 
 // --- Hono app ---
 
@@ -165,37 +164,12 @@ app.use('/api/*', async (c, next) => {
   await next();
 });
 
-/**
- * Constant-time string comparison — XOR loop over UTF-8 bytes. Returns
- * true iff the inputs are byte-equal in length AND content. Per bearer
- * § observable-timing : short-circuit `===` on secret-equality leaks
- * length + prefix-match info via observable timing.
- */
-const timingSafeStrEqual = (a, b) => {
-  if (typeof a !== 'string' || typeof b !== 'string') return false;
-  const encoder = new TextEncoder();
-  const aBytes = encoder.encode(a);
-  const bBytes = encoder.encode(b);
-  if (aBytes.length !== bBytes.length) return false;
-  let diff = 0;
-  for (let i = 0; i < aBytes.length; i += 1) {
-    diff |= aBytes[i] ^ bBytes[i];
-  }
-  return diff === 0;
-};
-
 // --- Tally webhook auth (signature-based, not session-based) ---
-const handleTallyWithAuth = async (request, url, env) => {
+const handleTallyWithAuth = async (request, env) => {
   const signingSecret = await getTallySigningSecret(env);
   const { isValid, body, noSignature } = await verifyTallySignature(request, signingSecret);
-  if (noSignature) {
-    const webhookSecret = url.searchParams.get('secret');
-    const expectedSecret = await getTallyWebhookSecret(env);
-    if (!timingSafeStrEqual(webhookSecret ?? '', expectedSecret ?? '')) {
-      return jsonResponse({ error: 'Invalid webhook: no signature and invalid secret' }, 403, request);
-    }
-    return await handleTallyWebhookWithBody(body, env, request);
-  }
+  // Tally signs every delivery of the configured webhook: an unsigned request is refused (no shared-secret fallback).
+  if (noSignature) return jsonResponse({ error: 'Unsigned Tally webhook' }, 403, request);
   if (!isValid) return jsonResponse({ error: 'Invalid Tally signature' }, 403, request);
   return await handleTallyWebhookWithBody(body, env, request);
 };
@@ -205,7 +179,7 @@ const handleTallyWithAuth = async (request, url, env) => {
 const PUBLIC_API_PATHS = ['/api/health', '/api/tally-webhook', '/api/content/github', '/api/test/seed'];
 
 const publicRoutes = [
-  { method: 'POST', path: '/api/tally-webhook', handler: (req, env) => handleTallyWithAuth(req, new URL(req.url), env) },
+  { method: 'POST', path: '/api/tally-webhook', handler: (req, env) => handleTallyWithAuth(req, env) },
   { method: 'GET', path: '/api/content/github', handler: (req, env) => getGitHubContent(req, env, null) },
   { method: 'GET', path: '/api/content/github/tree', handler: (req, env) => listGitHubDirectory(req, env, null) },
   { method: 'POST', path: '/api/test/seed', handler: handleTestSeed },
