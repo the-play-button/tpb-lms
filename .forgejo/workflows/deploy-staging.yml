@@ -27,26 +27,54 @@ jobs:
 
       - name: Setup pnpm via corepack
         run: |
+          echo '::tpb-step::Setup pnpm via corepack' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           corepack enable
           corepack prepare pnpm@10.17.1 --activate
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Inject npm auth token (global ~/.npmrc)
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
+          echo '::tpb-step::Inject npm auth token (global ~/.npmrc)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           cat > "$HOME/.npmrc" <<EOF
           @the-play-button:registry=https://npm.tpb.sh/api/packages/the-play-button/npm/
           //npm.tpb.sh/api/packages/the-play-button/npm/:_authToken=$NPM_AUTH_TOKEN
           EOF
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          echo '::tpb-step::Install dependencies' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          pnpm install --frozen-lockfile
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Typecheck (tsc --noEmit)
-        run: pnpm typecheck
+        run: |
+          echo '::tpb-step::Gate — Typecheck (tsc --noEmit)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          pnpm typecheck
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Unit tests (vitest)
-        run: pnpm test
+        run: |
+          echo '::tpb-step::Gate — Unit tests (vitest)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          pnpm test
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Checkout tpb-entropy (gate source)
         uses: actions/checkout@v4
@@ -56,6 +84,8 @@ jobs:
           token: ${{ secrets.FORGEJO_PAT_RO }}
       - name: Gate — Entropy (fail-hard — no-op INTERDIT, § A3 un-skipped)
         run: |
+          echo '::tpb-step::Gate — Entropy (fail-hard — no-op INTERDIT, § A3 un-skipped)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           set -eu
           # recon-18: install the gate FROM SOURCE via cross-repo checkout (registry download is
           # CF-gated → hash-mismatch). Deps are public PyPI. rm before scanning (audit only this repo).
@@ -70,12 +100,17 @@ jobs:
           # SINGLE_REPO_CI (recon-19): skip the bridged monorepo-context checks that are
           # structurally FALSE POSITIVES + non-deterministic on the flat single-repo checkout.
           TPB_ENTROPY_NO_DAEMON=1 TPB_ENTROPY_ENGINE_INTERNAL=1 TPB_ENTROPY_NATIVE_ONLY=1 TPB_ENTROPY_SINGLE_REPO_CI=1             "$VENV/bin/python" -m tpb_entropy --last-status check --path .
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Pre-deploy secrets check (§ J3 restored)
         env:
           BASTION_TOKEN: ${{ secrets.BASTION_TOKEN_STAGING }}
           FORGEJO_PYPI_TOKEN: ${{ secrets.FORGEJO_PYPI_TOKEN }}
         run: |
+          echo '::tpb-step::Gate — Pre-deploy secrets check (§ J3 restored)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           set -eu
           # The check calls `tpb bastion check-secret` (tpb-cli >= 0.12.0) : the runner has no `tpb`, install it in a
           # job-unique venv removed on EXIT (no /tmp leak, no PATH side effect on later steps) — same index as tpb-cli CI.
@@ -91,12 +126,23 @@ jobs:
           done
           "$VENV/bin/pip" install --quiet             --index-url "file://$ORG_IDX/"             --extra-index-url https://pypi.org/simple/             "tpb-cli>=0.12.0"
           PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target staging --bastion-token "$BASTION_TOKEN"
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Materialize public env (staging)
-        run: python3 scripts/materialize_public_env.py staging
+        run: |
+          echo '::tpb-step::Materialize public env (staging)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          python3 scripts/materialize_public_env.py staging
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Backup D1 pre-migration (§ G3 restored — export before schema change)
         run: |
+          echo '::tpb-step::Backup D1 pre-migration (§ G3 restored — export before schema change)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           set -x
           if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-staging.toml; then
             mkdir -p .d1-backup
@@ -107,9 +153,14 @@ jobs:
           else
             echo "No db/migrations or no migrations_dir — skipping D1 backup"
           fi
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Apply D1 migrations (staging)
         run: |
+          echo '::tpb-step::Apply D1 migrations (staging)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           set -x
           if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-staging.toml; then
             grep 'database_name' backend/wrangler-staging.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
@@ -118,9 +169,14 @@ jobs:
           else
             echo "No db/migrations or no migrations_dir — skipping migrations"
           fi
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Wrangler deploy (staging)
         run: |
+          echo '::tpb-step::Wrangler deploy (staging)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           # PROVENANCE-STAMP COMMIT_SHA (axe 51 bundle==source vérifiable, fleet homogénéisé) — mirror deploy.sh:143.
           COMMIT_SHA="$(git rev-parse HEAD 2>/dev/null || echo nogit)"
           set +e
@@ -146,9 +202,14 @@ jobs:
           print(f"crons unchanged ({len(live)}) — CF schedules write refused (10063) is harmless here; version deployed")
           PY
           fi
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Smoke test (FAIL-HARD — § G1, curl -f not '|| echo WARN')
         run: |
+          echo '::tpb-step::Smoke test (FAIL-HARD — § G1, curl -f not '\''|| echo WARN'\'')' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           set -x
           sleep 10
           URL="$(grep -E '^\s*(routes|route|workers_dev)' backend/wrangler-staging.toml >/dev/null 2>&1 && echo '' || echo '')"
@@ -159,3 +220,17 @@ jobs:
           else
             echo "No scripts/smoke_recipe.sh yet — deploy success gate = wrangler exit code (fail-hard). App smoke-recipes = Phase 2 G2."
           fi
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
+
+      - name: Report failure to telemetry
+        if: failure()
+        env:
+          TPB_CI_REDACT_VARS: "BASTION_TOKEN_STAGING,CF_TOKEN_STAGING,FORGEJO_PAT_RO,FORGEJO_PYPI_TOKEN,NPM_AUTH_TOKEN"
+          BASTION_TOKEN_STAGING: ${{ secrets.BASTION_TOKEN_STAGING }}
+          CF_TOKEN_STAGING: ${{ secrets.CF_TOKEN_STAGING }}
+          FORGEJO_PAT_RO: ${{ secrets.FORGEJO_PAT_RO }}
+          FORGEJO_PYPI_TOKEN: ${{ secrets.FORGEJO_PYPI_TOKEN }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: python3 scripts/report_ci_failure.py --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "staging"

@@ -20,26 +20,54 @@ jobs:
 
       - name: Setup pnpm via corepack
         run: |
+          echo '::tpb-step::Setup pnpm via corepack' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           corepack enable
           corepack prepare pnpm@10.17.1 --activate
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Inject npm auth token (global ~/.npmrc)
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
+          echo '::tpb-step::Inject npm auth token (global ~/.npmrc)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           cat > "$HOME/.npmrc" <<EOF
           @the-play-button:registry=https://npm.tpb.sh/api/packages/the-play-button/npm/
           //npm.tpb.sh/api/packages/the-play-button/npm/:_authToken=$NPM_AUTH_TOKEN
           EOF
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: |
+          echo '::tpb-step::Install dependencies' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          pnpm install --frozen-lockfile
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Typecheck (tsc --noEmit)
-        run: pnpm typecheck
+        run: |
+          echo '::tpb-step::Gate — Typecheck (tsc --noEmit)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          pnpm typecheck
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Unit tests (vitest)
-        run: pnpm test
+        run: |
+          echo '::tpb-step::Gate — Unit tests (vitest)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          pnpm test
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Checkout tpb-entropy (gate source)
         uses: actions/checkout@v4
@@ -49,6 +77,8 @@ jobs:
           token: ${{ secrets.FORGEJO_PAT_RO }}
       - name: Gate — Entropy (fail-hard — no-op INTERDIT, § ci_entropy_gate_is_noop A3)
         run: |
+          echo '::tpb-step::Gate — Entropy (fail-hard — no-op INTERDIT, § ci_entropy_gate_is_noop A3)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
           set -eu
           # recon-18: the Forgejo PyPI download URLs are absolute-public (CF-Access-gated) → pip on the
           # runner gets the CF challenge HTML → hash-mismatch. Install the gate FROM SOURCE via a
@@ -65,3 +95,14 @@ jobs:
           # SINGLE_REPO_CI (recon-19): skip the bridged monorepo-context checks that are
           # structurally FALSE POSITIVES + non-deterministic on the flat single-repo checkout.
           TPB_ENTROPY_NO_DAEMON=1 TPB_ENTROPY_ENGINE_INTERNAL=1 TPB_ENTROPY_NATIVE_ONLY=1 TPB_ENTROPY_SINGLE_REPO_CI=1             "$VENV/bin/python" -m tpb_entropy --last-status check --path .
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
+
+      - name: Report failure to telemetry
+        if: failure()
+        env:
+          TPB_CI_REDACT_VARS: "FORGEJO_PAT_RO,NPM_AUTH_TOKEN"
+          FORGEJO_PAT_RO: ${{ secrets.FORGEJO_PAT_RO }}
+          NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+        run: python3 scripts/report_ci_failure.py --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "ci"
