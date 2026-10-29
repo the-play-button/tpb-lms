@@ -43,7 +43,7 @@ export const createShareHandle = async (request: Request, ctx: HandlerContext, r
   );
 
   // 7. Track
-  createShareTrack(ctx.actor, inputResult.value.ref_id, inputResult.value.email);
+  createShareTrack(ctx.actor, inputResult.value.refId, inputResult.value.email);
 
   return { ok: true, value: filtered };
 };

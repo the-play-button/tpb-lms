@@ -43,7 +43,7 @@ export const getCloudContentHandle = async (request: Request, ctx: HandlerContex
   );
 
   // 7. Track
-  getCloudContentTrack(ctx.actor, inputResult.value.ref_id);
+  getCloudContentTrack(ctx.actor, inputResult.value.refId);
 
   return { ok: true, value: filtered };
 };

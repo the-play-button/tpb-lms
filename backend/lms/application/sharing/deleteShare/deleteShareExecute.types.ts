@@ -1,6 +1,6 @@
 
 export interface RevokeShareOutput {
-  share_id: string;
+  shareId: string;
   content_ref_id: string;
   revoked_at: string;
 }

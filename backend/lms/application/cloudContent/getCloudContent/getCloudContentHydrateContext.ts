@@ -16,7 +16,7 @@ export type { GetCloudContentContext };
  * language routing is the caller's responsibility (planned for a future layer).
  */
 export const getCloudContentHydrateContext = async (input: GetCloudContentInput, ctx: HandlerContext): Promise<Result<'NOT_FOUND', GetCloudContentContext>> => {
-  const refId = ContentRefId.reconstitute(input.ref_id);
+  const refId = ContentRefId.reconstitute(input.refId);
 
   // TODO: i18n fallback - for now, always use findById.
   // add lookup logic here: try translated ref first, fall back to source.

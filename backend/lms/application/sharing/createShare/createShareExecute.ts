@@ -51,7 +51,7 @@ export const createShareExecute = async (
   );
 
   return succeed({
-    share_id: shareIdResult.value.value,
+    shareId: shareIdResult.value.value,
     content_ref_id: contentRef.id.value,
     shared_with: input.email,
     role: input.role,

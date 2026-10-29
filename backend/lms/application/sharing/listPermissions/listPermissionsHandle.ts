@@ -43,7 +43,7 @@ export const listPermissionsHandle = async (rawRefId: string, ctx: HandlerContex
   );
 
   // 7. Track
-  listPermissionsTrack(ctx.actor, inputResult.value.ref_id);
+  listPermissionsTrack(ctx.actor, inputResult.value.refId);
 
   return { ok: true, value: filtered };
 };

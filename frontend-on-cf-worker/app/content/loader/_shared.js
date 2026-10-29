@@ -171,7 +171,7 @@ export const isCloudRef = media => {
  * Build API URL for cloud content
  */
 export const buildCloudContentUrl = (contentRefId, lang) => {
-    let url = `${API_BASE}/content/cloud?ref_id=${contentRefId}`;
+    let url = `${API_BASE}/content/cloud?refId=${contentRefId}`;
     if (lang) url += `&lang=${lang}`;
     return url;
 };
@@ -180,7 +180,7 @@ export const buildCloudContentUrl = (contentRefId, lang) => {
  * Build API URL for cloud pitch file
  */
 export const buildCloudPitchUrl = contentRefId => {
-    return `${API_BASE}/content/cloud?usage=pitch&ref_id=${contentRefId}`;
+    return `${API_BASE}/content/cloud?usage=pitch&refId=${contentRefId}`;
 };
 
 /**

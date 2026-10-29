@@ -12,7 +12,7 @@ export type { ListPermissionsContext };
  * HydrateContext step: load contentRef and active shares.
  */
 export const listPermissionsHydrateContext = async (input: ListPermissionsValidatedInput, ctx: HandlerContext): Promise<Result<'NOT_FOUND', ListPermissionsContext>> => {
-  const refId = ContentRefId.reconstitute(input.ref_id);
+  const refId = ContentRefId.reconstitute(input.refId);
   const contentRef = await ctx.contentRefsRepository.findById(refId);
   if (!contentRef) {
     return fail('NOT_FOUND' as const);

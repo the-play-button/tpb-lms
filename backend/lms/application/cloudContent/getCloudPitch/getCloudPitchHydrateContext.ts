@@ -14,7 +14,7 @@ export type { GetCloudPitchContext };
  * See getCloudContentHydrateContext for i18n fallback notes.
  */
 export const getCloudPitchHydrateContext = async (input: GetCloudPitchInput, ctx: HandlerContext): Promise<Result<'NOT_FOUND', GetCloudPitchContext>> => {
-  const refId = ContentRefId.reconstitute(input.ref_id);
+  const refId = ContentRefId.reconstitute(input.refId);
 
   // TODO: i18n fallback - same strategy as getCloudContent
   const contentRef = await ctx.contentRefsRepository.findById(refId);

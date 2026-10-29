@@ -33,7 +33,7 @@ export const deleteShareExecute = async (context: RevokeShareContext, ctx: Handl
   );
 
   return succeed({
-    share_id: share.id.value,
+    shareId: share.id.value,
     content_ref_id: contentRef.id.value,
     revoked_at: revokedShare.revokedAt.toISOString(),
   });

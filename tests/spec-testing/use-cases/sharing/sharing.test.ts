@@ -52,7 +52,7 @@ describe('createShare', () => {
       const result = await createShareValidateInput(request, REF_ID);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.value.ref_id).toBe(REF_ID);
+        expect(result.value.refId).toBe(REF_ID);
         expect(result.value.email).toBe(RECIPIENT_EMAIL);
         expect(result.value.role).toBe('READ');
       }
@@ -101,7 +101,7 @@ describe('createShare', () => {
       const ref = ContentRefMother.draft();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const input = { ref_id: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
+      const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
       const result = await createShareHydrateContext(input, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
@@ -112,7 +112,7 @@ describe('createShare', () => {
 
     it('fails when contentRef not found', async () => {
       const { handlerContext } = createTestContext();
-      const input = { ref_id: 'nonexistent', email: RECIPIENT_EMAIL, role: 'READ' as const };
+      const input = { refId: 'nonexistent', email: RECIPIENT_EMAIL, role: 'READ' as const };
       const result = await createShareHydrateContext(input, handlerContext as any);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('NOT_FOUND');
@@ -162,7 +162,7 @@ describe('createShare', () => {
       const { handlerContext, sharesRepository } = createTestContext();
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const input = { ref_id: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
+      const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
 
       const result = await createShareExecute(input, context as any, handlerContext as any);
       expect(result.ok).toBe(true);
@@ -178,7 +178,7 @@ describe('createShare', () => {
       const { handlerContext, domainEvents } = createTestContext();
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const input = { ref_id: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
+      const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
 
       await createShareExecute(input, context as any, handlerContext as any);
       expect(domainEvents.published).toHaveLength(1);
@@ -189,7 +189,7 @@ describe('createShare', () => {
       const { handlerContext, sharesRepository } = createTestContext();
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const input = { ref_id: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
+      const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
 
       await createShareExecute(input, context as any, handlerContext as any);
       const saved = [...sharesRepository.shares.values()][0];
@@ -204,13 +204,13 @@ describe('createShare', () => {
 
 describe('deleteShare', () => {
   describe('ValidateInput', () => {
-    it('accepts valid share_id', () => {
+    it('accepts valid shareId', () => {
       const result = deleteShareValidateInput(SHARE_ID);
       expect(result.ok).toBe(true);
-      if (result.ok) expect(result.value.share_id).toBe(SHARE_ID);
+      if (result.ok) expect(result.value.shareId).toBe(SHARE_ID);
     });
 
-    it('rejects empty share_id', () => {
+    it('rejects empty shareId', () => {
       const result = deleteShareValidateInput('');
       expect(result.ok).toBe(false);
     });
@@ -300,7 +300,7 @@ describe('deleteShare', () => {
       const result = await deleteShareExecute(context as any, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
-        expect(result.value.share_id).toBe(SHARE_ID);
+        expect(result.value.shareId).toBe(SHARE_ID);
         expect(result.value.revoked_at).toBeDefined();
       }
       const saved = sharesRepository.shares.get(SHARE_ID);
@@ -326,12 +326,12 @@ describe('deleteShare', () => {
 
 describe('listPermissions', () => {
   describe('ValidateInput', () => {
-    it('accepts valid ref_id', () => {
+    it('accepts valid refId', () => {
       const result = listPermissionsValidateInput(REF_ID);
       expect(result.ok).toBe(true);
     });
 
-    it('rejects empty ref_id', () => {
+    it('rejects empty refId', () => {
       const result = listPermissionsValidateInput('');
       expect(result.ok).toBe(false);
     });
@@ -343,7 +343,7 @@ describe('listPermissions', () => {
       const ref = ContentRefMother.draft();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const result = await listPermissionsHydrateContext({ ref_id: REF_ID }, handlerContext as any);
+      const result = await listPermissionsHydrateContext({ refId: REF_ID }, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.isOwner).toBe(true);
@@ -353,7 +353,7 @@ describe('listPermissions', () => {
 
     it('fails when contentRef not found', async () => {
       const { handlerContext } = createTestContext();
-      const result = await listPermissionsHydrateContext({ ref_id: 'missing' }, handlerContext as any);
+      const result = await listPermissionsHydrateContext({ refId: 'missing' }, handlerContext as any);
       expect(result.ok).toBe(false);
     });
   });

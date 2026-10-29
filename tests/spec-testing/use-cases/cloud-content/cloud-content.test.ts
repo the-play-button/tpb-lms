@@ -25,21 +25,21 @@ import { getCloudPitchExecute } from '../../../../backend/lms/application/cloudC
 
 describe('getCloudContent', () => {
   describe('ValidateInput', () => {
-    it('accepts valid ref_id', () => {
-      const request = new Request(`http://test.local?ref_id=${REF_ID}`);
+    it('accepts valid refId', () => {
+      const request = new Request(`http://test.local?refId=${REF_ID}`);
       const result = getCloudContentValidateInput(request);
       expect(result.ok).toBe(true);
-      if (result.ok) expect(result.value.ref_id).toBe(REF_ID);
+      if (result.ok) expect(result.value.refId).toBe(REF_ID);
     });
 
-    it('rejects missing ref_id', () => {
+    it('rejects missing refId', () => {
       const request = new Request('http://test.local');
       const result = getCloudContentValidateInput(request);
       expect(result.ok).toBe(false);
     });
 
     it('accepts optional lang parameter', () => {
-      const request = new Request(`http://test.local?ref_id=${REF_ID}&lang=fr`);
+      const request = new Request(`http://test.local?refId=${REF_ID}&lang=fr`);
       const result = getCloudContentValidateInput(request);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.lang).toBe('fr');
@@ -52,7 +52,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.draft();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const result = await getCloudContentHydrateContext({ ref_id: REF_ID }, handlerContext as any);
+      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.isOwner).toBe(true);
@@ -70,7 +70,7 @@ describe('getCloudContent', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
       sharesRepository.shares.set(share.id.value, share);
 
-      const result = await getCloudContentHydrateContext({ ref_id: REF_ID }, handlerContext as any);
+      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.isOwner).toBe(false);
@@ -86,7 +86,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.draft();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const result = await getCloudContentHydrateContext({ ref_id: REF_ID }, handlerContext as any);
+      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.isOwner).toBe(false);
@@ -96,7 +96,7 @@ describe('getCloudContent', () => {
 
     it('fails when contentRef not found', async () => {
       const { handlerContext } = createTestContext();
-      const result = await getCloudContentHydrateContext({ ref_id: 'missing' }, handlerContext as any);
+      const result = await getCloudContentHydrateContext({ refId: 'missing' }, handlerContext as any);
       expect(result.ok).toBe(false);
     });
   });
@@ -196,13 +196,13 @@ describe('getCloudContent', () => {
 
 describe('getCloudPitch', () => {
   describe('ValidateInput', () => {
-    it('accepts valid ref_id', () => {
-      const request = new Request(`http://test.local?ref_id=${REF_ID}`);
+    it('accepts valid refId', () => {
+      const request = new Request(`http://test.local?refId=${REF_ID}`);
       const result = getCloudPitchValidateInput(request);
       expect(result.ok).toBe(true);
     });
 
-    it('rejects missing ref_id', () => {
+    it('rejects missing refId', () => {
       const request = new Request('http://test.local');
       const result = getCloudPitchValidateInput(request);
       expect(result.ok).toBe(false);
@@ -215,14 +215,14 @@ describe('getCloudPitch', () => {
       const ref = ContentRefMother.pitch();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const result = await getCloudPitchHydrateContext({ ref_id: REF_ID }, handlerContext as any);
+      const result = await getCloudPitchHydrateContext({ refId: REF_ID }, handlerContext as any);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.isOwner).toBe(true);
     });
 
     it('fails when not found', async () => {
       const { handlerContext } = createTestContext();
-      const result = await getCloudPitchHydrateContext({ ref_id: 'missing' }, handlerContext as any);
+      const result = await getCloudPitchHydrateContext({ refId: 'missing' }, handlerContext as any);
       expect(result.ok).toBe(false);
     });
   });

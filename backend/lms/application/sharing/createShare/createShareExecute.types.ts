@@ -1,6 +1,6 @@
 
 export interface ShareContentOutput {
-  share_id: string;
+  shareId: string;
   content_ref_id: string;
   shared_with: string;
   role: string;

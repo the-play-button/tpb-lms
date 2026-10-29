@@ -2,16 +2,16 @@ import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 
 const RevokeShareInputSchema = z.object({
-  share_id: z.string().min(1, 'share_id is required'),
+  shareId: z.string().min(1, 'shareId is required'),
 });
 
 export type RevokeShareValidatedInput = z.infer<typeof RevokeShareInputSchema>;
 
 /**
- * ValidateInput step: validate share_id path parameter.
+ * ValidateInput step: validate shareId path parameter.
  */
 export const deleteShareValidateInput = (shareId: string): Result<string, RevokeShareValidatedInput> => {
-  const parsed = RevokeShareInputSchema.safeParse({ share_id: shareId });
+  const parsed = RevokeShareInputSchema.safeParse({ shareId: shareId });
   if (!parsed.success) {
     return fail(parsed.error.issues.map((i) => i.message).join('; '));
   }

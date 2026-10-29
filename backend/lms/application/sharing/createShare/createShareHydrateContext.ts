@@ -12,7 +12,7 @@ export type { ShareContentContext };
  * HydrateContext step: load contentRef and existing shares.
  */
 export const createShareHydrateContext = async (input: ShareContentInput, ctx: HandlerContext): Promise<Result<'NOT_FOUND', ShareContentContext>> => {
-  const refId = ContentRefId.reconstitute(input.ref_id);
+  const refId = ContentRefId.reconstitute(input.refId);
 
   const contentRef = await ctx.contentRefsRepository.findById(refId);
   if (!contentRef) {

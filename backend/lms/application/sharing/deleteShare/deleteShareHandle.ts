@@ -20,7 +20,7 @@ export const deleteShareHandle = async (shareId: string, ctx: HandlerContext): P
   if (!inputResult.ok) return fail(inputResult.error);
 
   // 2. HydrateContext
-  const contextResult = await deleteShareHydrateContext(inputResult.value.share_id, ctx);
+  const contextResult = await deleteShareHydrateContext(inputResult.value.shareId, ctx);
   if (!contextResult.ok) return fail(contextResult.error);
 
   // 3. ValidateContext
@@ -39,7 +39,7 @@ export const deleteShareHandle = async (shareId: string, ctx: HandlerContext): P
   const filtered = deleteShareFilter(executeResult.value);
 
   // 7. Track
-  deleteShareTrack(ctx.actor, inputResult.value.share_id);
+  deleteShareTrack(ctx.actor, inputResult.value.shareId);
 
   return { ok: true, value: filtered };
 };

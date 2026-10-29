@@ -39,7 +39,7 @@ export const getCloudPitchHandle = async (request: Request, ctx: HandlerContext)
   const filtered = getCloudPitchFilter(executeResult.value);
 
   // 7. Track
-  getCloudPitchTrack(ctx.actor, inputResult.value.ref_id);
+  getCloudPitchTrack(ctx.actor, inputResult.value.refId);
 
   return { ok: true, value: filtered };
 };
