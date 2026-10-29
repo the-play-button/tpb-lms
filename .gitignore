@@ -64,3 +64,6 @@ frontend-on-cf-worker/resources/
 backend/wrangler-dev.toml
 backend/wrangler-staging.toml
 backend/wrangler-production.toml
+
+# eslint cache written by the pre-push hook
+.eslintcache
