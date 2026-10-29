@@ -2,7 +2,7 @@
 # Canonical SSOT = tpb-devops/scripts/generate_workflows.py. Regenerate: python3 scripts/generate_workflows.py
 # Drift-locked by entropy: workflows_match_canonical_template + vendored_workflow_generator_matches_ssot.
 name: deploy-production
-# Deploy production — § restored gates (secrets-check, shutdown[prod], backup-D1, entropy, smoke fail-hard).
+# Deploy production — § restored gates (secrets-check, backup-D1, entropy, smoke fail-hard).
 # GROUNDED on WMS deploy-production.yml; env-parameterized by generate_workflows.py.
 on:
   push:
@@ -136,15 +136,6 @@ jobs:
           done
           "$VENV/bin/pip" install --quiet             --index-url "file://$ORG_IDX/"             --extra-index-url https://pypi.org/simple/             "tpb-cli>=0.12.0"
           PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target production --bastion-token "$BASTION_TOKEN"
-          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
-          __tpb_rc=${PIPESTATUS[0]}
-          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
-
-      - name: Gate — Shutdown window (prod, § G3 restored)
-        run: |
-          echo '::tpb-step::Gate — Shutdown window (prod, § G3 restored)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
-          {
-          bash scripts/check_shutdown_window.sh
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"

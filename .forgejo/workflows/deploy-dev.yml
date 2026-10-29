@@ -2,7 +2,7 @@
 # Canonical SSOT = tpb-devops/scripts/generate_workflows.py. Regenerate: python3 scripts/generate_workflows.py
 # Drift-locked by entropy: workflows_match_canonical_template + vendored_workflow_generator_matches_ssot.
 name: deploy-dev
-# Deploy dev — § restored gates (secrets-check, shutdown[prod], backup-D1, entropy, smoke fail-hard).
+# Deploy dev — § restored gates (secrets-check, backup-D1, entropy, smoke fail-hard).
 # GROUNDED on WMS deploy-production.yml; env-parameterized by generate_workflows.py.
 on:
   workflow_dispatch: {}
