@@ -78,10 +78,10 @@ const fetchCurrentUserRank = async (db: D1Database, userId: string): Promise<{ r
 const enrichLeaderboardEntry = async (db: D1Database, entry: LeaderboardRow, index: number) => ({
     rank: index + 1,
     user_id: entry.user_id,
-    total_points: entry.total_points || 0,
-    video_completed_count: entry.videos_completed || 0,
-    quiz_passed_count: entry.quizzes_completed || 0,
-    badges_count: entry.badges_earned || 0,
+    total_points: entry.total_points ?? 0,
+    video_completed_count: entry.videos_completed ?? 0,
+    quiz_passed_count: entry.quizzes_completed ?? 0,
+    badges_count: entry.badges_earned ?? 0,
     user: await fetchUserInfo(db, entry.user_id ?? ''),
 });
 
@@ -115,7 +115,7 @@ export const fetchLeaderboard = async (env: Env, userId: string, limit: number):
     `).bind(limit).all<LeaderboardRow>();
 
     const leaderboard = await Promise.all(
-        (results.results || []).map(async (entry, index) => enrichLeaderboardEntry(env.DB, entry, index))
+        results.results.map(async (entry, index) => enrichLeaderboardEntry(env.DB, entry, index))
     );
 
     const currentUserEntry = leaderboard.find((e) => e.user_id === userId);
@@ -168,7 +168,7 @@ export const fetchUserStats = async (env: Env, userId: string): Promise<{
         user_id: userId,
         stats: buildStatsObject(stats),
         activity: buildActivityObject(activity),
-        badges: badges.results || [],
+        badges: badges.results,
         xp: { total: calculateXP(stats) },
     };
 };

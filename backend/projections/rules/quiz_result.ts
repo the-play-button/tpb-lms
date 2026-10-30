@@ -30,7 +30,7 @@ export const QUIZ_RESULT_PROJECTION: Projection = {
      */
     reduce(state: ProjectionState, event: ProjectionEvent & { payload: unknown }): ProjectionState {
         const payload = (event.payload ?? {}) as QuizPayload;
-        const score = payload.score || 0;
+        const score = payload.score ?? 0;
         const maxScore = payload.max_score || 1;
         const percentage = Math.round((score / maxScore) * 100);
         

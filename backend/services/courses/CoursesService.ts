@@ -65,7 +65,7 @@ const loadTranslations = async (env: Env, contentType: string, contentId: string
         WHERE content_type = ? AND content_id = ? AND lang = ?
     `).bind(contentType, contentId, lang).all<{ field: string; value: string }>();
     const map: Translations = {};
-    for (const row of result.results || []) map[row.field] = row.value;
+    for (const row of result.results) map[row.field] = row.value;
     return map;
 };
 
@@ -158,10 +158,10 @@ const enrichCourseSummary = async (env: Env, course: CoursesCourseRow, userId: s
         is_private: course.is_private === 1,
         cover_image_url: extractCoverImageUrl(course.media_json),
         program_id: course.program_id ?? null,
-        total_steps: stepCount?.count || 0,
+        total_steps: stepCount?.count ?? 0,
         progress: {
-            videos_completed: progress?.videos_completed || 0,
-            quizzes_passed: progress?.quizzes_passed || 0,
+            videos_completed: progress?.videos_completed ?? 0,
+            quizzes_passed: progress?.quizzes_passed ?? 0,
         },
     };
 
@@ -190,7 +190,7 @@ export const listCoursesForUser = async (env: Env, userId: string, lang: string)
     }[];
 }>  => {
     const courses = await queryActiveCourses(env);
-    const rows = (courses.results || []) as unknown as CoursesCourseRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
+    const rows = courses.results as unknown as CoursesCourseRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
     const enriched = await Promise.all(
         rows.map(async (course) => enrichCourseSummary(env, course, userId, lang))
     );
@@ -331,7 +331,7 @@ export const getCourseForUser = async (env: Env, userId: string, courseId: strin
     if (!course) return { notFound: true };
 
     const classesResult = await queryCourseClasses(env, userId, courseId);
-    const rows = (classesResult.results || []) as unknown as CoursesClassRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
+    const rows = classesResult.results as unknown as CoursesClassRow[];  // entropy-no-unsafe-type-assertion-ok: D1 query .results is untyped unknown[] at the CF D1 vendor boundary — cast to the row type is the DB-adapter ACL edge
     const byParent = buildAdjacency(rows);
 
     // Flat LESSON sequence (progress) + section folders (display).

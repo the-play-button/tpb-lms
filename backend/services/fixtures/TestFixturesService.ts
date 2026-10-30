@@ -47,7 +47,7 @@ const deleteForContactByEmail = async (db: D1Database, email: string) => {
         'SELECT id FROM crm_contact WHERE emails_json LIKE ?'
     ).bind(`%${email}%`).all();
 
-    for (const contact of contacts.results || []) {
+    for (const contact of contacts.results) {
         const contactId = contact.id;
         await db.batch([
             db.prepare('DELETE FROM v_user_progress WHERE user_id = ?').bind(contactId),

@@ -20,7 +20,7 @@ export const checkQuizBadges = async (db: D1Database, userId: string, isPerfect:
           AND json_extract(form_json, '$.passed') = 1
     `).bind(userId).first<{ count?: number }>();
 
-    const quizCount = result?.count || 0;
+    const quizCount = result?.count ?? 0;
 
     if (quizCount === 1) {
         const earned = await awardBadge(db, userId, 'first_quiz');

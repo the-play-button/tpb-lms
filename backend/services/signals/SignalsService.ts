@@ -150,7 +150,7 @@ export const fetchCourseSignals = async (env: Env, userId: string, courseId: str
 
     let currentStep = 0;
     const videoPositions: Record<string, { position: number; duration: number; percentage: number }> = {};
-    const steps = (result.results || []).map((row) => {
+    const steps = result.results.map((row) => {
         const step = parseStep(row, currentStep);
         if (step.step_completed) currentStep = Math.max(currentStep, row.sys_order_index);
         const videoPosition = collectVideoPosition(row);
@@ -240,8 +240,8 @@ export const fetchStepSignals = async (env: Env, userId: string, courseId: strin
             quiz_passed: quizPassed,
             step_completed: hasQuiz ? quizPassed : (hasVideo ? videoCompleted : false),
             progress: {
-                video_max_position_sec: progress?.video_max_position_sec || 0,
-                video_duration_sec: progress?.video_duration_sec || 0,
+                video_max_position_sec: progress?.video_max_position_sec ?? 0,
+                video_duration_sec: progress?.video_duration_sec ?? 0,
                 video_coverage_pct: progress?.video_duration_sec
                     ? Math.round(((progress.video_max_position_sec ?? 0) / progress.video_duration_sec) * 100)
                     : 0,

@@ -27,7 +27,7 @@ export class LmsClassDatabaseRepository implements LmsClassRepository {
       .prepare('SELECT * FROM lms_class WHERE course_id = ? ORDER BY sys_order_index ASC')
       .bind(courseId)
       .all<ClassRow>();
-    return res.results ?? [];
+    return res.results;
   }
 
   async insert(data: CreateClassData): Promise<ClassRow> {
@@ -78,7 +78,7 @@ export class LmsClassDatabaseRepository implements LmsClassRepository {
       )
       .bind(id)
       .all<{ id: string }>();
-    return (res.results ?? []).map((r) => r.id);
+    return res.results.map((r) => r.id);
   }
 
   async deleteSubtree(id: string): Promise<number> {

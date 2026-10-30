@@ -30,10 +30,11 @@ export const VIDEO_PROGRESS_PROJECTION: Projection = {
      */
     reduce(state: ProjectionState, event: ProjectionEvent & { payload: unknown }): ProjectionState {
         const payload = (event.payload ?? {}) as VideoPayload;
-        const position = payload.position_sec || 0;
-        const duration = payload.duration_sec || state.video_duration_sec || 0;
+        const position = payload.position_sec ?? 0;
+        // A 0 duration from the player means unknown: keep the duration already known for this video.
+  const duration = payload.duration_sec !== undefined && payload.duration_sec > 0 ? payload.duration_sec : (state.video_duration_sec ?? 0);
         
-        const newMaxPosition = Math.max(state.video_max_position_sec || 0, position);
+        const newMaxPosition = Math.max(state.video_max_position_sec ?? 0, position);
         
         const wasCompleted = state.video_completed === 1;
         const isCompleted = duration > 0 && newMaxPosition >= 0.9 * duration;

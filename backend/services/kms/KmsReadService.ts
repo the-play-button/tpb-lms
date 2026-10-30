@@ -67,7 +67,7 @@ export const listSpaces = async (env: Env): Promise<{
     spaces: Record<string, unknown>[];
 }>  => {
     const result = await queryActiveSpaces(env);
-    return { spaces: result.results || [] };
+    return { spaces: result.results };
 };
 
 export const getSpace = async (env: Env, spaceId: string): Promise<{
@@ -85,7 +85,7 @@ export const getSpace = async (env: Env, spaceId: string): Promise<{
     const pagesResult = await querySpacePages(env, spaceId);
     return {
         ...space,
-        pages: (pagesResult.results || []).map(projectPage),
+        pages: pagesResult.results.map(projectPage),
     };
 };
 

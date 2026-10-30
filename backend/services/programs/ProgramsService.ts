@@ -38,13 +38,13 @@ export const listProgramsForUser = async (env: Env): Promise<{
         env.DB.prepare("SELECT program_id, COUNT(*) AS n FROM lms_course WHERE is_active = 1 AND program_id IS NOT NULL GROUP BY program_id").all<ProgramsProgramCountRow>(),
     ]);
     const countById: Record<string, number | undefined> = {};
-    for (const row of countsRes.results || []) countById[row.program_id] = row.n;
-    const programs = (programsRes.results || []).map((p) => ({
+    for (const row of countsRes.results) countById[row.program_id] = row.n;
+    const programs = programsRes.results.map((p) => ({
         id: p.id,
         name: p.name,
         description: p.description,
         cover_image_url: extractCoverImageUrl(p.media_json),
-        course_count: countById[p.id] || 0,
+        course_count: countById[p.id] ?? 0,
     }));
     return { programs };
 };

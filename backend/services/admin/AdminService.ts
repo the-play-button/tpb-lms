@@ -16,12 +16,12 @@ interface AdminStatsRow {
 }
 
 const projectAdminStats = (stats: AdminStatsRow) => ({
-    totalStudents: stats.total_students || 0,
-    active24h: stats.active_24h || 0,
-    active7d: stats.active_7d || 0,
-    coursesCompleted: stats.courses_completed || 0,
-    videosCompleted: stats.videos_completed || 0,
-    quizzesPassed: stats.quizzes_passed || 0,
+    totalStudents: stats.total_students ?? 0,
+    active24h: stats.active_24h ?? 0,
+    active7d: stats.active_7d ?? 0,
+    coursesCompleted: stats.courses_completed ?? 0,
+    videosCompleted: stats.videos_completed ?? 0,
+    quizzesPassed: stats.quizzes_passed ?? 0,
     avgQuizScore: stats.avg_quiz_score ? Math.round(stats.avg_quiz_score * 10) / 10 : null,
 });
 

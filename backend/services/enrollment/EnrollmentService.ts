@@ -139,8 +139,8 @@ const projectEnrollment = (row: EnrollmentRow) => ({
     course_description: row.course_description,
     status: row.status,
     current_class_id: row.current_class_id,
-    completed_classes_count: row.completed_classes_count || 0,
-    total_classes: row.total_classes || 0,
+    completed_classes_count: row.completed_classes_count ?? 0,
+    total_classes: row.total_classes ?? 0,
     progress_percent: (row.total_classes ?? 0) > 0
         ? Math.round(((row.completed_classes_count ?? 0) / (row.total_classes ?? 1)) * 100)
         : 0,
@@ -301,8 +301,8 @@ export const getUserEnrollmentStatus = async (env: Env, userId: string, courseId
                     id: enrollment.id,
                     status: enrollment.status,
                     current_class_id: enrollment.current_class_id,
-                    completed_classes_count: enrollment.completed_classes_count || 0,
-                    total_classes: enrollment.total_classes || 0,
+                    completed_classes_count: enrollment.completed_classes_count ?? 0,
+                    total_classes: enrollment.total_classes ?? 0,
                     progress_percent: (enrollment.total_classes ?? 0) > 0
                         ? Math.round(((enrollment.completed_classes_count ?? 0) / (enrollment.total_classes ?? 1)) * 100)
                         : 0,
@@ -317,7 +317,7 @@ export const getUserEnrollmentStatus = async (env: Env, userId: string, courseId
 
 export const listUserEnrollments = async (env: Env, userId: string, status: string | undefined): Promise<EnrollmentActionResult> => {
     const result = await queryUserEnrollments(env, userId, status);
-    const enrollments = (result.results || []).map(projectEnrollment);
+    const enrollments = result.results.map(projectEnrollment);
     const activeCount = enrollments.filter((e) => e.status === 'active').length;
     return {
         value: {

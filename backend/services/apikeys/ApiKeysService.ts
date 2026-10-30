@@ -21,7 +21,7 @@ export const listKeysForUser = async (env: Env, userId: string): Promise<{
         ORDER BY created_at DESC
     `).bind(userId).all();
 
-    return (result.results || []).map((row) => ({
+    return result.results.map((row) => ({
         id: row.id,
         name: row.name,
         prefix: row.key_prefix,

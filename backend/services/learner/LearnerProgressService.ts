@@ -72,7 +72,7 @@ export const fetchLearnerProgress = async (env: Env, userId: string, userEmail: 
         getCurrentStreak(env.DB, userId),
     ]);
 
-    const totalPoints = leaderboard?.total_points || 0;
+    const totalPoints = leaderboard?.total_points ?? 0;
     return {
         user: {
             id: userId,
@@ -81,13 +81,13 @@ export const fetchLearnerProgress = async (env: Env, userId: string, userEmail: 
             level: Math.floor(totalPoints / 1000) + 1,
             level_progress: (totalPoints % 1000) / 10,
             current_streak: currentStreak,
-            videos_completed: leaderboard?.videos_completed || 0,
-            quizzes_completed: leaderboard?.quizzes_completed || 0,
-            badges_earned: leaderboard?.badges_earned || 0,
+            videos_completed: leaderboard?.videos_completed ?? 0,
+            quizzes_completed: leaderboard?.quizzes_completed ?? 0,
+            badges_earned: leaderboard?.badges_earned ?? 0,
         },
         stats: stats || { total_activities: 0 },
-        badges: badges.results || [],
-        recentVideos: videos.results || [],
-        recentQuizzes: quizzes.results || [],
+        badges: badges.results,
+        recentVideos: videos.results,
+        recentQuizzes: quizzes.results,
     };
 };

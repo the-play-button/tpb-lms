@@ -17,7 +17,7 @@ export const checkCourseCompletionBadges = async (db: D1Database, userId: string
         WHERE user_id = ? AND type = 'COURSE_COMPLETED'
     `).bind(userId).first<{ count?: number }>();
 
-    const courseCount = (completedCourses?.count || 0) + 1; // +1 for current completion
+    const courseCount = (completedCourses?.count ?? 0) + 1; // +1 for current completion
 
     if (courseCount >= 5) {
         const expertBadge = await awardBadge(db, userId, 'course_5', courseId);

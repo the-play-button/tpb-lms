@@ -39,11 +39,11 @@ export const listBadgesWithUserStatus = async (env: Env, userId: string): Promis
     `).bind(userId).all<AwardRow>();
 
     const earnedMap: Record<string, string | null | undefined> = {};
-    for (const e of earned.results || []) {
+    for (const e of earned.results) {
         earnedMap[e.badge_id] = e.awarded_at;
     }
 
-    const enrichedBadges = (badges.results || []).map((badge) => ({
+    const enrichedBadges = badges.results.map((badge) => ({
         ...badge,
         criteria: badge.criteria_json ? JSON.parse(badge.criteria_json) : null,
         earned: !!earnedMap[badge.id],

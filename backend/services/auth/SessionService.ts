@@ -42,8 +42,8 @@ export const fetchUserData = async (db: D1Database, contactId: string): Promise<
     ]);
     return {
         stats,
-        badges: badges.results || [],
-        recentActivities: recentActivity.results || [],
+        badges: badges.results,
+        recentActivities: recentActivity.results,
         currentStreak,
     };
 };
@@ -79,7 +79,7 @@ export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionConta
     badges: unknown;
     recentActivity: unknown;
 }  => {
-    const totalPoints = userData.stats?.total_points || 0;
+    const totalPoints = userData.stats?.total_points ?? 0;
     return {
         user: {
             email: jwtResult.email,
@@ -90,8 +90,8 @@ export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionConta
             id: contact.id,
             total_points: totalPoints,
             level: Math.floor(totalPoints / 1000) + 1,
-            videos_completed: userData.stats?.videos_completed || 0,
-            quizzes_completed: userData.stats?.quizzes_completed || 0,
+            videos_completed: userData.stats?.videos_completed ?? 0,
+            quizzes_completed: userData.stats?.quizzes_completed ?? 0,
             badges_earned: userData.stats?.badges_earned || 0,
             current_streak: userData.currentStreak,
             created_at: contact.created_at,
