@@ -48,7 +48,7 @@ const classHasQuiz = async (env: Env, classId: string): Promise<boolean>  => {
         .bind(classId).first<{ media_json?: string | null }>();
     if (!cls?.media_json) return false;
     const media = JSON.parse(cls.media_json) as { type?: string }[];
-    return media.some((m) => m?.type === 'QUIZ');
+    return media.some((m) => m.type === 'QUIZ');
 };
 
 export const deriveCompletionState = async (env: Env, userId: string, classId: string): Promise<{

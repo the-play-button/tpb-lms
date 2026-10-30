@@ -11,7 +11,7 @@ import type { HandlerUserContext } from "../../types/HandlerContext.types.js";
 
 interface UpsertTranslationsBody { translations?: unknown[]; }
 
-export const upsertTranslations = async (request: Request, env: Env, ctx: HandlerUserContext): Promise<Response>  => {
+export const upsertTranslations = async (request: Request, env: Env, _ctx: HandlerUserContext): Promise<Response>  => {
     let body: UpsertTranslationsBody;
     try {
         body = await request.json();
@@ -24,8 +24,7 @@ export const upsertTranslations = async (request: Request, env: Env, ctx: Handle
         return errorResponse('translations must be a non-empty array', 400);
     }
 
-    const userId = ctx.user?.id || 'system';
-    const { successCount, errorCount } = await bulkUpsert(env, translations as never, userId);
+    const { successCount, errorCount } = await bulkUpsert(env, translations as never);
     return jsonResponse({
         success: true,
         inserted: successCount,

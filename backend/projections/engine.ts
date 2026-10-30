@@ -54,7 +54,7 @@ export const applyProjections = async (db: D1Database, event: ProjectionEvent): 
                 ? JSON.parse(event.payload_json) 
                 : event.payload_json;
             
-            const next = projection.reduce(current || {}, { ...event, payload });
+            const next = projection.reduce(current ?? {}, { ...event, payload });
             await upsertState(db, key, event.course_id, next);
             
             if (projection.name === 'video_progress') {

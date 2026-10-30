@@ -37,6 +37,9 @@ import { listSharedWithMeExecute } from '../../../../backend/lms/application/sha
 import { listSharedByMeValidateInput } from '../../../../backend/lms/application/sharing/listSharedByMe/listSharedByMeValidateInput';
 import { listSharedByMeCheckPolicies } from '../../../../backend/lms/application/sharing/listSharedByMe/listSharedByMeCheckPolicies';
 import { listSharedByMeExecute } from '../../../../backend/lms/application/sharing/listSharedByMe/listSharedByMeExecute';
+import type { ActiveShare } from '../../../../backend/lms/domain/entities/Share/ActiveShare';
+
+const noActiveShares = (): ActiveShare[] => [];
 
 // ════════════════════════════════════════════════════════════
 // createShare
@@ -123,7 +126,7 @@ describe('createShare', () => {
     it('allows owner with authz', async () => {
       const { handlerContext } = createTestContext();
       const ref = ContentRefMother.draft();
-      const context = { contentRef: ref, existingShares: [] as any[] };
+      const context = { contentRef: ref, existingShares: noActiveShares() };
       const result = await createShareCheckPolicies(context, OWNER_EMAIL, handlerContext);
       expect(result.ok).toBe(true);
     });
@@ -131,7 +134,7 @@ describe('createShare', () => {
     it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
       const { handlerContext } = createTestContext({ scopes: [] });
       const ref = ContentRefMother.draft();
-      const context = { contentRef: ref, existingShares: [] as any[] };
+      const context = { contentRef: ref, existingShares: noActiveShares() };
       const result = await createShareCheckPolicies(context, OWNER_EMAIL, handlerContext);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('FORBIDDEN');
@@ -140,7 +143,7 @@ describe('createShare', () => {
     it('denies non-owner', async () => {
       const { handlerContext } = createTestContext();
       const ref = ContentRefMother.draft();
-      const context = { contentRef: ref, existingShares: [] as any[] };
+      const context = { contentRef: ref, existingShares: noActiveShares() };
       const result = await createShareCheckPolicies(context, OTHER_EMAIL, handlerContext);
       expect(result.ok).toBe(false);
     });
@@ -161,7 +164,7 @@ describe('createShare', () => {
     it('creates and saves share', async () => {
       const { handlerContext, sharesRepository } = createTestContext();
       const ref = ContentRefMother.draft();
-      const context = { contentRef: ref, existingShares: [] as any[] };
+      const context = { contentRef: ref, existingShares: noActiveShares() };
       const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
 
       const result = await createShareExecute(input, context, handlerContext);
@@ -177,7 +180,7 @@ describe('createShare', () => {
     it('emits content.shared event', async () => {
       const { handlerContext, domainEvents } = createTestContext();
       const ref = ContentRefMother.draft();
-      const context = { contentRef: ref, existingShares: [] as any[] };
+      const context = { contentRef: ref, existingShares: noActiveShares() };
       const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
 
       await createShareExecute(input, context, handlerContext);
@@ -188,7 +191,7 @@ describe('createShare', () => {
     it('maps WRITE role to editor domain role', async () => {
       const { handlerContext, sharesRepository } = createTestContext();
       const ref = ContentRefMother.draft();
-      const context = { contentRef: ref, existingShares: [] as any[] };
+      const context = { contentRef: ref, existingShares: noActiveShares() };
       const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
 
       await createShareExecute(input, context, handlerContext);

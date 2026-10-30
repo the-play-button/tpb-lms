@@ -6,8 +6,9 @@
 import { describe, it, expect, vi } from 'vitest';
 import { PamStorageClientAdapter } from './PamStorageClientAdapter.js';
 
-const makeStorage = (over: Record<string, unknown> = {}) =>
-  ({
+// A storage double with only the three calls this adapter makes; any other method is absent on purpose.
+const makeStorage = (over: Record<string, unknown> = {}): never => {
+  const storage = {
     getFile: vi.fn(async () => ({ id: 'f1', name: 'f', type: 'FILE' })),
     downloadFile: vi.fn(async () => ({ content: new TextEncoder().encode('hello deck').buffer, mimeType: 'text/plain' })),
     listFiles: vi.fn(async () => [
@@ -15,7 +16,9 @@ const makeStorage = (over: Record<string, unknown> = {}) =>
       { id: 'f2', name: 'a.txt', type: 'FILE', mime_type: 'text/plain', parent_id: 'd1' },
     ]),
     ...over,
-  }) as never;
+  };
+  return storage as never;
+};
 
 describe('PamStorageClientAdapter (lms, Plan 11b.b)', () => {
   it('verifyAccess : getFile succeeds → allowed', async () => {

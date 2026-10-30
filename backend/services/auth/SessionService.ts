@@ -55,6 +55,7 @@ interface SessionUserData {
         total_points?: number;
         videos_completed?: number;
         quizzes_completed?: number;
+        badges_earned?: number;
         [key: string]: unknown;
     } | null;
     [key: string]: unknown;
@@ -72,7 +73,7 @@ export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionConta
         level: number;
         videos_completed: number;
         quizzes_completed: number;
-        badges_earned: {};
+        badges_earned: number;
         current_streak: unknown;
         created_at: unknown;
     };
@@ -84,7 +85,7 @@ export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionConta
         user: {
             email: jwtResult.email,
             name: jwtResult.payload?.name || contact.name || null,
-            groups: jwtResult.payload?.groups || [],
+            groups: jwtResult.payload?.groups ?? [],
         },
         profile: {
             id: contact.id,
@@ -92,7 +93,7 @@ export const buildSessionResponse = (jwtResult: JwtResult, contact: SessionConta
             level: Math.floor(totalPoints / 1000) + 1,
             videos_completed: userData.stats?.videos_completed ?? 0,
             quizzes_completed: userData.stats?.quizzes_completed ?? 0,
-            badges_earned: userData.stats?.badges_earned || 0,
+            badges_earned: userData.stats?.badges_earned ?? 0,
             current_streak: userData.currentStreak,
             created_at: contact.created_at,
         },

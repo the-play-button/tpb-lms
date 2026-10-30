@@ -73,8 +73,8 @@ const queryStepProgress = async (env: Env, userId: string, classId: string) =>
 
 const parseStep = (row: StepRow, currentStep: number): Step => {
     const media = JSON.parse(row.media_json || '[]') as MediaEntry[];
-    const hasQuiz = media.some((m) => m?.type === 'QUIZ');
-    const hasVideo = media.some((m) => m?.type === 'VIDEO');
+    const hasQuiz = media.some((m) => m.type === 'QUIZ');
+    const hasVideo = media.some((m) => m.type === 'VIDEO');
     const videoCompleted = row.video_completed === 1;
     const quizPassed = row.quiz_passed === 1;
     const stepCompleted = hasQuiz ? quizPassed : (hasVideo ? videoCompleted : false);
@@ -107,7 +107,8 @@ export const resetProgress = async (env: Env, userId: string, courseId: string):
 
 const collectVideoPosition = (row: StepRow) => {
     if (!row.video_max_position_sec || row.video_max_position_sec <= 0) return null;
-    const duration = row.video_duration_sec || 1;
+    // A 0 duration cannot divide: it reads as 1, as before.
+    const duration = row.video_duration_sec != null && row.video_duration_sec > 0 ? row.video_duration_sec : 1;
     return {
         position: row.video_max_position_sec,
         duration,
@@ -224,8 +225,8 @@ export const fetchStepSignals = async (env: Env, userId: string, courseId: strin
     if (!cls) return { notFound: true };
 
     const media = JSON.parse(cls.media_json || '[]') as MediaEntry[];
-    const hasQuiz = media.some((m) => m?.type === 'QUIZ');
-    const hasVideo = media.some((m) => m?.type === 'VIDEO');
+    const hasQuiz = media.some((m) => m.type === 'QUIZ');
+    const hasVideo = media.some((m) => m.type === 'VIDEO');
     const videoCompleted = progress?.video_completed === 1;
     const quizPassed = progress?.quiz_passed === 1;
 

@@ -54,9 +54,11 @@ export const base64urlDecode = (str: string): Uint8Array<ArrayBuffer>  => {
  * Import RSA public key from JWK
  */
 export const importPublicKey = async (jwk: Jwk): Promise<CryptoKey>  => {
+    if (!jwk.kty) throw new Error('importPublicKey: the JWKS key has no kty');
+    const publicKey: JsonWebKey = { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: 'RS256', use: 'sig' };
     return crypto.subtle.importKey(
         'jwk',
-        { kty: jwk.kty, n: jwk.n, e: jwk.e, alg: 'RS256', use: 'sig' } as JsonWebKey,
+        publicKey,
         { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
         false,
         ['verify']

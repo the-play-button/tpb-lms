@@ -8,7 +8,7 @@ import { createClassExecute } from './createClassExecute.js';
 import { createClassFilter, type ClassView } from './createClassFilter.js';
 import { createClassTrack } from './createClassTrack.js';
 
-export const createClassHandle = async (request: Request, ctx: AuthoringContext, param?: string): Promise<Result<string, ClassView>> => {
+export const createClassHandle = async (request: Request, ctx: AuthoringContext, _param?: string): Promise<Result<string, ClassView>> => {
   const input = await createClassValidateInput(request);
   if (!input.ok) return fail(input.error);
   const context = await createClassHydrateContext(input.value, ctx);

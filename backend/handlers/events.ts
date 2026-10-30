@@ -66,7 +66,7 @@ export const createEvents = async (request: Request, env: Env, userContext: Hand
     if ('errorResponse' in authed) return authed.errorResponse;
     const { userId, body } = authed;
 
-    if (Array.isArray(body?.events)) {
+    if (Array.isArray(body.events)) {
         return createBatchEvents(request, env, userId, body.events);
     }
     return createSingleEvent(request, env, userId, body);

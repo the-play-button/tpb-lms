@@ -19,7 +19,7 @@ interface AdminCreateApiKeyBody {
 
 export const adminCreateAPIKeyHandler = async (request: Request, env: Env, userContext: HandlerUserContext): Promise<Response>  => {
     try {
-        if (userContext.user?.role !== 'admin') {
+        if (userContext.user.role !== 'admin') {
             return jsonResponse({ error: 'Forbidden: Admin role required' }, 403, request);
         }
 

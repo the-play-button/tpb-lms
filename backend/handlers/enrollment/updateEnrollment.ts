@@ -15,7 +15,7 @@ export const updateEnrollment = async (request: Request, env: Env, userContext: 
 
     let body: { status?: string } = {};
     try { body = await request.json(); } catch { /* empty body → validated below */ }
-    const status = body?.status;
+    const status = body.status;
 
     let result:
         | { error: { status: number; body: unknown } }

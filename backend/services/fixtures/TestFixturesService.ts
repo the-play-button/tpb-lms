@@ -136,7 +136,7 @@ export const applyFixture = async (env: Env, cfUserId: string, fixture: string, 
     const contactId = await resolveContactId(db, email);
 
     if (!contactId && fixture !== 'clean_slate') {
-        throw new Error(`Cannot resolve contact_id for email: ${email}. User must exist in crm_contact.`);
+        throw new Error(`Cannot resolve contact_id for email: ${email ?? '(none)'}. User must exist in crm_contact.`);
     }
 
     await cleanSlate(db, cfUserId, email);

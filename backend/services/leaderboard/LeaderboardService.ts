@@ -32,17 +32,17 @@ const buildStatsObject = (stats: StatsRow | null) => {
         quiz_passed_count = 0,
         step_completed_count = 0,
         course_completed_count = 0,
-    } = stats || {};
+    } = stats ?? {};
     return { video_completed_count, quiz_passed_count, step_completed_count, course_completed_count };
 };
 
 const buildActivityObject = (activity: ActivityRow | null) => {
-    const { last_event_at = null, events_24h = 0, total_events = 0 } = activity || {};
+    const { last_event_at = null, events_24h = 0, total_events = 0 } = activity ?? {};
     return { last_event_at, events_24h, total_events };
 };
 
 const calculateXP = (stats: StatsRow | null) => {
-    const { video_completed_count = 0, quiz_passed_count = 0, course_completed_count = 0 } = stats || {};
+    const { video_completed_count = 0, quiz_passed_count = 0, course_completed_count = 0 } = stats ?? {};
     return (video_completed_count * 50) + (quiz_passed_count * 100) + (course_completed_count * 200);
 };
 
@@ -52,12 +52,10 @@ const fetchUserInfo = async (db: D1Database, userId: string) => {
         FROM crm_contact WHERE id = ?
     `).bind(userId).first();
 
-    if (!user) {
-        user = await db.prepare(`
+    user ??= await db.prepare(`
             SELECT id, name, json_extract(emails_json, '$[0].email') as email
             FROM hris_employee WHERE id = ?
         `).bind(userId).first();
-    }
 
     return user ? { id: user.id, name: user.name, email: user.email } : { id: userId };
 };
@@ -119,7 +117,7 @@ export const fetchLeaderboard = async (env: Env, userId: string, limit: number):
     );
 
     const currentUserEntry = leaderboard.find((e) => e.user_id === userId);
-    const { rank = null, total_points = 0 } = currentUserEntry || {};
+    const { rank = null, total_points = 0 } = currentUserEntry ?? {};
     let currentUserRank = rank;
     let currentUserPoints = total_points;
 
@@ -131,7 +129,7 @@ export const fetchLeaderboard = async (env: Env, userId: string, limit: number):
 
     return {
         leaderboard,
-        currentUser: { id: userId, rank: currentUserRank || null, total_points: currentUserPoints || 0 },
+        currentUser: { id: userId, rank: currentUserRank, total_points: currentUserPoints },
     };
 };
 

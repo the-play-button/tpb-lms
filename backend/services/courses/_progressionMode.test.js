@@ -18,7 +18,7 @@ describe('resolveProgressionMode', () => {
   });
 
   it('defaults to linear + warns on an invalid explicit value', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => undefined);
     expect(resolveProgressionMode('{"tpb_progression_mode":"skool"}')).toBe('linear');
     expect(warn).toHaveBeenCalledOnce();
     warn.mockRestore();

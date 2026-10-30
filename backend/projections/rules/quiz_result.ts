@@ -31,7 +31,8 @@ export const QUIZ_RESULT_PROJECTION: Projection = {
     reduce(state: ProjectionState, event: ProjectionEvent & { payload: unknown }): ProjectionState {
         const payload = (event.payload ?? {}) as QuizPayload;
         const score = payload.score ?? 0;
-        const maxScore = payload.max_score || 1;
+        // A max score of 0 cannot divide: it reads as 1, as before.
+        const maxScore = payload.max_score !== undefined && payload.max_score > 0 ? payload.max_score : 1;
         const percentage = Math.round((score / maxScore) * 100);
         
         const wasPassed = state.quiz_passed === 1;

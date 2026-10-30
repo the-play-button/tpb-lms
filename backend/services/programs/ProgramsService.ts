@@ -13,7 +13,7 @@ const extractCoverImageUrl = (mediaJson: string | null | undefined): string | nu
     try {
         const media = JSON.parse(mediaJson);
         return Array.isArray(media)
-            ? ((media as { type?: string; url?: string }[]).find((m) => m?.type === 'IMAGE')?.url ?? null)
+            ? ((media as { type?: string; url?: string }[]).find((m) => m.type === 'IMAGE')?.url ?? null)
             : null;
     } catch {
         return null;

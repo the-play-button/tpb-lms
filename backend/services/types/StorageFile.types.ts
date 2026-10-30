@@ -16,13 +16,3 @@ export interface StorageFile {
   webUrl?: string;
 }
 
-/**
- * StoragePermission - Permission on a cloud storage file
- */
-interface StoragePermission {
-  id: string;
-  fileId: string;
-  email: string;
-  role: 'READ' | 'WRITE' | 'OWNER';
-  grantedAt?: string;
-}

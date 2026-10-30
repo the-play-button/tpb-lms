@@ -8,17 +8,17 @@ import {
   StubConnectionResolver,
   StubDomainEvents,
 } from './stubs';
-import { ActorMother, OWNER_EMAIL } from './mothers';
+import { ActorMother } from './mothers';
 
 type ActorOverrides = Partial<ReturnType<typeof ActorMother.owner>>;
 
 /** A port these use-case tests never reach: any access fails loud instead of returning undefined. */
-function unusedPort<Port extends object>(name: string): Port {
+function unusedPort(name: string): never {
   return new Proxy({}, {
     get: (_target, property) => {
       throw new Error(`test context: ${name}.${String(property)} was used but is not stubbed`);
     },
-  }) as Port;
+  }) as never;
 }
 
 export function createTestContext(actorOverrides: ActorOverrides = {}) {
@@ -39,14 +39,14 @@ export function createTestContext(actorOverrides: ActorOverrides = {}) {
     storageService,
     pamClient,
     connectionResolver,
-    bastionClient: unusedPort<HandlerContext['bastionClient']>('bastionClient'),
+    bastionClient: unusedPort('bastionClient'),
     actor,
     domainEvents,
-    userEmail: actor.email ?? OWNER_EMAIL,
+    userEmail: actor.email,
     jwt: 'test-jwt-token',
     userScopes: actor.scopes,
     teamDomain: 'test.theplaybutton.ai',
-    db: unusedPort<HandlerContext['db']>('db'),
+    db: unusedPort('db'),
   };
 
   return {

@@ -19,7 +19,7 @@ const processTallyPayload = async (payload: TallyWebhookPayload, env: Env, reque
         return jsonResponse({ ignored: true, reason: 'Not a form response' }, 200, request);
     }
 
-    const { userId, courseId, answers } = extractFieldsFromPayload(payload.data?.fields || []);
+    const { userId, courseId, answers } = extractFieldsFromPayload(payload.data?.fields ?? []);
     const formId = payload.data?.formId ?? '';
     if (!userId) return jsonResponse({ error: 'Missing user_id in submission' }, 400, request);
 
@@ -29,8 +29,8 @@ const processTallyPayload = async (payload: TallyWebhookPayload, env: Env, reque
     return processQuizSubmission({
         userId: userId as string,
         quizId: formId,
-        courseId: (courseId as string) || (quizClass?.course_id!) || '',
-        classId: (quizClass?.id!) ?? '',
+        courseId: (courseId as string) || (quizClass?.course_id ?? ''),
+        classId: quizClass?.id ?? '',
         score,
         maxScore,
         answers,

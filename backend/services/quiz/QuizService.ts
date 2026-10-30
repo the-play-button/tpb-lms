@@ -27,7 +27,7 @@ const findQuizClassByTallyFormId = async (env: Env, tallyFormId: string) =>
 
 export const submitQuizFromUser = async (env: Env, request: Request, body: QuizSubmissionInput): Promise<Response>  => {
     const quizClass = await findQuizClassByTallyFormId(env, body.quizId);
-    const { score, maxScore } = calculateScore((body.answers as never) || [], quizClass);
+    const { score, maxScore } = calculateScore(body.answers as never, quizClass);
     const enriched = {
         ...body,
         score,

@@ -84,7 +84,8 @@ export const listForReview = async (env: Env, source: string, limit: number): Pr
     return result.results;
 };
 
-const upsertBatchOne = async (env: Env, payload: TranslationPayload, userId: string) => {
+// A batch row (AI translation) is not a review: reviewed_at / reviewed_by stay NULL so it lands in the review queue.
+const upsertBatchOne = async (env: Env, payload: TranslationPayload) => {
     const { content_type, content_id, field, lang, value, source = 'ai' } = payload;
     if (!content_type || !content_id || !field || !lang || value === undefined) {
         return false;
@@ -104,14 +105,14 @@ const upsertBatchOne = async (env: Env, payload: TranslationPayload, userId: str
     }
 };
 
-export const bulkUpsert = async (env: Env, translations: TranslationPayload[], userId: string): Promise<{
+export const bulkUpsert = async (env: Env, translations: TranslationPayload[]): Promise<{
     successCount: number;
     errorCount: number;
 }>  => {
     let successCount = 0;
     let errorCount = 0;
     for (const t of translations) {
-        const ok = await upsertBatchOne(env, t, userId);
+        const ok = await upsertBatchOne(env, t);
         if (ok) successCount += 1;
         else errorCount += 1;
     }

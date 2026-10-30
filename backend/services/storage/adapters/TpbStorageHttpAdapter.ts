@@ -63,9 +63,9 @@ export class TpbStorageHttpAdapter implements StoragePort {
     const resp = await this.fetchStorage('/api/storage/list', { connectionId, parent_id: parentId }, 'list');
     const body = await resp.json<TpbStorageListResponse>();
     return (body.files ?? []).map((f) => ({
-      id: String(f.id ?? ''),
-      name: String(f.name ?? ''),
-      mimeType: String(f.mime_type ?? ''),
+      id: f.id ?? '',
+      name: f.name ?? '',
+      mimeType: f.mime_type ?? '',
       size: f.size,
       parentId: f.parent_id,
       updatedAt: f.updated_at,

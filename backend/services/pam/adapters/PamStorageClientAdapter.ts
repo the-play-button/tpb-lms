@@ -70,7 +70,7 @@ export class PamStorageClientAdapter implements PamPort {
       const files = await this.listFiles(connectionId, currentFolderId, guestEmail);
       const match = files.find(({ name }) => name === segment);
       if (!match) {
-        throw new NotFoundError('Path segment', `${segments.slice(0, i + 1).join('/')} (looking for "${segment}")`);
+        throw new NotFoundError('Path segment', `${segments.slice(0, i + 1).join('/')} (looking for "${segment ?? ''}")`);
       }
       if (isLast) return match;
       if (match.mimeType !== FOLDER_MIME_TYPE) {

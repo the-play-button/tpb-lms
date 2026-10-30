@@ -43,8 +43,10 @@ const getPassThreshold = (quizClass: QuizClassRow | null | undefined): number =>
         return 80;
     }
     const media = JSON.parse(quizClass.media_json) as { type?: string; pass_threshold?: number }[];
-    const quizMedia = media.find((m) => m?.type === 'QUIZ' || m?.type === 'WEB');
-    return quizMedia?.pass_threshold || 80;
+    const quizMedia = media.find((m) => m.type === 'QUIZ' || m.type === 'WEB');
+    // A pass threshold of 0 is an unset Tally field, never "everyone passes": the default 80 applies.
+    const threshold = quizMedia?.pass_threshold;
+    return threshold !== undefined && threshold > 0 ? threshold : 80;
 };
 
 /**
@@ -110,12 +112,12 @@ export const calculateScore = (answers: QuizAnswers, quizClass: QuizClassRow | n
         throw new Error('calculateScore: quizClass is null — quiz lookup failed');
     }
     if (!quizClass.raw_json) {
-        throw new Error(`calculateScore: raw_json missing on class ${quizClass.id}`);
+        throw new Error(`calculateScore: raw_json missing on class ${quizClass.id ?? '(no id)'}`);
     }
 
     const correctAnswers = (JSON.parse(quizClass.raw_json) as { correct_answers?: CorrectAnswers }).correct_answers;
     if (!correctAnswers || Object.keys(correctAnswers).length === 0) {
-        throw new Error(`calculateScore: no correct_answers in class ${quizClass.id}`);
+        throw new Error(`calculateScore: no correct_answers in class ${quizClass.id ?? '(no id)'}`);
     }
 
     const maxScore = Object.keys(correctAnswers).length;
@@ -197,7 +199,7 @@ const handleQuizBadges = async (db: D1Database, userId: string, isPerfect: boole
     rarity: unknown;
 } | null>  => {
     let badge = await checkQuizBadges(db, userId, isPerfect);
-    if (!badge) badge = await checkStreakBadges(db, userId);
+    badge ??= await checkStreakBadges(db, userId);
     return badge;
 };
 
@@ -217,7 +219,7 @@ interface QuizSubmissionData {
 export const processQuizSubmission = async (data: QuizSubmissionData, env: Env, request: Request, quizClass: QuizClassRow | null = null): Promise<Response>  => {
     const { userId, quizId, courseId, classId, score, maxScore, answers } = data;
 
-    if (!userId || !quizId || score === undefined || !maxScore) {
+    if (!userId || !quizId || !maxScore) {
         return jsonResponse({ error: 'Missing required fields' }, 400, request);
     }
 
@@ -264,7 +266,9 @@ export const processQuizSubmission = async (data: QuizSubmissionData, env: Env, 
             percentage,
             score,
             maxScore,
-            mustRewatch: true
+            mustRewatch: true,
+            recorded: storeQuizEventOk,
+            progressReset: videoProgressResetOk,
         }, 200, request);
     }
 
@@ -278,7 +282,7 @@ export const processQuizSubmission = async (data: QuizSubmissionData, env: Env, 
 
         if (!isPerfect && quizClass?.raw_json) {
             try {
-                wrongAnswers = buildWrongAnswersList(answers, (JSON.parse(quizClass.raw_json) as { correct_answers?: CorrectAnswers }).correct_answers || {});
+                wrongAnswers = buildWrongAnswersList(answers, (JSON.parse(quizClass.raw_json) as { correct_answers?: CorrectAnswers }).correct_answers ?? {});
             } catch (e) {
                 log.warn('Failed to build wrong answers list', { error: toError(e).message });
                 wrongAnswers = null; // explicit fallback — UI shows generic "review incorrect answers" message
@@ -295,6 +299,7 @@ export const processQuizSubmission = async (data: QuizSubmissionData, env: Env, 
         xpAwarded,
         badgeEarned,
         wrongAnswers,
+        recorded: storeQuizEventOk,
         signalsGenerated: true
     }, 200, request);
 };

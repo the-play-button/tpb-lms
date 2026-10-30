@@ -35,7 +35,7 @@ export const upsertTranslation = async (request: Request, env: Env, ctx: Handler
         return errorResponse('Missing field or value', 400);
     }
 
-    const userId = ctx.user?.id || 'system';
+    const userId = ctx.user.id || 'system';
 
     try {
         const id = await upsertOne(env, { contentType, contentId, field, lang, value, source, userId });

@@ -52,7 +52,7 @@ export const listBadgesWithUserStatus = async (env: Env, userId: string): Promis
 
     return {
         badges: enrichedBadges,
-        earnedCount: earned.results?.length || 0,
-        totalCount: badges.results?.length || 0,
+        earnedCount: earned.results.length,
+        totalCount: badges.results.length,
     };
 };

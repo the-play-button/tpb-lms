@@ -12,5 +12,5 @@ export const getConnectionsByProvider = async (bastionUrl: string, jwt: string, 
   }
   return result.value
     .filter((c) => c.integrationType === provider)
-    .map((c) => ({ id: c.id, integrationType: c.integrationType, category: c.categories?.[0] ?? '' }));
+    .map((c) => ({ id: c.id, integrationType: c.integrationType, category: c.categories[0] ?? '' }));
 };

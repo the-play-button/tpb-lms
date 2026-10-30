@@ -89,10 +89,10 @@ export const validateEvent = (body: unknown): {
     return { success: false as const, error: 'type is required' };
   }
 
-  const schema = schemas[typed.type as keyof typeof schemas];
-  if (!schema) {
+  if (!Object.hasOwn(schemas, typed.type)) {
     return { success: false as const, error: `Unknown event type: ${typed.type}` };
   }
+  const schema = schemas[typed.type as keyof typeof schemas];
 
   const result = schema.safeParse(body);
   if (result.success) {

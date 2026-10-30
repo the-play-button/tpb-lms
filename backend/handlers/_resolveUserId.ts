@@ -9,4 +9,4 @@ import type { HandlerUserContext } from "../types/HandlerContext.types.js";
  */
 
 export const resolveUserId = (userContext: HandlerUserContext): string | null  =>
-    userContext?.contact?.id || userContext?.employee?.id || null;
+    userContext.contact?.id || userContext.employee?.id || null;

@@ -8,7 +8,7 @@ import { createCourseExecute } from './createCourseExecute.js';
 import { createCourseFilter, type CourseView } from './createCourseFilter.js';
 import { createCourseTrack } from './createCourseTrack.js';
 
-export const createCourseHandle = async (request: Request, ctx: AuthoringContext, param?: string): Promise<Result<string, CourseView>> => {
+export const createCourseHandle = async (request: Request, ctx: AuthoringContext, _param?: string): Promise<Result<string, CourseView>> => {
   const input = await createCourseValidateInput(request);
   if (!input.ok) return fail(input.error);
   const context = await createCourseHydrateContext(input.value, ctx);

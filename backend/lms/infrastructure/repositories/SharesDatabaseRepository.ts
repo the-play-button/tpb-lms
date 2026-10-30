@@ -164,9 +164,10 @@ export class SharesDatabaseRepository implements SharesRepository {
   }
 
   private reconstituteRevoked(row: ShareRow): RevokedShare {
+    if (row.revoked_at === null) throw new Error(`share ${row.id} is read as revoked but has no revoked_at`);
     return RevokedShare.reconstitute({
       ...this.baseShareProps(row),
-      revokedAt: new Date(row.revoked_at!),
+      revokedAt: new Date(row.revoked_at),
       revokedByEmail: Email.reconstitute(row.shared_by),
     });
   }

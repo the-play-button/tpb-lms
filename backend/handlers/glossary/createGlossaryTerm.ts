@@ -34,7 +34,7 @@ export const createGlossaryTerm = async (request: Request, env: Env, _ctx?: unkn
 
     // Bulk create: body { terms: [...] } (Tier 1 create accepting single-or-array;
     // no separate /import endpoint — cf. crud_list_only_endpoint_design § Q3).
-    if (Array.isArray(body?.terms)) {
+    if (Array.isArray(body.terms)) {
         if (body.terms.length === 0) return errorResponse('terms must be a non-empty array', 400);
         const { successCount, errorCount } = await bulkImportTerms(env, orgId, body.terms);
         return jsonResponse({ success: true, imported: successCount, errors: errorCount });

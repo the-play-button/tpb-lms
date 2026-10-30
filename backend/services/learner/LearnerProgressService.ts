@@ -85,7 +85,7 @@ export const fetchLearnerProgress = async (env: Env, userId: string, userEmail: 
             quizzes_completed: leaderboard?.quizzes_completed ?? 0,
             badges_earned: leaderboard?.badges_earned ?? 0,
         },
-        stats: stats || { total_activities: 0 },
+        stats: stats ?? { total_activities: 0 },
         badges: badges.results,
         recentVideos: videos.results,
         recentQuizzes: quizzes.results,

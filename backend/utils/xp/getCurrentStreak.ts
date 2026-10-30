@@ -11,7 +11,7 @@ export const getCurrentStreak = async (db: D1Database, userId: string): Promise<
         LIMIT 100
     `).bind(userId).all<{ activity_date: string }>();
 
-    if (!activities.results || activities.results.length === 0) {
+    if (activities.results.length === 0) {
         return 0;
     }
 

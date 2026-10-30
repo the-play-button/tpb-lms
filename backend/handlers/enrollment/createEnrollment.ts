@@ -15,7 +15,7 @@ export const createEnrollment = async (request: Request, env: Env, userContext: 
 
     let body: { courseId?: string; course_id?: string } = {};
     try { body = await request.json(); } catch { /* empty body → validated below */ }
-    const courseId = body?.courseId ?? body?.course_id;
+    const courseId = body.courseId ?? body.course_id;
     if (!courseId) return jsonResponse({ error: 'courseId is required' }, 400, request);
 
     const result = await enrollUserInCourse(env, userId, courseId);

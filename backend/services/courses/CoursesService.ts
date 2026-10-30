@@ -70,8 +70,8 @@ const loadTranslations = async (env: Env, contentType: string, contentId: string
 };
 
 const applyTranslations = <T extends Record<string, unknown>>(obj: T, translations: Translations): T => {
-    if (!translations || Object.keys(translations).length === 0) return obj;
-    const result = { ...obj } as Record<string, unknown>;
+    if (Object.keys(translations).length === 0) return obj;
+    const result: Record<string, unknown> = { ...obj };
     for (const [field, value] of Object.entries(translations)) {
         if (field === 'name' && result.title !== undefined) result.title = value;
         if (result[field] !== undefined) result[field] = value;
@@ -128,7 +128,7 @@ const extractCoverImageUrl = (mediaJson: string | null | undefined): string | nu
     try {
         const media: unknown = JSON.parse(mediaJson);
         return Array.isArray(media)
-            ? ((media as MediaItem[]).find((m) => m?.type === 'IMAGE')?.url ?? null)
+            ? ((media as MediaItem[]).find((m) => m.type === 'IMAGE')?.url ?? null)
             : null;
     } catch {
         return null;
@@ -255,7 +255,7 @@ const buildAdjacency = (rows: CoursesClassRow[]): Adjacency => {
 // Depth-first traversal → ordered flat list of LESSON leaf rows (the global step
 // sequence used for sequential progress / can_access gating).
 const flattenLessonsDFS = (byParent: Adjacency, key = ROOT_KEY, acc: CoursesClassRow[] = []): CoursesClassRow[] => {
-    for (const row of byParent.get(key) || []) {
+    for (const row of byParent.get(key) ?? []) {
         if ((row.node_kind || 'LESSON') === 'LESSON') acc.push(row);
         flattenLessonsDFS(byParent, row.id, acc);
     }
@@ -277,7 +277,7 @@ const enrichLessonSequence = (lessonRows: CoursesClassRow[]): EnrichedClass[] =>
 
 // Build the display tree: SECTION folders + LESSON leaves (enriched/localized).
 const buildDisplayTree = (byParent: Adjacency, lessonById: Map<string, EnrichedClass>, sectionNameById: Map<string, string>, key = ROOT_KEY): unknown[] =>
-    (byParent.get(key) || []).map((row) => {
+    (byParent.get(key) ?? []).map((row) => {
         const kind = row.node_kind || 'LESSON';
         if (kind === 'SECTION') {
             return {
@@ -290,7 +290,7 @@ const buildDisplayTree = (byParent: Adjacency, lessonById: Map<string, EnrichedC
             };
         }
         return {
-            ...(lessonById.get(row.id) || { id: row.id, name: row.name }),
+            ...(lessonById.get(row.id) ?? { id: row.id, name: row.name }),
             node_kind: 'LESSON',
             children: buildDisplayTree(byParent, lessonById, sectionNameById, row.id),
         };
