@@ -83,8 +83,24 @@ jobs:
           # CF-gated → hash-mismatch). Deps are public PyPI. rm before scanning (audit only this repo).
           VENVROOT="$(mktemp -d)"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"   # job-unique + EXIT-cleanup (recon-18 v7 collision fix + 2026-10-14 ENOSPC fix : trap rm le venv ~92M, sinon fuite /tmp/tmp.* → disque runner plein → CI rouge fleet-wide)
           python3 -m venv "$VENV" 2>/dev/null || { apt-get install -y -qq python3-venv >/dev/null 2>&1 && python3 -m venv "$VENV"; }
-          "$VENV/bin/pip" install --quiet ./.ci-tpb-entropy/python
-          rm -rf .ci-tpb-entropy
+          # Keep the source outside the scanned app until this owned job finishes.
+          ENTROPY_SOURCE="$VENVROOT/entropy"
+          mv .ci-tpb-entropy "$ENTROPY_SOURCE"
+          "$VENV/bin/pip" install --quiet "$ENTROPY_SOURCE/python"
+          # Runtime description: the TS resolver owns every path; Python only consumes it.
+          # Assign before export so a failed resolver preserves its nonzero exit status.
+          TPB_ENTROPY_RUNTIME_RESOURCES="$(node --experimental-strip-types --input-type=module - "$ENTROPY_SOURCE" "$VENV/bin/tpb-entropy" <<'JS'
+          import { resolve } from 'node:path';
+          import { pathToFileURL } from 'node:url';
+          const [source, executablePath] = process.argv.slice(2);
+          const { resolveEntropyRuntimeResources, describeEntropyRuntimeResources } = await import(
+            pathToFileURL(resolve(source, 'backend/entry-ts/_runtimeResources.ts')).href);
+          const resources = resolveEntropyRuntimeResources({ environment: process.env, executablePath,
+            sourceFallbackRoot: resolve(source, 'python') });
+          process.stdout.write(JSON.stringify(describeEntropyRuntimeResources(resources)));
+          JS
+          )"
+          export TPB_ENTROPY_RUNTIME_RESOURCES
           # recon-18 (v6): the runner is Linux, daemon-less + tool-less. Native-only mode
           # runs ONLY the native Python ratchet checks (mega checks need semgrep/trivy/
           # bearer/gitleaks binaries absent here + are non-ratcheted → verdict-equivalent).
