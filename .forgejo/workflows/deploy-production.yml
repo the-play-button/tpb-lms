@@ -165,16 +165,23 @@ jobs:
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
-      - name: Backup D1 pre-migration (§ G3 restored — export before schema change)
+      - name: Backup D1 pre-migration (§ G3 — Time Travel restore point before schema change)
         run: |
-          echo '::tpb-step::Backup D1 pre-migration (§ G3 restored — export before schema change)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          echo '::tpb-step::Backup D1 pre-migration (§ G3 — Time Travel restore point before schema change)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
           set -x
+          # D1 Time Travel, not a SQL export: an export refuses any database with a virtual table (FTS5 — tpb-kms deploy-staging
+          # run 250, 2026-10-30), makes the database unavailable while it runs, and its .sql stayed on the runner, lost with
+          # the job. The bookmark is Cloudflare's own restore point (30 days); it is printed in this log and kept in
+          # .d1-backup/. Restore: `wrangler d1 time-travel restore <db> --bookmark <bookmark>`.
           if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-production.toml; then
             mkdir -p .d1-backup
             grep 'database_name' backend/wrangler-production.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
-              echo "Backing up $DB before migration (production)..."
-              CI=1 npx -y wrangler@latest d1 export "$DB" --remote --config backend/wrangler-production.toml --output ".d1-backup/$DB.$(date -u +%Y%m%dT%H%M%SZ).sql" || { echo "FATAL: D1 backup failed for $DB"; exit 1; }
+              echo "Recording the Time Travel restore point of $DB before migration (production)..."
+              POINT=".d1-backup/$DB.$(date -u +%Y%m%dT%H%M%SZ).time-travel.json"
+              CI=1 npx -y wrangler@latest d1 time-travel info "$DB" --json --config backend/wrangler-production.toml > "$POINT" || { echo "FATAL: D1 restore point failed for $DB"; exit 1; }
+              grep -q '"bookmark"' "$POINT" || { echo "FATAL: no Time Travel bookmark for $DB"; cat "$POINT"; exit 1; }
+              cat "$POINT"
             done
           else
             echo "No db/migrations or no migrations_dir — skipping D1 backup"
