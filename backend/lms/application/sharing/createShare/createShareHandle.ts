@@ -9,7 +9,8 @@ import { createShareExecute, type ShareContentOutput } from './createShareExecut
 import { createShareFilter } from './createShareFilter.js';
 import { createShareTrack } from './createShareTrack.js';
 
-type ShareContentError = 'NOT_FOUND' | 'FORBIDDEN' | string;
+// Any step's error code passes through (NOT_FOUND, FORBIDDEN, storage codes…): a string by design.
+type ShareContentError = string;
 
 /**
  * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track

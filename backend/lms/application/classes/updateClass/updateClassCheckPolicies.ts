@@ -5,4 +5,4 @@ import type { AuthoringContext } from '../../../types/AuthoringContext.types.js'
 const REQUIRED_SCOPE = 'lms:class:write';
 
 export const updateClassCheckPolicies = (ctx: AuthoringContext): Result<'FORBIDDEN', 'allowed'> =>
-  hasScope(ctx.actor.scopes ?? [], REQUIRED_SCOPE) ? succeed('allowed' as const) : fail('FORBIDDEN' as const);
+  hasScope(ctx.actor.scopes, REQUIRED_SCOPE) ? succeed('allowed' as const) : fail('FORBIDDEN' as const);

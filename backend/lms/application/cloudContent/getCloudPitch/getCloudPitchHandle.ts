@@ -9,7 +9,8 @@ import { getCloudPitchExecute, type GetCloudPitchOutput } from './getCloudPitchE
 import { getCloudPitchFilter } from './getCloudPitchFilter.js';
 import { getCloudPitchTrack } from './getCloudPitchTrack.js';
 
-type GetCloudPitchError = 'NOT_FOUND' | 'FORBIDDEN' | string;
+// Any step's error code passes through (NOT_FOUND, FORBIDDEN, storage codes…): a string by design.
+type GetCloudPitchError = string;
 
 /**
  * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track

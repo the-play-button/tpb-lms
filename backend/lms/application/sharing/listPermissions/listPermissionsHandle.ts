@@ -9,7 +9,8 @@ import { listPermissionsExecute, type ListPermissionsOutput } from './listPermis
 import { listPermissionsFilter } from './listPermissionsFilter.js';
 import { listPermissionsTrack } from './listPermissionsTrack.js';
 
-type ListPermissionsError = 'NOT_FOUND' | 'FORBIDDEN' | string;
+// Any step's error code passes through (NOT_FOUND, FORBIDDEN, storage codes…): a string by design.
+type ListPermissionsError = string;
 
 /**
  * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track

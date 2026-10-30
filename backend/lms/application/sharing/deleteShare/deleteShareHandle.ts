@@ -9,7 +9,8 @@ import { deleteShareExecute, type RevokeShareOutput } from './deleteShareExecute
 import { deleteShareFilter } from './deleteShareFilter.js';
 import { deleteShareTrack } from './deleteShareTrack.js';
 
-type RevokeShareError = 'NOT_FOUND' | 'FORBIDDEN' | string;
+// Any step's error code passes through (NOT_FOUND, FORBIDDEN, storage codes…): a string by design.
+type RevokeShareError = string;
 
 /**
  * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track

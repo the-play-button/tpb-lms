@@ -9,7 +9,8 @@ import { getCloudContentExecute, type GetCloudContentOutput } from './getCloudCo
 import { getCloudContentFilter } from './getCloudContentFilter.js';
 import { getCloudContentTrack } from './getCloudContentTrack.js';
 
-type GetCloudContentError = 'NOT_FOUND' | 'FORBIDDEN' | string;
+// Any step's error code passes through (NOT_FOUND, FORBIDDEN, storage codes…): a string by design.
+type GetCloudContentError = string;
 
 /**
  * Handle orchestrator: ValidateInput -> HydrateContext -> ValidateContext -> CheckPolicies -> Execute -> Filter -> Track

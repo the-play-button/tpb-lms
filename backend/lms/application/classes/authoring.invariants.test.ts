@@ -4,6 +4,11 @@ import { updateClassValidateContext } from './updateClass/updateClassValidateCon
 import { createClassCheckPolicies } from './createClass/createClassCheckPolicies.js';
 import type { AuthoringContext } from '../../types/AuthoringContext.types.js';
 
+/** A dependency this test never reaches: any access fails loud. */
+function unusedDependency(): never {
+  return new Proxy({}, { get: (_target, property) => { throw new Error(`unused dependency read: ${String(property)}`); } }) as never;
+}
+
 const sectionRow = (over = {}) => ({
   id: 'sec1', course_id: 'c1', parent_class_id: null, node_kind: 'SECTION' as const,
   name: 'Month 1', description: null, media_json: null, sys_order_index: 0, raw_json: null,
@@ -15,7 +20,7 @@ describe('createClass ValidateContext — tree invariants', () => {
   it('rejects SECTION carrying media', () => {
     const r = createClassValidateContext({
       input: { courseId: 'c1', nodeKind: 'SECTION', name: 'x', mediaJson: [{ url: 'u', type: 'VIDEO' }] },
-      course: {} as never, parent: null,
+      course: unusedDependency(), parent: null,
     });
     expect(r.ok).toBe(false);
     expect((r as { error: string }).error).toBe('SECTION_CANNOT_HAVE_MEDIA');
@@ -24,7 +29,7 @@ describe('createClass ValidateContext — tree invariants', () => {
   it('rejects a LESSON parent', () => {
     const r = createClassValidateContext({
       input: { courseId: 'c1', nodeKind: 'LESSON', name: 'x', parentClassId: 'les1' },
-      course: {} as never, parent: lessonRow(),
+      course: unusedDependency(), parent: lessonRow(),
     });
     expect((r as { error: string }).error).toBe('PARENT_MUST_BE_SECTION');
   });
@@ -32,7 +37,7 @@ describe('createClass ValidateContext — tree invariants', () => {
   it('rejects a parent in a different course', () => {
     const r = createClassValidateContext({
       input: { courseId: 'c1', nodeKind: 'LESSON', name: 'x', parentClassId: 'sec1' },
-      course: {} as never, parent: sectionRow({ course_id: 'OTHER' }),
+      course: unusedDependency(), parent: sectionRow({ course_id: 'OTHER' }),
     });
     expect((r as { error: string }).error).toBe('PARENT_COURSE_MISMATCH');
   });
@@ -40,7 +45,7 @@ describe('createClass ValidateContext — tree invariants', () => {
   it('accepts a LESSON under a SECTION in the same course', () => {
     const r = createClassValidateContext({
       input: { courseId: 'c1', nodeKind: 'LESSON', name: 'x', parentClassId: 'sec1', mediaJson: [{ url: 'u', type: 'VIDEO' }] },
-      course: {} as never, parent: sectionRow(),
+      course: unusedDependency(), parent: sectionRow(),
     });
     expect(r.ok).toBe(true);
   });
@@ -70,9 +75,9 @@ describe('updateClass ValidateContext — move invariants + cycle detection', ()
 
 describe('CheckPolicies — PBAC hasScope gate', () => {
   const ctxWith = (scopes: string[]): AuthoringContext => ({
-    db: {} as never,
+    db: unusedDependency(),
     actor: { id: 'a', email: 'a@x', type: 'user', bastionUserId: null, scopes, organizationId: null, roles: [] },
-    userEmail: 'a@x', courseRepo: {} as never, classRepo: {} as never, programRepo: {} as never,
+    userEmail: 'a@x', courseRepo: unusedDependency(), classRepo: unusedDependency(), programRepo: unusedDependency(),
   });
 
   it('allows when actor holds lms:class:write', () => {

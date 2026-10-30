@@ -4,12 +4,13 @@ import { updateCourseExecute } from '../courses/updateCourse/updateCourseExecute
 import { createClassExecute } from './createClass/createClassExecute.js';
 import { updateClassExecute } from './updateClass/updateClassExecute.js';
 import type { AuthoringContext } from '../../types/AuthoringContext.types.js';
+import type { CourseRow } from '../../domain/repositories/LmsCourseRepository.js';
 
 const actor = { id: 'a', email: 'creator@x', type: 'user' as const, bastionUserId: null, scopes: [], organizationId: null, roles: [] };
 
-const courseRow = (raw: string | null) => ({
+const courseRow = (raw: string | null): CourseRow => ({
   id: 'c1', name: 'C', description: null, categories_json: null, media_json: null,
-  is_active: 1, is_private: 0, languages_json: null, raw_json: raw, created_at: '', updated_at: '',
+  is_active: 1, is_private: 0, languages_json: null, program_id: null, sys_order_index: 0, raw_json: raw, created_at: '', updated_at: '',
 });
 const classRow = (raw: string | null) => ({
   id: 'les1', course_id: 'c1', parent_class_id: null, node_kind: 'LESSON' as const, name: 'L',
@@ -23,7 +24,7 @@ describe('createCourseExecute — rawJson merge', () => {
       actor,
       courseRepo: { insert: async (d: { rawJson: Record<string, unknown> }) => { inserted = d.rawJson; return courseRow(JSON.stringify(d.rawJson)); } },
     } as unknown as AuthoringContext;
-    const r = await createCourseExecute({ input: { name: 'C', progressionMode: 'free', rawJson: { tpb_intro_url: 'https://i' } } } as never, ctx);
+    const r = await createCourseExecute({ input: { name: 'C', progressionMode: 'free', rawJson: { tpb_intro_url: 'https://i' } } }, ctx);
     expect(r.ok).toBe(true);
     expect(inserted).toEqual({ tpb_intro_url: 'https://i', tpb_progression_mode: 'free', tpb_created_by: 'creator@x' });
   });
@@ -49,7 +50,7 @@ describe('updateCourseExecute — read-modify-write merge', () => {
         update: async (_id: string, p: { rawJson?: Record<string, unknown> }) => { patched = p.rawJson; },
       },
     } as unknown as AuthoringContext;
-    const r = await updateCourseExecute({ input: { courseId: 'c1', progressionMode: 'free' } } as never, ctx);
+    const r = await updateCourseExecute({ input: { courseId: 'c1', progressionMode: 'free' }, course: courseRow(null) }, ctx);
     expect(r.ok).toBe(true);
     expect(patched).toEqual({ tpb_created_by: 'orig', keep: 'me', tpb_progression_mode: 'free' });
   });
@@ -63,7 +64,7 @@ describe('updateCourseExecute — read-modify-write merge', () => {
         update: async (_id: string, p: { rawJson?: unknown }) => { patched = p; },
       },
     } as unknown as AuthoringContext;
-    await updateCourseExecute({ input: { courseId: 'c1', name: 'renamed' } } as never, ctx);
+    await updateCourseExecute({ input: { courseId: 'c1', name: 'renamed' }, course: courseRow(null) }, ctx);
     expect(patched.rawJson).toBeUndefined();
   });
 });
@@ -75,7 +76,7 @@ describe('createClassExecute — content routed to raw_json (not deprecated colu
       actor,
       classRepo: { insert: async (d: Record<string, unknown>) => { inserted = d; return classRow(JSON.stringify(d.rawJson)); } },
     } as unknown as AuthoringContext;
-    const r = await createClassExecute({ input: { courseId: 'c1', nodeKind: 'LESSON', name: 'L', contentMd: '# hi', stepType: 'CONTENT' } } as never, ctx);
+    const r = await createClassExecute({ input: { courseId: 'c1', nodeKind: 'LESSON', name: 'L', contentMd: '# hi', stepType: 'CONTENT' }, course: courseRow(null), parent: null }, ctx);
     expect(r.ok).toBe(true);
     expect(inserted.rawJson).toEqual({ tpb_step_type: 'CONTENT', tpb_content_md: '# hi', tpb_created_by: 'creator@x' });
     expect(inserted.contentMd).toBeUndefined();
@@ -88,7 +89,7 @@ describe('createClassExecute — content routed to raw_json (not deprecated colu
       actor,
       classRepo: { insert: async (d: Record<string, unknown>) => { inserted = d; return classRow(JSON.stringify(d.rawJson)); } },
     } as unknown as AuthoringContext;
-    const r = await createClassExecute({ input: { courseId: 'c1', nodeKind: 'LESSON', name: 'L', contentMd: 'b', transcriptMd: 'FR transcript' } } as never, ctx);
+    const r = await createClassExecute({ input: { courseId: 'c1', nodeKind: 'LESSON', name: 'L', contentMd: 'b', transcriptMd: 'FR transcript' }, course: courseRow(null), parent: null }, ctx);
     expect(r.ok).toBe(true);
     expect((inserted.rawJson as Record<string, unknown>).tpb_transcript_md).toBe('FR transcript');
     expect((inserted.rawJson as Record<string, unknown>).tpb_content_md).toBe('b');
@@ -106,7 +107,7 @@ describe('updateClassExecute — read-modify-write merge for inline content', ()
         update: async (_id: string, p: { rawJson?: Record<string, unknown> }) => { patched = p.rawJson; },
       },
     } as unknown as AuthoringContext;
-    const r = await updateClassExecute({ input: { classId: 'les1', contentMd: 'new body' } } as never, ctx);
+    const r = await updateClassExecute({ input: { classId: 'les1', contentMd: 'new body' }, current: classRow(null), parent: null, subtreeIds: ['les1'] }, ctx);
     expect(r.ok).toBe(true);
     expect(patched).toEqual({ tpb_created_by: 'orig', tpb_step_type: 'VIDEO', tpb_content_md: 'new body' });
   });
@@ -120,7 +121,7 @@ describe('updateClassExecute — read-modify-write merge for inline content', ()
         update: async (_id: string, p: { rawJson?: Record<string, unknown> }) => { patched = p.rawJson; },
       },
     } as unknown as AuthoringContext;
-    const r = await updateClassExecute({ input: { classId: 'les1', transcriptMd: 'FR' } } as never, ctx);
+    const r = await updateClassExecute({ input: { classId: 'les1', transcriptMd: 'FR' }, current: classRow(null), parent: null, subtreeIds: ['les1'] }, ctx);
     expect(r.ok).toBe(true);
     expect(patched).toEqual({ tpb_created_by: 'orig', tpb_content_md: 'body', tpb_transcript_md: 'FR' });
   });

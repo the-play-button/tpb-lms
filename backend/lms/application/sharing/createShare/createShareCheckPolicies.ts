@@ -16,7 +16,7 @@ export const createShareCheckPolicies = async (context: ShareContentContext, use
   // § AUTHZ — PBAC FIRST : local literal-scope check (lms doctrine — cf. AuthoringContext.ts:
   // "scope checks on the actor (hasScope), not ReBAC delegated authz"). id:'*' was a capability
   // check, so a delegated ReBAC where a local hasScope is the correct form. Domain rules below unchanged.
-  if (!hasScope(actor.scopes ?? [], 'lms:create')) return fail('FORBIDDEN');
+  if (!hasScope(actor.scopes, 'lms:create')) return fail('FORBIDDEN');
 
   const emailResult = Email.create(userEmail);
   if (!emailResult.ok) return fail(emailResult.error);
