@@ -36,13 +36,13 @@ describe('listConnections', () => {
   describe('CheckPolicies', () => {
     it('allows when authz passes', async () => {
       const { handlerContext } = createTestContext();
-      const result = await listConnectionsCheckPolicies(handlerContext as any);
+      const result = await listConnectionsCheckPolicies(handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
       const { handlerContext } = createTestContext({ scopes: [] });
-      const result = await listConnectionsCheckPolicies(handlerContext as any);
+      const result = await listConnectionsCheckPolicies(handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -55,7 +55,7 @@ describe('listConnections', () => {
         { id: 'conn_2', integrationType: 'onedrive', category: 'storage' },
       ];
 
-      const result = await listConnectionsExecute(handlerContext as any);
+      const result = await listConnectionsExecute(handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(2);
@@ -70,7 +70,7 @@ describe('listConnections', () => {
         throw new Error('Connection unavailable');
       };
 
-      const result = await listConnectionsExecute(handlerContext as any);
+      const result = await listConnectionsExecute(handlerContext);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toContain('Connection unavailable');
     });
@@ -92,13 +92,13 @@ describe('getDefaultConnection', () => {
   describe('CheckPolicies', () => {
     it('allows when authz passes', async () => {
       const { handlerContext } = createTestContext();
-      const result = await getDefaultConnectionCheckPolicies(handlerContext as any);
+      const result = await getDefaultConnectionCheckPolicies(handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
       const { handlerContext } = createTestContext({ scopes: [] });
-      const result = await getDefaultConnectionCheckPolicies(handlerContext as any);
+      const result = await getDefaultConnectionCheckPolicies(handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -107,7 +107,7 @@ describe('getDefaultConnection', () => {
     it('returns default connection', async () => {
       const { handlerContext } = createTestContext();
 
-      const result = await getDefaultConnectionExecute(handlerContext as any);
+      const result = await getDefaultConnectionExecute(handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.id).toBe('conn_001');
@@ -121,7 +121,7 @@ describe('getDefaultConnection', () => {
         throw new Error('No default connection configured');
       };
 
-      const result = await getDefaultConnectionExecute(handlerContext as any);
+      const result = await getDefaultConnectionExecute(handlerContext);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toContain('No default connection');
     });

@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import {
-  ContentRefMother, ShareMother, ActorMother,
-  OWNER_EMAIL, RECIPIENT_EMAIL, OTHER_EMAIL, REF_ID, CONNECTION_ID, FILE_ID,
+  ContentRefMother, ShareMother, RECIPIENT_EMAIL, OTHER_EMAIL, REF_ID,
   createTestContext,
 } from '../../fixtures';
 
@@ -52,7 +51,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.draft();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext as any);
+      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.isOwner).toBe(true);
@@ -70,7 +69,7 @@ describe('getCloudContent', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
       sharesRepository.shares.set(share.id.value, share);
 
-      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext as any);
+      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.isOwner).toBe(false);
@@ -86,7 +85,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.draft();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext as any);
+      const result = await getCloudContentHydrateContext({ refId: REF_ID }, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.isOwner).toBe(false);
@@ -96,7 +95,7 @@ describe('getCloudContent', () => {
 
     it('fails when contentRef not found', async () => {
       const { handlerContext } = createTestContext();
-      const result = await getCloudContentHydrateContext({ refId: 'missing' }, handlerContext as any);
+      const result = await getCloudContentHydrateContext({ refId: 'missing' }, handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -105,28 +104,28 @@ describe('getCloudContent', () => {
     it('allows owner', async () => {
       const { handlerContext } = createTestContext();
       const context = { contentRef: ContentRefMother.draft(), isOwner: true, isEnrolled: false };
-      const result = await getCloudContentCheckPolicies(context as any, handlerContext as any);
+      const result = await getCloudContentCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('allows enrolled non-owner', async () => {
       const { handlerContext } = createTestContext();
       const context = { contentRef: ContentRefMother.draft(), isOwner: false, isEnrolled: true };
-      const result = await getCloudContentCheckPolicies(context as any, handlerContext as any);
+      const result = await getCloudContentCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('denies non-owner non-enrolled', async () => {
       const { handlerContext } = createTestContext();
       const context = { contentRef: ContentRefMother.draft(), isOwner: false, isEnrolled: false };
-      const result = await getCloudContentCheckPolicies(context as any, handlerContext as any);
+      const result = await getCloudContentCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(false);
     });
 
     it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
       const { handlerContext } = createTestContext({ scopes: [] });
       const context = { contentRef: ContentRefMother.draft(), isOwner: true, isEnrolled: false };
-      const result = await getCloudContentCheckPolicies(context as any, handlerContext as any);
+      const result = await getCloudContentCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -138,7 +137,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.markdown();
       const context = { contentRef: ref, isOwner: true, isEnrolled: false };
 
-      const result = await getCloudContentExecute(context as any, handlerContext as any);
+      const result = await getCloudContentExecute(context, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.content).toBe('# Hello from storage');
@@ -152,7 +151,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.markdown();
       const context = { contentRef: ref, isOwner: false, isEnrolled: true };
 
-      const result = await getCloudContentExecute(context as any, handlerContext as any);
+      const result = await getCloudContentExecute(context, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.content).toBe('delegated content');
     });
@@ -163,7 +162,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.markdown();
       const context = { contentRef: ref, isOwner: false, isEnrolled: true };
 
-      const result = await getCloudContentExecute(context as any, handlerContext as any);
+      const result = await getCloudContentExecute(context, handlerContext);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toContain('PAM');
     });
@@ -173,7 +172,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.markdown();
       const context = { contentRef: ref, isOwner: true, isEnrolled: false };
 
-      await getCloudContentExecute(context as any, handlerContext as any);
+      await getCloudContentExecute(context, handlerContext);
       expect(domainEvents.published).toHaveLength(1);
       expect(domainEvents.published[0]?.type).toBe('content.accessed');
     });
@@ -183,7 +182,7 @@ describe('getCloudContent', () => {
       const ref = ContentRefMother.pdf();
       const context = { contentRef: ref, isOwner: true, isEnrolled: false };
 
-      const result = await getCloudContentExecute(context as any, handlerContext as any);
+      const result = await getCloudContentExecute(context, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.contentType).toBe('application/pdf');
     });
@@ -215,14 +214,14 @@ describe('getCloudPitch', () => {
       const ref = ContentRefMother.pitch();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const result = await getCloudPitchHydrateContext({ refId: REF_ID }, handlerContext as any);
+      const result = await getCloudPitchHydrateContext({ refId: REF_ID }, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.isOwner).toBe(true);
     });
 
     it('fails when not found', async () => {
       const { handlerContext } = createTestContext();
-      const result = await getCloudPitchHydrateContext({ refId: 'missing' }, handlerContext as any);
+      const result = await getCloudPitchHydrateContext({ refId: 'missing' }, handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -231,21 +230,21 @@ describe('getCloudPitch', () => {
     it('allows owner', async () => {
       const { handlerContext } = createTestContext();
       const context = { contentRef: ContentRefMother.pitch(), isOwner: true, isEnrolled: false };
-      const result = await getCloudPitchCheckPolicies(context as any, handlerContext as any);
+      const result = await getCloudPitchCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('allows enrolled non-owner', async () => {
       const { handlerContext } = createTestContext();
       const context = { contentRef: ContentRefMother.pitch(), isOwner: false, isEnrolled: true };
-      const result = await getCloudPitchCheckPolicies(context as any, handlerContext as any);
+      const result = await getCloudPitchCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('denies non-owner non-enrolled', async () => {
       const { handlerContext } = createTestContext();
       const context = { contentRef: ContentRefMother.pitch(), isOwner: false, isEnrolled: false };
-      const result = await getCloudPitchCheckPolicies(context as any, handlerContext as any);
+      const result = await getCloudPitchCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -258,7 +257,7 @@ describe('getCloudPitch', () => {
       const ref = ContentRefMother.pitch();
       const context = { contentRef: ref, isOwner: true, isEnrolled: false };
 
-      const result = await getCloudPitchExecute(context as any, handlerContext as any);
+      const result = await getCloudPitchExecute(context, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.binary).toBe(buf);
@@ -271,7 +270,7 @@ describe('getCloudPitch', () => {
       const ref = ContentRefMother.draft({ contentType: 'pitch', name: 'MyPres' });
       const context = { contentRef: ref, isOwner: true, isEnrolled: false };
 
-      const result = await getCloudPitchExecute(context as any, handlerContext as any);
+      const result = await getCloudPitchExecute(context, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.fileName).toBe('MyPres.pitch');
     });
@@ -281,7 +280,7 @@ describe('getCloudPitch', () => {
       const ref = ContentRefMother.pitch();
       const context = { contentRef: ref, isOwner: true, isEnrolled: false };
 
-      await getCloudPitchExecute(context as any, handlerContext as any);
+      await getCloudPitchExecute(context, handlerContext);
       expect(domainEvents.published).toHaveLength(1);
       expect(domainEvents.published[0]?.type).toBe('content.accessed');
     });

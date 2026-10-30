@@ -1,9 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { Email, ContentRefId, ShareId, ConnectionId } from '../../../backend/lms/domain/value-objects/index';
 import { DraftContentRef } from '../../../backend/lms/domain/entities/ContentRef/DraftContentRef';
-import { SharedContentRef } from '../../../backend/lms/domain/entities/ContentRef/SharedContentRef';
 import { ActiveShare } from '../../../backend/lms/domain/entities/Share/ActiveShare';
-import { RevokedShare } from '../../../backend/lms/domain/entities/Share/RevokedShare';
 import { onlyOwnerCanSharePolicy, maxSharesPolicy } from '../../../backend/lms/domain/policies/SharingPolicies';
 import { enrolledLearnerPolicy, ownerAccessPolicy } from '../../../backend/lms/domain/policies/ContentAccessPolicies';
 import { filterContentRefFields } from '../../../backend/lms/domain/policies/FieldAccessPolicies';

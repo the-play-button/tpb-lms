@@ -24,6 +24,17 @@ export default [
   },
   ...sdkPreset,
   {
+    files: ['**/*.ts', '**/*.tsx'],
+    rules: {
+      // An empty query param / form field / claim means "absent" here (`?branch=` → 'main', empty email → sub):
+      // `||` on a string is the intended fallback, `??` would keep ''. Numbers, booleans and objects stay judged.
+      '@typescript-eslint/prefer-nullish-coalescing': ['error', { ignorePrimitives: { string: true } }],
+      // Port methods return Promise by contract; in-memory adapters and test stubs implement them without an await,
+      // and `async` keeps a throw a rejection for every implementation (same choice as tpb-commerce).
+      '@typescript-eslint/require-await': 'off',
+    },
+  },
+  {
     plugins: { 'unused-imports': unusedImports },
     rules: {
       // The SDK preset configures @typescript-eslint/no-unused-vars; layer the

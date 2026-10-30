@@ -1,3 +1,4 @@
+import type { HandlerContext } from '../../../backend/lms/types/HandlerContext.types';
 import {
   InMemoryContentRefsRepository,
   InMemorySharesRepository,
@@ -11,6 +12,15 @@ import { ActorMother, OWNER_EMAIL } from './mothers';
 
 type ActorOverrides = Partial<ReturnType<typeof ActorMother.owner>>;
 
+/** A port these use-case tests never reach: any access fails loud instead of returning undefined. */
+function unusedPort<Port extends object>(name: string): Port {
+  return new Proxy({}, {
+    get: (_target, property) => {
+      throw new Error(`test context: ${name}.${String(property)} was used but is not stubbed`);
+    },
+  }) as Port;
+}
+
 export function createTestContext(actorOverrides: ActorOverrides = {}) {
   const actor = { ...ActorMother.owner(), ...actorOverrides };
 
@@ -22,21 +32,21 @@ export function createTestContext(actorOverrides: ActorOverrides = {}) {
   const connectionResolver = new StubConnectionResolver();
   const domainEvents = new StubDomainEvents();
 
-  const handlerContext = {
+  const handlerContext: HandlerContext = {
     contentRefsRepository,
     sharesRepository,
     authzBastionClient: authz,
     storageService,
-    pamClient: pamClient as StubPamClient | null,
+    pamClient,
     connectionResolver,
-    bastionClient: {} as any,
+    bastionClient: unusedPort<HandlerContext['bastionClient']>('bastionClient'),
     actor,
     domainEvents,
     userEmail: actor.email ?? OWNER_EMAIL,
     jwt: 'test-jwt-token',
     userScopes: actor.scopes,
     teamDomain: 'test.theplaybutton.ai',
-    db: {} as any,
+    db: unusedPort<HandlerContext['db']>('db'),
   };
 
   return {

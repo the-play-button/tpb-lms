@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import {
-  ContentRefMother, ShareMother, ActorMother,
+  ContentRefMother, ShareMother,
   OWNER_EMAIL, RECIPIENT_EMAIL, OTHER_EMAIL, REF_ID, SHARE_ID,
   createTestContext,
 } from '../../fixtures';
@@ -102,7 +102,7 @@ describe('createShare', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
 
       const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
-      const result = await createShareHydrateContext(input, handlerContext as any);
+      const result = await createShareHydrateContext(input, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.contentRef.id.value).toBe(REF_ID);
@@ -113,7 +113,7 @@ describe('createShare', () => {
     it('fails when contentRef not found', async () => {
       const { handlerContext } = createTestContext();
       const input = { refId: 'nonexistent', email: RECIPIENT_EMAIL, role: 'READ' as const };
-      const result = await createShareHydrateContext(input, handlerContext as any);
+      const result = await createShareHydrateContext(input, handlerContext);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('NOT_FOUND');
     });
@@ -124,7 +124,7 @@ describe('createShare', () => {
       const { handlerContext } = createTestContext();
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const result = await createShareCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
+      const result = await createShareCheckPolicies(context, OWNER_EMAIL, handlerContext);
       expect(result.ok).toBe(true);
     });
 
@@ -132,7 +132,7 @@ describe('createShare', () => {
       const { handlerContext } = createTestContext({ scopes: [] });
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const result = await createShareCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
+      const result = await createShareCheckPolicies(context, OWNER_EMAIL, handlerContext);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('FORBIDDEN');
     });
@@ -141,7 +141,7 @@ describe('createShare', () => {
       const { handlerContext } = createTestContext();
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, existingShares: [] as any[] };
-      const result = await createShareCheckPolicies(context as any, OTHER_EMAIL, handlerContext as any);
+      const result = await createShareCheckPolicies(context, OTHER_EMAIL, handlerContext);
       expect(result.ok).toBe(false);
     });
 
@@ -152,7 +152,7 @@ describe('createShare', () => {
         ShareMother.active({ id: `s_${i}`, sharedWithEmail: `u${i}@t.com` }),
       );
       const context = { contentRef: ref, existingShares: shares };
-      const result = await createShareCheckPolicies(context as any, OWNER_EMAIL, handlerContext as any);
+      const result = await createShareCheckPolicies(context, OWNER_EMAIL, handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -164,7 +164,7 @@ describe('createShare', () => {
       const context = { contentRef: ref, existingShares: [] as any[] };
       const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'READ' as const };
 
-      const result = await createShareExecute(input, context as any, handlerContext as any);
+      const result = await createShareExecute(input, context, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.shared_with).toBe(RECIPIENT_EMAIL);
@@ -180,7 +180,7 @@ describe('createShare', () => {
       const context = { contentRef: ref, existingShares: [] as any[] };
       const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
 
-      await createShareExecute(input, context as any, handlerContext as any);
+      await createShareExecute(input, context, handlerContext);
       expect(domainEvents.published).toHaveLength(1);
       expect(domainEvents.published[0]?.type).toBe('content.shared');
     });
@@ -191,7 +191,7 @@ describe('createShare', () => {
       const context = { contentRef: ref, existingShares: [] as any[] };
       const input = { refId: REF_ID, email: RECIPIENT_EMAIL, role: 'WRITE' as const };
 
-      await createShareExecute(input, context as any, handlerContext as any);
+      await createShareExecute(input, context, handlerContext);
       const saved = [...sharesRepository.shares.values()][0];
       expect(saved?.role).toBe('editor');
     });
@@ -224,7 +224,7 @@ describe('deleteShare', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
       sharesRepository.shares.set(share.id.value, share);
 
-      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext as any);
+      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.share.id.value).toBe(SHARE_ID);
@@ -234,7 +234,7 @@ describe('deleteShare', () => {
 
     it('fails when share not found', async () => {
       const { handlerContext } = createTestContext();
-      const result = await deleteShareHydrateContext('nonexistent', handlerContext as any);
+      const result = await deleteShareHydrateContext('nonexistent', handlerContext);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('NOT_FOUND');
     });
@@ -246,7 +246,7 @@ describe('deleteShare', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
       sharesRepository.shares.set(revoked.id.value, revoked);
 
-      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext as any);
+      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext);
       expect(result.ok).toBe(false);
       if (!result.ok) expect(result.error).toBe('NOT_FOUND');
     });
@@ -261,7 +261,7 @@ describe('deleteShare', () => {
       contentRefsRepository.refs.set(ref.id.value, ref);
       sharesRepository.shares.set(share.id.value, share);
 
-      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext as any);
+      const result = await deleteShareHydrateContext(SHARE_ID, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.isOwner).toBe(false);
     });
@@ -271,21 +271,21 @@ describe('deleteShare', () => {
     it('allows owner with authz', async () => {
       const { handlerContext } = createTestContext();
       const context = { share: ShareMother.active(), contentRef: ContentRefMother.draft(), isOwner: true };
-      const result = await deleteShareCheckPolicies(context as any, handlerContext as any);
+      const result = await deleteShareCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
       const { handlerContext } = createTestContext({ scopes: [] });
       const context = { share: ShareMother.active(), contentRef: ContentRefMother.draft(), isOwner: true };
-      const result = await deleteShareCheckPolicies(context as any, handlerContext as any);
+      const result = await deleteShareCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(false);
     });
 
     it('denies non-owner', async () => {
       const { handlerContext } = createTestContext();
       const context = { share: ShareMother.active(), contentRef: ContentRefMother.draft(), isOwner: false };
-      const result = await deleteShareCheckPolicies(context as any, handlerContext as any);
+      const result = await deleteShareCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -297,7 +297,7 @@ describe('deleteShare', () => {
       const ref = ContentRefMother.draft();
       const context = { share, contentRef: ref, isOwner: true };
 
-      const result = await deleteShareExecute(context as any, handlerContext as any);
+      const result = await deleteShareExecute(context, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.shareId).toBe(SHARE_ID);
@@ -313,7 +313,7 @@ describe('deleteShare', () => {
       const ref = ContentRefMother.draft();
       const context = { share, contentRef: ref, isOwner: true };
 
-      await deleteShareExecute(context as any, handlerContext as any);
+      await deleteShareExecute(context, handlerContext);
       expect(domainEvents.published).toHaveLength(1);
       expect(domainEvents.published[0]?.type).toBe('share.revoked');
     });
@@ -343,7 +343,7 @@ describe('listPermissions', () => {
       const ref = ContentRefMother.draft();
       contentRefsRepository.refs.set(ref.id.value, ref);
 
-      const result = await listPermissionsHydrateContext({ refId: REF_ID }, handlerContext as any);
+      const result = await listPermissionsHydrateContext({ refId: REF_ID }, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.isOwner).toBe(true);
@@ -353,7 +353,7 @@ describe('listPermissions', () => {
 
     it('fails when contentRef not found', async () => {
       const { handlerContext } = createTestContext();
-      const result = await listPermissionsHydrateContext({ refId: 'missing' }, handlerContext as any);
+      const result = await listPermissionsHydrateContext({ refId: 'missing' }, handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -362,21 +362,21 @@ describe('listPermissions', () => {
     it('allows owner with authz', async () => {
       const { handlerContext } = createTestContext();
       const context = { contentRef: ContentRefMother.draft(), shares: [], isOwner: true };
-      const result = await listPermissionsCheckPolicies(context as any, handlerContext as any);
+      const result = await listPermissionsCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
       const { handlerContext } = createTestContext({ scopes: [] });
       const context = { contentRef: ContentRefMother.draft(), shares: [], isOwner: true };
-      const result = await listPermissionsCheckPolicies(context as any, handlerContext as any);
+      const result = await listPermissionsCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(false);
     });
 
     it('denies non-owner', async () => {
       const { handlerContext } = createTestContext();
       const context = { contentRef: ContentRefMother.draft(), shares: [], isOwner: false };
-      const result = await listPermissionsCheckPolicies(context as any, handlerContext as any);
+      const result = await listPermissionsCheckPolicies(context, handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -387,7 +387,7 @@ describe('listPermissions', () => {
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, shares: [share], isOwner: true };
 
-      const result = listPermissionsExecute(context as any);
+      const result = listPermissionsExecute(context);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value.permissions).toHaveLength(1);
@@ -401,7 +401,7 @@ describe('listPermissions', () => {
       const ref = ContentRefMother.draft();
       const context = { contentRef: ref, shares: [], isOwner: true };
 
-      const result = listPermissionsExecute(context as any);
+      const result = listPermissionsExecute(context);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value.permissions).toHaveLength(0);
     });
@@ -428,13 +428,13 @@ describe('listSharedWithMe', () => {
   describe('CheckPolicies', () => {
     it('allows when authz passes', async () => {
       const { handlerContext } = createTestContext();
-      const result = await listSharedWithMeCheckPolicies(handlerContext as any);
+      const result = await listSharedWithMeCheckPolicies(handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
       const { handlerContext } = createTestContext({ scopes: [] });
-      const result = await listSharedWithMeCheckPolicies(handlerContext as any);
+      const result = await listSharedWithMeCheckPolicies(handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -448,7 +448,7 @@ describe('listSharedWithMe', () => {
       sharesRepository.shares.set(share.id.value, share);
 
       const input = { userEmail: OWNER_EMAIL };
-      const result = await listSharedWithMeExecute(input, handlerContext as any);
+      const result = await listSharedWithMeExecute(input, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(1);
@@ -460,7 +460,7 @@ describe('listSharedWithMe', () => {
     it('returns empty array when no shares', async () => {
       const { handlerContext } = createTestContext();
       const input = { userEmail: OWNER_EMAIL };
-      const result = await listSharedWithMeExecute(input, handlerContext as any);
+      const result = await listSharedWithMeExecute(input, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value).toHaveLength(0);
     });
@@ -487,13 +487,13 @@ describe('listSharedByMe', () => {
   describe('CheckPolicies', () => {
     it('allows when authz passes', async () => {
       const { handlerContext } = createTestContext();
-      const result = await listSharedByMeCheckPolicies(handlerContext as any);
+      const result = await listSharedByMeCheckPolicies(handlerContext);
       expect(result.ok).toBe(true);
     });
 
     it('denies an actor without the required scope (PBAC literal hasScope)', async () => {
       const { handlerContext } = createTestContext({ scopes: [] });
-      const result = await listSharedByMeCheckPolicies(handlerContext as any);
+      const result = await listSharedByMeCheckPolicies(handlerContext);
       expect(result.ok).toBe(false);
     });
   });
@@ -505,7 +505,7 @@ describe('listSharedByMe', () => {
       sharesRepository.shares.set(share.id.value, share);
 
       const input = { userEmail: OWNER_EMAIL };
-      const result = await listSharedByMeExecute(input, handlerContext as any);
+      const result = await listSharedByMeExecute(input, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) {
         expect(result.value).toHaveLength(1);
@@ -517,7 +517,7 @@ describe('listSharedByMe', () => {
     it('returns empty when no shares by user', async () => {
       const { handlerContext } = createTestContext();
       const input = { userEmail: OTHER_EMAIL };
-      const result = await listSharedByMeExecute(input, handlerContext as any);
+      const result = await listSharedByMeExecute(input, handlerContext);
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.value).toHaveLength(0);
     });

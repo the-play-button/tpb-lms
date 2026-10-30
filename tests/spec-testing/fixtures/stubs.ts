@@ -1,3 +1,7 @@
+import type { PamPort } from '../../../backend/services/pam/PamPort';
+import type { ConnectionResolverPort, ResolveConnectionOptions } from '../../../backend/services/connections/ConnectionResolverPort';
+import type { ConnectionInfo } from '../../../backend/services/types/ConnectionInfo.types';
+import type { StorageFile } from '../../../backend/services/types/StorageFile.types';
 import type { DraftContentRef } from '../../../backend/lms/domain/entities/ContentRef/DraftContentRef';
 import type { SharedContentRef } from '../../../backend/lms/domain/entities/ContentRef/SharedContentRef';
 import type { ActiveShare } from '../../../backend/lms/domain/entities/Share/ActiveShare';
@@ -113,7 +117,7 @@ export class StubStorageService {
 
 // ── StubPamClient ──────────────────────────────────────────
 
-export class StubPamClient {
+export class StubPamClient implements PamPort {
   content = 'pam-delegated-content';
 
   async verifyAccess(_connectionId: string, _fileId: string, _guestEmail: string): Promise<{ allowed: boolean }> {
@@ -124,7 +128,7 @@ export class StubPamClient {
     return { content: this.content };
   }
 
-  async listFiles(_connectionId: string, _parentId: string, _guestEmail: string): Promise<unknown[]> {
+  async listFiles(_connectionId: string, _parentId: string, _guestEmail: string): Promise<StorageFile[]> {
     return [];
   }
 
@@ -135,25 +139,31 @@ export class StubPamClient {
 
 // ── StubConnectionResolver ─────────────────────────────────
 
-export class StubConnectionResolver {
-  connections = [
+export class StubConnectionResolver implements ConnectionResolverPort {
+  connections: ConnectionInfo[] = [
     { id: 'conn_001', integrationType: 'gdrive', category: 'storage' },
   ];
 
-  async findWorkingConnection(_provider: string, _folderId: string) {
-    return this.connections[0];
+  async findWorkingConnection(_provider: string, _folderId: string): Promise<ConnectionInfo> {
+    return this.defaultConnection();
   }
 
-  async resolveConnection(_params: { connectionId?: string; provider?: string; folderId?: string }) {
-    return this.connections[0];
+  async resolveConnection(_params: ResolveConnectionOptions): Promise<ConnectionInfo> {
+    return this.defaultConnection();
   }
 
-  async getAllConnections() {
+  async getAllConnections(): Promise<ConnectionInfo[]> {
     return this.connections;
   }
 
-  async getDefaultConnection() {
-    return this.connections[0];
+  async getDefaultConnection(): Promise<ConnectionInfo> {
+    return this.defaultConnection();
+  }
+
+  private defaultConnection(): ConnectionInfo {
+    const [connection] = this.connections;
+    if (!connection) throw new Error('StubConnectionResolver: no connection configured');
+    return connection;
   }
 }
 
