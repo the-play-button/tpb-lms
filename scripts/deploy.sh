@@ -116,16 +116,22 @@ fi
 HAS_D1="$MIG_DIR"
 [[ -z "$HAS_D1" && -n "$WF" ]] && grep -qE '^[[:space:]]*migrations_dir[[:space:]]*=' "$WF" 2>/dev/null && HAS_D1="toml"
 if [[ -n "$HAS_D1" ]]; then
-  # D1_NAME depuis le manifest (backend.D1_NAME) si présent, sinon depuis le wrangler toml
-  D1_NAME=""
-  if [[ "$HAS_MANIFEST" == "1" ]]; then
-    D1_NAME="$(python3 -c "import json;print((json.load(open('env/${TARGET}.public.json')).get('backend') or {}).get('D1_NAME',''))" 2>/dev/null || true)"
+  # Every D1 the toml declares WITH a migrations_dir is migrated — the parity gate below checks all of them, so
+  # migrating only the first one blocked multi-D1 apps (tpb-crm MV + operational, 2026-10-30). A base bound without
+  # migrations_dir (a foreign D1 read by this Worker) is never migrated here. Fallbacks: the manifest backend.D1_NAME,
+  # then the first database_name of the toml (migrations found under db/migrations without a migrations_dir).
+  D1_NAMES="$(python3 -c "import sys,tomllib;d=tomllib.load(open(sys.argv[1],'rb'));print(chr(10).join(x['database_name'] for x in d.get('d1_databases',[]) if x.get('migrations_dir') and x.get('database_name')))" "$WF" 2>/dev/null || true)"
+  if [[ -z "$D1_NAMES" && "$HAS_MANIFEST" == "1" ]]; then
+    D1_NAMES="$(python3 -c "import json;print((json.load(open('env/${TARGET}.public.json')).get('backend') or {}).get('D1_NAME',''))" 2>/dev/null || true)"
   fi
-  if [[ -z "$D1_NAME" ]]; then
-    D1_NAME="$(python3 -c "import re;print((re.search(r'database_name\s*=\s*\"([^\"]+)\"', open('$WF').read()) or [None,''])[1])" 2>/dev/null || true)"
+  if [[ -z "$D1_NAMES" ]]; then
+    D1_NAMES="$(python3 -c "import re;print((re.search(r'database_name\s*=\s*\"([^\"]+)\"', open('$WF').read()) or [None,''])[1])" 2>/dev/null || true)"
   fi
-  if [[ -n "$D1_NAME" ]]; then
-    n "D1 migrations apply ${D1_NAME}…"; pnpm exec wrangler d1 migrations apply "$D1_NAME" --remote -c "$WF"
+  if [[ -n "$D1_NAMES" ]]; then
+    while IFS= read -r D1_NAME; do
+      [[ -z "$D1_NAME" ]] && continue
+      n "D1 migrations apply ${D1_NAME}…"; pnpm exec wrangler d1 migrations apply "$D1_NAME" --remote -c "$WF"
+    done <<< "$D1_NAMES"
     n "D1 deployed-parity assert (${TARGET})…"
     PYTHONPATH="${TPB_SDK_PYTHONPATH:-../tpb-sdk/python/src}" python3 -m tpb_sdk.d1_parity assert-deployed --wrangler "$WF" --target "${TARGET}"
   fi
