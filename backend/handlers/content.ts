@@ -45,7 +45,6 @@ const buildAuthErrorResponse = (request: Request, response: Response, errorBody:
         gitHubStatus: response.status,
         gitHubError: errorBody,
         hasToken: !!token,
-        tokenPrefix: token ? token.substring(0, 8) : null,
         vault: vaultDebug,
     };
     if (response.status === 404) {

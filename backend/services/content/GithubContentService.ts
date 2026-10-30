@@ -17,7 +17,6 @@ interface TokenDebug {
     cached: boolean;
     hasBastionUrl: boolean;
     hasVaultToken: boolean;
-    vaultTokenPrefix: string | null;
     vaultStatus: number | null;
     vaultError: string | null;
 }
@@ -61,7 +60,6 @@ const getTokenDebug = (env: Env): TokenDebug => ({
     cached: false,
     hasBastionUrl: !!env.BASTION_URL,
     hasVaultToken: !!env.BASTION_TOKEN,
-    vaultTokenPrefix: env.BASTION_TOKEN ? env.BASTION_TOKEN.substring(0, 12) : null,
     vaultStatus: null,
     vaultError: null,
 });
@@ -87,7 +85,7 @@ export const injectI18nIntoPath = (path: string, lang: string): string => {
     if (!lang) return path;
     if (path.includes('/STEPS/')) return path.replace('/STEPS/', `/i18n/${lang}/STEPS/`);
     const match = /^(.+\/SOM_[^/]+\/)(.+)$/.exec(path);
-    if (match) return `${match[1]}i18n/${lang}/${match[2]}`;
+    if (match) return `${capturedGroup(match, 1)}i18n/${lang}/${capturedGroup(match, 2)}`;
     return path;
 };
 
@@ -97,16 +95,21 @@ const SIMPLE_PATTERN = /^([^/]+)\/([^/]+)\/(.+)$/;
 
 export const parseGitHubUrl = (url: string): GitHubUrlParts | null => {
     const raw = RAW_PATTERN.exec(url);
-    if (raw) return { owner: raw[1], repo: raw[2], branch: raw[3], path: raw[4] };
+    if (raw) return { owner: capturedGroup(raw, 1), repo: capturedGroup(raw, 2), branch: capturedGroup(raw, 3), path: capturedGroup(raw, 4) };
     const blob = BLOB_PATTERN.exec(url);
-    if (blob) return { owner: blob[1], repo: blob[2], branch: blob[3], path: blob[4] };
+    if (blob) return { owner: capturedGroup(blob, 1), repo: capturedGroup(blob, 2), branch: capturedGroup(blob, 3), path: capturedGroup(blob, 4) };
     const simple = SIMPLE_PATTERN.exec(url);
-    if (simple) return { owner: simple[1], repo: simple[2], branch: 'main', path: simple[3] };
+    if (simple) return { owner: capturedGroup(simple, 1), repo: capturedGroup(simple, 2), branch: 'main', path: capturedGroup(simple, 3) };
     return null;
 };
 
-const buildGitHubApiUrl = ({ owner, repo, branch, path }: GitHubUrlParts = {}): string  =>
-    `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch}`;
+const buildGitHubApiUrl = ({ owner, repo, branch, path }: GitHubUrlParts): string => {
+    // Callers validate owner/repo/path first; an absent one here is a caller bug, never an `undefined` in the URL.
+    if (!owner || !repo || path === undefined || path === null) {
+        throw new Error('buildGitHubApiUrl: owner, repo and path are required');
+    }
+    return `${GITHUB_API_BASE}/repos/${owner}/${repo}/contents/${path}?ref=${branch ?? 'main'}`;
+};
 
 export const fetchRawContent = async (env: Env, params: GitHubUrlParts): Promise<{
     response: Response;
@@ -137,3 +140,10 @@ export const fetchDirectoryListing = async (env: Env, params: GitHubUrlParts): P
     if (token) headers.Authorization = `Bearer ${token}`;
     return fetch(apiUrl, { headers });
 };
+
+/** A capture group the pattern always fills once it matched: its absence is a pattern bug, raised loud. */
+function capturedGroup(match: RegExpExecArray, index: number): string {
+    const value = match[index];
+    if (value === undefined) throw new Error(`capture group ${index} missing in ${match[0].slice(0, 80)}`);
+    return value;
+}
