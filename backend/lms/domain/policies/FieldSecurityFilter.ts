@@ -11,7 +11,7 @@ export const filterFields = <T extends object>(
   ownerEmail: string,
   sensitiveFields: string[] = ['connectionId', 'fileId']
 ): Partial<T> => {
-  if (viewerEmail === ownerEmail) return { ...data };
-  const hidden = new Set(sensitiveFields);
-  return Object.fromEntries(Object.entries(data).filter(([field]) => !hidden.has(field))) as Partial<T>;
+  const hidden = new Set(viewerEmail === ownerEmail ? [] : sensitiveFields);
+  const visible = Object.fromEntries(Object.entries(data).filter(([field]) => !hidden.has(field))) as Partial<T>;
+  return visible;
 };
