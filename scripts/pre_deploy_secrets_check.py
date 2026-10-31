@@ -11,9 +11,9 @@ D1 IDs…) ne passe plus par ici : elle vit dans le manifest tracké
 `env/<target>.public.json` + est vérifiée par les checks tpb-entropy C1/C2/C6 au
 commit. Doctrine 2026-07-15 § PUBLIC-ENV.
 
-Gate coherence optionnel : `--target <env>` lance `materialize_public_env.py --check`
+`--target <env>` est obligatoire : ce qu'un déploiement lit dépend de son env (un chemin déclaré
+`vault-production-only` n'est requis qu'en production). Il lance aussi `materialize_public_env.py --check`
 (manifest présent + schéma + placeholders wrangler résolubles) AVANT le vault check.
-Remplace l'ancienne lecture vault `build_env` par une validation locale hermétique.
 
 Usage :
   python3 pre_deploy_secrets_check.py \
@@ -23,7 +23,7 @@ Usage :
     --bastion-token $BASTION_TOKEN_STAGING
 
 Exit codes :
-  0  tous les secrets référencés présents + manifest cohérent (si --target)
+  0  tous les secrets requis pour la cible présents + manifest cohérent
   1  un ou plusieurs secrets manquants / manifest incohérent — détail en stderr
   2  bad args / bastion unreachable
 """
@@ -49,12 +49,17 @@ from pathlib import Path
 # A resolved path whose absence the code handles itself (a provider credential used only by one connection type, a
 # config table without which a job is a no-op) is DECLARED optional on the call line or the line above :
 #   `// vault-optional: <reason>`. It is checked and its absence printed, but it does not block the deploy.
+# A resolved path read only by code that runs in production (a production-only cron holding a credential that acts on
+# the whole Cloudflare account) is DECLARED on the call line or the line above :
+#   `// vault-production-only: <reason>`. Required for `production`, listed and not required for dev and staging.
 # Anything else stays a hard error : an unresolved reference is never silently ignored.
 SECRET_CALL_PATTERN = re.compile(r"(?:\.getSecret|\bcreateLazyVaultSecret)\s*\(\s*([^,)]+)")
 STRING_LITERAL = re.compile(r"^(?:\"([^\"]+)\"|'([^']+)'|`([^`$]+)`)$")
 VAULT_CONSTANT = re.compile(r"\bconst\s+(\w+)\s*=\s*[\"'`](tpb/[^\"'`$]+)[\"'`]")
 DYNAMIC_DECLARATION = re.compile(r"vault-dynamic-path:\s*(\S+)\s*(?:—|-)\s*(.+)")
 OPTIONAL_DECLARATION = re.compile(r"vault-optional:\s*(\S.+)")
+PRODUCTION_ONLY_DECLARATION = re.compile(r"vault-production-only:\s*(\S.+)")
+TARGETS = ("dev", "staging", "production")
 IDENTIFIER = re.compile(r"^[A-Za-z_$][\w$]*$")
 
 # The Worker source only — it never runs a .py (Python admin scripts are not deployed code).
@@ -116,9 +121,14 @@ def _source_files(app_path: Path) -> list[Path]:
     return files
 
 
-def scan_secret_refs(app_path: Path) -> tuple[set[str], list[tuple[str, str, str]], list[tuple[str, str, str]]]:
-    """Return (required vault paths, declared dynamic references as (file, prefix, reason), declared optional paths as
-    (file, path, reason)). Raises on the unresolved."""
+def scan_secret_refs(
+    app_path: Path, target: str,
+) -> tuple[set[str], list[tuple[str, str, str]], list[tuple[str, str, str]], list[tuple[str, str, str]]]:
+    """Return, for one deploy `target`, (required vault paths, declared dynamic references as (file, prefix, reason),
+    declared optional paths as (file, path, reason), declared production-only paths as (file, path, reason)).
+    A production-only path is required for `production` only. Raises on the unresolved."""
+    if target not in TARGETS:
+        raise ValueError(f"target must be one of {TARGETS}, not {target!r}")
     sources: dict[Path, str] = {}
     app_constants: dict[str, set[str]] = {}
     for f in _source_files(app_path):
@@ -132,6 +142,7 @@ def scan_secret_refs(app_path: Path) -> tuple[set[str], list[tuple[str, str, str
     refs: set[str] = set()
     dynamic: list[tuple[str, str, str]] = []
     optional: list[tuple[str, str, str]] = []
+    production_only: list[tuple[str, str, str]] = []
     for f, text in sources.items():
         code = _strip_comments(text)
         local = dict(VAULT_CONSTANT.findall(code))
@@ -153,8 +164,13 @@ def scan_secret_refs(app_path: Path) -> tuple[set[str], list[tuple[str, str, str
                     continue
             if path is not None:
                 why = next((m for m in map(OPTIONAL_DECLARATION.search, near) if m), None)
+                only = next((m for m in map(PRODUCTION_ONLY_DECLARATION.search, near) if m), None)
                 if why:
                     optional.append((str(f.relative_to(app_path)), path, why.group(1).strip()))
+                elif only:
+                    production_only.append((str(f.relative_to(app_path)), path, only.group(1).strip()))
+                    if target == "production":
+                        refs.add(path)
                 else:
                     refs.add(path)
                 continue
@@ -163,12 +179,12 @@ def scan_secret_refs(app_path: Path) -> tuple[set[str], list[tuple[str, str, str
                 dynamic.append((str(f.relative_to(app_path)), declared.group(1), declared.group(2).strip())); continue
             raise RuntimeError(f"Unresolved vault reference in {f.relative_to(app_path)}:{line + 1} — use a literal path or "
                                "an app constant, or declare a data-driven path with `// vault-dynamic-path: <prefix> — <reason>`")
-    return refs, dynamic, optional
+    return refs, dynamic, optional, production_only
 
 
-def find_secret_refs(app_path: Path) -> set[str]:
-    """Walk app_path, return set of unique secret paths referenced in source."""
-    return scan_secret_refs(app_path)[0]
+def find_secret_refs(app_path: Path, target: str) -> set[str]:
+    """The vault paths a deploy of app_path to `target` requires."""
+    return scan_secret_refs(app_path, target)[0]
 
 
 def check_vault_has(bastion_url: str, bastion_token: str, path: str,
@@ -242,10 +258,10 @@ def main() -> int:
                         help="Bearer PAT used to probe the bastion vault for the required secret paths.")
     parser.add_argument(
         "--target",
-        choices=("dev", "staging", "production"),
-        default=None,
-        help="If set, run materialize_public_env.py --check <target> first "
-        "(manifest coherence gate).",
+        choices=TARGETS,
+        required=True,
+        help="Env of the deploy: what it reads depends on it (vault-production-only), and "
+        "materialize_public_env.py --check <target> runs first (manifest coherence gate).",
     )
     parser.add_argument(
         "--skip-vault-check",
@@ -254,9 +270,6 @@ def main() -> int:
     )
     args = parser.parse_args()
     if not args.bastion_url:
-        if not args.target:
-            print("ERROR: provide --bastion-url OR --target (to derive it).", file=sys.stderr)
-            return 2
         manifest = args.app_path / "env" / f"{args.target}.public.json"
         try:
             args.bastion_url = str(json.loads(manifest.read_text())["backend"]["BASTION_URL"]).rstrip("/")
@@ -271,21 +284,24 @@ def main() -> int:
 
     # Coherence gate — validate the tracked manifest + wrangler placeholders
     # hermetically before any deploy work. Replaces the old vault build_env read.
-    if args.target is not None:
-        rc = _materialize_check(args.app_path, args.target)
-        if rc != 0:
-            print(
-                f"FAIL : manifest coherence check failed for target "
-                f"{args.target!r} (materialize_public_env --check exit {rc}).",
-                file=sys.stderr,
-            )
-            return 1
+    rc = _materialize_check(args.app_path, args.target)
+    if rc != 0:
+        print(
+            f"FAIL : manifest coherence check failed for target "
+            f"{args.target!r} (materialize_public_env --check exit {rc}).",
+            file=sys.stderr,
+        )
+        return 1
 
     try:
-        refs, dynamic, optional = scan_secret_refs(args.app_path)
+        refs, dynamic, optional, production_only = scan_secret_refs(args.app_path, args.target)
     except RuntimeError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
+    if args.target != "production":
+        for file, path, reason in production_only:
+            if path not in refs:  # required elsewhere in the app wins
+                print(f"  ⊘ {path} (prod seulement : {reason}) — {file}")
     for file, prefix, reason in dynamic:
         print(f"  ~ {prefix}* (dynamique : {reason}) — {file}")
     optional = [o for o in optional if o[1] not in refs]  # required elsewhere in the app wins
