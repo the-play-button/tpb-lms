@@ -42,13 +42,20 @@ def failed_step(log_text: str) -> "tuple[str, bool, list[str]]":
     """(step name, failed inside that step?, its output lines). The last started step without its ok marker failed;
     when the last started step ended ok, the failure came from a later non-`run` step (an action)."""
     name, lines, ended_ok = "unknown (no step marker in the log)", [], False
+    previous_failure = None
+    started = False
     for line in log_text.splitlines():
         if line.startswith(STEP_MARKER):
+            if started and not ended_ok:
+                previous_failure = (name, True, lines)
+            started = True
             name, lines, ended_ok = line[len(STEP_MARKER):].strip() or "unnamed step", [], False
         elif line.startswith(STEP_OK_MARKER):
             ended_ok = True
         else:
             lines.append(line)
+    if ended_ok and previous_failure is not None:
+        return previous_failure
     return name, not ended_ok, lines
 
 
