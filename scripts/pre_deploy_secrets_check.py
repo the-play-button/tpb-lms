@@ -53,7 +53,12 @@ from pathlib import Path
 # the whole Cloudflare account) is DECLARED on the call line or the line above :
 #   `// vault-production-only: <reason>`. Required for `production`, listed and not required for dev and staging.
 # Anything else stays a hard error : an unresolved reference is never silently ignored.
-SECRET_CALL_PATTERN = re.compile(r"(?:\.getSecret|\bcreateLazyVaultSecret)\s*\(\s*([^,)]+)")
+# A secret read in ANOTHER organisation's vault (`createLazyVaultSecret(path, { organizationId: X })`, X a literal or an
+# app constant `const X = 'org_…'`) is checked in that organisation (`TPB_BASTION_ACTIVE_ORG_ID`, the CLI's --org) :
+# 2026-11-01, the WGE bridge reads its HubSpot token in the WGE org vault and every gate judged it unreadable.
+SECRET_CALL_PATTERN = re.compile(r"(?:\.getSecret|\bcreateLazyVaultSecret)\s*\(\s*([^,)]+)(?:,\s*\{([^}]*)\})?")
+ORGANIZATION_OPTION = re.compile(r"\borganizationId\s*:\s*([^,}\s]+)")
+ORGANIZATION_CONSTANT = re.compile(r"\bconst\s+(\w+)\s*=\s*[\"'`](org_[^\"'`$]+)[\"'`]")
 STRING_LITERAL = re.compile(r"^(?:\"([^\"]+)\"|'([^']+)'|`([^`$]+)`)$")
 VAULT_CONSTANT = re.compile(r"\bconst\s+(\w+)\s*=\s*[\"'`](tpb/[^\"'`$]+)[\"'`]")
 DYNAMIC_DECLARATION = re.compile(r"vault-dynamic-path:\s*(\S+)\s*(?:—|-)\s*(.+)")
@@ -123,14 +128,17 @@ def _source_files(app_path: Path) -> list[Path]:
 
 def scan_secret_refs(
     app_path: Path, target: str,
-) -> tuple[set[str], list[tuple[str, str, str]], list[tuple[str, str, str]], list[tuple[str, str, str]]]:
+) -> tuple[set[str], list[tuple[str, str, str]], list[tuple[str, str, str]], list[tuple[str, str, str]], dict[str, str]]:
     """Return, for one deploy `target`, (required vault paths, declared dynamic references as (file, prefix, reason),
-    declared optional paths as (file, path, reason), declared production-only paths as (file, path, reason)).
-    A production-only path is required for `production` only. Raises on the unresolved."""
+    declared optional paths as (file, path, reason), declared production-only paths as (file, path, reason), the
+    organisation each cross-organisation path is read in). A production-only path is required for `production` only.
+    Raises on the unresolved."""
     if target not in TARGETS:
         raise ValueError(f"target must be one of {TARGETS}, not {target!r}")
     sources: dict[Path, str] = {}
     app_constants: dict[str, set[str]] = {}
+    organization_constants: dict[str, set[str]] = {}
+    organizations: dict[str, str] = {}
     for f in _source_files(app_path):
         try:
             text = f.read_text(encoding="utf-8", errors="ignore")
@@ -139,6 +147,8 @@ def scan_secret_refs(
         sources[f] = text
         for name, value in VAULT_CONSTANT.findall(_strip_comments(text)):
             app_constants.setdefault(name, set()).add(value)
+        for name, value in ORGANIZATION_CONSTANT.findall(_strip_comments(text)):
+            organization_constants.setdefault(name, set()).add(value)
     refs: set[str] = set()
     dynamic: list[tuple[str, str, str]] = []
     optional: list[tuple[str, str, str]] = []
@@ -163,6 +173,16 @@ def scan_secret_refs(
                 elif _is_forwarded_parameter(code, match.start(), argument):
                     continue
             if path is not None:
+                option = ORGANIZATION_OPTION.search(match.group(2) or "")
+                if option:
+                    organization = option.group(1).strip("'\"`")
+                    if not organization.startswith("org_"):
+                        candidates = organization_constants.get(option.group(1), set())
+                        if len(candidates) != 1:
+                            raise RuntimeError(f"Unresolved organizationId {option.group(1)} in {f.relative_to(app_path)}:{line + 1} "
+                                               "— use a literal or one app constant `const NAME = 'org_…'`")
+                        organization = next(iter(candidates))
+                    organizations[path] = organization
                 why = next((m for m in map(OPTIONAL_DECLARATION.search, near) if m), None)
                 only = next((m for m in map(PRODUCTION_ONLY_DECLARATION.search, near) if m), None)
                 if why:
@@ -179,7 +199,7 @@ def scan_secret_refs(
                 dynamic.append((str(f.relative_to(app_path)), declared.group(1), declared.group(2).strip())); continue
             raise RuntimeError(f"Unresolved vault reference in {f.relative_to(app_path)}:{line + 1} — use a literal path or "
                                "an app constant, or declare a data-driven path with `// vault-dynamic-path: <prefix> — <reason>`")
-    return refs, dynamic, optional, production_only
+    return refs, dynamic, optional, production_only, organizations
 
 
 def find_secret_refs(app_path: Path, target: str) -> set[str]:
@@ -187,12 +207,20 @@ def find_secret_refs(app_path: Path, target: str) -> set[str]:
     return scan_secret_refs(app_path, target)[0]
 
 
+def find_secret_organizations(app_path: Path, target: str) -> dict[str, str]:
+    """The organisation each cross-organisation vault path of app_path is read in (absent = the identity's own)."""
+    return scan_secret_refs(app_path, target)[4]
+
+
 def check_vault_has(bastion_url: str, bastion_token: str, path: str,
-                    target: str | None = None) -> bool:
-    """Check readability through CLI → Python → TypeScript; never return a secret."""
+                    target: str | None = None, organization_id: str | None = None) -> bool:
+    """Check readability through CLI → Python → TypeScript, in `organization_id`'s vault when given ; never return a
+    secret."""
     env = {**os.environ, "BASTION_URL": bastion_url, "BASTION_TOKEN": bastion_token}
     if target is not None:
         env["TPB_TARGET"] = target
+    if organization_id is not None:
+        env["TPB_BASTION_ACTIVE_ORG_ID"] = organization_id
     try:
         result = subprocess.run(
             ["tpb", "bastion", "check-secret", "--path", path],
@@ -294,7 +322,7 @@ def main() -> int:
         return 1
 
     try:
-        refs, dynamic, optional, production_only = scan_secret_refs(args.app_path, args.target)
+        refs, dynamic, optional, production_only, organizations = scan_secret_refs(args.app_path, args.target)
     except RuntimeError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
@@ -310,7 +338,7 @@ def main() -> int:
     if optional and args.bastion_token and not args.skip_vault_check:
         for _, path, reason in optional:
             try:
-                ready = check_vault_has(args.bastion_url, args.bastion_token, path, args.target)
+                ready = check_vault_has(args.bastion_url, args.bastion_token, path, args.target, organizations.get(path))
             except RuntimeError as e:
                 print(f"ERROR: {e}", file=sys.stderr)
                 return 2
@@ -334,7 +362,7 @@ def main() -> int:
     missing: list[str] = []
     for ref in sorted(refs):
         try:
-            if check_vault_has(args.bastion_url, args.bastion_token, ref, args.target):
+            if check_vault_has(args.bastion_url, args.bastion_token, ref, args.target, organizations.get(ref)):
                 print(f"  ✓ {ref}")
             else:
                 print(f"  ✗ {ref} — NOT READY (no readable nonempty value)")
