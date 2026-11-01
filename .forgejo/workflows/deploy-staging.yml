@@ -18,7 +18,8 @@ jobs:
     environment: staging
     timeout-minutes: 20
     env:
-      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN_STAGING }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN_CICD_ACCOUNT_THEPLAYBUTTON_AI }}
+      CLOUDFLARE_ACCOUNT_ID: '79d621c1d8e20c3c85009b30099b96e0'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -250,9 +251,9 @@ jobs:
       - name: Report failure to telemetry
         if: failure()
         env:
-          TPB_CI_REDACT_VARS: "BASTION_TOKEN_STAGING,CF_TOKEN_STAGING,FORGEJO_PAT_RO,FORGEJO_PYPI_TOKEN,NPM_AUTH_TOKEN"
+          TPB_CI_REDACT_VARS: "BASTION_TOKEN_STAGING,CF_TOKEN_CICD_ACCOUNT_THEPLAYBUTTON_AI,FORGEJO_PAT_RO,FORGEJO_PYPI_TOKEN,NPM_AUTH_TOKEN"
           BASTION_TOKEN_STAGING: ${{ secrets.BASTION_TOKEN_STAGING }}
-          CF_TOKEN_STAGING: ${{ secrets.CF_TOKEN_STAGING }}
+          CF_TOKEN_CICD_ACCOUNT_THEPLAYBUTTON_AI: ${{ secrets.CF_TOKEN_CICD_ACCOUNT_THEPLAYBUTTON_AI }}
           FORGEJO_PAT_RO: ${{ secrets.FORGEJO_PAT_RO }}
           FORGEJO_PYPI_TOKEN: ${{ secrets.FORGEJO_PYPI_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
