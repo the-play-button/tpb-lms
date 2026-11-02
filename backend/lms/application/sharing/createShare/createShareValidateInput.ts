@@ -4,7 +4,7 @@ import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 const ShareContentInputSchema = z.object({
   refId: z.string().min(1, 'refId is required'),
   email: z.string().email('Valid email is required'),
-  role: z.enum(['READ', 'WRITE'], { errorMap: () => ({ message: 'role must be READ or WRITE' }) }),
+  role: z.enum(['READ', 'WRITE'], { error: 'role must be READ or WRITE' }),
 });
 
 export type ShareContentInput = z.infer<typeof ShareContentInputSchema>;

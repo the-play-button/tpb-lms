@@ -7,18 +7,18 @@
     "dev": "wrangler dev --config backend/wrangler-dev.toml",
     "db:migrate:remote": "wrangler d1 migrations apply lms-db --remote --config backend/wrangler-dev.toml",
     "deploy": "bash scripts/deploy.sh dev",
-    "deploy:prod": "pnpm run typecheck && echo '\\n\u2717 Direct wrangler deploy --config backend/wrangler-dev.toml --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
+    "deploy:prod": "pnpm run typecheck && echo '\\n✗ Direct wrangler deploy --config backend/wrangler-dev.toml --env production INTERDIT. Use:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli --target production deploy-release-train deploy lms\\nor:\\n  python -m Apps.the-play-button.tpb-cock.agent.scripts.tpb_cli promote worker lms --to production' && exit 1",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit -p backend/tsconfig.json",
-    "deploy:staging": "echo '\\n\u2717 Direct wrangler deploy --env staging INTERDIT. Push main\u2192staging (git push origin main:staging \u2192 deploy-staging.yml).' && exit 1",
-    "deploy:production": "echo '\\n\u2717 Direct wrangler deploy --env production INTERDIT. Use the weekly release train.' && exit 1"
+    "deploy:staging": "echo '\\n✗ Direct wrangler deploy --env staging INTERDIT. Push main→staging (git push origin main:staging → deploy-staging.yml).' && exit 1",
+    "deploy:production": "echo '\\n✗ Direct wrangler deploy --env production INTERDIT. Use the weekly release train.' && exit 1"
   },
   "dependencies": {
     "@the-play-button/tpb-sdk-js": "31.3.0",
     "hono": "^4.7.10",
-    "zod": "^3.25.76"
+    "zod": "^4.6.6"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260217.0",
@@ -34,7 +34,15 @@
   "packageManager": "pnpm@10.17.1",
   "pnpm": {
     "overrides": {
-      "zod@>=4.0.0 <5.0.0": "4.5.4"
+      "zod@>=4.0.0 <5.0.0": "4.6.7",
+      "brace-expansion@>=1.0.0 <1.1.20": "^1.1.20",
+      "brace-expansion@>=5.0.0 <5.0.11": "^5.0.11",
+      "js-yaml@>=4.0.0 <4.3.2": "^4.3.2",
+      "source-map-js@>=1.0.0 <1.2.2": "^1.2.2",
+      "vite@>=8.0.0 <8.1.6": "^8.1.6",
+      "dompurify@>=3.0.0 <3.4.17": "^3.4.17",
+      "zod@>=3.0.0 <4.0.0": "4.6.7",
+      "undici@>=7.0.0 <7.30.1": "^7.30.1"
     }
   }
 }
