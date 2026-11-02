@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { fail, succeed, type Result } from '../../../domain/core/Result.js';
 
 const SharedWithMeInputSchema = z.object({
-  userEmail: z.string().email('Invalid user email'),
+  userEmail: z.email({ error: 'Invalid user email' }),
 });
 
 export type SharedWithMeValidatedInput = z.infer<typeof SharedWithMeInputSchema>;
