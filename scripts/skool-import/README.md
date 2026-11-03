@@ -32,6 +32,24 @@ Loom/YouTube embeds. Skool CDN verified public (HTTP 200 without auth) on covers
 SA + Bearer via `BastionClient.from_devcontainer()`. Run from the workspace root (or any dir
 where `.devcontainer/.env` resolves).
 
+## Where the course copies are
+
+Since 2026-11-03 (tpb-cogs sub-05, plan 13) the course copies live on the TPB Drive (connection
+`conn_googledrive_e60bd652d19`, organization `org_tpb`), no longer on CORSAIR:
+
+| Drive folder | What it holds |
+|---|---|
+| `Cours/skool-mirrors/` | the Skool mirrors (`generation-ia`, `ai-fashion-house`, …) |
+| `Cours/skool_makerschool_scrape/` | the Maker School scrape, its videos included |
+| `Cours/pa02-resources/` | the course resources of the roadmap project (`Nick Saraev - Maker School`, …) |
+| `Cours/skool-mirrors-campaign/` | the capture campaign's mirrors and their `external_resources` |
+
+The scripts read a local folder: fetch one first, then pass it as `--data-root` (or `--gpts-dir`):
+
+```bash
+python3 fetch_course_copy.py --folder "Cours/pa02-resources/Nick Saraev - Maker School" --dest <empty-folder>
+```
+
 ## Usage
 
 ```bash

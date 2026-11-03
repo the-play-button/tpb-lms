@@ -2,14 +2,18 @@
 """Re-PATCH the AI Fashion House "Chat GPT bots" lesson with the 8 CLEAN reconstructed
 GPT prompt-system docs (replacing the earlier flattened innerText dump).
 
-Reads the 8 reconstructed `.md` from CORSAIR external_resources/gpts/, builds a
-`resourcesJson` array of {title, content}, and PATCHes the lesson class.
+Reads the 8 reconstructed `.md` from the folder given by `--gpts-dir`: the course's `external_resources/gpts/`, on the
+TPB Drive since 2026-11-03 (`Cours/skool-mirrors/ai-fashion-house/external_resources/gpts`), fetched for this run by
+`fetch_course_copy.py`. Builds a `resourcesJson` array of {title, content}, and PATCHes the lesson class.
+
+Usage: patch_gpt_resources.py --gpts-dir <folder fetched from the Drive>
 
 Target prod domain `lms-api.theplaybutton.ai` (serves the dev-config worker → dev vault PAT).
 Auth: `app_lms` PAT (vault `tpb/apps/lms/bastion_token`).
 """
 from __future__ import annotations
 
+import argparse
 import os
 import sys
 from pathlib import Path
@@ -19,10 +23,6 @@ from lms_api_client import authenticated_lms_client  # noqa: E402
 
 LMS = os.environ.get("LMS_API_URL", "https://lms-api.theplaybutton.ai")
 LESSON_ID = "les_72a7ed15f6cd423e96136c5fb1146862"  # "Chat GPT bots"
-
-GPTS = Path(
-    "/Volumes/CORSAIR/live/workspace/skool-mirrors/ai-fashion-house/external_resources/gpts"
-)
 
 # (file, human title) — ordered: master gen → editor → specialized lenses → video
 DOCS = [
@@ -38,9 +38,12 @@ DOCS = [
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--gpts-dir", required=True, type=Path, help="the course's external_resources/gpts, fetched from the Drive for this run")
+    gpts = parser.parse_args().gpts_dir
     resources = []
     for fname, title in DOCS:
-        p = GPTS / fname
+        p = gpts / fname
         if not p.exists():
             print(f"FATAL: missing {p}", file=sys.stderr)
             sys.exit(2)
