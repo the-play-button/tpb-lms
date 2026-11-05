@@ -274,6 +274,38 @@ def _materialize_check(app_path: Path, target: str) -> int:
     return result.returncode
 
 
+def worker_name(config_path: Path, target: str) -> str:
+    """The name this deploy gives its Worker : the target's block when the toml has one, else the toml's own."""
+    import tomllib
+    config = tomllib.loads(config_path.read_text(encoding="utf-8"))
+    selected = config.get("env", {}).get(target, config) if target != "dev" else config
+    name = selected.get("name") or config.get("name")
+    if not isinstance(name, str) or not name:
+        raise RuntimeError(f"{config_path} names no Worker for {target}")
+    return name
+
+
+def registered_workers(registry_text: str) -> set[str]:
+    return set(re.findall(r"^- name: ([A-Za-z0-9_-]+)\s*$", registry_text, re.MULTILINE))
+
+
+def check_worker_registered(config_path: Path, registry_path: Path, target: str) -> int:
+    """The kill switch stops every 5 minutes a Worker its registry does not name : four did go down that way, deployed green
+    (2026-11-01). Refused here, before `wrangler deploy`, with the command that declares it. A registry that cannot be read refuses."""
+    name = worker_name(config_path, target)
+    workers = registered_workers(registry_path.read_text(encoding="utf-8"))
+    if not workers:
+        print(f"ERROR: {registry_path} names no Worker : refusing rather than deploying unchecked.", file=sys.stderr)
+        return 2
+    if name in workers:
+        print(f"  ✓ Worker {name} is in the kill switch's registry")
+        return 0
+    print(f"ERROR: Worker {name} is not in the kill switch's registry, which would stop it within 5 minutes. Declare it, then redeploy :\n"
+          f"  tpb cf-kill-switch registry create {name} --owner <email> --envs {target}\n"
+          f"  tpb cf-kill-switch registry update --target production", file=sys.stderr)
+    return 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     parser.add_argument("--app-path", required=True, type=Path,
@@ -296,7 +328,20 @@ def main() -> int:
         action="store_true",
         help="Print refs without querying bastion (debug mode)",
     )
+    parser.add_argument("--worker-config", type=Path, help="The deploy's wrangler file : its Worker must be in --worker-registry.")
+    parser.add_argument("--worker-registry", type=Path, help="tpb-devops's cf_workers_registry.yaml, fetched by the deploy job.")
     args = parser.parse_args()
+    if args.worker_config or args.worker_registry:
+        if not (args.worker_config and args.worker_registry):
+            print("ERROR: --worker-config and --worker-registry go together", file=sys.stderr)
+            return 2
+        try:
+            rc = check_worker_registered(args.worker_config, args.worker_registry, args.target)
+        except (OSError, ValueError, RuntimeError) as error:
+            print(f"ERROR: cannot judge the Worker's registration : {type(error).__name__}: {error}", file=sys.stderr)
+            return 2
+        if rc != 0:
+            return rc
     if not args.bastion_url:
         manifest = args.app_path / "env" / f"{args.target}.public.json"
         try:
