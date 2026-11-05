@@ -81,7 +81,7 @@ jobs:
           set -eu
           # recon-18: install the gate FROM SOURCE via cross-repo checkout (registry download is
           # CF-gated → hash-mismatch). Deps are public PyPI. rm before scanning (audit only this repo).
-          VENVROOT="$(mktemp -d)"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"   # job-unique + EXIT-cleanup (recon-18 v7 collision fix + 2026-10-14 ENOSPC fix : trap rm le venv ~92M, sinon fuite /tmp/tmp.* → disque runner plein → CI rouge fleet-wide)
+          VENVROOT="$(mktemp -d "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/entropy-gate.XXXXXX")"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"   # job-unique + EXIT-cleanup (recon-18 v7 collision fix + 2026-10-14 ENOSPC fix : trap rm le venv ~92M, sinon fuite /tmp/tmp.* → disque runner plein → CI rouge fleet-wide)
           python3 -m venv "$VENV" 2>/dev/null || { apt-get install -y -qq python3-venv >/dev/null 2>&1 && python3 -m venv "$VENV"; }
           # Keep the source outside the scanned app until this owned job finishes.
           ENTROPY_SOURCE="$VENVROOT/entropy"
@@ -116,13 +116,14 @@ jobs:
         env:
           BASTION_TOKEN: ${{ secrets.BASTION_TOKEN_DEV }}
           FORGEJO_PYPI_TOKEN: ${{ secrets.FORGEJO_PYPI_TOKEN }}
+          FORGEJO_PAT_RO: ${{ secrets.FORGEJO_PAT_RO }}
         run: |
           echo '::tpb-step::Gate — Pre-deploy secrets check (§ J3 restored)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
           set -eu
           # The check calls `tpb bastion check-secret` (tpb-cli >= 0.12.0) : the runner has no `tpb`, install it in a
           # job-unique venv removed on EXIT (no /tmp leak, no PATH side effect on later steps) — same index as tpb-cli CI.
-          VENVROOT="$(mktemp -d)"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"
+          VENVROOT="$(mktemp -d "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/entropy-gate.XXXXXX")"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"
           python3 -m venv "$VENV" 2>/dev/null || { apt-get install -y -qq python3-venv >/dev/null 2>&1 && python3 -m venv "$VENV"; }
           # Org index MIRRORED with wheel links rewritten to npm.tpb.sh : Forgejo lists files on its ROOT_URL
           # (git.theplaybutton.ai, behind CF Access) even when the index is read via npm.tpb.sh -> pip would download
@@ -133,7 +134,9 @@ jobs:
             curl -fsS -H "$H" "https://npm.tpb.sh/api/packages/the-play-button/pypi/simple/$p/"               | sed "s#https://git.theplaybutton.ai/#https://token:${FORGEJO_PYPI_TOKEN}@npm.tpb.sh/#g" > "$ORG_IDX/$p/index.html"
           done
           "$VENV/bin/pip" install --quiet             --index-url "file://$ORG_IDX/"             --extra-index-url https://pypi.org/simple/             "tpb-cli>=0.12.0"
-          PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target dev --bastion-token "$BASTION_TOKEN"
+          # The kill switch's registry, from its source : the deploy's application token has no right to the vault's mirror.
+          curl -fsS -H "Authorization: token $FORGEJO_PAT_RO" "${{ github.server_url }}/api/v1/repos/the-play-button/tpb-devops/raw/tpb-devops-budget-guard/data/cf_workers_registry.yaml" -o "$VENVROOT/workers-registry.yaml"
+          PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target dev --bastion-token "$BASTION_TOKEN" --worker-config backend/wrangler-dev.toml --worker-registry "$VENVROOT/workers-registry.yaml"
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
@@ -156,7 +159,12 @@ jobs:
           # run 250, 2026-10-30), makes the database unavailable while it runs, and its .sql stayed on the runner, lost with
           # the job. The bookmark is Cloudflare's own restore point (30 days); it is printed in this log and kept in
           # .d1-backup/. Restore: `wrangler d1 time-travel restore <db> --bookmark <bookmark>`.
-          if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-dev.toml; then
+          MIGRATIONS_DIR="$(sed -nE 's/^migrations_dir[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' backend/wrangler-dev.toml | head -1)"
+          if [ -z "$MIGRATIONS_DIR" ]; then
+            echo "backend/wrangler-dev.toml declares no migrations_dir — no D1 migrations for this worker"
+          else
+            MIGRATIONS_PATH="$(dirname backend/wrangler-dev.toml)/$MIGRATIONS_DIR"
+            [ -d "$MIGRATIONS_PATH" ] || { echo "FATAL: backend/wrangler-dev.toml declares migrations_dir=$MIGRATIONS_DIR but $MIGRATIONS_PATH does not exist"; exit 1; }
             mkdir -p .d1-backup
             grep 'database_name' backend/wrangler-dev.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
               echo "Recording the Time Travel restore point of $DB before migration (dev)..."
@@ -165,8 +173,6 @@ jobs:
               grep -q '"bookmark"' "$POINT" || { echo "FATAL: no Time Travel bookmark for $DB"; cat "$POINT"; exit 1; }
               cat "$POINT"
             done
-          else
-            echo "No db/migrations or no migrations_dir — skipping D1 backup"
           fi
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
@@ -177,12 +183,15 @@ jobs:
           echo '::tpb-step::Apply D1 migrations (dev)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
           set -x
-          if [ -d db/migrations ] && grep -q 'migrations_dir' backend/wrangler-dev.toml; then
+          MIGRATIONS_DIR="$(sed -nE 's/^migrations_dir[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' backend/wrangler-dev.toml | head -1)"
+          if [ -z "$MIGRATIONS_DIR" ]; then
+            echo "backend/wrangler-dev.toml declares no migrations_dir — no D1 migrations for this worker"
+          else
+            MIGRATIONS_PATH="$(dirname backend/wrangler-dev.toml)/$MIGRATIONS_DIR"
+            [ -d "$MIGRATIONS_PATH" ] || { echo "FATAL: backend/wrangler-dev.toml declares migrations_dir=$MIGRATIONS_DIR but $MIGRATIONS_PATH does not exist"; exit 1; }
             grep 'database_name' backend/wrangler-dev.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
               CI=1 npx -y wrangler@latest d1 migrations apply "$DB" --remote --config backend/wrangler-dev.toml
             done
-          else
-            echo "No db/migrations or no migrations_dir — skipping migrations"
           fi
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
