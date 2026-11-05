@@ -80,6 +80,11 @@ jobs:
           if ls eslint.config.* >/dev/null 2>&1; then
             # Judged here, after the push: heavy judging does not wait in front of main (Matthieu, « 2 ok », 2026-11-02). A debt is one
             # committed count, `.eslint-last-status.json`; no regression above it.
+            # A package outside the root workspace has its own installation: without it, typed rules read its imports as `any` (tpb-genai-agents).
+            for nested_lockfile in */pnpm-lock.yaml; do
+              [ -f "$nested_lockfile" ] || continue
+              ( cd "$(dirname "$nested_lockfile")" && pnpm install --no-frozen-lockfile --ignore-scripts )
+            done
             lint_rc=0
             pnpm exec eslint . --format json --output-file "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/eslint.json" || lint_rc=$?
             if [ "$lint_rc" -gt 1 ]; then echo "eslint did not complete (exit $lint_rc)"; exit "$lint_rc"; fi
