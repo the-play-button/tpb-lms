@@ -19,6 +19,7 @@ from pathlib import Path
 import httpx
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from lms_api_client import authenticated_lms_client, request_with_backoff  # noqa: E402
+from tpb_sdk.skills import skills_mirror_root  # noqa: E402
 
 LMS = "https://lms-api.theplaybutton.dev"
 
@@ -26,8 +27,10 @@ LMS = "https://lms-api.theplaybutton.dev"
 # never a machine-specific literal — this script runs on any dev's clone).
 WS = next(p for p in Path(__file__).resolve().parents if p.name == "the-play-button-business")
 CONTENT = WS / "Apps/the-play-button/tpb-lms/plans/2026-07-05_tpb-sales-masterclass-3.0-fresh/_content"
-MC = WS / "Brain/the-play-button/pb05-lead-sales-training-program/inputs/TPB Notion/TPB Sales On-Boarding/Master class"
-NS = WS / "Brain/the-play-button/pb15-customer-marketing-playbook/inputs/sme-sources/nick-saraev/cold-outbound-course"
+# The Brain projects live in the `Brain` skill of the KMS space since 2026-11-03 (tpb-cogs sub-05 plan 14).
+BRAIN_SKILL = skills_mirror_root() / "the-play-button-skills" / "Brain"
+MC = BRAIN_SKILL / "pb05-lead-sales-training-program/inputs/TPB Notion/TPB Sales On-Boarding/Master class"
+NS = BRAIN_SKILL / "pb15-customer-marketing-playbook/inputs/sme-sources/nick-saraev/cold-outbound-course"
 
 # Nick Saraev's cold-outbound course is ONE YouTube video (uSTGNHGFOAo). Each part is a
 # timestamped segment — lessons embed the video at the part's start (transcript = notes
