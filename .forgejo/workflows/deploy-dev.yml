@@ -153,6 +153,9 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Backup D1 pre-migration (§ G3 — Time Travel restore point before schema change)
+        # Bounded : a wrangler that hangs fails this step, named, instead of the job deadline (tpb-kms deploy-production
+        # #373, 2026-11-05 : the migration step silent for 20 minutes). tpb-devops sub-54 plan 03.1.
+        timeout-minutes: 10
         run: |
           echo '::tpb-step::Backup D1 pre-migration (§ G3 — Time Travel restore point before schema change)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -181,6 +184,9 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Apply D1 migrations (dev)
+        # Bounded : a wrangler that hangs fails this step, named, instead of the job deadline (tpb-kms deploy-production
+        # #373, 2026-11-05 : the migration step silent for 20 minutes). tpb-devops sub-54 plan 03.1.
+        timeout-minutes: 10
         run: |
           echo '::tpb-step::Apply D1 migrations (dev)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -192,7 +198,14 @@ jobs:
             MIGRATIONS_PATH="$(dirname backend/wrangler-dev.toml)/$MIGRATIONS_DIR"
             [ -d "$MIGRATIONS_PATH" ] || { echo "FATAL: backend/wrangler-dev.toml declares migrations_dir=$MIGRATIONS_DIR but $MIGRATIONS_PATH does not exist"; exit 1; }
             grep 'database_name' backend/wrangler-dev.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
-              CI=1 npx -y wrangler@latest d1 migrations apply "$DB" --remote --config backend/wrangler-dev.toml
+              # One read first, one apply, and a stop at the first « overloaded » : never a replay on a loaded database
+              # (production bastion 168, 2026-11-05 10:10 UTC : 204 replays, the bastion answered 401 to the portfolio).
+              HEALTH="$(CI=1 npx -y wrangler@latest d1 execute "$DB" --remote --command "SELECT 1 AS alive;" --config backend/wrangler-dev.toml 2>&1)" || { echo "$HEALTH"; echo "FATAL: $DB unreadable before its migrations"; exit 1; }
+              if printf '%s' "$HEALTH" | grep -qi overloaded; then echo "FATAL: $DB is overloaded — not migrated now"; exit 1; fi
+              APPLY="$(CI=1 npx -y wrangler@latest d1 migrations apply "$DB" --remote --config backend/wrangler-dev.toml 2>&1)" && RC=0 || RC=$?
+              echo "$APPLY"
+              if printf '%s' "$APPLY" | grep -qi overloaded; then echo "FATAL: $DB answered overloaded while migrating — stopped, no replay"; exit 1; fi
+              [ "$RC" -eq 0 ] || exit "$RC"
             done
           fi
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"

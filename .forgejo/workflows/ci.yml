@@ -72,6 +72,36 @@ jobs:
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
+      - name: Gate — Eslint, the whole tree (if an eslint configuration is present)
+        timeout-minutes: 8
+        run: |
+          echo '::tpb-step::Gate — Eslint, the whole tree (if an eslint configuration is present)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          if ls eslint.config.* >/dev/null 2>&1; then
+            # Judged here, after the push: heavy judging does not wait in front of main (Matthieu, « 2 ok », 2026-11-02). A debt is one
+            # committed count, `.eslint-last-status.json`; no regression above it.
+            lint_rc=0
+            pnpm exec eslint . --format json --output-file "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/eslint.json" || lint_rc=$?
+            if [ "$lint_rc" -gt 1 ]; then echo "eslint did not complete (exit $lint_rc)"; exit "$lint_rc"; fi
+            node -e '
+              const fs=require("node:fs");
+              const results=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
+              if(!results.length)throw Error("eslint judged no file");
+              const baseline=fs.existsSync(".eslint-last-status.json")?JSON.parse(fs.readFileSync(".eslint-last-status.json","utf8")).eslint_errors:0;
+              const errors=results.reduce((sum,result)=>sum+result.errorCount,0);
+              console.log(`eslint: ${errors} errors, ${results.length} files, baseline ${baseline}`);
+              if(errors>baseline){
+                let shown=0;
+                for(const result of results)for(const message of result.messages)if(message.severity===2&&shown++<40)console.log(`${result.filePath}:${message.line}:${message.column} ${message.message} ${message.ruleId||""}`);
+                process.exit(1);
+              }
+            ' "$RUNNER_TEMP/eslint.json"
+          else
+            echo "no eslint configuration in this repository"
+          fi
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
       - name: Checkout tpb-entropy (gate source)
         uses: actions/checkout@v4
         with:
