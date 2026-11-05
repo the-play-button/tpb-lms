@@ -121,6 +121,17 @@ jobs:
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
+      # Before the secrets check : a template app's wrangler-<env>.toml exists only once rendered, and the check reads
+      # the Worker's name from it (tpb-ats deploy-dev 78 : No such file 'wrangler-dev.toml').
+      - name: Materialize public env (staging)
+        run: |
+          echo '::tpb-step::Materialize public env (staging)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          python3 scripts/materialize_public_env.py staging
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
+
       - name: Gate — Pre-deploy secrets check (§ J3 restored)
         env:
           BASTION_TOKEN: ${{ secrets.BASTION_TOKEN_STAGING }}
@@ -146,15 +157,6 @@ jobs:
           # The kill switch's registry, from its source : the deploy's application token has no right to the vault's mirror.
           curl -fsS -H "Authorization: token $FORGEJO_PAT_RO" "${{ github.server_url }}/api/v1/repos/the-play-button/tpb-devops/raw/tpb-devops-budget-guard/data/cf_workers_registry.yaml" -o "$VENVROOT/workers-registry.yaml"
           PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target staging --bastion-token "$BASTION_TOKEN" --worker-config backend/wrangler-staging.toml --worker-registry "$VENVROOT/workers-registry.yaml"
-          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
-          __tpb_rc=${PIPESTATUS[0]}
-          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
-
-      - name: Materialize public env (staging)
-        run: |
-          echo '::tpb-step::Materialize public env (staging)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
-          {
-          python3 scripts/materialize_public_env.py staging
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
