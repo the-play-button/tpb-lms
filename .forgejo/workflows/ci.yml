@@ -6,6 +6,9 @@ name: ci
 on:
   push:
     branches: [main]
+    # A push of plans alone runs nothing and cancels nothing : 49 of tpb-fleet's 73 runs over 48 h saw only plans change
+    # (2026-11-06). The push hook judges those files, and the next run of code reads the whole tree.
+    paths-ignore: ['plans/**', 'TODO.md']
   pull_request:
     branches: [main]
 
