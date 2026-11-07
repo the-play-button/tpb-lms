@@ -11,12 +11,15 @@ on:
     paths-ignore: ['plans/**', 'TODO.md']
   pull_request:
     branches: [main]
+  # `tpb ci run` judges any commit, on main or not, pushed under refs/tpb-ci/<id> : the same judge as main, on demand
+  # (plan 07.1.1 of tpb-devops/plans/2026-11-01_build-tooling-shared-cache-forgejo).
+  workflow_dispatch:
 
 jobs:
   ci:
     name: ci
     runs-on: tpb-staging-runner
-    timeout-minutes: 104
+    timeout-minutes: 120
     steps:
       - name: Checkout
         timeout-minutes: 36
@@ -69,7 +72,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Unit tests (vitest)
-        timeout-minutes: 16
+        timeout-minutes: 32
         run: |
           echo '::tpb-step::Gate — Unit tests (vitest)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -114,6 +117,11 @@ jobs:
       - name: Gate — Eslint, the whole tree (if an eslint configuration is present)
         timeout-minutes: 10
         if: success() || failure()
+        # One typed program for the whole tree: tpb-crm peaks at 3.3 GB, over Node's default 2 GB heap on a 7.7 GB runner
+        # (plan 07.1 of tpb-devops/plans/2026-11-01_build-tooling-shared-cache-forgejo, run #392). Split by folder, its
+        # backend/crm alone still needs 2.3 GB and the passes cost 26 % more time.
+        env:
+          NODE_OPTIONS: --max-old-space-size=4096
         run: |
           echo '::tpb-step::Gate — Eslint, the whole tree (if an eslint configuration is present)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {

@@ -15,18 +15,20 @@ on:
 jobs:
   deploy-staging:
     runs-on: tpb-staging-runner
+    timeout-minutes: 160
     environment: staging
-    timeout-minutes: 20
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN_CICD_ACCOUNT_THEPLAYBUTTON_AI }}
       CLOUDFLARE_ACCOUNT_ID: '79d621c1d8e20c3c85009b30099b96e0'
     steps:
       - name: Checkout
+        timeout-minutes: 36
         uses: actions/checkout@v4
         with:
           ref: ${{ inputs.sha }}
 
       - name: Setup pnpm via corepack
+        timeout-minutes: 2
         run: |
           echo '::tpb-step::Setup pnpm via corepack' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -37,6 +39,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Inject npm auth token (global ~/.npmrc)
+        timeout-minutes: 2
         env:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
@@ -51,6 +54,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Install dependencies
+        timeout-minutes: 2
         run: |
           echo '::tpb-step::Install dependencies' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -60,6 +64,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Typecheck (tsc --noEmit)
+        timeout-minutes: 3
         run: |
           echo '::tpb-step::Gate — Typecheck (tsc --noEmit)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -69,6 +74,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Unit tests (vitest)
+        timeout-minutes: 32
         run: |
           echo '::tpb-step::Gate — Unit tests (vitest)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -78,12 +84,14 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Checkout tpb-entropy (gate source)
+        timeout-minutes: 2
         uses: actions/checkout@v4
         with:
           repository: the-play-button/tpb-entropy
           path: .ci-tpb-entropy
           token: ${{ secrets.FORGEJO_PAT_RO }}
       - name: Gate — Entropy (fail-hard — no-op INTERDIT, § A3 un-skipped)
+        timeout-minutes: 30
         run: |
           echo '::tpb-step::Gate — Entropy (fail-hard — no-op INTERDIT, § A3 un-skipped)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -124,6 +132,7 @@ jobs:
       # Before the secrets check : a template app's wrangler-<env>.toml exists only once rendered, and the check reads
       # the Worker's name from it (tpb-ats deploy-dev 78 : No such file 'wrangler-dev.toml').
       - name: Materialize public env (staging)
+        timeout-minutes: 2
         run: |
           echo '::tpb-step::Materialize public env (staging)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -133,6 +142,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Pre-deploy secrets check (§ J3 restored)
+        timeout-minutes: 4
         env:
           BASTION_TOKEN: ${{ secrets.BASTION_TOKEN_STAGING }}
           FORGEJO_PYPI_TOKEN: ${{ secrets.FORGEJO_PYPI_TOKEN }}
@@ -162,9 +172,9 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Backup D1 pre-migration (§ G3 — Time Travel restore point before schema change)
+        timeout-minutes: 2
         # Bounded : a wrangler that hangs fails this step, named, instead of the job deadline (tpb-kms deploy-production
         # #373, 2026-11-05 : the migration step silent for 20 minutes). tpb-devops sub-54 plan 03.1.
-        timeout-minutes: 10
         run: |
           echo '::tpb-step::Backup D1 pre-migration (§ G3 — Time Travel restore point before schema change)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -193,9 +203,9 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Apply D1 migrations (staging)
+        timeout-minutes: 2
         # Bounded : a wrangler that hangs fails this step, named, instead of the job deadline (tpb-kms deploy-production
         # #373, 2026-11-05 : the migration step silent for 20 minutes). tpb-devops sub-54 plan 03.1.
-        timeout-minutes: 10
         run: |
           echo '::tpb-step::Apply D1 migrations (staging)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -222,6 +232,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Wrangler deploy (staging)
+        timeout-minutes: 27
         run: |
           echo '::tpb-step::Wrangler deploy (staging)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -255,6 +266,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Smoke test (FAIL-HARD — § G1, curl -f not '|| echo WARN')
+        timeout-minutes: 2
         run: |
           echo '::tpb-step::Smoke test (FAIL-HARD — § G1, curl -f not '\''|| echo WARN'\'')' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
@@ -273,6 +285,7 @@ jobs:
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Report failure to telemetry
+        timeout-minutes: 2
         if: failure()
         env:
           TPB_CI_REDACT_VARS: "BASTION_TOKEN_STAGING,CF_TOKEN_CICD_ACCOUNT_THEPLAYBUTTON_AI,FORGEJO_PAT_RO,FORGEJO_PYPI_TOKEN,NPM_AUTH_TOKEN"
