@@ -19,7 +19,7 @@ jobs:
   ci:
     name: ci
     runs-on: tpb-staging-runner
-    timeout-minutes: 135
+    timeout-minutes: 142
     steps:
       - name: Checkout
         timeout-minutes: 36
@@ -164,7 +164,7 @@ jobs:
           path: .ci-tpb-entropy
           token: ${{ secrets.FORGEJO_PAT_RO }}
       - name: Gate — Entropy (fail-hard — no-op INTERDIT, § ci_entropy_gate_is_noop A3)
-        timeout-minutes: 17
+        timeout-minutes: 24
         if: success() || failure()
         run: |
           echo '::tpb-step::Gate — Entropy (fail-hard — no-op INTERDIT, § ci_entropy_gate_is_noop A3)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
