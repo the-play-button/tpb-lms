@@ -190,7 +190,7 @@ jobs:
             MIGRATIONS_PATH="$(dirname backend/wrangler-staging.toml)/$MIGRATIONS_DIR"
             [ -d "$MIGRATIONS_PATH" ] || { echo "FATAL: backend/wrangler-staging.toml declares migrations_dir=$MIGRATIONS_DIR but $MIGRATIONS_PATH does not exist"; exit 1; }
             mkdir -p .d1-backup
-            grep 'database_name' backend/wrangler-staging.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
+            python3 -c 'import sys, tomllib; [print(d["database_name"]) for d in tomllib.load(open(sys.argv[1], "rb")).get("d1_databases", [])]' backend/wrangler-staging.toml | while read -r DB; do
               echo "Recording the Time Travel restore point of $DB before migration (staging)..."
               POINT=".d1-backup/$DB.$(date -u +%Y%m%dT%H%M%SZ).time-travel.json"
               CI=1 npx -y wrangler@latest d1 time-travel info "$DB" --json --config backend/wrangler-staging.toml > "$POINT" || { echo "FATAL: D1 restore point failed for $DB"; exit 1; }
@@ -216,7 +216,7 @@ jobs:
           else
             MIGRATIONS_PATH="$(dirname backend/wrangler-staging.toml)/$MIGRATIONS_DIR"
             [ -d "$MIGRATIONS_PATH" ] || { echo "FATAL: backend/wrangler-staging.toml declares migrations_dir=$MIGRATIONS_DIR but $MIGRATIONS_PATH does not exist"; exit 1; }
-            grep 'database_name' backend/wrangler-staging.toml | sed -E 's/.*=[[:space:]]*"([^"]+)".*/\1/' | while read -r DB; do
+            python3 -c 'import sys, tomllib; [print(d["database_name"]) for d in tomllib.load(open(sys.argv[1], "rb")).get("d1_databases", [])]' backend/wrangler-staging.toml | while read -r DB; do
               # One read first, one apply, and a stop at the first « overloaded » : never a replay on a loaded database
               # (production bastion 168, 2026-11-05 10:10 UTC : 204 replays, the bastion answered 401 to the portfolio).
               HEALTH="$(CI=1 npx -y wrangler@latest d1 execute "$DB" --remote --command "SELECT 1 AS alive;" --config backend/wrangler-staging.toml 2>&1)" || { echo "$HEALTH"; echo "FATAL: $DB unreadable before its migrations"; exit 1; }
