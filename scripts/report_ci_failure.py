@@ -19,6 +19,7 @@ import http.client
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -59,6 +60,27 @@ def failed_step(log_text: str) -> "tuple[str, bool, list[str]]":
     return name, not ended_ok, lines
 
 
+# Every commit names the agent's channel that made it and the folder of its plan (Matthieu, 2026-11-07): a red run is
+# addressed to that channel, even when its agent does not push again.
+ATTRIBUTION_TRAILERS = (("Agent-Channel-Id", "agent_channel_id"), ("Agent-Channel-Name", "agent_channel_name"),
+                        ("Agent-Channel-Folder-Path", "agent_channel_folder_path"))
+NOT_SET = "(not set)"
+
+
+def commit_attribution(commit: str) -> "dict[str, str]":
+    """The run's commit trailers, `(not set)` for each one it lacks or when git cannot read it."""
+    found: "dict[str, str]" = {}
+    try:
+        message = subprocess.run(["git", "log", "-1", "--format=%(trailers:unfold,only)", commit],
+                                 capture_output=True, text=True, timeout=10).stdout
+    except (OSError, subprocess.SubprocessError):
+        message = ""
+    for line in message.splitlines():
+        key, _, value = line.partition(":")
+        found.setdefault(key.strip(), value.strip())
+    return {tag: found.get(trailer) or NOT_SET for trailer, tag in ATTRIBUTION_TRAILERS}
+
+
 def redact(text: str, env: "dict[str, str]") -> str:
     names = [n.strip() for n in env.get("TPB_CI_REDACT_VARS", "").split(",") if n.strip()]
     for value in sorted({env.get(n, "") for n in names}, key=len, reverse=True):
@@ -73,6 +95,7 @@ def build_report(args: argparse.Namespace, log_text: str, env: "dict[str, str]")
     step, inside, lines = failed_step(log_text)
     kept = [redact(line[:MAX_LINE_CHARS], env) for line in lines[-MAX_LINES:]]
     where = step if inside else f"after {step} (a non-run step)"
+    commit = env.get("GITHUB_SHA", "")
     return {
         "ingest_key": INGEST_KEY,
         "install_id": INSTALL_ID,
@@ -84,7 +107,8 @@ def build_report(args: argparse.Namespace, log_text: str, env: "dict[str, str]")
             "level": "ERROR",
             "group_key": f"ci:{args.repo}:{args.workflow}:{step}"[:200],
             "tags": {"repo": args.repo, "workflow": args.workflow, "ref": args.ref, "run_number": args.run,
-                     "step": step, "failed_inside_step": str(inside).lower()},
+                     "step": step, "failed_inside_step": str(inside).lower(),
+                     "commit": commit or NOT_SET, **commit_attribution(commit or "HEAD")},
             "context": {"lines": kept},
         }],
     }
