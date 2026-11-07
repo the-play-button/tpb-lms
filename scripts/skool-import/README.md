@@ -1,6 +1,6 @@
 # skool-import — upload a Skool classroom into tpb-lms (100% API, self-contained)
 
-Uploads extracted Skool courses (`Brain/…/<Author> - <School>/`) into tpb-lms **entirely
+Uploads extracted Skool courses (TPB Drive, `Cours/…/<Author> - <School>/`, fetched to a local folder) into tpb-lms **entirely
 via the LMS API** — no external content push, no re-hosting.
 
 ## Architecture — self-contained, zero re-host

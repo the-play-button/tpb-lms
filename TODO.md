@@ -66,7 +66,7 @@
 - [ ] THEN pipeline each surviving handler into 9-step DDD {priority:medium} {tags:ddd+lms}
 Actuellement le LMS est branché sur GitHub pour lire le contenu (markdown via GitHub raw + token depuis Vault). L'objectif est d'en faire une app standalone avec sa propre D1 comme source de données.
 ```
-Brain/{org}/{project}/outputs/built/SOMs/
+<espace>-skills/Brain/<projet>/outputs/built/SOMs/
     ↓ (scripts PA06: upload_som.py + handler.py)
     ↓
 1. PARSE SOM (som_parser.py)
@@ -97,7 +97,7 @@ Brain/{org}/{project}/outputs/built/SOMs/
    - Fallback language : en → source
 ```
 ```
-Brain/{org}/{project}/outputs/built/SOMs/
+<espace>-skills/Brain/<projet>/outputs/built/SOMs/
     ↓ (scripts de build — à migrer depuis PA06 vers tpb-lms/scripts/)
     ↓
 1-4. Même pipeline (parse, transcribe, translate, upload captions)
@@ -113,7 +113,7 @@ Brain/{org}/{project}/outputs/built/SOMs/
    - Requête D1 = source unique
    - i18n : query par lang + fallback en D1
 ```
-Actuellement dans `Brain/the-play-button/PA06 KMS Setup/outputs/run/automations/scripts/` :
+Sur le Drive TPB depuis le 2026-11-03, `Brain/pa06-kms-setup/outputs/run/automations/scripts/` (tpb-cogs sub-05 plan 14 ; avant, `Brain/the-play-button/PA06 KMS Setup/…` du workspace) :
 | Script PA06 | Destination tpb-lms | Rôle |
 |---|---|---|
 | `upload_som.py` | `scripts/upload_som.py` | CLI entry point |
