@@ -16,7 +16,7 @@ jobs:
   ci:
     name: ci
     runs-on: tpb-staging-runner
-    timeout-minutes: 60
+    timeout-minutes: 65
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -71,6 +71,39 @@ jobs:
           echo '::tpb-step::Gate — Unit tests (vitest)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
           pnpm test
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
+
+      - name: Gate — Each pushed commit names its agent's channel and the folder of its plan
+        timeout-minutes: 1
+        if: success() || failure()
+        run: |
+          echo '::tpb-step::Gate — Each pushed commit names its agent'\''s channel and the folder of its plan' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          # Matthieu, 2026-11-07: « Un commit sans attribution doit juste pas du tout passer. » The fleet's hooks refuse it on the
+          # agent's machine; a hook can be skipped (49 unjudged pushes, 2026-11-04), so the push is judged here too. Commits made
+          # before the rule are not judged: history is never rewritten.
+          since="2026-11-08T00:00:00Z"
+          before="${{ github.event.before }}"
+          git fetch --quiet --no-tags --shallow-since="2026-11-06" origin "${{ github.sha }}" 2>/dev/null || true
+          if [ -n "$before" ] && [ "${before//0/}" != "" ] && git cat-file -e "$before^{commit}" 2>/dev/null; then
+            commits="$(git rev-list --no-merges "$before..${{ github.sha }}")"
+          else
+            commits="${{ github.sha }}"
+          fi
+          missing=0
+          for commit in $commits; do
+            [ "$(git show -s --format=%cI "$commit")" \< "$since" ] && continue
+            trailers="$(git show -s --format=%B "$commit" | git interpret-trailers --parse)"
+            if ! grep -qE '^Agent-Channel-Id: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$' <<<"$trailers" \
+              || ! grep -qE '^Agent-Channel-Name: .+' <<<"$trailers" || ! grep -qE '^Agent-Channel-Folder-Path: .+' <<<"$trailers"; then
+              echo "::error::$(git show -s --format='%h %s' "$commit") carries no complete attribution (Agent-Channel-Id, -Name, -Folder-Path)"
+              missing=$((missing + 1))
+            fi
+          done
+          echo "commits without attribution: $missing"
+          [ "$missing" -eq 0 ]
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
