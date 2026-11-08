@@ -181,7 +181,7 @@ jobs:
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
-      - name: Gate — Eslint, the whole tree (if an eslint configuration is present)
+      - name: Gate — Eslint, every configured folder
         timeout-minutes: 25
         if: success() || failure()
         # One typed program for the whole tree: tpb-crm peaks at 3.3 GB, over Node's default 2 GB heap on a 7.7 GB runner
@@ -190,35 +190,12 @@ jobs:
         env:
           NODE_OPTIONS: --max-old-space-size=4096
         run: |
-          echo '::tpb-step::Gate — Eslint, the whole tree (if an eslint configuration is present)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          echo '::tpb-step::Gate — Eslint, every configured folder' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
-          if ls eslint.config.* >/dev/null 2>&1; then
-            # Judged here, after the push: heavy judging does not wait in front of main (Matthieu, « 2 ok », 2026-11-02). A debt is one
-            # committed count, `.eslint-last-status.json`; no regression above it.
-            # A package outside the root workspace has its own installation: without it, typed rules read its imports as `any` (tpb-genai-agents).
-            for nested_lockfile in */pnpm-lock.yaml; do
-              [ -f "$nested_lockfile" ] || continue
-              ( cd "$(dirname "$nested_lockfile")" && pnpm install --no-frozen-lockfile --ignore-scripts )
-            done
-            lint_rc=0
-            pnpm exec eslint . --format json --output-file "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/eslint.json" || lint_rc=$?
-            if [ "$lint_rc" -gt 1 ]; then echo "eslint did not complete (exit $lint_rc)"; exit "$lint_rc"; fi
-            node -e '
-              const fs=require("node:fs");
-              const results=JSON.parse(fs.readFileSync(process.argv[1],"utf8"));
-              if(!results.length)throw Error("eslint judged no file");
-              const baseline=fs.existsSync(".eslint-last-status.json")?JSON.parse(fs.readFileSync(".eslint-last-status.json","utf8")).eslint_errors:0;
-              const errors=results.reduce((sum,result)=>sum+result.errorCount,0);
-              console.log(`eslint: ${errors} errors, ${results.length} files, baseline ${baseline}`);
-              if(errors>baseline){
-                let shown=0;
-                for(const result of results)for(const message of result.messages)if(message.severity===2&&shown++<40)console.log(`${result.filePath}:${message.line}:${message.column} ${message.message} ${message.ruleId||""}`);
-                process.exit(1);
-              }
-            ' "$RUNNER_TEMP/eslint.json"
-          else
-            echo "no eslint configuration in this repository"
-          fi
+          # Judged here, after the push: heavy judging does not wait in front of main (Matthieu, « 2 ok », 2026-11-02). Every
+          # folder that carries an eslint configuration is judged by it, against its committed count in
+          # `.eslint-last-status.json`; no regression above it (tpb-devops plan 07.1.2.1.1.1).
+          node scripts/judge_eslint_per_configuration.mjs
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
