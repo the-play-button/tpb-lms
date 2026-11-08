@@ -84,6 +84,13 @@ if [[ "$HAS_MATERIALIZE" == "1" ]]; then
 fi
 [[ -n "$WF" ]] || { echo "✗ wrangler config introuvable après materialize" >&2; exit 1; }
 
+# ── 3.4 SDK telemetry pair — the same script as the generated CI deploy ───────
+# The deploy kit ships scripts/materialize-telemetry-vars.mjs to every Worker that depends on the SDK (generate_workflows.py) :
+# its presence is that dependency. Without the pair the Worker's unhandled exceptions reach no one (modern-data-stack 06.1.1.1).
+if [[ -f "scripts/materialize-telemetry-vars.mjs" ]]; then
+  n "SDK telemetry pair (${TARGET})…"; node scripts/materialize-telemetry-vars.mjs "${TARGET}" "$WF"
+fi
+
 # ── 3.5 post-materialize hook app-spécifique — no-op si absent ────────────────
 # A second, app-owned stage over the materialized config (e.g. wge-tpb-bridge resolves its [[PUBLIC_CF_*]] KV ids
 # and adds the SDK telemetry bindings : scripts/materialize-telemetry-wrangler.mjs). Gets the target and the config.
