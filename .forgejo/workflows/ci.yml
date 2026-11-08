@@ -96,7 +96,7 @@ jobs:
           if [ -n "$before" ] && [ "${before//0/}" != "" ] && git cat-file -e "$before^{commit}" 2>/dev/null; then
             commits="$(git rev-list --no-merges "$before..${{ github.sha }}")"
           else
-            commits="${{ github.sha }}"
+            commits="$(git rev-list --no-merges -n 1 "${{ github.sha }}")"  # a merge head is exempt, as on the path with `before`
           fi
           missing=0
           for commit in $commits; do
