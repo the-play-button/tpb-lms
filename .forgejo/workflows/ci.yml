@@ -174,12 +174,13 @@ jobs:
           # runner gets the CF challenge HTML → hash-mismatch. Install the gate FROM SOURCE via a
           # cross-repo checkout (Design-B fallback, recon-08); deps are all public PyPI. rm the nested
           # checkout before scanning so `--path .` audits only THIS repo.
-          VENVROOT="$(mktemp -d "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/entropy-gate.XXXXXX")"; trap 'rm -rf "$VENVROOT"' EXIT; VENV="$VENVROOT/venv"   # job-unique + EXIT-cleanup (recon-18 v7 collision fix + 2026-10-14 ENOSPC fix : trap rm le venv ~92M, sinon fuite /tmp/tmp.* → disque runner plein → CI rouge fleet-wide)
-          python3 -m venv "$VENV" 2>/dev/null || { apt-get install -y -qq python3-venv >/dev/null 2>&1 && python3 -m venv "$VENV"; }
+          VENVROOT="$(mktemp -d "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/entropy-gate.XXXXXX")"; trap 'rm -rf "$VENVROOT"' EXIT   # job-unique + EXIT-cleanup (recon-18 v7 collision fix + 2026-10-14 ENOSPC fix: a leaked /tmp/tmp.* filled a runner's disk)
           # Keep the source outside the scanned app until this owned job finishes.
           ENTROPY_SOURCE="$VENVROOT/entropy"
           mv .ci-tpb-entropy "$ENTROPY_SOURCE"
-          "$VENV/bin/pip" install --quiet "$ENTROPY_SOURCE/python"
+          # The engine's venv is installed once per version of its Python package on this runner, then reused: a fresh venv and
+          # a pip install from source took 15.3 s on every pass (tpb-entropy plan 17.2.1.1.5.1.1.1.1.4, 2026-11-08).
+          VENV="$(python3 "$ENTROPY_SOURCE/scripts/install_engine_for_ci.py" "$ENTROPY_SOURCE" "${HOME:?}/.tpb-entropy/ci-engines")"
           # Runtime description: the TS resolver owns every path; Python only consumes it.
           # Assign before export so a failed resolver preserves its nonzero exit status.
           TPB_ENTROPY_RUNTIME_RESOURCES="$(node --experimental-strip-types --input-type=module - "$ENTROPY_SOURCE" "$VENV/bin/tpb-entropy" <<'JS'
