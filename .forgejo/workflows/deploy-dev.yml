@@ -16,7 +16,7 @@ concurrency:
 jobs:
   deploy-dev:
     runs-on: tpb-dev-runner
-    timeout-minutes: 159
+    timeout-minutes: 161
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN_DEV }}
     steps:
@@ -164,6 +164,16 @@ jobs:
           # The kill switch's registry, from its source : the deploy's application token has no right to the vault's mirror.
           curl -fsS -H "Authorization: token $FORGEJO_PAT_RO" "${{ github.server_url }}/api/v1/repos/the-play-button/tpb-devops/raw/tpb-devops-budget-guard/data/cf_workers_registry.yaml" -o "$VENVROOT/workers-registry.yaml"
           PATH="$VENV/bin:$PATH" python3 scripts/pre_deploy_secrets_check.py --app-path . --target dev --bastion-token "$BASTION_TOKEN" --worker-config backend/wrangler-dev.toml --worker-registry "$VENVROOT/workers-registry.yaml"
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
+
+      - name: Materialize SDK telemetry vars (dev) — backend 500s reach telemetry
+        timeout-minutes: 2
+        run: |
+          echo '::tpb-step::Materialize SDK telemetry vars (dev) — backend 500s reach telemetry' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          node scripts/materialize-telemetry-vars.mjs dev backend/wrangler-dev.toml
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
