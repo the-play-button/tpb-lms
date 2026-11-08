@@ -19,6 +19,7 @@ import { dirname, join, resolve } from 'node:path';
 const BEGIN = '# BEGIN AUTO-GENERATED SDK TELEMETRY BINDINGS';
 const END = '# END AUTO-GENERATED SDK TELEMETRY BINDINGS';
 
+/** @param {string} message @returns {never} */
 function fail(message) {
   console.error(`[telemetry-vars] FATAL — ${message}`);
   process.exit(1);
@@ -27,10 +28,20 @@ function fail(message) {
 const [target, file] = process.argv.slice(2);
 if (!target || !file) fail('usage: materialize-telemetry-vars.mjs <dev|staging|production> <wrangler config>');
 
-const requireFromWorker = createRequire(join(resolve(dirname(file)), 'package.json'));
-const { TELEMETRY_ENDPOINTS_PER_ENV } = requireFromWorker('@the-play-button/tpb-sdk-js/telemetry-endpoints');
-const config = TELEMETRY_ENDPOINTS_PER_ENV[target];
-if (!config || !config.url || !config.ingestKey) fail(`no SDK telemetry endpoint for target "${target}"`);
+/** @param {unknown} value @returns {value is Record<string, unknown>} */
+function isRecord(value) {
+  return typeof value === 'object' && value !== null;
+}
+
+// Resolved at run time from the Worker's directory, so it carries no types : its shape is checked here, and a change of
+// the SDK's endpoints table fails loud rather than writing an empty pair.
+/** @type {unknown} */
+const loaded = createRequire(join(resolve(dirname(file)), 'package.json'))('@the-play-button/tpb-sdk-js/telemetry-endpoints');
+const endpoints = isRecord(loaded) && isRecord(loaded.TELEMETRY_ENDPOINTS_PER_ENV) ? loaded.TELEMETRY_ENDPOINTS_PER_ENV : undefined;
+const entry = endpoints?.[target];
+const config = isRecord(entry) && typeof entry.url === 'string' && typeof entry.ingestKey === 'string' && entry.url && entry.ingestKey
+  ? { url: entry.url, ingestKey: entry.ingestKey }
+  : fail(`no SDK telemetry endpoint for target "${target}"`);
 
 const block = [
   BEGIN,
