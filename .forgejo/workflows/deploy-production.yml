@@ -9,6 +9,12 @@ on:
     tags:
       - 'go-live-lms-api-v*'
 
+# One deploy of an environment at a time : two go-live tags of one SHA, 15 s apart, started two production deploys of
+# tpb-bastion side by side (2026-11-08, runs 654-657), D1 migrations included. The next one waits, never cancelled.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
 jobs:
   deploy-production:
     runs-on: tpb-production-runner

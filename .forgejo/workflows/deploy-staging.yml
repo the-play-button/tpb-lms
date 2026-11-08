@@ -12,6 +12,12 @@ on:
         type: string
         description: "Commit SHA to deploy (validated staging candidate)"
 
+# One deploy of an environment at a time : two go-live tags of one SHA, 15 s apart, started two production deploys of
+# tpb-bastion side by side (2026-11-08, runs 654-657), D1 migrations included. The next one waits, never cancelled.
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
 jobs:
   deploy-staging:
     runs-on: tpb-staging-runner
