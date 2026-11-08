@@ -15,9 +15,76 @@ on:
   # (plan 07.1.1 of tpb-devops/plans/2026-11-01_build-tooling-shared-cache-forgejo).
   workflow_dispatch:
 
+# Every CI archetype's `concurrency` and `latest` job, injected by _wf_parts._template in its LATEST_JOB slot (the desktop CI first).
+# A push waits for the run in progress instead of cancelling it : without this, Forgejo cancelled every tpb-cogs run
+# whose 14 minutes outlived the next push (seven in a row on 2026-11-03, no verdict for an hour), and on 2026-11-08 26 of
+# tpb-devops' 30 runs of main in 6 hours, 19 of tpb-entropy's 23 (tpb-entropy plan 17.2.1.1.5.1.1.1.1.8).
+concurrency:
+  cancel-in-progress: false
+
 jobs:
+  # Queued push runs pile up (Forgejo keeps every waiting run : tpb-cogs 5892 to 5913, 2026-11-03). A push run whose
+  # commit main has already moved past leaves the verdict to the newest run, which carries it : the queue drains in
+  # seconds instead of one full run per push. A pull request is always judged. An unreadable main fails the run.
+  # A push of plans alone starts no run (paths-ignore) : when only such files changed since this commit, no newer run will
+  # judge it, so this one does (tpb-cogs run 8830, 2026-11-07, judged nothing behind a push of plans).
+  latest:
+    name: latest
+    runs-on: tpb-staging-runner
+    timeout-minutes: 50
+    outputs:
+      judge: ${{ steps.main.outputs.judge }}
+    steps:
+      # Only `git ls-remote` reads this checkout, and the failure report its one script. Extracting all of tpb-cogs (33 000 files)
+      # outlived these 5 minutes on the desktop runner : 10 false reds in 20 hours (2026-11-06), each leaving its commit unjudged.
+      - name: Checkout
+        timeout-minutes: 36
+        uses: actions/checkout@v4
+        with:
+          filter: blob:none
+          sparse-checkout-cone-mode: false
+          sparse-checkout: |
+            /scripts/report_ci_failure.py
+
+      - name: Is this commit still the head of main ?
+        timeout-minutes: 2
+        id: main
+        run: |
+          echo '::tpb-step::Is this commit still the head of main ?' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          set -eu
+          if [ "${{ github.event_name }}" != "push" ]; then echo "judge=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          head="$(git ls-remote origin refs/heads/main | cut -f1)"
+          test -n "$head"
+          if [ "$head" = "${{ github.sha }}" ]; then
+            echo "judge=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Trees only : the names of what changed, no file content.
+          git fetch -q --filter=blob:none --depth=1 origin "$head"
+          changed="$(git diff --name-only "${{ github.sha }}" "$head" -- . ':(exclude)plans' ':(exclude)TODO.md')"
+          if [ -z "$changed" ]; then
+            echo "main is at $head, past ${{ github.sha }} by plans and TODO.md only, which start no run : this run judges."
+            echo "judge=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "main is at $head, past ${{ github.sha }} : the run of the newer commit judges this one."
+            echo "judge=false" >> "$GITHUB_OUTPUT"
+          fi
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
+
+      - name: Report failure to telemetry
+        timeout-minutes: 2
+        if: failure()
+        env:
+          TPB_CI_REDACT_VARS: ""
+        run: python3 scripts/report_ci_failure.py --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "ci"
+
   ci:
     name: ci
+    needs: latest
+    if: needs.latest.outputs.judge == 'true'
     runs-on: tpb-staging-runner
     timeout-minutes: 142
     steps:
