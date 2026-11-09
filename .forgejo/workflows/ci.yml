@@ -35,7 +35,8 @@ jobs:
     outputs:
       judge: ${{ steps.main.outputs.judge }}
     steps:
-      # Only `git ls-remote` reads this checkout, and the failure report its one script. Extracting all of tpb-cogs (33 000 files)
+      # Only `git ls-remote` reads this checkout (the failure report reads its script from Forgejo, tpb-entropy plan
+      # 17.2.1.1.5.1.1.1.1.3.1): one small file every generated repository holds. Extracting all of tpb-cogs (33 000 files)
       # outlived these 5 minutes on the desktop runner : 10 false reds in 20 hours (2026-11-06), each leaving its commit unjudged.
       - name: Checkout
         timeout-minutes: 36
@@ -44,7 +45,7 @@ jobs:
           filter: blob:none
           sparse-checkout-cone-mode: false
           sparse-checkout: |
-            /scripts/report_ci_failure.py
+            /.forgejo/workflows/ci.yml
 
       - name: Is this commit still the head of main ?
         timeout-minutes: 2
@@ -79,7 +80,10 @@ jobs:
         if: failure()
         env:
           TPB_CI_REDACT_VARS: ""
-        run: python3 scripts/report_ci_failure.py --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "ci"
+          TPB_CI_REPORT_TOKEN: ${{ github.token }}
+        run: |
+          set -o pipefail
+          curl -fsS -H "Authorization: token $TPB_CI_REPORT_TOKEN" "${{ github.server_url }}/api/v1/repos/${{ github.repository }}/raw/scripts/report_ci_failure.py?ref=${{ github.sha }}" | python3 - --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "ci"
 
   ci:
     name: ci
@@ -279,6 +283,7 @@ jobs:
         if: failure()
         env:
           TPB_CI_REDACT_VARS: "ENTROPY_CHECK_CACHE_R2_ACCOUNT_ID,ENTROPY_CHECK_CACHE_R2_READ_ACCESS_KEY_ID,ENTROPY_CHECK_CACHE_R2_READ_SECRET_ACCESS_KEY,ENTROPY_CHECK_CACHE_R2_WRITE_ACCESS_KEY_ID,ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY,FORGEJO_PAT_RO,NPM_AUTH_TOKEN"
+          TPB_CI_REPORT_TOKEN: ${{ github.token }}
           ENTROPY_CHECK_CACHE_R2_ACCOUNT_ID: ${{ secrets.ENTROPY_CHECK_CACHE_R2_ACCOUNT_ID }}
           ENTROPY_CHECK_CACHE_R2_READ_ACCESS_KEY_ID: ${{ secrets.ENTROPY_CHECK_CACHE_R2_READ_ACCESS_KEY_ID }}
           ENTROPY_CHECK_CACHE_R2_READ_SECRET_ACCESS_KEY: ${{ secrets.ENTROPY_CHECK_CACHE_R2_READ_SECRET_ACCESS_KEY }}
@@ -286,4 +291,6 @@ jobs:
           ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY: ${{ secrets.ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY }}
           FORGEJO_PAT_RO: ${{ secrets.FORGEJO_PAT_RO }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        run: python3 scripts/report_ci_failure.py --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "ci"
+        run: |
+          set -o pipefail
+          curl -fsS -H "Authorization: token $TPB_CI_REPORT_TOKEN" "${{ github.server_url }}/api/v1/repos/${{ github.repository }}/raw/scripts/report_ci_failure.py?ref=${{ github.sha }}" | python3 - --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "ci"

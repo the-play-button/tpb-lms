@@ -335,10 +335,13 @@ jobs:
         if: failure()
         env:
           TPB_CI_REDACT_VARS: "BASTION_TOKEN_PRODUCTION,CF_TOKEN_PRODUCTION,FORGEJO_PAT_RO,FORGEJO_PYPI_TOKEN,NPM_AUTH_TOKEN,RELEASE_TRAIN_READER_BASTION_TOKEN"
+          TPB_CI_REPORT_TOKEN: ${{ github.token }}
           BASTION_TOKEN_PRODUCTION: ${{ secrets.BASTION_TOKEN_PRODUCTION }}
           CF_TOKEN_PRODUCTION: ${{ secrets.CF_TOKEN_PRODUCTION }}
           FORGEJO_PAT_RO: ${{ secrets.FORGEJO_PAT_RO }}
           FORGEJO_PYPI_TOKEN: ${{ secrets.FORGEJO_PYPI_TOKEN }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           RELEASE_TRAIN_READER_BASTION_TOKEN: ${{ secrets.RELEASE_TRAIN_READER_BASTION_TOKEN }}
-        run: python3 scripts/report_ci_failure.py --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "production"
+        run: |
+          set -o pipefail
+          curl -fsS -H "Authorization: token $TPB_CI_REPORT_TOKEN" "${{ github.server_url }}/api/v1/repos/${{ github.repository }}/raw/scripts/report_ci_failure.py?ref=${{ github.sha }}" | python3 - --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "production"

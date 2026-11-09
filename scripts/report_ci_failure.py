@@ -19,7 +19,6 @@ import http.client
 import json
 import os
 import re
-import subprocess
 import sys
 from pathlib import Path
 from urllib.parse import urlsplit
@@ -67,15 +66,39 @@ ATTRIBUTION_TRAILERS = (("Agent-Channel-Id", "agent_channel_id"), ("Agent-Channe
 NOT_SET = "(not set)"
 
 
-def commit_attribution(commit: str) -> "dict[str, str]":
-    """The run's commit trailers, `(not set)` for each one it lacks or when git cannot read it."""
-    found: "dict[str, str]" = {}
+def commit_message(commit: str, env: "dict[str, str]") -> str:
+    """The commit's message, read from Forgejo with the job's token, never from a checkout: a job whose checkout failed
+    (disk full on tpb-cicd, tpb-cogs runs 10150 and 10173, 2026-11-09) has no repository on disk, and its report ran
+    from that checkout and reached no one (tpb-entropy plan 17.2.1.1.5.1.1.1.1.3.1). Empty, with the reason on stderr,
+    when the server, the repository, the token or the answer is missing."""
+    server, repository, token = (env.get(name, "") for name in ("GITHUB_SERVER_URL", "GITHUB_REPOSITORY", "TPB_CI_REPORT_TOKEN"))
+    if not (server and repository and token and commit):
+        print("[report_ci_failure] commit attribution not read: GITHUB_SERVER_URL, GITHUB_REPOSITORY, TPB_CI_REPORT_TOKEN"
+              " and GITHUB_SHA are all required", file=sys.stderr)
+        return ""
+    parts = urlsplit(server)
+    connection_class = http.client.HTTPSConnection if parts.scheme == "https" else http.client.HTTPConnection
+    conn = connection_class(parts.netloc, timeout=15)
     try:
-        message = subprocess.run(["git", "log", "-1", "--format=%(trailers:unfold,only)", commit],
-                                 capture_output=True, text=True, timeout=10).stdout
-    except (OSError, subprocess.SubprocessError):
-        message = ""
-    for line in message.splitlines():
+        conn.request("GET", f"{parts.path.rstrip('/')}/api/v1/repos/{repository}/git/commits/{commit}",
+                     headers={"Authorization": f"token {token}", "Accept": "application/json"})
+        answer = conn.getresponse()
+        body = answer.read()
+        if answer.status != 200:
+            print(f"[report_ci_failure] commit attribution not read: HTTP {answer.status}", file=sys.stderr)
+            return ""
+        return str(((json.loads(body) or {}).get("commit") or {}).get("message") or "")
+    except (OSError, http.client.HTTPException, ValueError) as error:
+        print(f"[report_ci_failure] commit attribution not read: {error!r}", file=sys.stderr)
+        return ""
+    finally:
+        conn.close()
+
+
+def commit_attribution(message: str) -> "dict[str, str]":
+    """The attribution trailers of a commit message, `(not set)` for each one it lacks."""
+    found: "dict[str, str]" = {}
+    for line in message.strip().split("\n\n")[-1].splitlines():
         key, _, value = line.partition(":")
         found.setdefault(key.strip(), value.strip())
     return {tag: found.get(trailer) or NOT_SET for trailer, tag in ATTRIBUTION_TRAILERS}
@@ -108,7 +131,7 @@ def build_report(args: argparse.Namespace, log_text: str, env: "dict[str, str]")
             "group_key": f"ci:{args.repo}:{args.workflow}:{step}"[:200],
             "tags": {"repo": args.repo, "workflow": args.workflow, "ref": args.ref, "run_number": args.run,
                      "step": step, "failed_inside_step": str(inside).lower(),
-                     "commit": commit or NOT_SET, **commit_attribution(commit or "HEAD")},
+                     "commit": commit or NOT_SET, **commit_attribution(commit_message(commit, env))},
             "context": {"lines": kept},
         }],
     }
