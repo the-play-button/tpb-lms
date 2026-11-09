@@ -23,6 +23,7 @@
   "devDependencies": {
     "@cloudflare/workers-types": "^4.20260217.0",
     "@the-play-button/tpb-sdk-eslint": "^0.4.0",
+    "@the-play-button/tpb-sdk-vitest": "0.5.1",
     "@total-typescript/ts-reset": "^0.6.1",
     "@vitest/coverage-v8": "^4.1.0",
     "eslint": "^9.39.5",
