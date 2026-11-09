@@ -105,16 +105,20 @@ def _vault_cf_access_sa(app_dir: Path) -> tuple[str, str] | None:
         if cand and (Path(cand) / "tpb_sdk").is_dir() and cand not in sys.path:
             sys.path.insert(0, cand)
     try:
-        from tpb_sdk.crm.dev_bastion import dev_bastion  # the dev vault, TPB_TARGET stripped
+        from tpb_sdk.bastion import BastionClient
     except ImportError:
         print("[deploy-verify] ⚠ tpb_sdk not importable — no CF Access SA from the vault.", file=sys.stderr)
         return None
+    saved = os.environ.pop("TPB_TARGET", None)  # the dev vault holds the SA, even for a production deploy
     try:
-        bastion = dev_bastion()
+        bastion = BastionClient.from_devcontainer()
         cid, csecret = (bastion.get_secret(path) for path in _SA_VAULT_PATHS)
     except Exception as exc:  # noqa: BLE001 — logged, the edge read below decides the verdict
         print(f"[deploy-verify] ⚠ CF Access SA not readable from the vault ({type(exc).__name__}: {exc}).", file=sys.stderr)
         return None
+    finally:
+        if saved is not None:
+            os.environ["TPB_TARGET"] = saved
     return (cid, csecret) if cid and csecret else None
 
 
