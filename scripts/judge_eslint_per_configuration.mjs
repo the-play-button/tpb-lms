@@ -153,13 +153,16 @@ for (const row of rows.filter((candidate) => candidate.state === 'measured')) {
   console.log(`eslint: ${row.folder} ${String(errors)} errors, ${String(row.files)} files, baseline ${String(allowed)}`);
   if (errors <= allowed) continue;
   regressed = true;
-  let shown = 0;
+  // Every error of a folder above its count, not the first forty : the new ones sit anywhere in the list, and a capped
+  // list hid the four a dependency bump added to tpb-crm's 1 246 (tpb-devops plan 07.1.2.1.2.2, run 454).
   for (const result of row.results ?? []) {
     for (const message of result.messages) {
-      if (message.severity === 2 && shown++ < 40) {
+      if (message.severity === 2) {
         console.log(`${result.filePath}:${String(message.line)}:${String(message.column)} ${message.text} ${message.rule}`);
       }
     }
   }
 }
-process.exit(failed.length || unknown.length || regressed ? 1 : 0);
+// The exit code, not process.exit(): exiting drops what stdout still holds for a slow reader (tpb-crm's runner log stopped
+// near the 4 260th of 4 293 errors, tpb-devops plan 07.1.2.1.2.2, run 460).
+process.exitCode = failed.length || unknown.length || regressed ? 1 : 0;
