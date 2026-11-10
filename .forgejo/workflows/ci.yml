@@ -50,6 +50,10 @@ jobs:
           sparse-checkout: |
             /.forgejo/workflows/ci.yml
 
+      # The newest run of main judges ; a run main has moved past by code leaves it the verdict (the `latest` job, and the
+      # first step of every other CI job, which may start long after `latest` when the queue is long : 41 h of runner in
+      # 24 h went to CI jobs that started after a newer run existed, tpb-devops plans/2026-11-10_ci-queue-under-two-minutes,
+      # plan 11). Superseded, it writes $RUNNER_TEMP/tpb-superseded : every later captured step of its job then skips.
       - name: Is this commit still the head of main ?
         timeout-minutes: 2
         id: main
@@ -72,6 +76,7 @@ jobs:
             echo "judge=true" >> "$GITHUB_OUTPUT"
           else
             echo "main is at $head, past ${{ github.sha }} : the run of the newer commit judges this one."
+            : > "${RUNNER_TEMP:-/tmp}/tpb-superseded"
             echo "judge=false" >> "$GITHUB_OUTPUT"
           fi
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
@@ -93,16 +98,50 @@ jobs:
     needs: latest
     if: needs.latest.outputs.judge == 'true'
     runs-on: tpb-ci-runner
-    timeout-minutes: 142
+    timeout-minutes: 144
     steps:
       - name: Checkout
         timeout-minutes: 36
         uses: actions/checkout@v4
 
+      # The newest run of main judges ; a run main has moved past by code leaves it the verdict (the `latest` job, and the
+      # first step of every other CI job, which may start long after `latest` when the queue is long : 41 h of runner in
+      # 24 h went to CI jobs that started after a newer run existed, tpb-devops plans/2026-11-10_ci-queue-under-two-minutes,
+      # plan 11). Superseded, it writes $RUNNER_TEMP/tpb-superseded : every later captured step of its job then skips.
+      - name: Is this commit still the head of main ?
+        timeout-minutes: 2
+        id: main
+        run: |
+          echo '::tpb-step::Is this commit still the head of main ?' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          set -eu
+          if [ "${{ github.event_name }}" != "push" ]; then echo "judge=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          head="$(git ls-remote origin refs/heads/main | cut -f1)"
+          test -n "$head"
+          if [ "$head" = "${{ github.sha }}" ]; then
+            echo "judge=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Trees only : the names of what changed, no file content.
+          git fetch -q --filter=blob:none --depth=1 origin "$head"
+          changed="$(git diff --name-only "${{ github.sha }}" "$head" -- . ':(exclude)plans' ':(exclude)TODO.md')"
+          if [ -z "$changed" ]; then
+            echo "main is at $head, past ${{ github.sha }} by plans and TODO.md only, which start no run : this run judges."
+            echo "judge=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "main is at $head, past ${{ github.sha }} : the run of the newer commit judges this one."
+            : > "${RUNNER_TEMP:-/tmp}/tpb-superseded"
+            echo "judge=false" >> "$GITHUB_OUTPUT"
+          fi
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
+
       - name: Setup pnpm via corepack
         timeout-minutes: 2
         run: |
           echo '::tpb-step::Setup pnpm via corepack' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "main has moved past this commit : step skipped, the newer run judges it"; exit 0; fi
           {
           corepack enable
           corepack prepare pnpm@10.17.1 --activate
@@ -116,6 +155,7 @@ jobs:
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
         run: |
           echo '::tpb-step::Inject npm auth token (global ~/.npmrc)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "main has moved past this commit : step skipped, the newer run judges it"; exit 0; fi
           {
           cat > "$HOME/.npmrc" <<EOF
           @the-play-button:registry=https://npm.tpb.sh/api/packages/the-play-button/npm/
@@ -129,6 +169,7 @@ jobs:
         timeout-minutes: 2
         run: |
           echo '::tpb-step::Install dependencies' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "main has moved past this commit : step skipped, the newer run judges it"; exit 0; fi
           {
           pnpm install --frozen-lockfile
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
@@ -139,6 +180,7 @@ jobs:
         timeout-minutes: 3
         run: |
           echo '::tpb-step::Gate — Typecheck (tsc --noEmit)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "main has moved past this commit : step skipped, the newer run judges it"; exit 0; fi
           {
           pnpm typecheck
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
@@ -149,6 +191,7 @@ jobs:
         timeout-minutes: 32
         run: |
           echo '::tpb-step::Gate — Unit tests (vitest)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "main has moved past this commit : step skipped, the newer run judges it"; exit 0; fi
           {
           pnpm test
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
@@ -160,6 +203,7 @@ jobs:
         if: success() || failure()
         run: |
           echo '::tpb-step::Gate — Each pushed commit names its agent'\''s channel and the folder of its plan' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "main has moved past this commit : step skipped, the newer run judges it"; exit 0; fi
           {
           # Matthieu, 2026-11-07: « Un commit sans attribution doit juste pas du tout passer. » The fleet's hooks refuse it on the
           # agent's machine; a hook can be skipped (49 unjudged pushes, 2026-11-04), so the push is judged here too. Commits made
@@ -198,6 +242,7 @@ jobs:
           NODE_OPTIONS: --max-old-space-size=4096
         run: |
           echo '::tpb-step::Gate — Eslint, every configured folder' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "main has moved past this commit : step skipped, the newer run judges it"; exit 0; fi
           {
           # Judged here, after the push: heavy judging does not wait in front of main (Matthieu, « 2 ok », 2026-11-02). Every
           # folder that carries an eslint configuration is judged by it, against its committed count in
@@ -227,6 +272,7 @@ jobs:
           ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY: ${{ secrets.ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY }}
         run: |
           echo '::tpb-step::Gate — Entropy (fail-hard — no-op INTERDIT, § ci_entropy_gate_is_noop A3)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "main has moved past this commit : step skipped, the newer run judges it"; exit 0; fi
           {
           set -eu
           # recon-18: the Forgejo PyPI download URLs are absolute-public (CF-Access-gated) → pip on the
