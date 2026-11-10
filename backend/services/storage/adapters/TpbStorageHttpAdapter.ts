@@ -12,6 +12,7 @@ import type { StoragePort } from '../StoragePort.js';
 import type { StorageFile } from '../../types/StorageFile.types.js';
 
 import type { TpbStorageHttpAdapterConfig } from './TpbStorageHttpAdapter.types';
+import { callerHeaders } from '@the-play-button/tpb-sdk-js';
 export type { TpbStorageHttpAdapterConfig };
 
 
@@ -50,7 +51,7 @@ export class TpbStorageHttpAdapter implements StoragePort {
     }
     const url = `${this.config.tpbStorageUrl}${path}?${usp.toString()}`;
     const resp = await fetch(url, {
-      headers: { Authorization: `Bearer ${this.config.bastionToken}` },
+      headers: { ...callerHeaders(), Authorization: `Bearer ${this.config.bastionToken}` },
     });
     if (!resp.ok) {
       const text = await resp.text().catch(() => '');
