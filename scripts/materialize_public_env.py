@@ -119,10 +119,13 @@ BACKEND_KEY_ALLOWLIST = frozenset(
 # _INSTANCE_ID / _HOSTNAME / _KV_ID = public INFRA IDENTIFIERS (e.g. tpb-telemetry: Grafana stack instance id,
 # ORIGIN_HOSTNAME dispatcher target, KV namespace uuid). All world-readable like a D1 id; none is a secret
 # suffix. Additive-safe → lets tpb-telemetry drop its bespoke config for the canonical materialize.
+# _VPC_SERVICE_ID = the uuid of a Workers VPC service (wge-tpb-bridge: the client's gold warehouse, bound in production
+# only through `#{{IF GOLD_WAREHOUSE_VPC_SERVICE_ID}}`). A public infra identifier like a KV id ; the service reaches a
+# private address only through its tunnel, and the password stays at the vault.
 _PUBLIC_CATEGORY_KEY = re.compile(
     r"^[A-Z0-9_]+_(URL|CLIENT_ID|ROUTE_PATTERN|CONNECTION_ID|DRIVE_ID|ENABLED|DISABLED"
     r"|PROVIDER_ID|ACCOUNT_ID|ZONE_ID|SCOPE_ALIAS|TUNNEL_DOMAIN|NAME_PREFIX|KEY_PREFIX"
-    r"|INSTANCE_ID|HOSTNAME|KV_ID)$|^ROUTE_PATTERN(_[A-Z0-9_]+)?$"
+    r"|INSTANCE_ID|HOSTNAME|KV_ID|VPC_SERVICE_ID)$|^ROUTE_PATTERN(_[A-Z0-9_]+)?$"
     r"|^R2_(ACCOUNT_ID|BINDING|BUCKET(_[A-Z0-9_]+)?)$"
     # Any additional D1 of a multi-database Worker (tpb-calendar: D1_ADMIN_*) — a database name/uuid is a public
     # identifier like D1_NAME/D1_ID, never a secret.

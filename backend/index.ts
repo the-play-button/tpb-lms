@@ -11,7 +11,7 @@
 
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
-import { configureLogger, setLoggerWaitUntil, log, createBastionAuthMiddleware, createBastionClient, createLazyVaultSecret, emitAnonReturned5xx, isErrorHandled, markErrorHandled } from '@the-play-button/tpb-sdk-js';
+import { callerAttribution, configureCaller, configureLogger, setLoggerWaitUntil, log, createBastionAuthMiddleware, createBastionClient, createLazyVaultSecret, emitAnonReturned5xx, isErrorHandled, markErrorHandled } from '@the-play-button/tpb-sdk-js';
 import { ALLOWED_ORIGINS, jsonResponse } from './cors.js';
 import { verifyAPIKey } from './auth/verifyAPIKey.js';
 import { getOrCreateContact } from './auth/getOrCreateContact.js';
@@ -76,6 +76,11 @@ const getTallySigningSecret  = createLazyVaultSecret('tpb/apps/lms/tally_signing
 // --- Hono app ---
 
 const app = new Hono();
+
+// Who calls, both ways (tpb-plans caller-attribution) : this Worker's own outbound calls name it, and the calls it
+// receives are attributed — the two lines createTpbHonoApp carries, for an app built on a bare Hono.
+configureCaller({ agent: 'worker:tpb-lms', fallback: true });
+app.use('/*', callerAttribution({ service: 'tpb-lms' }));
 
 app.use('/*', cors({
   origin: ALLOWED_ORIGINS,
