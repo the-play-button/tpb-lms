@@ -7,7 +7,7 @@
   "backend": {
     "WORKER_NAME": "lms-api-staging",
     "D1_NAME": "lms-db-staging",
-    "D1_ID": null,
+    "D1_ID": "94ae4205-c6bb-4a80-8a43-9cd9c300f511",
     "PAM_JTI_KV_ID": null,
     "ACCESS_TEAM_DOMAIN": "theplaybutton",
     "BASTION_URL": "https://bastion-backend-staging.theplaybutton.dev",
