@@ -293,7 +293,11 @@ jobs:
           # Judged here, after the push: heavy judging does not wait in front of main (Matthieu, « 2 ok », 2026-11-02). Every
           # folder that carries an eslint configuration is judged by it, against its committed count in
           # `.eslint-last-status.json`; no regression above it (tpb-devops plan 07.1.2.1.1.1).
-          node scripts/judge_eslint_per_configuration.mjs
+          # Each file's result is kept under a key that covers its import closure (tpb-entropy plan 06.8.1.1.1.1.1): the
+          # runner's results for this repository live in its cache, one file per configured folder, so a push that changes no
+          # file eslint reads no longer pays the whole lint. GITHUB_REPOSITORY is the runner's; outside a runner, no cache.
+          env ${GITHUB_REPOSITORY:+"TPB_ESLINT_CACHE_DIRECTORY=$HOME/.cache/tpb-eslint-closure/$GITHUB_REPOSITORY"} \
+            node scripts/judge_eslint_per_configuration.mjs
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
