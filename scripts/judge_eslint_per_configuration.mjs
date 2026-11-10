@@ -95,7 +95,39 @@ const isRecord = (value) => typeof value === 'object' && value !== null && !Arra
 /** @typedef {{ severity: number, line: number, column: number, text: string, rule: string }} Message */
 /** @typedef {{ errorCount: number, messages: Message[] }} Verdict */
 /** @typedef {{ filePath: string, errorCount: number, messages: Message[] }} Result */
+// The members of TypeScript and eslint this judge uses, loaded at run time from the folder's own installation: typed here,
+// so no value of theirs is `any` under the fleet's typed rules (tpb-devops test_deploy_kit_lints_clean.py).
+/** @typedef {{ resolvedFileName: string, isExternalLibraryImport?: boolean }} ResolvedModule */
+/** @typedef {{ fileNames: string[], options: object }} ParsedConfiguration */
+/**
+ * @typedef {{
+ *   version: string,
+ *   sys: { fileExists: (path: string) => boolean },
+ *   findConfigFile: (folder: string, exists: (path: string) => boolean, name: string) => string | undefined,
+ *   getParsedCommandLineOfConfigFile: (path: string, options: object, host: object) => ParsedConfiguration | undefined,
+ *   createModuleResolutionCache: (folder: string, canonical: (name: string) => string, options: object) => object,
+ *   preProcessFile: (text: string, readImports: boolean, detectJavaScriptImports: boolean) => { importedFiles: { fileName: string }[] },
+ *   resolveModuleName: (name: string, file: string, options: object, host: object, cache: object) => { resolvedModule?: ResolvedModule },
+ * }} TypeScriptApi
+ */
+/** @typedef {{ isPathIgnored: (file: string) => Promise<boolean>, calculateConfigForFile: (file: string) => Promise<unknown>, lintFiles: (files: string[]) => Promise<unknown[]> }} EslintInstance */
+/** @typedef {{ ESLint: new (options: { cwd: string, cache: boolean, ignorePatterns: string[] }) => EslintInstance }} EslintModule */
 
+/** @param {string} text @returns {unknown} */
+const parseJson = (text) => {
+  const value = /** @type {unknown} */ (JSON.parse(text));
+  return value;
+};
+/** @param {NodeJS.Require} requireHere @returns {TypeScriptApi} */
+const loadTypeScript = (requireHere) => {
+  const loaded = /** @type {unknown} */ (requireHere('typescript'));
+  return /** @type {TypeScriptApi} */ (loaded);
+};
+/** @param {NodeJS.Require} requireHere @returns {EslintModule} */
+const loadEslint = (requireHere) => {
+  const loaded = /** @type {unknown} */ (requireHere('eslint'));
+  return /** @type {EslintModule} */ (loaded);
+};
 /** @param {unknown} value @returns {Message} */
 const toMessage = (value) => {
   const message = isRecord(value) ? value : {};
@@ -121,7 +153,7 @@ const readCache = (path) => {
   if (path === null || !existsSync(path)) return kept;
   let parsed;
   try {
-    parsed = /** @type {unknown} */ (JSON.parse(readFileSync(path, 'utf8')));
+    parsed = parseJson(readFileSync(path, 'utf8'));
   } catch (error) {
     console.log(`eslint cache: ${path} unreadable, every file is linted (${String(error)})`);
     return kept;
@@ -153,18 +185,18 @@ const writeCache = (path, kept) => {
  * @returns {(file: string) => string}
  */
 const closureKeys = (folder, top, judged, requireHere) => {
-  /** @type {any} */
+  /** @type {TypeScriptApi | null} */
   let ts = null;
   try {
-    ts = requireHere('typescript');
+    ts = loadTypeScript(requireHere);
   } catch {
     ts = null;
   }
-  const configPath = ts === null ? undefined : /** @type {string | undefined} */ (ts.findConfigFile(folder, ts.sys.fileExists, 'tsconfig.json'));
+  const configPath = ts === null ? undefined : ts.findConfigFile(folder, ts.sys.fileExists, 'tsconfig.json');
   const parsed = ts === null || configPath === undefined ? undefined
     : ts.getParsedCommandLineOfConfigFile(configPath, {}, { ...ts.sys, onUnRecoverableConfigFileDiagnostic: () => undefined });
   /** @type {string[]} */
-  const programFiles = parsed === undefined ? [] : /** @type {string[]} */ (parsed.fileNames).filter((file) => !file.includes('/node_modules/'));
+  const programFiles = parsed === undefined ? [] : parsed.fileNames.filter((file) => !file.includes('/node_modules/'));
 
   /** @type {string[]} */
   const folderInputs = [];
@@ -180,7 +212,7 @@ const closureKeys = (folder, top, judged, requireHere) => {
   }
   const eslintManifest = /** @type {unknown} */ (JSON.parse(readFileSync(requireHere.resolve('eslint/package.json'), 'utf8')));
   const eslintVersion = isRecord(eslintManifest) && typeof eslintManifest.version === 'string' ? eslintManifest.version : '';
-  const folderKey = sha(...folderInputs, `eslint ${eslintVersion}`, `node ${process.version}`, ts === null ? 'no typescript' : `typescript ${String(ts.version)}`);
+  const folderKey = sha(...folderInputs, `eslint ${eslintVersion}`, `node ${process.version}`, ts === null ? 'no typescript' : `typescript ${ts.version}`);
 
   /** @type {Map<string, string>} */
   const contentHash = new Map();
@@ -193,20 +225,21 @@ const closureKeys = (folder, top, judged, requireHere) => {
     }
     return hash;
   };
-  if (parsed === undefined) return (file) => sha(folderKey, relative(top, file), hashOf(file));
+  if (ts === null || parsed === undefined) return (file) => sha(folderKey, relative(top, file), hashOf(file));
 
   /** @type {Map<string, string[]>} */
   const edges = new Map();
-  const resolution = ts.createModuleResolutionCache(folder, (/** @type {string} */ name) => name, parsed.options);
+  const typescript = ts;
+  const resolution = typescript.createModuleResolutionCache(folder, (name) => name, parsed.options);
   for (const file of new Set([...programFiles, ...judged])) {
     const text = readFileSync(file, 'utf8');
     contentHash.set(file, sha(text));
     /** @type {Set<string>} */
     const targets = new Set();
-    for (const imported of /** @type {{ fileName: string }[]} */ (ts.preProcessFile(text, true, true).importedFiles)) {
-      const found = ts.resolveModuleName(imported.fileName, file, parsed.options, ts.sys, resolution).resolvedModule;
-      if (found && !found.isExternalLibraryImport && !String(found.resolvedFileName).includes('/node_modules/')
-        && found.resolvedFileName !== file) targets.add(String(found.resolvedFileName));
+    for (const imported of typescript.preProcessFile(text, true, true).importedFiles) {
+      const found = typescript.resolveModuleName(imported.fileName, file, parsed.options, typescript.sys, resolution).resolvedModule;
+      if (found && found.isExternalLibraryImport !== true && !found.resolvedFileName.includes('/node_modules/')
+        && found.resolvedFileName !== file) targets.add(found.resolvedFileName);
     }
     edges.set(file, [...targets]);
   }
@@ -221,11 +254,10 @@ const closureKeys = (folder, top, judged, requireHere) => {
     if (order.has(root)) continue;
     /** @type {[string, number][]} */
     const work = [[root, 0]];
-    while (work.length) {
-      const frame = work[work.length - 1];
+    for (let frame = work.at(-1); frame !== undefined; frame = work.at(-1)) {
       const [node, at] = frame;
       if (at === 0) { order.set(node, next); low.set(node, next); next += 1; stack.push(node); onStack.add(node); }
-      const child = (edges.get(node) ?? [])[at];
+      const child = (edges.get(node) ?? []).at(at);
       if (child !== undefined) {
         frame[1] += 1;
         if (!edges.has(child)) continue;
@@ -234,7 +266,7 @@ const closureKeys = (folder, top, judged, requireHere) => {
         continue;
       }
       work.pop();
-      const parent = work[work.length - 1];
+      const parent = work.at(-1);
       if (parent !== undefined) low.set(parent[0], Math.min(low.get(parent[0]) ?? 0, low.get(node) ?? 0));
       if (low.get(node) === order.get(node)) {
         /** @type {string[]} */
@@ -260,13 +292,16 @@ const closureKeys = (folder, top, judged, requireHere) => {
       for (const target of edges.get(member) ?? []) {
         const other = componentOf.get(target);
         if (other === undefined) outside.add(`${relative(top, target)}\0${hashOf(target)}`);
-        else if (other !== id) outside.add(closure[other] ?? '');
+        else if (other !== id) outside.add(closure.at(other) ?? '');
       }
     }
     for (const part of [...outside].sort()) hash.update(part);
     closure[id] = hash.digest('hex');
   });
-  return (file) => sha(folderKey, relative(top, file), closure[componentOf.get(file) ?? -1] ?? hashOf(file));
+  return (file) => {
+    const id = componentOf.get(file);
+    return sha(folderKey, relative(top, file), (id === undefined ? undefined : closure.at(id)) ?? hashOf(file));
+  };
 };
 
 /** @typedef {{ folder: string, state: string, exit?: number | null, detail?: string, errors?: number, files?: number, served?: number, results?: Result[] }} Row */
@@ -282,10 +317,10 @@ const judgeFolder = async (folder, nested) => {
   const absolute = resolve(folder);
   const top = resolve('.');
   const requireHere = createRequire(join(absolute, 'package.json'));
-  /** @type {any} */
+  /** @type {EslintModule} */
   let eslintModule;
   try {
-    eslintModule = requireHere('eslint');
+    eslintModule = loadEslint(requireHere);
   } catch (error) {
     return { folder, state: 'eslint is not installed', exit: null, detail: `eslint does not resolve from ${folder}: ${String(error)}` };
   }
@@ -321,7 +356,7 @@ const judgeFolder = async (folder, nested) => {
       results.push({ filePath: file, ...verdict });
     }
     for (let start = 0; start < missing.length; start += LINT_BATCH) {
-      for (const linted of /** @type {unknown[]} */ (await eslint.lintFiles(missing.slice(start, start + LINT_BATCH)))) {
+      for (const linted of await eslint.lintFiles(missing.slice(start, start + LINT_BATCH))) {
         if (!isRecord(linted) || typeof linted.filePath !== 'string' || typeof linted.errorCount !== 'number'
           || !Array.isArray(linted.messages)) throw new Error(`${folder}: eslint returned a result that is not one`);
         const verdict = { errorCount: linted.errorCount, messages: /** @type {unknown[]} */ (linted.messages).map(toMessage) };
