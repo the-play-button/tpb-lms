@@ -41,3 +41,11 @@ organization, user and employee ids must be checked against the production basti
 
 Owner of steps 1-2 : the tpb-lms work (data and ids) ; steps 3-4 : AGENT DEVOPS. Who decides the window : Matthieu (production data
 moves between environments).
+
+## Step 1, measured 2026-11-11 08:20 UTC (dev database, read-only)
+
+The rows carry no bastion organization id : `glossary.org_id` is the literal `theplaybutton`. Their user ids are LMS contacts :
+`contact_<epoch>_<random>` (three learners : `contact_1766799203473_s11pxmp07`, `contact_1767083393289_2jjxbs03p`,
+`contact_1767628844409_pt32efp21`), `test_contact_1`, and `contact_usr_<id>` built on bastion user ids (`usr_86dab4bf`,
+`usr_902f95c7`, `usr_9b5bf855`, `usr_a0dd01f1`, `usr_cb488f50`, `usr_f819caf5`, the API keys' owners). What remains to map is
+those six `usr_` ids : do they exist on the production bastion, and as the same people ? `test_contact_1` rows are test data.
