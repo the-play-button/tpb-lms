@@ -7,7 +7,7 @@ name: deploy-production
 on:
   push:
     tags:
-      - 'go-live-lms-api-v*'
+      - 'go-live-tpb-lms-v*'
 
 # One deploy of an environment at a time : two go-live tags of one SHA, 15 s apart, started two production deploys of
 # tpb-bastion side by side (2026-11-08, runs 654-657), D1 migrations included. The next one waits, never cancelled.
@@ -36,9 +36,9 @@ jobs:
           echo '::tpb-step::Parse tag (extract semver)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
           TAG="${{ github.ref_name }}"
-          VERSION="$(echo "$TAG" | sed -E 's/^go-live-lms-api-(v[0-9]+\.[0-9]+\.[0-9]+.*)$/\1/')"
+          VERSION="$(echo "$TAG" | sed -E 's/^go-live-tpb-lms-(v[0-9]+\.[0-9]+\.[0-9]+.*)$/\1/')"
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Deploy target: lms-api-production version=$VERSION"
+          echo "Deploy target: tpb-lms-production version=$VERSION"
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
@@ -59,7 +59,7 @@ jobs:
           VENVROOT="$(mktemp -d "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/release-authorization.XXXXXX")"; trap 'rm -rf "$VENVROOT"' EXIT
           python3 -m venv "$VENVROOT/venv"
           bash scripts/install_from_org_pypi.sh "$VENVROOT/venv/bin/python" "tpb-sdk>=12.0.0" "tpb-cli>=0.54.0"
-          "$VENVROOT/venv/bin/tpb" devops release-authorization check --app "lms-api" --sha "$GITHUB_SHA" --tag "$GITHUB_REF_NAME"
+          "$VENVROOT/venv/bin/tpb" devops release-authorization check --app "tpb-lms" --sha "$GITHUB_SHA" --tag "$GITHUB_REF_NAME"
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"

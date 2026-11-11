@@ -1,6 +1,6 @@
 {
   "env": "dev",
-  "app": "lms-api",
+  "app": "tpb-lms",
   "public": {
     "NEXT_PUBLIC_ENV": "dev"
   },
