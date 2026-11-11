@@ -97,6 +97,9 @@ BACKEND_KEY_ALLOWLIST = frozenset(
         # tpb-cli arguments of the env's authenticated smoke read (smoke_canonical.py, axis 107) — a command line,
         # never a credential (the identity is BASTION_TOKEN, from the runner).
         "SMOKE_TPB_ARGS",
+        # The bastion namespace the Worker's own token resolves on : the deploy step that puts BASTION_TOKEN on the Worker
+        # refuses any other (tpb-devops 07.1.2.1.2.6, 2026-11-11). An IAM namespace, never a credential.
+        "BASTION_NAMESPACE",
     }
 )
 # Whitelist by nomenclature — KNOWN public wrangler [vars] categories. A secret
