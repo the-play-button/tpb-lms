@@ -413,7 +413,10 @@ def main() -> int:
                 print(f"  ✗ {ref} — NOT READY (no readable nonempty value)")
                 missing.append(ref)
         except RuntimeError as e:
-            print(f"ERROR: {e}", file=sys.stderr)
+            # The refusal names its path, on stdout beside the ✓ lines and on stderr : tpb-enrichment's first production deploy
+            # (run 200, 2026-11-11) printed « SECRET_READINESS_FAILED (… status=403) » 25 lines above them, without the path.
+            print(f"  ✗ {ref} — {e}")
+            print(f"ERROR: {ref} : {e}", file=sys.stderr)
             return 2
 
     if missing:
