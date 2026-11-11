@@ -54,3 +54,17 @@ those six `usr_` ids : do they exist on the production bastion, and as the same 
   are short-form ids of an older generation of users : their API keys (`api_key`, 7 rows) and progress rows belong to nobody who can
   sign in today. Step 1 therefore reduces to a decision : carry the courses and classes (organization-level content, no owner) and
   drop or re-issue the per-user rows, or carry everything as it is. Matthieu's call, with the migration window.
+
+## Recommendation (AGENT DEVOPS 2, 2026-11-11 08:50 UTC)
+
+**Migrate now, the content as it is, the per-user rows of people who no longer exist dropped.**
+- Carried : every organization-level row (lms_course 57, lms_class 1 596, kms_space 2, kms_page 36, translations, glossary,
+  gamification_badge 10, hris_employee 8, crm_contact 20), and the learner rows of the three `contact_<epoch>_…` learners
+  (lms_event, lms_signal, lms_enrollment, gamification_award, crm_event, v_user_progress) : LMS contacts, not bastion users.
+- Dropped : `test_contact_1` rows (test data) and the 7 `api_key` rows, whose six `usr_` owners exist on no bastion ; a key is
+  issued again, on the production bastion, by whoever needs one.
+- Why now : no activity since 2026-09-28, so the switch window costs nobody ; every week on the dev Worker keeps production traffic
+  on the dev bastion and on code without caller attribution.
+- What decides : only whether the three learners' progress matters (keep it, as above, or start them fresh). Matthieu's word on
+  « migre » starts steps 2 to 4 ; AGENT DEVOPS runs them with the proof (row counts per table, then configureCaller on
+  lms-api.theplaybutton.ai).
