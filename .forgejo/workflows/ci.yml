@@ -70,10 +70,13 @@ jobs:
           echo '::tpb-step::Is this commit still the head of main ?' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
           set -eu
-          if [ "${{ github.event_name }}" != "push" ]; then echo "judge=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          event="${{ github.event_name }}"
+          if [ "$event" != "push" ] && [ "$event" != "workflow_dispatch" ]; then echo "judge=true" >> "$GITHUB_OUTPUT"; exit 0; fi
           head="$(git ls-remote origin refs/heads/main | cut -f1)"
           test -n "$head"
-          if [ "$head" = "${{ github.sha }}" ]; then
+          # A dispatch (`tpb ci run`, a relaunch) judges the commit it names wherever main is : only its code's mark spares it.
+          # 95 dispatched jobs took 4.4 h of runner in 6 h on 2026-11-11, most on code already judged green (plan 09.2.1.1.1).
+          if [ "$event" = "workflow_dispatch" ] || [ "$head" = "${{ github.sha }}" ]; then
           # Inputs already judged green are not judged again (tpb-devops plans/2026-11-10_ci-queue-under-two-minutes, plans 09.1 and
           # 09.3) : a mark per key in the shared build cache (tpb-build-cache, 14-day expiry). The token reaches curl on its stdin,
           # never as an argument ; a cache that answers anything but 200 or 404 is a warning, and the step judges.
@@ -181,10 +184,13 @@ jobs:
           echo '::tpb-step::Is this commit still the head of main ?' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           {
           set -eu
-          if [ "${{ github.event_name }}" != "push" ]; then echo "judge=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          event="${{ github.event_name }}"
+          if [ "$event" != "push" ] && [ "$event" != "workflow_dispatch" ]; then echo "judge=true" >> "$GITHUB_OUTPUT"; exit 0; fi
           head="$(git ls-remote origin refs/heads/main | cut -f1)"
           test -n "$head"
-          if [ "$head" = "${{ github.sha }}" ]; then
+          # A dispatch (`tpb ci run`, a relaunch) judges the commit it names wherever main is : only its code's mark spares it.
+          # 95 dispatched jobs took 4.4 h of runner in 6 h on 2026-11-11, most on code already judged green (plan 09.2.1.1.1).
+          if [ "$event" = "workflow_dispatch" ] || [ "$head" = "${{ github.sha }}" ]; then
           # Inputs already judged green are not judged again (tpb-devops plans/2026-11-10_ci-queue-under-two-minutes, plans 09.1 and
           # 09.3) : a mark per key in the shared build cache (tpb-build-cache, 14-day expiry). The token reaches curl on its stdin,
           # never as an argument ; a cache that answers anything but 200 or 404 is a warning, and the step judges.
