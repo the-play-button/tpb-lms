@@ -70,7 +70,7 @@ jobs:
           head="$(git ls-remote origin refs/heads/main | cut -f1)"
           test -n "$head"
           if [ "$head" = "${{ github.sha }}" ]; then
-            code=". :(exclude).forgejo/workflows :(exclude)plans :(exclude)TODO.md"
+            code=". :(exclude).forgejo/workflows :(exclude)plans :(exclude)TODO.md :(exclude)scripts/materialize_public_env.py :(exclude)scripts/pre_deploy_secrets_check.py :(exclude)scripts/verify_build_env_coherence.py :(exclude)scripts/_wf_worker_target.py :(exclude)scripts/report_ci_failure.py :(exclude)scripts/install_from_org_pypi.sh :(exclude)scripts/qualify_npm_release.py :(exclude)scripts/verify-npm-package-artifact.mjs :(exclude)scripts/prepare_canonical_deployment_runtime.sh :(exclude)scripts/smoke_canonical.py :(exclude)scripts/materialize-telemetry-vars.mjs :(exclude)scripts/judge_eslint_per_configuration.mjs"
             # Trees only, as below. A failed fetch leaves the base unknown : the run judges.
             git fetch -q --filter=blob:none --depth=50 origin "${{ github.sha }}" || echo "::warning::history unread : this run judges"
             # shellcheck disable=SC2086  # one pathspec per word
@@ -147,7 +147,7 @@ jobs:
           head="$(git ls-remote origin refs/heads/main | cut -f1)"
           test -n "$head"
           if [ "$head" = "${{ github.sha }}" ]; then
-            code=". :(exclude).forgejo/workflows :(exclude)plans :(exclude)TODO.md"
+            code=". :(exclude).forgejo/workflows :(exclude)plans :(exclude)TODO.md :(exclude)scripts/materialize_public_env.py :(exclude)scripts/pre_deploy_secrets_check.py :(exclude)scripts/verify_build_env_coherence.py :(exclude)scripts/_wf_worker_target.py :(exclude)scripts/report_ci_failure.py :(exclude)scripts/install_from_org_pypi.sh :(exclude)scripts/qualify_npm_release.py :(exclude)scripts/verify-npm-package-artifact.mjs :(exclude)scripts/prepare_canonical_deployment_runtime.sh :(exclude)scripts/smoke_canonical.py :(exclude)scripts/materialize-telemetry-vars.mjs :(exclude)scripts/judge_eslint_per_configuration.mjs"
             # Trees only, as below. A failed fetch leaves the base unknown : the run judges.
             git fetch -q --filter=blob:none --depth=50 origin "${{ github.sha }}" || echo "::warning::history unread : this run judges"
             # shellcheck disable=SC2086  # one pathspec per word
