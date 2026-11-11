@@ -12,6 +12,7 @@
     "ACCESS_TEAM_DOMAIN": "theplaybutton",
     "BASTION_URL": "https://bastion-backend-staging.theplaybutton.dev",
     "TPB_STORAGE_URL": "https://storage-backend-staging.theplaybutton.dev",
-    "CF_ACCOUNT_ID": "79d621c1d8e20c3c85009b30099b96e0"
+    "CF_ACCOUNT_ID": "79d621c1d8e20c3c85009b30099b96e0",
+    "BASTION_NAMESPACE": "lms"
   }
 }

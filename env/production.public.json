@@ -11,6 +11,7 @@
     "PAM_JTI_KV_ID": "6cf46d8a59eb4fd6be155e43ecfbfdd5",
     "ACCESS_TEAM_DOMAIN": "theplaybutton",
     "BASTION_URL": "https://bastion-backend.theplaybutton.ai",
-    "TPB_STORAGE_URL": "https://storage-backend.theplaybutton.ai"
+    "TPB_STORAGE_URL": "https://storage-backend.theplaybutton.ai",
+    "BASTION_NAMESPACE": "lms"
   }
 }
