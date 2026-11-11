@@ -224,22 +224,103 @@ jobs:
 
       - name: Gate — Typecheck (tsc --noEmit)
         timeout-minutes: 3
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
         run: |
           echo '::tpb-step::Gate — Typecheck (tsc --noEmit)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "this commit is judged elsewhere (the step « Is this commit still the head of main ? » says by which run) : step skipped"; exit 0; fi
           {
+          # Inputs already judged green are not judged again (tpb-devops plans/2026-11-10_ci-queue-under-two-minutes, plans 09.1 and
+          # 09.3) : a mark per key in the shared build cache (tpb-build-cache, 14-day expiry). The token reaches curl on its stdin,
+          # never as an argument ; a cache that answers anything but 200 or 404 is a warning, and the step judges.
+          [ -n "${TURBO_TOKEN:-}" ] || { echo "::error::TURBO_TOKEN is empty : the organisation secret is not wired (tpb-devops scripts/wire_ci_organization_secrets.py set)"; exit 1; }
+          inputs_mark_url() { echo "https://build-cache.theplaybutton.ai/v8/artifacts/$1?slug=ci-inputs-verdict"; }
+          inputs_seen() {  # $1 key : 0 when these inputs were judged green
+            local seen
+            seen=$(printf 'header = "Authorization: Bearer %s"\n' "$TURBO_TOKEN" | curl -sS -o /dev/null -w '%{http_code}' -K - -I "$(inputs_mark_url "$1")") || true
+            case "$seen" in
+              200) return 0 ;;
+              404) return 1 ;;
+              *) echo "::warning::the build cache answered ${seen:-nothing} for key $1 : judged" ; return 1 ;;
+            esac
+          }
+          inputs_mark() {  # $1 key : these inputs were judged green
+            printf 'header = "Authorization: Bearer %s"\n' "$TURBO_TOKEN" | curl -sS -f -o /dev/null -K - -X PUT -H 'content-type: application/octet-stream' --data-binary "$GITHUB_SHA" "$(inputs_mark_url "$1")" \
+              || echo "::warning::the green verdict of key $1 could not be marked : the next run of these inputs judges again"
+          }
+          code_inputs_key() {  # $1 the step's version : the repository's TS and JS code, every top-level directory holding a .ts, .tsx, .js, .mjs or .cjs file but plans and .forgejo, and every root file but *.md
+            { echo "$1 $GITHUB_REPOSITORY $(node --version)"
+              git ls-tree HEAD | while read -r _mode type object path; do
+                case "$type:$path" in
+                  tree:plans|tree:.forgejo|blob:*.md) ;;
+                  tree:*) [ -n "$(git ls-files -- "$path/*.ts" "$path/*.tsx" "$path/*.js" "$path/*.mjs" "$path/*.cjs" | head -1)" ] && echo "$object $path" || true ;;
+                  *) echo "$object $path" ;;
+                esac
+              done
+            } | sha256sum | cut -c1-64
+          }
+          # One verdict for the CI and every deploy of a Worker : both render these two steps, byte for byte, under one key. The
+          # first to pass them green marks the code, the other skips them. A staging deploy starts in 0 to 4 min, its CI waited up
+          # to 19 : the deploy judged first, then the CI judged the same commit again (154 of 394 staging deploy minutes,
+          # 2026-11-10 ; tpb-devops plans/2026-11-10_ci-queue-under-two-minutes, plans 05.1 and 09.3).
+          code_key="$(code_inputs_key "76eecff4a2c8")"
+          echo "$code_key" > "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/tpb-typescript-key"
+          if inputs_seen "$code_key"; then
+            echo "this TS and JS code was already typechecked and tested green (key $code_key) : not judged again"
+            : > "$RUNNER_TEMP/tpb-typescript-already-green"
+            exit 0
+          fi
           pnpm typecheck
+          : > "$RUNNER_TEMP/tpb-typecheck-green"
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
 
       - name: Gate — Unit tests (vitest)
         timeout-minutes: 32
+        env:
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
         run: |
           echo '::tpb-step::Gate — Unit tests (vitest)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           if [ -f "${RUNNER_TEMP:-/tmp}/tpb-superseded" ]; then echo "this commit is judged elsewhere (the step « Is this commit still the head of main ? » says by which run) : step skipped"; exit 0; fi
           {
+          # Inputs already judged green are not judged again (tpb-devops plans/2026-11-10_ci-queue-under-two-minutes, plans 09.1 and
+          # 09.3) : a mark per key in the shared build cache (tpb-build-cache, 14-day expiry). The token reaches curl on its stdin,
+          # never as an argument ; a cache that answers anything but 200 or 404 is a warning, and the step judges.
+          [ -n "${TURBO_TOKEN:-}" ] || { echo "::error::TURBO_TOKEN is empty : the organisation secret is not wired (tpb-devops scripts/wire_ci_organization_secrets.py set)"; exit 1; }
+          inputs_mark_url() { echo "https://build-cache.theplaybutton.ai/v8/artifacts/$1?slug=ci-inputs-verdict"; }
+          inputs_seen() {  # $1 key : 0 when these inputs were judged green
+            local seen
+            seen=$(printf 'header = "Authorization: Bearer %s"\n' "$TURBO_TOKEN" | curl -sS -o /dev/null -w '%{http_code}' -K - -I "$(inputs_mark_url "$1")") || true
+            case "$seen" in
+              200) return 0 ;;
+              404) return 1 ;;
+              *) echo "::warning::the build cache answered ${seen:-nothing} for key $1 : judged" ; return 1 ;;
+            esac
+          }
+          inputs_mark() {  # $1 key : these inputs were judged green
+            printf 'header = "Authorization: Bearer %s"\n' "$TURBO_TOKEN" | curl -sS -f -o /dev/null -K - -X PUT -H 'content-type: application/octet-stream' --data-binary "$GITHUB_SHA" "$(inputs_mark_url "$1")" \
+              || echo "::warning::the green verdict of key $1 could not be marked : the next run of these inputs judges again"
+          }
+          code_inputs_key() {  # $1 the step's version : the repository's TS and JS code, every top-level directory holding a .ts, .tsx, .js, .mjs or .cjs file but plans and .forgejo, and every root file but *.md
+            { echo "$1 $GITHUB_REPOSITORY $(node --version)"
+              git ls-tree HEAD | while read -r _mode type object path; do
+                case "$type:$path" in
+                  tree:plans|tree:.forgejo|blob:*.md) ;;
+                  tree:*) [ -n "$(git ls-files -- "$path/*.ts" "$path/*.tsx" "$path/*.js" "$path/*.mjs" "$path/*.cjs" | head -1)" ] && echo "$object $path" || true ;;
+                  *) echo "$object $path" ;;
+                esac
+              done
+            } | sha256sum | cut -c1-64
+          }
+          if [ -f "${RUNNER_TEMP:?RUNNER_TEMP is set by the runner}/tpb-typescript-already-green" ]; then
+            echo "this TS and JS code was already typechecked and tested green (the step before says by which key) : not judged again"
+            exit 0
+          fi
           pnpm test
+          if [ -f "$RUNNER_TEMP/tpb-typecheck-green" ] && [ -f "$RUNNER_TEMP/tpb-typescript-key" ]; then
+            inputs_mark "$(cat "$RUNNER_TEMP/tpb-typescript-key")"
+          fi
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
@@ -381,7 +462,7 @@ jobs:
         timeout-minutes: 2
         if: failure()
         env:
-          TPB_CI_REDACT_VARS: "ENTROPY_CHECK_CACHE_R2_ACCOUNT_ID,ENTROPY_CHECK_CACHE_R2_READ_ACCESS_KEY_ID,ENTROPY_CHECK_CACHE_R2_READ_SECRET_ACCESS_KEY,ENTROPY_CHECK_CACHE_R2_WRITE_ACCESS_KEY_ID,ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY,FORGEJO_PAT_RO,NPM_AUTH_TOKEN"
+          TPB_CI_REDACT_VARS: "ENTROPY_CHECK_CACHE_R2_ACCOUNT_ID,ENTROPY_CHECK_CACHE_R2_READ_ACCESS_KEY_ID,ENTROPY_CHECK_CACHE_R2_READ_SECRET_ACCESS_KEY,ENTROPY_CHECK_CACHE_R2_WRITE_ACCESS_KEY_ID,ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY,FORGEJO_PAT_RO,NPM_AUTH_TOKEN,TURBO_TOKEN"
           TPB_CI_REPORT_TOKEN: ${{ github.token }}
           ENTROPY_CHECK_CACHE_R2_ACCOUNT_ID: ${{ secrets.ENTROPY_CHECK_CACHE_R2_ACCOUNT_ID }}
           ENTROPY_CHECK_CACHE_R2_READ_ACCESS_KEY_ID: ${{ secrets.ENTROPY_CHECK_CACHE_R2_READ_ACCESS_KEY_ID }}
@@ -390,6 +471,7 @@ jobs:
           ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY: ${{ secrets.ENTROPY_CHECK_CACHE_R2_WRITE_SECRET_ACCESS_KEY }}
           FORGEJO_PAT_RO: ${{ secrets.FORGEJO_PAT_RO }}
           NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
         run: |
           set -o pipefail
           curl -fsS -H "Authorization: token $TPB_CI_REPORT_TOKEN" "${{ github.server_url }}/api/v1/repos/${{ github.repository }}/raw/scripts/report_ci_failure.py?ref=${{ github.sha }}" | python3 - --repo "${{ github.repository }}" --workflow "${{ github.workflow }}" --ref "${{ github.ref_name }}" --run "${{ github.run_number }}" --environment "ci"
