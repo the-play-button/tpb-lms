@@ -68,3 +68,12 @@ those six `usr_` ids : do they exist on the production bastion, and as the same 
 - What decides : only whether the three learners' progress matters (keep it, as above, or start them fresh). Matthieu's word on
   « migre » starts steps 2 to 4 ; AGENT DEVOPS runs them with the proof (row counts per table, then configureCaller on
   lms-api.theplaybutton.ai).
+
+## Step 2 ready, dry run 2026-11-11 08:55 UTC
+
+`plans/_build/migrate_lms_dev_database_into_production.py` (dry run by default ; `--apply --bookmark=<production time-travel
+bookmark>` copies, INSERT OR IGNORE on the columns both databases declare). Dry run : 2 071 rows to carry — lms_class 1 596,
+lms_event 239, lms_course 57, kms_page 36, translations 42 (25 already in production), crm_event 26, crm_contact 20,
+v_user_progress 15, gamification_badge 10, hris_employee 8, gamification_award 6, glossary 6 (all 6 already there), lms_program 5,
+kms_space 2, lms_signal 2, lms_enrollment 1 ; `api_key` dropped (7) ; `test_contact_1` rows filtered out. On « migre » : bookmark,
+apply, counts, then step 3.
