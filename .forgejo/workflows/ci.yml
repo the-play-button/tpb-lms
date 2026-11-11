@@ -31,9 +31,11 @@ jobs:
   # seconds instead of one full run per push. A pull request is always judged. An unreadable main fails the run.
   # A push of plans or of the entropy snapshot alone starts no run (paths-ignore) : when only such files changed since this commit, no newer run will
   # judge it, so this one does (tpb-cogs run 8830, 2026-11-07, judged nothing behind a push of plans).
+  # `latest` has its lane (tpb-latest-runner, provision_priority_runner_lane.py ; the general runners carry the label as overflow) :
+  # under the CI's label it waited 5.7 min at p50, 15.3 at p90 for 2.8 s of work (588 jobs over 6 h, 2026-11-11, plan 04.1.1).
   latest:
     name: latest
-    runs-on: tpb-ci-runner
+    runs-on: tpb-latest-runner
     timeout-minutes: 50
     outputs:
       judge: ${{ steps.main.outputs.judge }}
