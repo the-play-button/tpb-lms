@@ -16,11 +16,18 @@
 // (the runner's, beside the entropy check cache), one file per configured folder, reduced to the keys of the run; without
 // the variable every file is linted. Proved equal to a plain `eslint .` file by file, before and after a type change, on
 // tpb-crm's frontend (1 170 errors, 18.6 s warm against 741 s cold, 2026-11-10).
+//
+// Each configured folder is judged in its own node process (`--folder <folder> --row <file>`), as `eslint .` started in it:
+// typescript-eslint infers a configuration's tsconfigRootDir from the configuration files its process loaded, and with
+// every folder in one process tpb-cogs' five configurations made each of its typed files a parsing error (« multiple
+// candidate TSConfigRootDirs », run 11060, 2026-11-10). A result eslint could not parse is never kept: it says nothing
+// about the file.
 import { createHash } from 'node:crypto';
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import { dirname, join, posix, relative, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const BASELINE = '.eslint-last-status.json';
 // Copies kept as evidence or builds inside plans are not application code (tpb-fleet's _build qualifications, tpb-plans'
@@ -36,6 +43,15 @@ const LINT_BATCH = 400;
 const temporary = process.env.RUNNER_TEMP;
 if (!temporary) throw new Error('RUNNER_TEMP is not set: the runner sets it, a measurement passes its own folder');
 const writeBaseline = process.argv.includes('--write-baseline');
+/** @param {string} name */
+const argumentAfter = (name) => {
+  const at = process.argv.indexOf(name);
+  return at < 0 ? undefined : process.argv.at(at + 1);
+};
+// Set in the process that judges one folder: it writes that folder's row to rowPath, and nothing else.
+const onlyFolder = argumentAfter('--folder');
+const rowPath = argumentAfter('--row');
+if ((onlyFolder === undefined) !== (rowPath === undefined)) throw new Error('--folder and --row go together');
 const cacheDirectory = process.env.TPB_ESLINT_CACHE_DIRECTORY ? resolve(process.env.TPB_ESLINT_CACHE_DIRECTORY) : null;
 
 const listed = spawnSync('git', ['ls-files', '-z'], { encoding: 'utf8', maxBuffer: 256 * 1024 * 1024 });
@@ -62,7 +78,7 @@ const INSTALL = new Map([
   ['package-lock.json', ['npm', 'ci', '--ignore-scripts']],
   ['bun.lock', ['bun', 'install', '--frozen-lockfile', '--ignore-scripts']],
 ]);
-for (const lockfile of tracked) {
+for (const lockfile of onlyFolder === undefined ? tracked : []) {
   const install = INSTALL.get(posix.basename(lockfile));
   if (posix.dirname(lockfile) === '.' || install === undefined) continue;
   const where = posix.dirname(lockfile);
@@ -212,7 +228,8 @@ const closureKeys = (folder, top, judged, requireHere) => {
   }
   const eslintManifest = /** @type {unknown} */ (JSON.parse(readFileSync(requireHere.resolve('eslint/package.json'), 'utf8')));
   const eslintVersion = isRecord(eslintManifest) && typeof eslintManifest.version === 'string' ? eslintManifest.version : '';
-  const folderKey = sha(...folderInputs, `eslint ${eslintVersion}`, `node ${process.version}`, ts === null ? 'no typescript' : `typescript ${ts.version}`);
+  // The judge's own generation: the one that judged every folder in a single process kept parsing errors (2026-11-10).
+  const folderKey = sha(...folderInputs, 'judge: one process per folder, unparsed results never kept', `eslint ${eslintVersion}`, `node ${process.version}`, ts === null ? 'no typescript' : `typescript ${ts.version}`);
 
   /** @type {Map<string, string>} */
   const contentHash = new Map();
@@ -360,7 +377,9 @@ const judgeFolder = async (folder, nested) => {
         if (!isRecord(linted) || typeof linted.filePath !== 'string' || typeof linted.errorCount !== 'number'
           || !Array.isArray(linted.messages)) throw new Error(`${folder}: eslint returned a result that is not one`);
         const verdict = { errorCount: linted.errorCount, messages: /** @type {unknown[]} */ (linted.messages).map(toMessage) };
-        kept.set(keyOf(linted.filePath), verdict);
+        // A parsing error is counted in this run, never kept: the next run parses the file again.
+        const unparsed = typeof linted.fatalErrorCount === 'number' && linted.fatalErrorCount > 0;
+        if (!unparsed) kept.set(keyOf(linted.filePath), verdict);
         results.push({ filePath: linted.filePath, ...verdict });
       }
     }
@@ -375,10 +394,51 @@ const judgeFolder = async (folder, nested) => {
   }
 };
 
+/** @param {string} folder @returns {string[]} its configured folders, relative to it */
+const nestedOf = (folder) => folders.filter((other) => inside(other, folder)).map((other) => posix.relative(folder, other));
+
+if (onlyFolder !== undefined && rowPath !== undefined) {
+  writeFileSync(rowPath, JSON.stringify(await judgeFolder(onlyFolder, nestedOf(onlyFolder))));
+  process.exit(0);
+}
+
+/** @param {unknown} value @returns {Result | null} */
+const toResult = (value) => {
+  const verdict = toVerdict(value);
+  return verdict === null || !isRecord(value) || typeof value.filePath !== 'string' ? null : { filePath: value.filePath, ...verdict };
+};
+/** @param {string} folder @param {unknown} value @returns {Row} */
+const toRow = (folder, value) => {
+  if (!isRecord(value) || value.folder !== folder || typeof value.state !== 'string') {
+    return { folder, state: 'eslint did not complete', exit: null, detail: 'the folder process wrote no row of its folder' };
+  }
+  /** @type {Row} */
+  const row = { folder, state: value.state };
+  if (typeof value.exit === 'number' || value.exit === null) row.exit = value.exit;
+  if (typeof value.detail === 'string') row.detail = value.detail;
+  if (typeof value.errors === 'number') row.errors = value.errors;
+  if (typeof value.files === 'number') row.files = value.files;
+  if (typeof value.served === 'number') row.served = value.served;
+  if (Array.isArray(value.results)) {
+    row.results = /** @type {unknown[]} */ (value.results).map(toResult).filter((result) => result !== null);
+  }
+  return row;
+};
+
+const self = fileURLToPath(import.meta.url);
 /** @type {Row[]} */
 const rows = [];
-for (const folder of folders) {
-  rows.push(await judgeFolder(folder, folders.filter((other) => inside(other, folder)).map((other) => posix.relative(folder, other))));
+for (const [index, folder] of folders.entries()) {
+  const path = join(temporary, `eslint-folder-${String(index)}.json`);
+  rmSync(path, { force: true });
+  const judged = spawnSync(process.execPath, [self, '--folder', folder, '--row', path], { stdio: 'inherit' });
+  if (judged.status !== 0 || !existsSync(path)) {
+    rows.push({ folder, state: 'eslint did not complete', exit: judged.status,
+      detail: `the process judging ${folder} ended with ${String(judged.status ?? judged.signal)} and wrote no row` });
+    continue;
+  }
+  rows.push(toRow(folder, parseJson(readFileSync(path, 'utf8'))));
+  rmSync(path, { force: true });
 }
 // The report keeps the counts, not every message.
 writeFileSync(join(temporary, 'eslint-per-configuration.json'),
