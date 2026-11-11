@@ -49,3 +49,8 @@ The rows carry no bastion organization id : `glossary.org_id` is the literal `th
 `contact_1767628844409_pt32efp21`), `test_contact_1`, and `contact_usr_<id>` built on bastion user ids (`usr_86dab4bf`,
 `usr_902f95c7`, `usr_9b5bf855`, `usr_a0dd01f1`, `usr_cb488f50`, `usr_f819caf5`, the API keys' owners). What remains to map is
 those six `usr_` ids : do they exist on the production bastion, and as the same people ? `test_contact_1` rows are test data.
+- Looked up 2026-11-11 08:35 UTC (`tpb bastion iam read users`, checked first on a known user, `usr_ded4dcde86a5`) : none of the six
+  `usr_` ids exists on the production bastion (167 users read, no id starting with them), nor answers on the dev bastion (404). They
+  are short-form ids of an older generation of users : their API keys (`api_key`, 7 rows) and progress rows belong to nobody who can
+  sign in today. Step 1 therefore reduces to a decision : carry the courses and classes (organization-level content, no owner) and
+  drop or re-issue the per-user rows, or carry everything as it is. Matthieu's call, with the migration window.
