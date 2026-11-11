@@ -18,7 +18,7 @@ concurrency:
 jobs:
   deploy-production:
     runs-on: tpb-production-runner
-    timeout-minutes: 161
+    timeout-minutes: 163
     environment: production
     env:
       CLOUDFLARE_API_TOKEN: ${{ secrets.CF_TOKEN_PRODUCTION }}
@@ -417,6 +417,62 @@ jobs:
           print(f"crons unchanged ({len(live)}) — CF schedules write refused (10063) is harmless here; version deployed")
           PY
           fi
+          } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          __tpb_rc=${PIPESTATUS[0]}
+          [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
+
+      - name: Provision the Worker's BASTION_TOKEN (production)
+        timeout-minutes: 2
+        env:
+          BASTION_TOKEN: ${{ secrets.BASTION_TOKEN_PRODUCTION }}
+        run: |
+          echo '::tpb-step::Provision the Worker'\''s BASTION_TOKEN (production)' >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
+          {
+          # tpb-devops plans/2026-11-01_build-tooling-shared-cache-forgejo/07.1.2.1.2.6 : no deploy put BASTION_TOKEN on its Worker, and
+          # tpb-lrm-production shipped without it (2026-11-11 : every bastion route answered BASTION_CONFIG). The token is the app's own
+          # (it resolves on the namespace the env manifest names, backend.BASTION_NAMESPACE : the repository's name is not it, tpb-pim
+          # resolves on pim), never the organization's that a
+          # repository without its own secret inherits ; it reaches the Worker by stdin, and the Worker's secret list proves it.
+          set -euo pipefail
+          # The namespace and the bastion come from the env manifest, one source for every repository : a committed
+          # multi-environment wrangler source reads its vars per target, never at the top of the file.
+          python3 - env/production.public.json <<'PY'
+          import json, os, sys, urllib.error, urllib.request
+          backend = json.load(open(sys.argv[1])).get('backend') or {}
+          expected = backend.get('BASTION_NAMESPACE')
+          if not expected:
+              sys.exit(f"BASTION_NAMESPACE_MISSING: {sys.argv[1]} names no backend.BASTION_NAMESPACE, the namespace this Worker's token must resolve on")
+          bastion = backend.get('BASTION_URL')
+          if not bastion:
+              sys.exit(f"BASTION_URL_MISSING: {sys.argv[1]} names no backend.BASTION_URL")
+          # TPB-Caller : every authenticated call says who makes it ; an anonymous one is refused 428 once the bastion enforces.
+          caller = f"agent=ci:{os.environ['GITHUB_REPOSITORY']}; purpose=deploy provisions the Worker's BASTION_TOKEN; run={os.environ['GITHUB_RUN_ID']}"
+          request = urllib.request.Request(f"{bastion}/auth/resolve", headers={'Authorization': f"Bearer {os.environ['BASTION_TOKEN']}",
+                                                                             'User-Agent': 'tpb-deploy', 'TPB-Caller': caller})
+          try:
+              resolved = json.load(urllib.request.urlopen(request, timeout=30))
+          except urllib.error.HTTPError as error:
+              sys.exit(f"BASTION_TOKEN_DOES_NOT_RESOLVE: {bastion}/auth/resolve answered {error.code}")
+          actor = resolved.get('actor', resolved)
+          if actor.get('namespace') != expected:
+              sys.exit(f"BASTION_TOKEN_IS_NOT_THE_APP_S: it resolves on namespace {actor.get('namespace')!r}, the app's is {expected!r} ; set the repository secret BASTION_TOKEN_PRODUCTION to the app's own token")
+          print(f"BASTION_TOKEN resolves on {expected} ({actor.get('email')})")
+          PY
+          printf '%s' "$BASTION_TOKEN" | npx -y wrangler@latest secret put BASTION_TOKEN --config backend/wrangler-production.toml
+          # The Worker's secret names, read back by wrangler : it resolves the account as the deploy did (a manifest without
+          # CF_ACCOUNT_ID renders no CLOUDFLARE_ACCOUNT_ID, so the account cannot come from the environment). Names only.
+          npx -y wrangler@latest secret list --config backend/wrangler-production.toml > "${RUNNER_TEMP:-/tmp}/worker-secrets.json"
+          python3 - "${RUNNER_TEMP:-/tmp}/worker-secrets.json" <<'PY'
+          import json, sys
+          lines = open(sys.argv[1]).read().splitlines()
+          start = next((i for i, line in enumerate(lines) if line.startswith('[')), None)  # the JSON list, past any banner
+          if start is None:
+              sys.exit(f"WORKER_SECRET_LIST_UNREADABLE: wrangler secret list printed no JSON list : {lines[-5:]!r}")
+          names = sorted(secret['name'] for secret in json.loads('\n'.join(lines[start:])))
+          if 'BASTION_TOKEN' not in names:
+              sys.exit(f"WORKER_SECRET_MISSING: the Worker lists {names} after the put")
+          print(f"the Worker carries BASTION_TOKEN ({len(names)} secrets)")
+          PY
           } 2>&1 | tee -a "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"
           __tpb_rc=${PIPESTATUS[0]}
           [ "$__tpb_rc" -eq 0 ] && echo "::tpb-step-ok::" >> "${RUNNER_TEMP:-/tmp}/tpb-ci-steps.log"; exit "$__tpb_rc"
